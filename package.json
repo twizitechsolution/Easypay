@@ -1,0 +1,18 @@
+{
+  "name": "easypay",
+  "version": "1.0.0",
+  "description": "EasyPay Enterprise Financial & Payment Platform",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "keywords": [
+    "easypay",
+    "fintech",
+    "payment",
+    "recharge",
+    "bonds"
+  ],
+  "author": "EasyPay",
+  "license": "ISC"
+}
