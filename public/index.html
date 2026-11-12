@@ -3436,6 +3436,207 @@
 </head>
 <body>
 
+  <!-- ==============================================================
+       AUTHENTIC EASYPAY (FREECHARGE BIZ) AUTHENTICATION SYSTEM
+       (SPLASH -> LOGIN -> 4-DIGIT OTP -> NEED HELP)
+       ============================================================== -->
+
+  <!-- 1. Authentic Splash Screen (Screenshot 1) -->
+  <div class="ep-auth-fullscreen active" id="epSplashScreen" style="position: fixed; inset: 0; background: #FFFFFF; z-index: 999999; display: flex !important; flex-direction: column; justify-content: space-between; align-items: center; padding: 50px 24px 36px; box-sizing: border-box;" onclick="goToEasyPayLogin()">
+    <div style="height: 20px;"></div>
+    
+    <div class="ep-splash-center">
+      <div class="ep-splash-brand-row">
+        <svg class="ep-flame-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 70L62 16L56 46L86 42L36 88L44 58L18 70Z" fill="#FF5722"/>
+          <path d="M44 58L56 46L62 16L18 70L44 58Z" fill="#E64A19"/>
+        </svg>
+        <div class="ep-splash-title">
+          <span id="epTypewriterText">EasyPay</span><span class="ep-typewriter-cursor"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ep-splash-bottom">
+      <div class="ep-upi-support-wrap">
+        <div class="ep-upi-support-text">SUPPORTS</div>
+        <div style="display:flex; align-items:center; gap:4px;">
+          <span style="font-size: 24px; font-weight: 900; font-style: italic; color: #424242; letter-spacing: -1px;">UPI</span>
+          <svg width="18" height="20" viewBox="0 0 20 24" fill="none">
+            <path d="M4 22L16 2L12 2L0 22H4Z" fill="#FF9933"/>
+            <path d="M7 22L19 2L15 2L3 22H7Z" fill="#138808"/>
+          </svg>
+        </div>
+      </div>
+      <div class="ep-badges-row">
+        <div class="ep-badge-item">
+          <i class="fa-solid fa-circle-check" style="color: #00897B; font-size: 16px;"></i>
+          <span>PCI DSS<br>COMPLIANT</span>
+        </div>
+        <div class="ep-badge-item">
+          <i class="fa-solid fa-shield-halved" style="color: #424242; font-size: 16px;"></i>
+          <span>100%<br>SECURED</span>
+        </div>
+        <div class="ep-badge-item">
+          <i class="fa-solid fa-globe" style="color: #1976D2; font-size: 16px;"></i>
+          <span>ISO 27001<br>CERTIFIED</span>
+        </div>
+        <div class="ep-badge-item">
+          <i class="fa-solid fa-lock" style="color: #424242; font-size: 16px;"></i>
+          <span>256-BIT<br>ENCRYPTION</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Authentic Login Screen (Screenshot 2) -->
+  <div class="ep-auth-fullscreen" id="epLoginScreen">
+    <div class="ep-auth-inner">
+      <div class="ep-auth-top-nav" style="justify-content: flex-end;">
+        <span class="ep-need-help-link" onclick="openNeedHelpScreen()">Need Help?</span>
+      </div>
+
+      <div class="ep-auth-heading-box">
+        <div class="ep-auth-title">Get started with<br><span>EasyPay</span>!</div>
+        <div class="ep-auth-subtitle">Fast simple & secure way to pay 😎</div>
+      </div>
+
+      <div class="ep-auth-card">
+        <label class="ep-input-label">Enter Mobile Number</label>
+        <div class="ep-phone-input-wrap" id="epPhoneWrap">
+          <div class="ep-phone-prefix-pill">+91</div>
+          <input type="tel" id="epMobileInput" class="ep-phone-field" maxlength="10" placeholder="7013893165" value="" oninput="handleMobileInput(this)">
+        </div>
+        <button id="epGetOtpBtn" class="ep-auth-btn disabled" onclick="executeGetOtp()">
+          Get OTP
+        </button>
+      </div>
+
+      <div class="ep-did-you-know-card">
+        <div class="ep-dyk-title">Did You Know?</div>
+        <div class="ep-dyk-desc">EasyPay is proudly trusted by millions, built for Bharat! 🇮🇳</div>
+        <div class="ep-carousel-dots-row">
+          <div class="ep-dot-pill active"></div>
+          <div class="ep-dot-pill"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Authentic 4-Digit OTP Screen (Screenshots 3 & 5) -->
+  <div class="ep-auth-fullscreen" id="epOtpScreen">
+    <div class="ep-auth-inner">
+      <div class="ep-auth-top-nav">
+        <button class="ep-back-icon-btn" onclick="goToEasyPayLogin()">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <span class="ep-need-help-link" onclick="openNeedHelpScreen()">Need Help?</span>
+      </div>
+
+      <div class="ep-auth-heading-box">
+        <div class="ep-auth-title">Verify your<br><span>Mobile Number</span></div>
+        <div class="ep-auth-subtitle">To enjoy services securely 🔒</div>
+      </div>
+
+      <div class="ep-auth-card">
+        <div style="font-size: 13px; color: #4A4A4A; font-weight: 500;">
+          Enter OTP sent to <strong id="epMaskedMobileDisplay">XXXXXX3165</strong> 
+          <span style="color: #FF5722; font-weight: 700; cursor: pointer; margin-left: 4px;" onclick="goToEasyPayLogin()">Change</span>
+        </div>
+
+        <div class="ep-otp-grid">
+          <input type="tel" class="ep-otp-box" maxlength="1" oninput="handleOtpInput(this, 0)" onkeydown="handleOtpKey(event, 0)">
+          <input type="tel" class="ep-otp-box" maxlength="1" oninput="handleOtpInput(this, 1)" onkeydown="handleOtpKey(event, 1)">
+          <input type="tel" class="ep-otp-box" maxlength="1" oninput="handleOtpInput(this, 2)" onkeydown="handleOtpKey(event, 2)">
+          <input type="tel" class="ep-otp-box" maxlength="1" oninput="handleOtpInput(this, 3)" onkeydown="handleOtpKey(event, 3)">
+        </div>
+
+        <button id="epVerifyOtpBtn" class="ep-auth-btn disabled" onclick="executeVerifyOtp()">
+          Verify
+        </button>
+
+        <div class="ep-otp-meta-row" id="epOtpTimerContainer">
+          Resend OTP in <strong id="epOtpCountdown">00:57</strong>
+        </div>
+        <div class="ep-otp-meta-row" id="epOtpResendLinks" style="display:none;">
+          Resend OTP in <span style="color:#FF5722; font-weight:700; cursor:pointer;" onclick="resendOtp()">Resend SMS</span> | <span style="color:#FF5722; font-weight:700; cursor:pointer;" onclick="resendOtp()">Call Me</span>
+        </div>
+      </div>
+
+      <div class="ep-did-you-know-card">
+        <div class="ep-dyk-title">Did You Know?</div>
+        <div class="ep-dyk-desc">EasyPay offers the fastest QR scan in the industry for seamless and lightspeed payments ! ⚡</div>
+        <div class="ep-carousel-dots-row">
+          <div class="ep-dot-pill"></div>
+          <div class="ep-dot-pill active"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Authentic Need Help Screen (Screenshot 4) -->
+  <div class="ep-auth-fullscreen" id="epNeedHelpScreen">
+    <div class="ep-auth-inner">
+      <div class="ep-auth-top-nav">
+        <button class="ep-back-icon-btn" onclick="closeNeedHelpScreen()">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <span style="font-size: 16px; font-weight: 700; color: #1A1A1A;">Need Help?</span>
+        <div style="width: 20px;"></div>
+      </div>
+
+      <div style="font-size: 13px; color: #616161; line-height: 1.45; margin-bottom: 20px;">
+        Get quick answers to common issues and troubleshoot login or sign-up problems easily
+      </div>
+
+      <div class="ep-faq-card" onclick="toggleFaq(this)">
+        <div class="ep-faq-header">
+          <span>Login issues</span>
+          <i class="fa-solid fa-chevron-down" style="font-size: 12px; color: #757575; transition: transform 0.2s;"></i>
+        </div>
+        <div class="ep-faq-body">
+          If you are not receiving OTP, please verify mobile network signal or wait 60 seconds before tapping 'Resend SMS'. Ensure DND settings allow transactional messages.
+        </div>
+      </div>
+
+      <div class="ep-faq-card" onclick="toggleFaq(this)">
+        <div class="ep-faq-header">
+          <span>Sign-up issues</span>
+          <i class="fa-solid fa-chevron-down" style="font-size: 12px; color: #757575; transition: transform 0.2s;"></i>
+        </div>
+        <div class="ep-faq-body">
+          Any valid Indian mobile number (+91) linked with an active SIM card can register on EasyPay. No initial documentation or KYC is required to get started.
+        </div>
+      </div>
+
+      <div class="ep-faq-card" onclick="toggleFaq(this)">
+        <div class="ep-faq-header">
+          <span>Account & security</span>
+          <i class="fa-solid fa-chevron-down" style="font-size: 12px; color: #757575; transition: transform 0.2s;"></i>
+        </div>
+        <div class="ep-faq-body">
+          Your EasyPay account is protected with 256-bit bank-grade encryption, PCI DSS compliance, and device-bound biometric authentication.
+        </div>
+      </div>
+
+      <div class="ep-support-banner">
+        <div style="max-width: 220px;">
+          <div style="font-size: 13px; font-weight: 700; color: #1A1A1A; margin-bottom: 4px;">Email our support team for further assistance. We're here to help!</div>
+          <button style="background: #FF5722; color: #FFFFFF; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 700; margin-top: 10px; cursor: pointer;" onclick="showToast('Support request initiated. Email: support@easypay.in')">
+            Write To Us
+          </button>
+        </div>
+        <div style="font-size: 40px; color: #FF5722; opacity: 0.85;">
+          <i class="fa-regular fa-envelope-open"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+  
+
   <!-- RESPONSIVE MOBILE VIEWPORT -->
   <div class="app-viewport-wrapper">
 
@@ -3482,7 +3683,7 @@
       <!-- ==============================================================
            VIEW 1: HOME TAB
            ============================================================== -->
-      <div id="viewHome" class="view-panel active">
+      <div id="viewHome" class="view-panel" style="display: none;">
 
         <!-- 1. Top Promotional Carousel Slider (Screenshot 3) -->
         <div class="home-promo-slider-wrap">
@@ -4739,7 +4940,7 @@
          5. Profile
          ============================================================== -->
     <!-- APP BOTTOM NAVIGATION (HOME, GIFT CARD, BONDS, SHOPPING, PROFILE) -->
-    <nav class="app-bottom-nav">
+    <nav class="app-bottom-nav" id="appBottomNav" style="display: none;">
       <div class="nav-tab-item active" id="tabHome" onclick="switchNavTab('home')">
         <i class="fa-solid fa-house"></i>
         <span>Home</span>
@@ -4913,203 +5114,6 @@
       <button class="btn-primary-action" style="max-width: 100%;" onclick="closeModal('bondSuccessModal'); switchNavTab('passbook');">
         <i class="fa-solid fa-file-shield"></i> View in Passbook & Portfolio
       </button>
-    </div>
-  </div>
-
-  <!-- ==============================================================
-       AUTHENTIC EASYPAY (FREECHARGE BIZ) AUTHENTICATION SYSTEM
-       (SPLASH -> LOGIN -> 4-DIGIT OTP -> NEED HELP)
-       ============================================================== -->
-
-  <!-- 1. Authentic Splash Screen (Screenshot 1) -->
-  <div class="ep-auth-fullscreen active" id="epSplashScreen" onclick="goToEasyPayLogin()">
-    <div style="height: 20px;"></div>
-    
-    <div class="ep-splash-center">
-      <div class="ep-splash-brand-row">
-        <svg class="ep-flame-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18 70L62 16L56 46L86 42L36 88L44 58L18 70Z" fill="#FF5722"/>
-          <path d="M44 58L56 46L62 16L18 70L44 58Z" fill="#E64A19"/>
-        </svg>
-        <div class="ep-splash-title">
-          <span id="epTypewriterText">EasyPay</span><span class="ep-typewriter-cursor"></span>
-        </div>
-      </div>
-    </div>
-
-    <div class="ep-splash-bottom">
-      <div class="ep-upi-support-wrap">
-        <div class="ep-upi-support-text">SUPPORTS</div>
-        <div style="display:flex; align-items:center; gap:4px;">
-          <span style="font-size: 24px; font-weight: 900; font-style: italic; color: #424242; letter-spacing: -1px;">UPI</span>
-          <svg width="18" height="20" viewBox="0 0 20 24" fill="none">
-            <path d="M4 22L16 2L12 2L0 22H4Z" fill="#FF9933"/>
-            <path d="M7 22L19 2L15 2L3 22H7Z" fill="#138808"/>
-          </svg>
-        </div>
-      </div>
-      <div class="ep-badges-row">
-        <div class="ep-badge-item">
-          <i class="fa-solid fa-circle-check" style="color: #00897B; font-size: 16px;"></i>
-          <span>PCI DSS<br>COMPLIANT</span>
-        </div>
-        <div class="ep-badge-item">
-          <i class="fa-solid fa-shield-halved" style="color: #424242; font-size: 16px;"></i>
-          <span>100%<br>SECURED</span>
-        </div>
-        <div class="ep-badge-item">
-          <i class="fa-solid fa-globe" style="color: #1976D2; font-size: 16px;"></i>
-          <span>ISO 27001<br>CERTIFIED</span>
-        </div>
-        <div class="ep-badge-item">
-          <i class="fa-solid fa-lock" style="color: #424242; font-size: 16px;"></i>
-          <span>256-BIT<br>ENCRYPTION</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2. Authentic Login Screen (Screenshot 2) -->
-  <div class="ep-auth-fullscreen" id="epLoginScreen">
-    <div class="ep-auth-inner">
-      <div class="ep-auth-top-nav" style="justify-content: flex-end;">
-        <span class="ep-need-help-link" onclick="openNeedHelpScreen()">Need Help?</span>
-      </div>
-
-      <div class="ep-auth-heading-box">
-        <div class="ep-auth-title">Get started with<br><span>EasyPay</span>!</div>
-        <div class="ep-auth-subtitle">Fast simple & secure way to pay 😎</div>
-      </div>
-
-      <div class="ep-auth-card">
-        <label class="ep-input-label">Enter Mobile Number</label>
-        <div class="ep-phone-input-wrap" id="epPhoneWrap">
-          <div class="ep-phone-prefix-pill">+91</div>
-          <input type="tel" id="epMobileInput" class="ep-phone-field" maxlength="10" placeholder="7013893165" value="" oninput="handleMobileInput(this)">
-        </div>
-        <button id="epGetOtpBtn" class="ep-auth-btn disabled" onclick="executeGetOtp()">
-          Get OTP
-        </button>
-      </div>
-
-      <div class="ep-did-you-know-card">
-        <div class="ep-dyk-title">Did You Know?</div>
-        <div class="ep-dyk-desc">EasyPay is proudly trusted by millions, built for Bharat! 🇮🇳</div>
-        <div class="ep-carousel-dots-row">
-          <div class="ep-dot-pill active"></div>
-          <div class="ep-dot-pill"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 3. Authentic 4-Digit OTP Screen (Screenshots 3 & 5) -->
-  <div class="ep-auth-fullscreen" id="epOtpScreen">
-    <div class="ep-auth-inner">
-      <div class="ep-auth-top-nav">
-        <button class="ep-back-icon-btn" onclick="goToEasyPayLogin()">
-          <i class="fa-solid fa-chevron-left"></i>
-        </button>
-        <span class="ep-need-help-link" onclick="openNeedHelpScreen()">Need Help?</span>
-      </div>
-
-      <div class="ep-auth-heading-box">
-        <div class="ep-auth-title">Verify your<br><span>Mobile Number</span></div>
-        <div class="ep-auth-subtitle">To enjoy services securely 🔒</div>
-      </div>
-
-      <div class="ep-auth-card">
-        <div style="font-size: 13px; color: #4A4A4A; font-weight: 500;">
-          Enter OTP sent to <strong id="epMaskedMobileDisplay">XXXXXX3165</strong> 
-          <span style="color: #FF5722; font-weight: 700; cursor: pointer; margin-left: 4px;" onclick="goToEasyPayLogin()">Change</span>
-        </div>
-
-        <div class="ep-otp-grid">
-          <input type="tel" class="ep-otp-box" maxlength="1" oninput="handleOtpInput(this, 0)" onkeydown="handleOtpKey(event, 0)">
-          <input type="tel" class="ep-otp-box" maxlength="1" oninput="handleOtpInput(this, 1)" onkeydown="handleOtpKey(event, 1)">
-          <input type="tel" class="ep-otp-box" maxlength="1" oninput="handleOtpInput(this, 2)" onkeydown="handleOtpKey(event, 2)">
-          <input type="tel" class="ep-otp-box" maxlength="1" oninput="handleOtpInput(this, 3)" onkeydown="handleOtpKey(event, 3)">
-        </div>
-
-        <button id="epVerifyOtpBtn" class="ep-auth-btn disabled" onclick="executeVerifyOtp()">
-          Verify
-        </button>
-
-        <div class="ep-otp-meta-row" id="epOtpTimerContainer">
-          Resend OTP in <strong id="epOtpCountdown">00:57</strong>
-        </div>
-        <div class="ep-otp-meta-row" id="epOtpResendLinks" style="display:none;">
-          Resend OTP in <span style="color:#FF5722; font-weight:700; cursor:pointer;" onclick="resendOtp()">Resend SMS</span> | <span style="color:#FF5722; font-weight:700; cursor:pointer;" onclick="resendOtp()">Call Me</span>
-        </div>
-      </div>
-
-      <div class="ep-did-you-know-card">
-        <div class="ep-dyk-title">Did You Know?</div>
-        <div class="ep-dyk-desc">EasyPay offers the fastest QR scan in the industry for seamless and lightspeed payments ! ⚡</div>
-        <div class="ep-carousel-dots-row">
-          <div class="ep-dot-pill"></div>
-          <div class="ep-dot-pill active"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 4. Authentic Need Help Screen (Screenshot 4) -->
-  <div class="ep-auth-fullscreen" id="epNeedHelpScreen">
-    <div class="ep-auth-inner">
-      <div class="ep-auth-top-nav">
-        <button class="ep-back-icon-btn" onclick="closeNeedHelpScreen()">
-          <i class="fa-solid fa-chevron-left"></i>
-        </button>
-        <span style="font-size: 16px; font-weight: 700; color: #1A1A1A;">Need Help?</span>
-        <div style="width: 20px;"></div>
-      </div>
-
-      <div style="font-size: 13px; color: #616161; line-height: 1.45; margin-bottom: 20px;">
-        Get quick answers to common issues and troubleshoot login or sign-up problems easily
-      </div>
-
-      <div class="ep-faq-card" onclick="toggleFaq(this)">
-        <div class="ep-faq-header">
-          <span>Login issues</span>
-          <i class="fa-solid fa-chevron-down" style="font-size: 12px; color: #757575; transition: transform 0.2s;"></i>
-        </div>
-        <div class="ep-faq-body">
-          If you are not receiving OTP, please verify mobile network signal or wait 60 seconds before tapping 'Resend SMS'. Ensure DND settings allow transactional messages.
-        </div>
-      </div>
-
-      <div class="ep-faq-card" onclick="toggleFaq(this)">
-        <div class="ep-faq-header">
-          <span>Sign-up issues</span>
-          <i class="fa-solid fa-chevron-down" style="font-size: 12px; color: #757575; transition: transform 0.2s;"></i>
-        </div>
-        <div class="ep-faq-body">
-          Any valid Indian mobile number (+91) linked with an active SIM card can register on EasyPay. No initial documentation or KYC is required to get started.
-        </div>
-      </div>
-
-      <div class="ep-faq-card" onclick="toggleFaq(this)">
-        <div class="ep-faq-header">
-          <span>Account & security</span>
-          <i class="fa-solid fa-chevron-down" style="font-size: 12px; color: #757575; transition: transform 0.2s;"></i>
-        </div>
-        <div class="ep-faq-body">
-          Your EasyPay account is protected with 256-bit bank-grade encryption, PCI DSS compliance, and device-bound biometric authentication.
-        </div>
-      </div>
-
-      <div class="ep-support-banner">
-        <div style="max-width: 220px;">
-          <div style="font-size: 13px; font-weight: 700; color: #1A1A1A; margin-bottom: 4px;">Email our support team for further assistance. We're here to help!</div>
-          <button style="background: #FF5722; color: #FFFFFF; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 700; margin-top: 10px; cursor: pointer;" onclick="showToast('Support request initiated. Email: support@easypay.in')">
-            Write To Us
-          </button>
-        </div>
-        <div style="font-size: 40px; color: #FF5722; opacity: 0.85;">
-          <i class="fa-regular fa-envelope-open"></i>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -7857,6 +7861,8 @@
 
     // Navigation Switcher (Exact 5 Items)
     function switchNavTab(tab) {
+      const bNav = document.getElementById('appBottomNav');
+      if (bNav) bNav.style.display = 'flex';
       if (!tab) tab = 'home';
       activeNavTab = tab;
 
@@ -8330,12 +8336,33 @@
     // ==============================================================
     // BIZ LOADER SCREEN (SCREENSHOT 5)
     // ==============================================================
-    function openBizLoader(title = 'Loading...', duration = 1200) {
+    function openBizLoader(title, durationOrCallback, maybeCallback) {
+      let duration = 1200;
+      let callback = null;
+      if (typeof durationOrCallback === 'function') {
+        callback = durationOrCallback;
+      } else if (typeof durationOrCallback === 'number') {
+        duration = durationOrCallback;
+        if (typeof maybeCallback === 'function') {
+          callback = maybeCallback;
+        }
+      }
+
       const loader = document.getElementById('fcBizLoaderModal');
-      document.getElementById('fcBizLoaderTitle').innerText = title;
+      const titleEl = document.getElementById('fcBizLoaderTitle');
+      if (titleEl) titleEl.innerText = title || 'Loading...';
       if (loader) loader.classList.add('active');
+
       if (duration > 0) {
-        setTimeout(closeBizLoader, duration);
+        setTimeout(() => {
+          closeBizLoader();
+          if (typeof callback === 'function') {
+            callback();
+          }
+        }, duration);
+      } else if (typeof callback === 'function') {
+        closeBizLoader();
+        callback();
       }
     }
 

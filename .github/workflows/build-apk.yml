@@ -53,19 +53,17 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.4
-          name: "EasyPay Android APK v1.0.4 (Production Final)"
+          tag_name: v1.0.5
+          name: "EasyPay Android APK v1.0.5 (Seamless Splash & OTP Flow)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.4 (Production Final)
-            Permanent fix: Resolved Android WebView origin undefined exception, syntax errors, and missing onclick handlers. All 76 functions 100% verified.
+            ## EasyPay Mobile Application APK v1.0.5 (Seamless Splash & OTP Flow)
+            Zero flicker startup, top-level splash screen, and fixed OTP transition loader callback.
             
-            ### Fixes & Verification in v1.0.4:
-            1. **Splash Screen & Login Onboarding First**: Splash screen is active by default in HTML and code; launches typewriter animation and smoothly moves to Login -> OTP -> Home.
-            2. **All Buttons & Gift Cards Operational**: Resolved the `TypeError` and `SyntaxError` that previously prevented scripts from parsing in Android WebView. All 76 onclick handlers verified.
-            3. **PhonePe/GPay UPI Bottom Sheet**: Verified slide-up modal with verified recipient badge, amounts chips, and IMPS/UPI transfer.
-            4. **Authentic Transition Loaders**: Orange arc spinner (`#fcBizLoaderModal`) active on OTP, Login, Transfer, and Gift Voucher issuance.
-            5. **Bonds & Fixed Deposits**: "Invest Now" modal with live monthly return and daily payout fully operational.
-            6. **4 Branded Homepage Sliders**: High-conversion promo banners for Recharges, 12% Bonds, Brand Vouchers, and UPI.
+            ### Fixes & Verification in v1.0.5:
+            1. **Zero Flicker Splash Screen First**: Splash screen element moved to the very top of `<body>` with inline `display: flex !important` and `z-index: 999999`. Main home view and bottom navigation are completely hidden by default until user authentication completes.
+            2. **Fixed OTP Transition Loader**: Upgraded `openBizLoader` to support callback execution; requesting OTP now shows the authentic orange arc spinner ("Sending OTP to +91...") and seamlessly transitions into the 4-digit OTP entry screen.
+            3. **Smooth Verify & Enter Home**: Submitting verified OTP displays "Verifying OTP & Securing Account..." and smoothly navigates into the full EasyPay Home Dashboard.
+            4. **All 76 Features Verified**: Gift cards, Bonds 12% investment, UPI bottom-sheet transfers, and Profile settings 100% active.
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
