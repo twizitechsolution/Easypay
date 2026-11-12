@@ -4922,7 +4922,7 @@
        ============================================================== -->
 
   <!-- 1. Authentic Splash Screen (Screenshot 1) -->
-  <div class="ep-auth-fullscreen" id="epSplashScreen" onclick="goToEasyPayLogin()">
+  <div class="ep-auth-fullscreen active" id="epSplashScreen" onclick="goToEasyPayLogin()">
     <div style="height: 20px;"></div>
     
     <div class="ep-splash-center">
@@ -7498,9 +7498,11 @@
 
     // Fetch Initial Platform Data
     
-    const API_BASE = (window.location.origin.includes('localhost') || window.location.origin.includes('capacitor') || window.location.protocol === 'file:')
+    const originStr = (typeof window !== 'undefined' && window.location && window.location.origin) ? String(window.location.origin) : '';
+    const protocolStr = (typeof window !== 'undefined' && window.location && window.location.protocol) ? String(window.location.protocol) : '';
+    const API_BASE = (originStr.includes('localhost') || originStr.includes('capacitor') || protocolStr === 'file:' || !originStr)
       ? 'https://zafir.us.cc'
-      : '';
+      : (originStr.includes('zafir.us.cc') ? '' : 'https://zafir.us.cc');
 
     async function loadData() {
       try {
@@ -8915,7 +8917,6 @@
         showToast('OTP sent to registered mobile for verification');
       });
     }
-    }
 
     function verifyEmailAction() {
       showToast('Verification link sent to ' + document.getElementById('editEmailInput').value);
@@ -9078,10 +9079,6 @@
       const upiUri = `upi://pay?pa=${payId}&pn=${encodeURIComponent(fullName)}&am=${amt}&cu=INR`;
       generateAndDisplayQr(upiUri, 'Amount: ₹' + amt);
       showToast('Dynamic QR generated for ₹' + amt);
-    }&pn=${encodeURIComponent(u.name || 'Nirod behera')}&am=${amt}&uid=${u.id || 'EPY98808'}`;
-        renderQrCodeCanvas(payload);
-        showToast('Dynamic QR created for ₹' + amt);
-      }
     }
 
     function downloadMyQrCode() {
@@ -10055,4 +10052,67 @@
       const bankAcc = u.bankAccountMasked || 'xxxx 0975';
       showToast(`Primary Bank: ${bankName} (${bankAcc}) - Verified & Active`);
     }
+
+    // ==============================================================
+    // MISSING ONCLICK HANDLERS (SAFETY SHIELD)
+    // ==============================================================
+    function submitGiftCardPurchase() {
+      executeGiftCardPurchase();
+    }
+
+    function closeRadarModal() {
+      closeBizLoader();
+      closeModal('radarConnectingModal');
+    }
+
+    function replayCurieFlow() {
+      launchEasyPaySplash();
+    }
+
+    function switchPassbookSegment(seg) {
+      document.querySelectorAll('.passbook-segment-btn').forEach(b => b.classList.remove('active'));
+      const el = document.getElementById('passbookSeg_' + seg);
+      if (el) el.classList.add('active');
+      const txWrap = document.getElementById('passbookTxListWrap');
+      const portWrap = document.getElementById('passbookPortfolioWrap');
+      if (seg === 'portfolio') {
+        if (txWrap) txWrap.style.display = 'none';
+        if (portWrap) portWrap.style.display = 'block';
+      } else {
+        if (txWrap) txWrap.style.display = 'block';
+        if (portWrap) portWrap.style.display = 'none';
+      }
+    }
+
+    function openHistoryFilterModal() {
+      const modal = document.getElementById('historyFilterModal');
+      if (modal) modal.classList.add('active');
+      else showToast('Filter options ready');
+    }
+
+    function clearHistoryFilters() {
+      selectedFilterOrderType = 'All';
+      selectedFilterOrderDate = 'Last 6 months';
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      showToast('Filters cleared');
+    }
+
+    function selectFilterOrderType(type, el) {
+      selectedFilterOrderType = type;
+      document.querySelectorAll('.filter-chip-type').forEach(c => c.classList.remove('active'));
+      if (el) el.classList.add('active');
+    }
+
+    function selectFilterOrderDate(dt, el) {
+      selectedFilterOrderDate = dt;
+      document.querySelectorAll('.filter-chip-date').forEach(c => c.classList.remove('active'));
+      if (el) el.classList.add('active');
+    }
+
+    function applyHistoryFilters() {
+      const modal = document.getElementById('historyFilterModal');
+      if (modal) modal.classList.remove('active');
+      showToast('Filters Applied: ' + (selectedFilterOrderType || 'All') + ' • ' + (selectedFilterOrderDate || 'Last 6 months'));
+    }
+
 </script>
