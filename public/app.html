@@ -163,10 +163,9 @@
       const last4 = mobile.slice(-4);
       const masked = 'XXXXXX' + last4;
       
-      const modal = document.getElementById('setPinOtpModal');
       const disp = document.getElementById('setPinMaskedMobile');
-      if (disp) disp.innerText = masked;
-      if (modal) modal.classList.add('active');
+      if (disp) disp.innerText = '+91 ' + masked;
+      openModal('setPinOtpModal');
     }
 
     function handleSetPinOtpInput(input, index) {
@@ -1301,14 +1300,14 @@
       background: #F8F9FA;
       color: #1A1A1A;
       z-index: 10000;
-      display: none;
+      display: none !important;
       flex-direction: column;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       overflow-y: auto;
       box-sizing: border-box;
     }
     .ep-auth-fullscreen.active {
-      display: flex;
+      display: flex !important;
     }
 
     /* Splash Screen (Screenshot 1) */
@@ -3442,7 +3441,7 @@
        ============================================================== -->
 
   <!-- 1. Authentic Splash Screen (Screenshot 1) -->
-  <div class="ep-auth-fullscreen active" id="epSplashScreen" style="position: fixed; inset: 0; background: #FFFFFF; z-index: 999999; display: flex !important; flex-direction: column; justify-content: space-between; align-items: center; padding: 50px 24px 36px; box-sizing: border-box;" onclick="goToEasyPayLogin()">
+  <div class="ep-auth-fullscreen active" id="epSplashScreen" style="position: fixed; inset: 0; background: #FFFFFF; z-index: 999999; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 50px 24px 36px; box-sizing: border-box;" onclick="goToEasyPayLogin()">
     <div style="height: 20px;"></div>
     
     <div class="ep-splash-center">
@@ -4712,7 +4711,7 @@
           </div>
 
           <!-- Payment Settings -->
-          <div class="profile-menu-row" onclick="showToast('Bank accounts & cards verified on RBI rail')">
+          <div class="profile-menu-row" onclick="openModal('paymentSettingsModal')">
             <div class="profile-menu-left">
               <div class="profile-menu-icon" style="background:#FFF8E1; color:#F57F17;">
                 <i class="fa-solid fa-gear"></i>
@@ -4729,7 +4728,7 @@
         <!-- Menu Group 2: Wallet & Rewards (Screenshot 4) -->
         <div class="profile-menu-group">
           <!-- Wallet with Inactive badge -->
-          <div class="profile-menu-row" style="flex-direction:column; align-items:flex-start; gap:8px;">
+          <div class="profile-menu-row" onclick="openAddMoneyModal()" style="flex-direction:column; align-items:flex-start; gap:8px; cursor:pointer;">
             <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
               <div class="profile-menu-left">
                 <div class="profile-menu-icon" style="background:#FFF1EE; color:#FF5722;">
@@ -5177,8 +5176,8 @@
     </div>
   </div>
 
-  <!-- QR Modal -->
-  <div class="modal-overlay" id="qrScannerModal">
+  <!-- Mini QR Modal -->
+  <div class="modal-overlay" id="miniQrPreviewModal">
     <div class="modal-sheet" style="text-align: center;">
       <div class="modal-title">Scan Any UPI QR</div>
       <div style="margin: 20px auto; width: 180px; height: 180px; background: #0F172A; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
@@ -5200,7 +5199,7 @@
   <!-- ========================================== -->
   <!-- 1. PROFILE EDIT MODAL (SCREENSHOT 2 REPLICA) -->
   <!-- ========================================== -->
-  <div class="modal-overlay" id="profileEditModal" style="display:none; align-items: flex-end; z-index: 10000;">
+  <div class="modal-overlay" id="profileEditModal" style="align-items: flex-end; z-index: 10000;">
     <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 20px 20px 28px; max-height: 90vh; overflow-y: auto;">
       <!-- Header -->
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
@@ -5286,7 +5285,7 @@
   <!-- ========================================== -->
   <!-- 2. MY QR CODE MODAL (SCREENSHOT 3 REPLICA) -->
   <!-- ========================================== -->
-  <div class="modal-overlay" id="myQrModal" style="display:none; align-items: flex-end; z-index: 10000;">
+  <div class="modal-overlay" id="myQrModal" style="align-items: flex-end; z-index: 10000;">
     <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 20px 20px 24px; max-height: 92vh; overflow-y: auto; text-align: center;">
       <!-- Header -->
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
@@ -5359,7 +5358,7 @@
   <!-- ========================================== -->
   <!-- 3. REAL QR SCANNER VIEW (WITH ACTIVE CAMERA & SAMPLES) -->
   <!-- ========================================== -->
-  <div class="modal-overlay" id="qrScannerModal" style="display:none; align-items: flex-end; z-index: 10000;">
+  <div class="modal-overlay" id="qrScannerModal" style="align-items: flex-end; z-index: 10000;">
     <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 20px; max-height: 90vh; overflow-y: auto;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
         <div style="font-size: 16px; font-weight: 800; color: #0F172A; display: flex; align-items: center; gap: 8px;">
@@ -5420,7 +5419,7 @@
   <!-- ========================================== -->
   <!-- 4. P2P AMOUNT ENTRY MODAL (VERIFIED RECIPIENT) -->
   <!-- ========================================== -->
-  <div class="modal-overlay" id="p2pPaymentModal" style="display:none; align-items: flex-end; z-index: 10001;">
+  <div class="modal-overlay" id="p2pPaymentModal" style="align-items: flex-end; z-index: 10001;">
     <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 20px; max-height: 90vh;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
         <div style="font-size: 16px; font-weight: 800; color: #0F172A;">Send Money</div>
@@ -5480,7 +5479,7 @@
   <!-- ========================================== -->
   <!-- 5. 4-DIGIT SECURITY PIN VERIFICATION MODAL -->
   <!-- ========================================== -->
-  <div class="modal-overlay" id="securityPinModal" style="display:none; align-items: flex-end; z-index: 10002;">
+  <div class="modal-overlay" id="securityPinModal" style="align-items: flex-end; z-index: 10002;">
     <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 24px 20px 20px; text-align: center;">
       <!-- Header -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
@@ -5528,7 +5527,7 @@
   <!-- ========================================== -->
   <!-- 6. P2P PAYMENT SUCCESS RECEIPT MODAL -->
   <!-- ========================================== -->
-  <div class="modal-overlay" id="p2pSuccessModal" style="display:none; align-items: flex-end; z-index: 10003;">
+  <div class="modal-overlay" id="p2pSuccessModal" style="align-items: flex-end; z-index: 10003;">
     <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 24px 20px; text-align: center;">
       <!-- Green Success Badge -->
       <div style="width: 64px; height: 64px; border-radius: 50%; background: #D1FAE5; color: #059669; display: inline-flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 12px;">
@@ -5571,7 +5570,7 @@
   <!-- ========================================== -->
   <!-- 7. CHANGE PIN MODAL -->
   <!-- ========================================== -->
-  <div class="modal-overlay" id="changePinModal" style="display:none; align-items: flex-end; z-index: 10000;">
+  <div class="modal-overlay" id="changePinModal" style="align-items: flex-end; z-index: 10000;">
     <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 20px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
         <div style="font-size: 16px; font-weight: 800; color: #0F172A;">Change 4-Digit Security PIN</div>
@@ -7988,8 +7987,18 @@
       }, 500);
     }
 
-    function openModal(id) { document.getElementById(id).classList.add('active'); }
-    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.add('active');
+      el.style.display = 'flex';
+    }
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('active');
+      el.style.display = 'none';
+    }
 
     // ==============================================================
     // DEDICATED GIFT CARD PURCHASE PAGE CONTROLS (SCREENSHOTS 1 & 3)
@@ -9368,40 +9377,73 @@
 
     // 1. Splash Screen with Typewriter Effect
     function launchEasyPaySplash() {
-      document.querySelectorAll('.ep-auth-fullscreen').forEach(el => el.classList.remove('active'));
+      if (typewriterInterval) {
+        clearInterval(typewriterInterval);
+        typewriterInterval = null;
+      }
+      document.querySelectorAll('.ep-auth-fullscreen').forEach(el => {
+        el.classList.remove('active');
+        el.style.display = 'none';
+      });
       const splash = document.getElementById('epSplashScreen');
-      if (splash) splash.classList.add('active');
+      if (splash) {
+        splash.classList.add('active');
+        splash.style.display = 'flex';
+      }
 
       const target = document.getElementById('epTypewriterText');
       if (target) {
         target.innerText = '';
         const brand = 'EasyPay';
         let i = 0;
-        if (typewriterInterval) clearInterval(typewriterInterval);
         typewriterInterval = setInterval(() => {
           if (i < brand.length) {
             target.innerText += brand.charAt(i);
             i++;
           } else {
             clearInterval(typewriterInterval);
-            // Automatic transition to Login after typing finishes
+            typewriterInterval = null;
             setTimeout(() => {
-              if (splash.classList.contains('active')) {
+              const sp = document.getElementById('epSplashScreen');
+              if (sp && (sp.classList.contains('active') || sp.style.display === 'flex')) {
                 goToEasyPayLogin();
               }
-            }, 1200);
+            }, 900);
           }
-        }, 130);
+        }, 120);
       }
+
+      // Safety watchdog: after 2.2 seconds unconditionally advance to login if splash is still displayed
+      setTimeout(() => {
+        const sp = document.getElementById('epSplashScreen');
+        const login = document.getElementById('epLoginScreen');
+        if (sp && (sp.classList.contains('active') || sp.style.display === 'flex')) {
+          if (login && !login.classList.contains('active')) {
+            goToEasyPayLogin();
+          }
+        }
+      }, 2200);
     }
 
     // 2. Login Screen
     function goToEasyPayLogin() {
-      if (typewriterInterval) clearInterval(typewriterInterval);
-      document.querySelectorAll('.ep-auth-fullscreen').forEach(el => el.classList.remove('active'));
+      if (typewriterInterval) {
+        clearInterval(typewriterInterval);
+        typewriterInterval = null;
+      }
+      document.querySelectorAll('.ep-auth-fullscreen').forEach(el => {
+        el.classList.remove('active');
+        el.style.display = 'none';
+      });
+      const splash = document.getElementById('epSplashScreen');
+      if (splash) {
+        splash.classList.remove('active');
+        splash.style.display = 'none';
+      }
       const login = document.getElementById('epLoginScreen');
       if (login) {
         login.classList.add('active');
+        login.style.display = 'flex';
         const input = document.getElementById('epMobileInput');
         if (input) {
           input.focus();
@@ -9447,10 +9489,14 @@
 
     // 3. OTP Screen
     function goToEasyPayOtp() {
-      document.querySelectorAll('.ep-auth-fullscreen').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.ep-auth-fullscreen').forEach(el => {
+        el.classList.remove('active');
+        el.style.display = 'none';
+      });
       const otpScreen = document.getElementById('epOtpScreen');
       if (otpScreen) {
         otpScreen.classList.add('active');
+        otpScreen.style.display = 'flex';
         // Clear old digits
         const boxes = document.querySelectorAll('.ep-otp-box');
         boxes.forEach(b => b.value = '');
@@ -9528,9 +9574,11 @@
         return;
       }
 
-      // Use authentic orange arc spinner loader for transition to Home
       openBizLoader('Verifying OTP & Securing Account...', 900, () => {
-        document.querySelectorAll('.ep-auth-fullscreen').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.ep-auth-fullscreen').forEach(el => {
+          el.classList.remove('active');
+          el.style.display = 'none';
+        });
         sessionStorage.setItem('easypay_auth_completed', 'true');
         showToast('🎉 Login Successful! Welcome to EasyPay');
         switchNavTab('home');
@@ -9562,517 +9610,9 @@
       switchNavTab('home');
     }
 
-</script>
-
-  <!-- ==============================================================
-       AUTHENTIC LOADER MODAL (SCREENSHOT 5: FREECHARGE BIZ LOADER)
-       ============================================================== -->
-  
-  <!-- ==============================================================
-       PROFESSIONAL PHONEPE / GPAY STYLE UPI SEND MONEY BOTTOM SHEET
-       ============================================================== -->
-  <div class="modal-overlay" id="upiSendMoneyModal">
-    <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 20px 18px; max-height: 90vh; overflow-y: auto;">
-      <div style="width: 40px; height: 4px; background: #E2E8F0; border-radius: 2px; margin: 0 auto 16px;"></div>
-      
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-        <div>
-          <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #0F172A;">
-            Pay to UPI ID or Mobile
-          </div>
-          <div style="font-size: 12px; color: #64748B;">
-            Instant 24x7 IMPS / UPI Transfer • ₹0 Platform Fee
-          </div>
-        </div>
-        <button onclick="closeModal('upiSendMoneyModal')" style="width: 32px; height: 32px; border-radius: 50%; background: #F1F5F9; border: none; font-size: 14px; color: #64748B; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <!-- Recipient Input Box -->
-      <div style="margin-bottom: 16px;">
-        <label style="display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 6px;">ENTER UPI ID OR MOBILE NUMBER</label>
-        <div style="position: relative; display: flex; align-items: center;">
-          <i class="fa-solid fa-at" style="position: absolute; left: 14px; color: #94A3B8; font-size: 16px;"></i>
-          <input type="text" id="upiSendRecipientInput" placeholder="e.g. rahul@okhdfcbank or 9876543210" value="9876543210@easypay" 
-                 oninput="handleUpiRecipientInput(this.value)" 
-                 style="width: 100%; height: 50px; background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 0 85px 0 42px; font-size: 14px; font-weight: 600; color: #0F172A; box-sizing: border-box;">
-          <button type="button" onclick="verifyUpiRecipientManual()" 
-                  style="position: absolute; right: 8px; height: 34px; background: #FF5722; color: #FFFFFF; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; padding: 0 12px; cursor: pointer;">
-            Verify
-          </button>
-        </div>
-      </div>
-
-      <!-- Verified Contact Card (PhonePe / GPay style) -->
-      <div id="upiVerifiedRecipientCard" style="display: flex; align-items: center; justify-content: space-between; background: #F0FDF4; border: 1.5px solid #BBF7D0; border-radius: 14px; padding: 12px 14px; margin-bottom: 16px;">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <div style="width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #10B981, #059669); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px;" id="upiVerifiedAvatar">
-            RS
-          </div>
-          <div>
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="font-size: 15px; font-weight: 800; color: #0F172A;" id="upiVerifiedName">Rahul Sharma</span>
-              <span style="background: #DCFCE7; color: #15803D; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 6px; display: inline-flex; align-items: center; gap: 3px;">
-                <i class="fa-solid fa-circle-check"></i> Verified NPCI
-              </span>
-            </div>
-            <div style="font-size: 12px; color: #64748B; margin-top: 2px;" id="upiVerifiedUpiId">9876543210@easypay • State Bank of India</div>
-          </div>
-        </div>
-        <i class="fa-solid fa-building-columns" style="color: #059669; font-size: 18px;"></i>
-      </div>
-
-      <!-- Amount Input -->
-      <div style="margin-bottom: 16px;">
-        <label style="display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 6px;">ENTER AMOUNT</label>
-        <div style="position: relative; display: flex; align-items: center;">
-          <span style="position: absolute; left: 16px; font-size: 26px; font-weight: 800; color: #0F172A;">₹</span>
-          <input type="number" id="upiSendAmountInput" value="500" min="1" max="100000" oninput="updateUpiPayButton()" 
-                 style="width: 100%; height: 60px; background: #FFFFFF; border: 2px solid #FF5722; border-radius: 14px; padding: 0 16px 0 44px; font-size: 26px; font-weight: 800; color: #0F172A; box-sizing: border-box;">
-        </div>
-        <!-- Quick Amount Chips -->
-        <div style="display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; padding-bottom: 4px;">
-          <button type="button" onclick="setUpiQuickAmount(100)" style="flex: 1; min-width: 60px; height: 34px; border: 1px solid #E2E8F0; background: #FFFFFF; border-radius: 8px; font-size: 12px; font-weight: 700; color: #334155; cursor: pointer;">+₹100</button>
-          <button type="button" onclick="setUpiQuickAmount(500)" style="flex: 1; min-width: 60px; height: 34px; border: 1.5px solid #FF5722; background: #FFF1EE; border-radius: 8px; font-size: 12px; font-weight: 700; color: #FF5722; cursor: pointer;">+₹500</button>
-          <button type="button" onclick="setUpiQuickAmount(1000)" style="flex: 1; min-width: 60px; height: 34px; border: 1px solid #E2E8F0; background: #FFFFFF; border-radius: 8px; font-size: 12px; font-weight: 700; color: #334155; cursor: pointer;">+₹1,000</button>
-          <button type="button" onclick="setUpiQuickAmount(2000)" style="flex: 1; min-width: 60px; height: 34px; border: 1px solid #E2E8F0; background: #FFFFFF; border-radius: 8px; font-size: 12px; font-weight: 700; color: #334155; cursor: pointer;">+₹2,000</button>
-        </div>
-      </div>
-
-      <!-- Debiting Account Box -->
-      <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 10px 14px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="width: 32px; height: 32px; border-radius: 8px; background: #FF5722; color: white; display: flex; align-items: center; justify-content: center; font-size: 14px;">
-            <i class="fa-solid fa-wallet"></i>
-          </div>
-          <div>
-            <div style="font-size: 13px; font-weight: 700; color: #0F172A;">EasyPay Balance / Bank Account</div>
-            <div style="font-size: 11px; color: #64748B;">Available Balance: ₹1,250.00</div>
-          </div>
-        </div>
-        <span style="font-size: 11px; font-weight: 800; color: #059669;"><i class="fa-solid fa-check"></i> Active</span>
-      </div>
-
-      <!-- Action Button -->
-      <button class="btn-primary-action" id="upiSendPayBtn" onclick="executeProfessionalUpiPayment()" 
-              style="width: 100% !important; height: 54px; background: linear-gradient(135deg, #FF5722, #E64A19); color: white; border: none; border-radius: 14px; font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 20px rgba(255, 87, 34, 0.35);">
-        <i class="fa-solid fa-lock"></i>
-        <span>Pay ₹500 Securely</span>
-      </button>
-
-      <div style="text-align: center; font-size: 11px; color: #94A3B8; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;">
-        <i class="fa-solid fa-shield-halved" style="color: #059669;"></i>
-        <span>Secured by 256-Bit NPCI Unified Payments Interface Encryption</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- UPI Success Modal -->
-  <div class="modal-overlay" id="upiTransferSuccessModal">
-    <div class="modal-sheet" style="text-align: center; padding: 28px 20px 24px; border-radius: 28px 28px 0 0;">
-      <div style="width: 68px; height: 68px; border-radius: 50%; background: #DCFCE7; color: #16A34A; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 16px; box-shadow: 0 10px 24px rgba(22, 163, 74, 0.25);">
-        <i class="fa-solid fa-check"></i>
-      </div>
-
-      <div style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: #0F172A;" id="upiSuccessAmtTitle">
-        ₹500.00
-      </div>
-      <div style="font-size: 14px; font-weight: 700; color: #16A34A; margin-top: 4px;">
-        Paid Successfully!
-      </div>
-      <div style="font-size: 13px; color: #64748B; margin-top: 2px;" id="upiSuccessRecipientSub">
-        to Rahul Sharma (9876543210@easypay)
-      </div>
-
-      <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 14px; margin: 20px 0; text-align: left; font-size: 12px;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-          <span style="color: #64748B;">UPI Transaction ID:</span>
-          <strong style="color: #0F172A;" id="upiSuccessTxnId">EP418290184712</strong>
-        </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-          <span style="color: #64748B;">Bank Ref No (UTR):</span>
-          <strong style="color: #0F172A;" id="upiSuccessUtr">431809281729</strong>
-        </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-          <span style="color: #64748B;">Payment Mode:</span>
-          <strong style="color: #059669;">Instant UPI / IMPS</strong>
-        </div>
-        <div style="display: flex; justify-content: space-between;">
-          <span style="color: #64748B;">Date & Time:</span>
-          <strong style="color: #0F172A;" id="upiSuccessDateTime">Just now</strong>
-        </div>
-      </div>
-
-      <div style="display: flex; gap: 10px;">
-        <button class="btn-primary-action" onclick="closeModal('upiTransferSuccessModal'); switchNavTab('home');" 
-                style="flex: 1; height: 48px; background: #FF5722; color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer;">
-          Done
-        </button>
-        <button onclick="showToast('Receipt saved to Downloads!');" 
-                style="width: 48px; height: 48px; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 12px; color: #334155; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-          <i class="fa-solid fa-share-nodes"></i>
-        </button>
-      </div>
-    </div>
-  </div>
 
 
-  <!-- Payment Settings Modal -->
-  <div class="modal-overlay" id="paymentSettingsModal">
-    <div class="modal-sheet" style="padding: 20px 18px; border-radius: 24px 24px 0 0;">
-      <div style="width: 40px; height: 4px; background: #E2E8F0; border-radius: 2px; margin: 0 auto 16px;"></div>
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #0F172A;">Payment Settings</div>
-        <button onclick="closeModal('paymentSettingsModal')" style="width: 32px; height: 32px; border-radius: 50%; background: #F1F5F9; border: none; font-size: 14px; color: #64748B; cursor: pointer;">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
 
-      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;">
-        <div style="border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 14px; display: flex; justify-content: space-between; align-items: center;">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="width: 40px; height: 40px; border-radius: 10px; background: #FFF1EE; color: #FF5722; display: flex; align-items: center; justify-content: center; font-size: 18px;">
-              <i class="fa-solid fa-building-columns"></i>
-            </div>
-            <div>
-              <div style="font-size: 14px; font-weight: 700; color: #0F172A;">Primary Bank Account</div>
-              <div style="font-size: 12px; color: #64748B;">Axis Bank •••• 4129 (Default for UPI)</div>
-            </div>
-          </div>
-          <span style="font-size: 11px; font-weight: 800; color: #059669; background: #ECFDF5; padding: 4px 8px; border-radius: 6px;">Active</span>
-        </div>
-
-        <div style="border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 14px; display: flex; justify-content: space-between; align-items: center;" onclick="openSetPinModal()">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="width: 40px; height: 40px; border-radius: 10px; background: #EFF6FF; color: #2563EB; display: flex; align-items: center; justify-content: center; font-size: 18px;">
-              <i class="fa-solid fa-key"></i>
-            </div>
-            <div>
-              <div style="font-size: 14px; font-weight: 700; color: #0F172A;">EasyPay Security PIN</div>
-              <div style="font-size: 12px; color: #64748B;">Change or reset your 4-digit PIN</div>
-            </div>
-          </div>
-          <i class="fa-solid fa-chevron-right" style="color: #94A3B8;"></i>
-        </div>
-
-        <div style="border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 14px; display: flex; justify-content: space-between; align-items: center;">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="width: 40px; height: 40px; border-radius: 10px; background: #FAF5FF; color: #9333EA; display: flex; align-items: center; justify-content: center; font-size: 18px;">
-              <i class="fa-solid fa-gauge-high"></i>
-            </div>
-            <div>
-              <div style="font-size: 14px; font-weight: 700; color: #0F172A;">Daily UPI Limit</div>
-              <div style="font-size: 12px; color: #64748B;">₹1,00,000 / day (NPCI Standard)</div>
-            </div>
-          </div>
-          <span style="font-size: 12px; font-weight: 700; color: #2563EB;">Standard</span>
-        </div>
-      </div>
-
-      <button class="btn-primary-action" onclick="closeModal('paymentSettingsModal')" style="width: 100% !important; height: 48px; background: #FF5722; color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer;">
-        Close
-      </button>
-    </div>
-  </div>
-
-<div class="fc-biz-loader-overlay" id="fcBizLoaderModal">
-    <div style="position: absolute; top: 16px; left: 16px;">
-      <button onclick="closeBizLoader()" style="background:none; border:none; font-size:18px; color:#1A1A1A; cursor:pointer;">
-        <i class="fa-solid fa-arrow-left"></i>
-      </button>
-    </div>
-    <div style="position: absolute; top: 18px; width: 100%; text-align: center; font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: #1A1A1A;" id="fcBizLoaderTitle">
-      Notifications
-    </div>
-
-    <!-- Spinner with Centered Flame Logo (Screenshot 5) -->
-    <div class="fc-biz-loader-spinner-box">
-      <div class="fc-biz-loader-ring"></div>
-      <div class="fc-biz-center-logo">
-        <svg width="30" height="30" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22 68L56 18L54 44L78 40L38 84L42 56L22 68Z" fill="#FF5722"/>
-          <path d="M42 56L54 44L56 18L22 68L42 56Z" fill="#E64A19"/>
-          <path d="M54 44L78 40L38 84L42 56L54 44Z" fill="#FF7043"/>
-        </svg>
-        <span class="fc-biz-text-tag">BIZ</span>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ==============================================================
-       RECHARGE & BILL PAYMENT MODAL (100% FUNCTIONAL)
-       ============================================================== -->
-  <div class="modal-overlay" id="rechargeFlowModal">
-    <div class="modal-sheet" style="max-height: 85vh; overflow-y: auto;">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-        <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #0F172A;" id="rechargeModalTitle">
-          Mobile Recharge
-        </div>
-        <i class="fa-solid fa-xmark" style="font-size: 18px; color: #64748B; cursor: pointer;" onclick="closeModal('rechargeFlowModal')"></i>
-      </div>
-
-      <!-- Operator Selector Chips -->
-      <div style="font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 8px;">SELECT OPERATOR / PROVIDER</div>
-      <div style="display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; scrollbar-width: none;" id="rechargeOperatorChipsWrap">
-        <button class="denom-chip active" onclick="selectRechargeOperator('Jio', this)">Jio</button>
-        <button class="denom-chip" onclick="selectRechargeOperator('Airtel', this)">Airtel</button>
-        <button class="denom-chip" onclick="selectRechargeOperator('Vi', this)">Vi</button>
-        <button class="denom-chip" onclick="selectRechargeOperator('BSNL', this)">BSNL</button>
-      </div>
-
-      <!-- Number Input -->
-      <div style="margin-bottom: 16px;">
-        <label style="font-size: 12px; font-weight: 700; color: #475569;" id="rechargeInputLabel">Mobile Number / Consumer ID</label>
-        <div style="display: flex; align-items: center; background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 10px 14px; margin-top: 6px;">
-          <input type="text" id="rechargeTargetNumberInput" value="98765 43210" style="border: none; background: transparent; font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: #0F172A; width: 100%; outline: none;">
-        </div>
-      </div>
-
-      <!-- Plan Selection -->
-      
-      <!-- Search Plans (User Requested) -->
-      <div style="font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 6px;">SEARCH RECHARGE PLANS</div>
-      <div style="position: relative; margin-bottom: 14px;">
-        <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 13px; color: #94A3B8; font-size: 13px;"></i>
-        <input type="text" id="rechargePlanSearchInput" placeholder="Search plans (e.g. 299, 1.5GB, 84 days, OTT, Truly Unlimited)" 
-               oninput="filterRechargePlans(this.value)"
-               style="width: 100%; background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 10px 14px 10px 38px; font-size: 13px; font-weight: 600; outline: none; box-sizing: border-box;">
-      </div>
-
-      <div style="font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 8px;">AVAILABLE RECHARGE PLANS</div>
-
-      <div id="rechargePlansContainerWrap" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
-        <div class="recharge-plan-card active" onclick="selectRechargePlan(299, '2GB/Day • 28 Days', this)" style="border: 1.5px solid #FF5722; background: #FFF1EE; border-radius: 12px; padding: 10px 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <div style="font-size: 15px; font-weight: 800; color: #0F172A;">₹299 <span style="font-size: 11px; color: #059669; font-weight: 700;">+₹7.48 Bachat</span></div>
-            <div style="font-size: 12px; color: #64748B;">2GB / Day • Truly Unlimited Calls • 28 Days</div>
-          </div>
-          <span style="background: #FF5722; color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px;">POPULAR</span>
-        </div>
-
-        <div class="recharge-plan-card" onclick="selectRechargePlan(479, '1.5GB/Day • 56 Days', this)" style="border: 1.5px solid #E2E8F0; background: #F8FAFC; border-radius: 12px; padding: 10px 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <div style="font-size: 15px; font-weight: 800; color: #0F172A;">₹479 <span style="font-size: 11px; color: #059669; font-weight: 700;">+₹11.98 Bachat</span></div>
-            <div style="font-size: 12px; color: #64748B;">1.5GB / Day • 56 Days Validity</div>
-          </div>
-        </div>
-
-        <div class="recharge-plan-card" onclick="selectRechargePlan(666, '1.5GB/Day • 84 Days', this)" style="border: 1.5px solid #E2E8F0; background: #F8FAFC; border-radius: 12px; padding: 10px 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <div style="font-size: 15px; font-weight: 800; color: #0F172A;">₹666 <span style="font-size: 11px; color: #059669; font-weight: 700;">+₹16.65 Bachat</span></div>
-            <div style="font-size: 12px; color: #64748B;">1.5GB / Day • 84 Days Best Value</div>
-          </div>
-          <span style="background: #059669; color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px;">BEST VALUE</span>
-        </div>
-      </div>
-
-      <!-- Action Button -->
-      <button class="btn-primary-action" id="rechargeSubmitPayBtn" style="width: 100%; max-width: 100%; background: #FF5722;" onclick="executeRechargePayment()">
-        Proceed to Pay ₹299
-      </button>
-    </div>
-  </div>
-
-  <!-- ==============================================================
-       UPI SEND MONEY MODAL (100% FUNCTIONAL)
-       ============================================================== -->
-  <div class="modal-overlay" id="sendMoneyModal">
-    <div class="modal-sheet">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-        <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #0F172A;">
-          <i class="fa-solid fa-paper-plane" style="color: #FF5722;"></i> Transfer via UPI
-        </div>
-        <i class="fa-solid fa-xmark" style="font-size: 18px; color: #64748B; cursor: pointer;" onclick="closeModal('sendMoneyModal')"></i>
-      </div>
-
-      <!-- Recipient Input -->
-      <div style="margin-bottom: 14px;">
-        <label style="font-size: 12px; font-weight: 700; color: #475569;">Enter UPI ID or Mobile Number</label>
-        <div style="display: flex; align-items: center; background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 10px 14px; margin-top: 6px;">
-          <input type="text" id="sendUpiRecipientInput" placeholder="e.g. rahul@upi or 9876543210" style="border: none; background: transparent; font-size: 15px; font-weight: 600; color: #0F172A; width: 100%; outline: none;">
-        </div>
-      </div>
-
-      <!-- Amount Input -->
-      <div style="margin-bottom: 14px;">
-        <label style="font-size: 12px; font-weight: 700; color: #475569;">Amount (₹)</label>
-        <div style="display: flex; align-items: center; background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 10px 14px; margin-top: 6px;">
-          <span style="font-size: 18px; font-weight: 800; color: #0F172A; margin-right: 8px;">₹</span>
-          <input type="number" id="sendUpiAmountInput" value="500" style="border: none; background: transparent; font-size: 18px; font-weight: 800; color: #0F172A; width: 100%; outline: none;">
-        </div>
-      </div>
-
-      <!-- Quick Amount Chips -->
-      <div style="display: flex; gap: 8px; margin-bottom: 16px;">
-        <button class="denom-chip" onclick="document.getElementById('sendUpiAmountInput').value = 100">₹100</button>
-        <button class="denom-chip active" onclick="document.getElementById('sendUpiAmountInput').value = 500">₹500</button>
-        <button class="denom-chip" onclick="document.getElementById('sendUpiAmountInput').value = 1000">₹1,000</button>
-        <button class="denom-chip" onclick="document.getElementById('sendUpiAmountInput').value = 2000">₹2,000</button>
-      </div>
-
-      <button class="btn-primary-action" style="width: 100%; max-width: 100%; background: #FF5722;" onclick="executeUpiSendPayment()">
-        Send Money Instantly
-      </button>
-    </div>
-  </div>
-
-  <!-- ==============================================================
-       CHECK BALANCE MODAL (100% FUNCTIONAL)
-       ============================================================== -->
-  <div class="modal-overlay" id="checkBalanceModal">
-    <div class="modal-sheet" style="text-align: center;">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-        <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #0F172A;">
-          <i class="fa-solid fa-receipt" style="color: #FFA000;"></i> Account Balances
-        </div>
-        <i class="fa-solid fa-xmark" style="font-size: 18px; color: #64748B; cursor: pointer;" onclick="closeModal('checkBalanceModal')"></i>
-      </div>
-
-      <!-- Main Wallet Balance Card -->
-      <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 18px; margin-bottom: 12px; text-align: left;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <span style="font-size: 12px; color: #64748B; font-weight: 700;">MAIN WALLET BALANCE</span>
-          <span style="background: #E8F5E9; color: #2E7D32; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px;">ACTIVE</span>
-        </div>
-        <div style="font-size: 24px; font-weight: 800; color: #0F172A;" id="balanceModalWalletDisplay">₹12,450.00</div>
-        <div style="font-size: 12px; color: #059669; font-weight: 600; margin-top: 4px;">+₹1,985.00 Lifetime Cashback Bachat</div>
-      </div>
-
-      <!-- Bank Account Balance Card -->
-      <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 18px; margin-bottom: 20px; text-align: left;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <span style="font-size: 12px; color: #64748B; font-weight: 700;">PRIMARY LINKED BANK (NPCI)</span>
-          <span style="color: #FF5722; font-size: 10px; font-weight: 800;">Axis Bank •••• 8808</span>
-        </div>
-        <div style="font-size: 22px; font-weight: 800; color: #1E3A8A;">₹48,250.00</div>
-        <div style="font-size: 11px; color: #64748B; margin-top: 4px;">Verified via 2FA UPI PIN</div>
-      </div>
-
-      <button class="btn-primary-action" style="width: 100%; max-width: 100%; background: #0F172A;" onclick="closeModal('checkBalanceModal'); openAddMoneyModal();">
-        <i class="fa-solid fa-plus"></i> Add Money to Wallet
-      </button>
-    </div>
-  </div>
-
-  <!-- ==============================================================
-       TRANSFER TO BANK MODAL (100% FUNCTIONAL)
-       ============================================================== -->
-  <div class="modal-overlay" id="transferToBankModal">
-    <div class="modal-sheet">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-        <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #0F172A;">
-          <i class="fa-solid fa-building-columns" style="color: #2E7D32;"></i> To Bank / Self Account
-        </div>
-        <i class="fa-solid fa-xmark" style="font-size: 18px; color: #64748B; cursor: pointer;" onclick="closeModal('transferToBankModal')"></i>
-      </div>
-
-      <div style="margin-bottom: 12px;">
-        <label style="font-size: 12px; font-weight: 700; color: #475569;">Bank Account Number</label>
-        <div style="display: flex; align-items: center; background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 10px 14px; margin-top: 6px;">
-          <input type="text" id="bankTargetAccountInput" value="918239019284" style="border: none; background: transparent; font-size: 15px; font-weight: 600; color: #0F172A; width: 100%; outline: none;">
-        </div>
-      </div>
-
-      <div style="margin-bottom: 12px;">
-        <label style="font-size: 12px; font-weight: 700; color: #475569;">IFSC Code</label>
-        <div style="display: flex; align-items: center; background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 10px 14px; margin-top: 6px;">
-          <input type="text" id="bankTargetIfscInput" value="UTIB0000042" style="border: none; background: transparent; font-size: 15px; font-weight: 600; color: #0F172A; width: 100%; outline: none;">
-        </div>
-      </div>
-
-      <div style="margin-bottom: 16px;">
-        <label style="font-size: 12px; font-weight: 700; color: #475569;">Amount (₹)</label>
-        <div style="display: flex; align-items: center; background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 10px 14px; margin-top: 6px;">
-          <span style="font-size: 18px; font-weight: 800; color: #0F172A; margin-right: 8px;">₹</span>
-          <input type="number" id="bankTargetAmountInput" value="1000" style="border: none; background: transparent; font-size: 18px; font-weight: 800; color: #0F172A; width: 100%; outline: none;">
-        </div>
-      </div>
-
-      <button class="btn-primary-action" style="width: 100%; max-width: 100%; background: #2E7D32;" onclick="executeBankTransferPayment()">
-        Transfer to Bank (IMPS 24x7)
-      </button>
-    </div>
-  </div>
-
-  <!-- ==============================================================
-       MY BILLS MODAL
-       ============================================================== -->
-  <div class="modal-overlay" id="myBillsModal">
-    <div class="modal-sheet">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-        <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #0F172A;">
-          <i class="fa-regular fa-file-lines" style="color: #FF5722;"></i> My Registered Bills
-        </div>
-        <i class="fa-solid fa-xmark" style="font-size: 18px; color: #64748B; cursor: pointer;" onclick="closeModal('myBillsModal')"></i>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
-        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <div style="font-size: 13px; font-weight: 800; color: #0F172A;">Electricity - Tata Power (Mumbai)</div>
-            <div style="font-size: 11px; color: #64748B;">Consumer No: 900281928 • Due in 5 days</div>
-          </div>
-          <button style="background: #FF5722; color: white; border: none; border-radius: 8px; padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer;" onclick="closeModal('myBillsModal'); openRechargeModal('Electricity');">Pay ₹1,480</button>
-        </div>
-
-        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <div style="font-size: 13px; font-weight: 800; color: #0F172A;">Jio Fiber Broadband</div>
-            <div style="font-size: 11px; color: #64748B;">Account: 022-8921829 • Due in 12 days</div>
-          </div>
-          <button style="background: #0F172A; color: white; border: none; border-radius: 8px; padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer;" onclick="closeModal('myBillsModal'); openRechargeModal('Broadband');">Pay ₹825</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ==============================================================
-       SET / RESET SECURITY PIN WITH OTP MODAL (USER REQUESTED)
-       ============================================================== -->
-  <div class="modal-overlay" id="setPinOtpModal">
-    <div class="modal-sheet">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-        <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #0F172A;">
-          <i class="fa-solid fa-shield-halved" style="color: #1976D2;"></i> Set Security & UPI PIN
-        </div>
-        <i class="fa-solid fa-xmark" style="font-size: 18px; color: #64748B; cursor: pointer;" onclick="closeModal('setPinOtpModal')"></i>
-      </div>
-
-      <div style="font-size: 13px; color: #64748B; margin-bottom: 16px;">
-        To secure your wallet and UPI transfers, an authentic 4-digit OTP has been sent to your registered mobile number:
-        <strong id="setPinMaskedMobile" style="color: #0F172A; display: block; margin-top: 4px;">+91 XXXXXX8808</strong>
-      </div>
-
-      <!-- OTP Input Boxes -->
-      <label style="font-size: 12px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px;">Enter Verification OTP</label>
-      <div style="display: flex; gap: 10px; margin-bottom: 16px;">
-        <input type="tel" class="set-pin-otp-box" maxlength="1" value="7" oninput="handleSetPinOtpInput(this, 0)" style="width: 50px; height: 50px; border: 1.5px solid #CBD5E1; border-radius: 12px; text-align: center; font-size: 20px; font-weight: 800; outline: none;">
-        <input type="tel" class="set-pin-otp-box" maxlength="1" value="3" oninput="handleSetPinOtpInput(this, 1)" style="width: 50px; height: 50px; border: 1.5px solid #CBD5E1; border-radius: 12px; text-align: center; font-size: 20px; font-weight: 800; outline: none;">
-        <input type="tel" class="set-pin-otp-box" maxlength="1" value="1" oninput="handleSetPinOtpInput(this, 2)" style="width: 50px; height: 50px; border: 1.5px solid #CBD5E1; border-radius: 12px; text-align: center; font-size: 20px; font-weight: 800; outline: none;">
-        <input type="tel" class="set-pin-otp-box" maxlength="1" value="9" oninput="handleSetPinOtpInput(this, 3)" style="width: 50px; height: 50px; border: 1.5px solid #CBD5E1; border-radius: 12px; text-align: center; font-size: 20px; font-weight: 800; outline: none;">
-      </div>
-
-      <!-- New PIN Input -->
-      <div style="margin-bottom: 18px;">
-        <label style="font-size: 12px; font-weight: 700; color: #475569; display: block; margin-bottom: 6px;">Enter New 4-Digit Security PIN</label>
-        <div style="display: flex; align-items: center; background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 10px 14px;">
-          <input type="password" id="newSecurityPinInput" maxlength="4" placeholder="••••" value="1234" style="border: none; background: transparent; font-size: 22px; font-weight: 800; color: #0F172A; width: 100%; outline: none; letter-spacing: 6px;">
-        </div>
-      </div>
-
-      <button class="btn-primary-action" onclick="submitSetPinWithOtp()">
-        <i class="fa-solid fa-lock"></i> Verify OTP & Save PIN
-      </button>
-    </div>
-  </div>
-
-</body>
-</html>
-
-<script>
     function openPaymentSettings() {
       const u = appData.user || {};
       const bankName = u.bankName || 'BANK OF INDIA';
@@ -10142,4 +9682,7 @@
       showToast('Filters Applied: ' + (selectedFilterOrderType || 'All') + ' • ' + (selectedFilterOrderDate || 'Last 6 months'));
     }
 
+
 </script>
+</body>
+</html>
