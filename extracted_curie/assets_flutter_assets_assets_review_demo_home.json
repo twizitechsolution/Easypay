@@ -1,0 +1,697 @@
+{
+ "screenId": "home_lite",
+ "version": 2,
+ "cacheTTL": 300,
+ "isActive": true,
+ "sectionSpacing": 20,
+ "header": {
+  "visible": true,
+  "profile": {
+   "greeting": "hi, Demo!",
+   "firstName": "Demo",
+   "avatarGender": "neutral",
+   "upiId": "demo@curie",
+   "upiNumber": "1234567890",
+   "showUpiNumber": true
+  },
+  "balance": {
+   "visible": true,
+   "label": "Total Balance",
+   "totalBalance": "12,500.00",
+   "showGains": true,
+   "lifetimeGains": "245.30",
+   "gainsLabel": "lifetime",
+   "showCagr": true,
+   "cagr": "6.3",
+   "cagrText": "Past 1-year CAGR: 6.3%",
+   "newLabel": "Balance growing at up to {#00FF75:6.3%}",
+   "newUserLabel": "On its way to earn up to {#00FF75:6.3%}",
+   "inProgressPurchaseTemplate": {
+    "titles": {
+     "bajaj": "Order placed with Bajaj Finserv",
+     "icici": "Order placed with ICICI Prudential",
+     "mixed": "Order placed with multiple AMCs",
+     "generic": "Order placed with Liquid funds"
+    },
+    "card": {
+     "iconUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/done_check.svg",
+     "subtitle": "Safe & secured • Ready to use {{earliestAllocation}}",
+     "subtitleWithAmount": "[{#FFFFFF:₹ {{amount}}}] {#BEBEC2:(Ready to use {{earliestAllocation}})}"
+    },
+    "sheet": {
+     "sectionTitle": "MUTUAL FUND ORDER DETAILS",
+     "fundTypeLabel": "Liquid Fund (Low risk • Stable)",
+     "timeline": [
+      {
+       "text": "₹{{amount}} received",
+       "iconUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/done_check.svg",
+       "shortLabel": "Deposited"
+      },
+      {
+       "text": "Allocation in progress: Money not usable yet",
+       "iconUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/pending_clock.svg",
+       "shortLabel": "In Allocation"
+      },
+      {
+       "text": "Ready to use: {{earliestAllocation}}",
+       "iconUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/final_flag.svg",
+       "shortLabel": "{{allocationShort}}"
+      }
+     ],
+     "footerText": "Your {{count}} add money orders are in allocation.",
+     "statusText": "Money not usable yet · ready {{earliestAllocation}}"
+    },
+    "kycInProgress": {
+     "card": {
+      "subtitle": "Safe & secured • KYC in progress"
+     },
+     "sheet": {
+      "infoText": "Your KYC is in progress, money will be deposited once it’s successful.",
+      "statusText": "Money not usable yet.",
+      "timeline": [
+       {
+        "shortLabel": "KYC in progress",
+        "state": "current"
+       },
+       {
+        "shortLabel": "Money allocation",
+        "state": "pending"
+       },
+       {
+        "state": "pending"
+       }
+      ]
+     }
+    }
+   },
+   "hideEye": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/hide_eye.webp",
+   "rupeeIcon": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/rupee_icon.webp",
+   "visibleEye": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/visible_eye.webp",
+   "showHideToggle": true,
+   "showRupeeIcon": true,
+   "allocationWidgetTemplate": {
+    "allocating": {
+     "label": "Allocating to earn at up to",
+     "rate": "6.3%",
+     "action": "show_purchase_progress",
+     "amcLogos": {
+      "bajaj": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/amc_logo/bajaj_bw_logo.webp",
+      "ipru": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/amc_logo/ipru_bw_logo.webp",
+      "uti": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/amc_logo/uti_bw_logo.webp",
+      "welth": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/amc_logo/welth_bw_logo.webp"
+     },
+     "rail": {
+      "depositedLabel": "Deposited",
+      "allocatingLabel": "In Allocation",
+      "usableLabel": "Usable: {{usableAt}}"
+     },
+     "compactLabel": "On its way to earn",
+     "rive": {
+      "url": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/rive/home/allocation.riv",
+      "stateMachine": "Allocation",
+      "viewModel": "Instance",
+      "variables": {
+       "booleanProperty1": true
+      }
+     }
+    },
+    "earning": {
+     "title": "Your money has started earning!",
+     "subtitle": "Tap to view your order details",
+     "action": "show_order_breakdown",
+     "rive": {
+      "url": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/rive/home/allocated_v2.riv",
+      "stateMachine": "allocated",
+      "viewModel": "Instance"
+     },
+     "sheet": {
+      "title": "Order details",
+      "subtitle": "Your money is now growing at {{rate}} p.a. Here’s an allocation breakdown of your [₹{{investedAmount}}.]",
+      "ctaLabel": "Got it",
+      "amcTitle": "{{amcName}} AMC",
+      "fundLine": "Liquid Fund (Low risk • Stable)",
+      "navLabel": "NAV",
+      "unitsLabel": "Units",
+      "stampTitle": "Stamp duty & Round off",
+      "placedLabel": "You added",
+      "earningLabel": "Amount earning",
+      "earningAccent": "@ {{rate}}",
+      "stampDutyLabel": "Stamp duty (0.005%)",
+      "roundOffLabel": "Round off adjustment",
+      "explainer": {
+       "title": "What is a round off adjustment?",
+       "body": "Fund units are calculated up to 3 decimal places. This can create a small difference in the final amount, which is adjusted by a few paise.",
+       "bullets": [
+        "Even for larger amounts, the adjustment is only a few paise.",
+        "This difference is usually covered in just a few days.",
+        "It’s not a fee."
+       ]
+      }
+     }
+    },
+    "nudgeSeconds": 8,
+    "orderPlaced": {
+     "title": "Order placed with {{amcName}}",
+     "subtitle": "Safe & secured •  Ready to use by {{usableAt}}",
+     "action": "show_purchase_progress",
+     "subtitleKyc": "Safe & secured • KYC in progress",
+     "titleMulti": "Order placed with {{count}} mutual funds"
+    }
+   }
+  },
+  "actions": [
+   {
+    "id": "add_money",
+    "text": "Add Money",
+    "icon": "add_money",
+    "showIcon": true,
+    "action": "navigate_add_money",
+    "visible": true
+   },
+   {
+    "id": "scan_pay",
+    "text": "Scan & Pay",
+    "icon": "scan_pay",
+    "showIcon": true,
+    "action": "navigate_scan_pay",
+    "visible": true
+   }
+  ],
+  "kycVerificationFailed": {
+   "imageUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/home/kyc_verify_failed.webp",
+   "iconUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/home/error_mark.webp",
+   "title": "KYC verification failed",
+   "subtitle": "We won’t be able to offer you instant UPI via Liquid Funds on Curie. Your money will be refunded to your bank account {#FFFFFF:in 5–7 days.}"
+  }
+ },
+ "sections": [
+  {
+   "type": "upi_search",
+   "order": 1,
+   "visible": true,
+   "data": {
+    "placeholder": "Pay anyone via UPI",
+    "showSearchIcon": true,
+    "secureText": "Secure payments powered by UPI",
+    "showSecureIcon": true,
+    "action": "navigate_upi_search"
+   }
+  },
+  {
+   "type": "upi_lite",
+   "order": 3,
+   "visible": true,
+   "data": {
+    "isActive": false,
+    "balance": "0",
+    "activeText": "Active",
+    "inactiveText": "Enable UPI Lite for faster payments",
+    "action": "navigate_upi_lite"
+   }
+  },
+  {
+   "type": "upi_actions",
+   "visible": true,
+   "actions": [
+    {
+     "iconUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/upi_actions/pay_anyone.webp",
+     "title": "Pay to Anyone",
+     "action": "navigate_pay_anyone",
+     "order": 1,
+     "animation": "send",
+     "showAnimation": true
+    },
+    {
+     "iconUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/upi_actions/self_transfer.webp",
+     "title": "With-\ndraw",
+     "action": "navigate_withdraw",
+     "order": 2,
+     "animation": "self",
+     "showAnimation": true
+    },
+    {
+     "iconUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/upi_actions/check_balance.webp",
+     "title": "Check Balance",
+     "action": "navigate_check_balance",
+     "order": 4,
+     "animation": "balance",
+     "showAnimation": true
+    },
+    {
+     "iconUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/upi_actions/receive_money.webp",
+     "title": "Receive Money",
+     "action": "navigate_receive_money",
+     "order": 3,
+     "animation": "receive",
+     "showAnimation": true
+    }
+   ],
+   "order": 2
+  },
+  {
+   "type": "quick_actions",
+   "order": 4,
+   "visible": true,
+   "data": {
+    "title": "Quick actions",
+    "actions": [
+     {
+      "id": "transfer",
+      "title": "Transfer",
+      "subtitle": "Send to beneficiary",
+      "icon": "transfer",
+      "showBadge": false,
+      "badgeText": null,
+      "action": "navigate_transfer"
+     },
+     {
+      "id": "breakdown",
+      "title": "Balance",
+      "subtitle": "View breakdown",
+      "icon": "breakdown",
+      "showBadge": false,
+      "badgeText": null,
+      "action": "navigate_breakdown"
+     },
+     {
+      "id": "withdraw",
+      "title": "Withdraw",
+      "subtitle": "Move to bank",
+      "icon": "withdraw",
+      "showBadge": false,
+      "badgeText": null,
+      "action": "navigate_withdraw"
+     },
+     {
+      "id": "sip",
+      "title": "Curie SIP",
+      "subtitle": "Monthly auto-add",
+      "icon": "sip",
+      "showBadge": false,
+      "badgeText": null,
+      "action": "navigate_sip"
+     }
+    ]
+   }
+  },
+  {
+   "type": "curie_bytes",
+   "order": 7,
+   "visible": true,
+   "data": {
+    "title": "Curie bytes",
+    "items": [
+     {
+      "id": "1",
+      "header": "UPI via Curie",
+      "title": "How does UPI using mutual fund work?",
+      "thumbnailUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/carousels/how_thumbnail.webp",
+      "viewed": false,
+      "carousels": [
+       {
+        "text": "Let's say you are paying ₹10 to a vendor",
+        "tagText": "Step 1",
+        "subText": "We notify our partnered fund house to redeem the required amount.",
+        "svgUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/carousels/how_1.webp",
+        "shareUrl": null,
+        "displayOrder": 1
+       },
+       {
+        "text": "Mutual fund house sends ₹10 from your mutual fund",
+        "tagText": "Step 2",
+        "subText": "Your linked savings account receives it instantly.",
+        "svgUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/carousels/how_2.webp",
+        "shareUrl": null,
+        "displayOrder": 2
+       },
+       {
+        "text": "₹10 is now available in your linked bank for the payment",
+        "tagText": "Step 3",
+        "subText": "Enter your bank UPI PIN and the payment is complete.",
+        "svgUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/carousels/how_3.webp",
+        "shareUrl": null,
+        "displayOrder": 3
+       }
+      ]
+     },
+     {
+      "id": "2",
+      "header": "Any risks?",
+      "title": "What if the market crashes",
+      "thumbnailUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/carousels/crash_thumbnail.webp",
+      "viewed": false,
+      "carousels": [
+       {
+        "text": "Curie keeps your money in debt mutual funds",
+        "tagText": "Market crashed?",
+        "subText": "Equity market does not impact debt funds.",
+        "svgUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/carousels/crash_1.webp",
+        "shareUrl": null,
+        "displayOrder": 1
+       },
+       {
+        "text": "Debt funds are stable and very less risky",
+        "tagText": "How?",
+        "subText": "They invest in government securities, commercial papers, and certificates of deposit. All of these are considered highly secure.",
+        "svgUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/carousels/crash_2.webp",
+        "shareUrl": null,
+        "displayOrder": 2
+       },
+       {
+        "text": "Curie keeps the money in Liquid funds of ICICI Prudential and Bajaj Finserv",
+        "tagText": "Gains?",
+        "subText": "Last year the fund grew by 7%.",
+        "svgUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/carousels/crash_3.webp",
+        "shareUrl": null,
+        "displayOrder": 3
+       }
+      ]
+     },
+     {
+      "id": "3",
+      "header": "Growth in Curie",
+      "title": "How does Curie grow my money?",
+      "thumbnailUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/carousels/grow_thumbnail.webp",
+      "viewed": false,
+      "carousels": [
+       {
+        "text": "Curie grows your money in Liquid funds of our partner fund houses",
+        "tagText": "Do I own it?",
+        "subText": "Yes, they are bought in your mutual fund account linked to your PAN.",
+        "svgUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/carousels/grow_1.webp",
+        "shareUrl": null,
+        "displayOrder": 1
+       },
+       {
+        "text": "The Liquid fund grew last year at 7%",
+        "tagText": "Earn daily",
+        "subText": "Money grows daily in Liquid funds.",
+        "svgUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/carousels/grow_2.webp",
+        "shareUrl": null,
+        "displayOrder": 2
+       },
+       {
+        "text": "Grow your money while you use it via UPI",
+        "tagText": "Instant UPI",
+        "subText": "Pay anyone, anytime with Curie UPI.",
+        "svgUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/carousels/grow_3.webp",
+        "shareUrl": null,
+        "displayOrder": 3
+       }
+      ]
+     },
+     {
+      "id": "4",
+      "header": "Spending limit",
+      "title": "What and why of daily spending limit?",
+      "thumbnailUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/carousels/limit_thumbnail.webp",
+      "viewed": false,
+      "carousels": [
+       {
+        "text": "You can spend up to 90% of your Liquid fund instantly",
+        "tagText": "Instant redemption",
+        "subText": "This is the instant redemption limit. We're partnering with more fund houses to raise it.",
+        "svgUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/carousels/limit_1.webp",
+        "shareUrl": null,
+        "displayOrder": 1
+       },
+       {
+        "text": "₹50,000 is the daily limit per fund",
+        "tagText": "The guideline",
+        "subText": "This is the instant redemption limit. We're partnering with more fund houses to raise it.",
+        "svgUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/carousels/limit_2.webp",
+        "shareUrl": null,
+        "displayOrder": 2
+       },
+       {
+        "text": "The rest gets credited in 1 working day",
+        "tagText": "Beyond the limit",
+        "subText": "We're adding more fund partners so more of your money stays instantly accessible.",
+        "svgUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/carousels/limit_3.webp",
+        "shareUrl": null,
+        "displayOrder": 3
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "type": "knowledge_stories",
+   "order": 8,
+   "visible": true,
+   "data": {
+    "title": "Knowledge stories",
+    "stories": [
+     {
+      "id": "74",
+      "title": "3D Curie Promo",
+      "thumbnailUrl": "https://d1pd40dpr33mof.cloudfront.net/thumbnails/3D_Curie_Promo_Thumbnail.png",
+      "videoUrl": "https://d1pd40dpr33mof.cloudfront.net/videos/3D_Curie_Video.mp4"
+     },
+     {
+      "id": "70",
+      "title": "What is LF",
+      "thumbnailUrl": "https://d1pd40dpr33mof.cloudfront.net/thumbnails/what_is_LF.png",
+      "videoUrl": "https://d1pd40dpr33mof.cloudfront.net/videos/what_is_LF.mp4"
+     },
+     {
+      "id": "71",
+      "title": "LF Safety",
+      "thumbnailUrl": "https://d1pd40dpr33mof.cloudfront.net/thumbnails/Lf_safety.png",
+      "videoUrl": "https://d1pd40dpr33mof.cloudfront.net/videos/LF_safety.mp4"
+     },
+     {
+      "id": "72",
+      "title": "Curie Promo",
+      "thumbnailUrl": "https://d1pd40dpr33mof.cloudfront.net/thumbnails/Thumbnail_03.png",
+      "videoUrl": "https://d1pd40dpr33mof.cloudfront.net/videos/Curie_Promo_03.mp4"
+     },
+     {
+      "id": "73",
+      "title": "Money in Curie",
+      "thumbnailUrl": "https://d1pd40dpr33mof.cloudfront.net/thumbnails/Money_In_curie.png",
+      "videoUrl": "https://d1pd40dpr33mof.cloudfront.net/videos/money_in_curie.mp4"
+     }
+    ]
+   }
+  },
+  {
+   "type": "support",
+   "order": 9,
+   "visible": true,
+   "data": {
+    "items": [
+     {
+      "id": "faq",
+      "text": "Have any questions? Check FAQs",
+      "action": "navigate_faq",
+      "showDivider": true
+     },
+     {
+      "id": "whatsapp",
+      "text": "Need assistance? WhatsApp us",
+      "action": "open_whatsapp",
+      "showDivider": false
+     }
+    ]
+   }
+  },
+  {
+   "type": "footer",
+   "order": 10,
+   "visible": true,
+   "data": {
+    "imageUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/old_footer_image.webp",
+    "newServiceImageUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/home/footer.webp"
+   }
+  },
+  {
+   "type": "payment_options",
+   "order": 5,
+   "visible": true,
+   "data": {
+    "title": "Payment Options",
+    "items": [
+     {
+      "id": "upi_lite",
+      "iconUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/upi_actions/upi_lite.webp",
+      "activeLabel": "Balance: ₹0",
+      "inactiveLabel": "Activate UPI Lite",
+      "action": "navigate_upi_lite"
+     },
+     {
+      "id": "upi_autopay",
+      "iconUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/upi_actions/upi_auto_pay.webp",
+      "activeLabel": "UPI Autopay",
+      "inactiveLabel": "UPI Autopay",
+      "action": "navigate_auto_pay"
+     }
+    ],
+    "upiIdLabel": "UPI ID:",
+    "upiId": "demo@curie",
+    "showCopy": true,
+    "thresholdAmount": 200
+   }
+  },
+  {
+   "type": "quick_actions_v2",
+   "order": 4,
+   "visible": true,
+   "data": {
+    "title": "Quick actions",
+    "columns": 2,
+    "thresholdAmount": 200,
+    "style": {
+     "cardBackgroundColor": "white",
+     "cardBorderColor": "secondary800",
+     "iconBackgroundColor": "secondary50",
+     "iconBorderColor": "secondary200",
+     "titleColor": "neutral900",
+     "subtitleColor": "neutral600",
+     "badgeBackgroundColor": "white",
+     "badgeTextColor": "secondary600"
+    },
+    "items": [
+     {
+      "id": "tuition_fees",
+      "size": "large",
+      "column": 0,
+      "title": "Pay tuition fees",
+      "subtitle": "Via credit card",
+      "icon": "tuition",
+      "iconUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/quick_actions/tution_fee.webp",
+      "badgeText": null,
+      "action": "navigate_education",
+      "requiresUpiLinked": false,
+      "visible": true,
+      "style": {
+       "cardGradientColors": [
+        "#EEEBFF",
+        "#FFFFFF"
+       ],
+       "iconBackgroundColor": "#4DFFFFFF",
+       "iconBorderColor": "white"
+      },
+      "rive": {
+       "asset": "",
+       "stateMachine": "offer",
+       "viewModel": "",
+       "amountProperty": "number",
+       "triggerProperty": "trigger",
+       "trigger": false,
+       "fit": "cover",
+       "hide": [
+        "icon",
+        "badge"
+       ],
+       "triggerIntervalSeconds": 8,
+       "url": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/quick_actions/offers.riv",
+       "variables": {
+        "trigger": {
+         "value": false,
+         "intervalSeconds": 8
+        }
+       }
+      }
+     },
+     {
+      "id": "withdraw",
+      "size": "small",
+      "column": 1,
+      "title": "Withdraw",
+      "subtitle": "Curie balance",
+      "icon": "withdraw",
+      "iconUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/quick_actions/withdraw.webp",
+      "badgeText": null,
+      "action": "navigate_withdraw",
+      "requiresUpiLinked": false,
+      "visible": true,
+      "style": {}
+     },
+     {
+      "id": "upi_lite",
+      "size": "small",
+      "column": 0,
+      "title": "UPI Lite",
+      "subtitle": "PIN-less payments",
+      "inactiveSubtitle": "Activate UPI Lite",
+      "icon": "",
+      "iconUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/quick_actions/upi_lite.webp",
+      "badgeText": null,
+      "action": "navigate_upi_lite",
+      "requiresUpiLinked": true,
+      "visible": true,
+      "style": {}
+     },
+     {
+      "id": "sip",
+      "size": "small",
+      "column": 1,
+      "title": "Curie SIP",
+      "subtitle": "Monthly invest",
+      "icon": "sip",
+      "iconUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/quick_actions/curie_sip.webp",
+      "badgeText": null,
+      "action": "navigate_sip",
+      "requiresUpiLinked": false,
+      "visible": true,
+      "style": {}
+     },
+     {
+      "id": "upi_autopay",
+      "size": "small",
+      "column": 1,
+      "title": "UPI Autopay",
+      "subtitle": "Mandates",
+      "icon": "",
+      "iconUrl": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/images/quick_actions/upi_autopay.webp",
+      "badgeText": null,
+      "action": "navigate_auto_pay",
+      "requiresUpiLinked": true,
+      "visible": true,
+      "style": {}
+     }
+    ]
+   }
+  },
+  {
+   "type": "banner",
+   "order": 2.5,
+   "visible": true,
+   "data": {
+    "variant": "card",
+    "title": "",
+    "autoScrollSeconds": 0,
+    "items": [
+     {
+      "id": "banner_biometric",
+      "imageUrl": "",
+      "rive": {
+       "url": "",
+       "urlIos": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/rive/banners/biometric_ios_v2.riv",
+       "urlAndroid": "https://curie-money-static-assets.s3.ap-south-1.amazonaws.com/rive/banners/biometric_android_v1.riv",
+       "asset": "",
+       "stateMachine": "Play",
+       "viewModel": "",
+       "trigger": true,
+       "triggerIntervalSeconds": 0,
+       "fit": "fitWidth",
+       "variables": {
+        "body": 16,
+        "header": 27
+       }
+      },
+      "action": "open_biometric_sheet",
+      "visible": true
+     }
+    ],
+    "cornerRadius": 0
+   }
+  }
+ ],
+ "allBalance": {
+  "spendableBalance": 12500.0,
+  "totalBalance": 12500.0
+ }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "EasyPay — Smart Investments & Instant Bachat",
+  "short_name": "EasyPay",
+  "start_url": "/app",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FF5722",
+  "description": "EasyPay: High Yield Monthly Bonds, Instant Gift Cards with up to 15% Bachat & UPI Bill Payments",
+  "icons": [
+    {
+      "src": "/assets/curie/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/curie/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

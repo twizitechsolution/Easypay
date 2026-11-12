@@ -1,0 +1,443 @@
+{
+  "$schema": "https://curie.money/schemas/sdui/v3.json",
+  "schemaVersion": "3.0.0",
+  "minAppVersion": "3.2.0",
+  "screen": {
+    "id": "gold_purchase",
+    "title": "Buy Gold",
+    "analytics": {
+      "name": "gold_purchase_screen",
+      "class": "GoldPurchaseScreen"
+    },
+    "theme": {
+      "backgroundColor": "#FFF7DF",
+      "statusBarStyle": "dark"
+    }
+  },
+  "config": {
+    "cache": { "ttl": 0, "staleWhileRevalidate": false },
+    "spacing": { "xs": 4, "sm": 8, "md": 16, "lg": 24, "xl": 32 },
+    "unknownWidgetBehavior": "hide",
+    "rateLock": {
+      "lockDurationSeconds": 420,
+      "fetchedAt": "{{rateFetchedAt}}",
+      "onExpiry": {
+        "type": "NATIVE_CALL",
+        "method": "onRateLockExpired"
+      }
+    }
+  },
+  "refs": {
+    "trust_badge_safegold": {
+      "type": "ROW",
+      "mainAxisAlignment": "center",
+      "gap": "xs",
+      "children": [
+        {
+          "type": "TEXT",
+          "text": "Securely stored with",
+          "style": "body.small.secondary"
+        },
+        {
+          "type": "IMAGE",
+          "source": "asset://safegold_logo.png",
+          "width": 10,
+          "height": 10
+        },
+        { "type": "TEXT", "text": "SafeGold", "style": "body.small.secondary" },
+        { "type": "TEXT", "text": "\u2022", "style": "body.small.secondary" },
+        {
+          "type": "TEXT",
+          "text": "99.5% purity",
+          "style": "body.small.secondary"
+        }
+      ]
+    }
+  },
+  "state": {
+    "defaults": {
+      "frequency": "weekly",
+      "inputMode": "amount",
+      "amount": 25000,
+      "day": "monday"
+    },
+    "frequencyDefaults": {
+      "daily": { "day": "everyday", "inputMode": "amount" },
+      "weekly": { "day": "monday", "inputMode": "amount" },
+      "monthly": { "day": "1", "inputMode": "amount" },
+      "one_time": { "day": null, "inputMode": "quantity" }
+    }
+  },
+
+  "body": [
+    {
+      "id": "header",
+      "type": "SECTION",
+      "padding": "md",
+      "children": [
+        {
+          "type": "ROW",
+          "gap": "sm",
+          "crossAxisAlignment": "center",
+          "children": [
+            {
+              "type": "ICON_BUTTON",
+              "icon": "arrow_back",
+              "size": 24,
+              "action": { "type": "BACK" }
+            },
+            {
+              "type": "TEXT",
+              "text": "Build your gold stack",
+              "style": "heading.small.primary"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "projection_section",
+      "type": "SECTION",
+      "padding": "md",
+      "children": [
+        {
+          "id": "growth_chart",
+          "type": "PROJECTION_CHART",
+          "variant": "bar",
+          "background": "surface.light",
+          "borderColor": "color.white",
+          "borderRadius": "md",
+          "height": 220,
+          "formula": {
+            "type": "compound_growth",
+            "annualReturnRate": 0.12,
+            "inflationRate": 0.06,
+            "inputs": ["amount", "frequency", "currentAge"],
+            "currentAge": "{{user.age}}",
+            "retirementAge": 55,
+            "targetAge": "{{user.targetAge}}"
+          },
+          "bars": {
+            "colors": ["#FFAA20", "#FFD13A"],
+            "width": 2,
+            "spacing": 5
+          },
+          "xAxis": {
+            "startValue": "{{user.age}}",
+            "endValue": 55,
+            "step": 3,
+            "highlightValue": "{{user.targetAge}}"
+          },
+          "legend": [
+            {
+              "label": "Invested:",
+              "valueKey": "totalInvested",
+              "color": "#FFAA20"
+            },
+            {
+              "label": "By age {{endAge}}:",
+              "valueKey": "projectedEnd",
+              "color": "#FFD13A"
+            }
+          ],
+          "tooltip": {
+            "background": "surface.dark",
+            "textColor": "color.inverse",
+            "format": { "label": "By age {{x}}", "value": "\u20b9{{y}}" }
+          },
+          "children": [
+            {
+              "slot": "header",
+              "type": "CONTAINER",
+              "background": {
+                "gradient": ["#FFE9B2", "#FFF6CA"],
+                "direction": "horizontal"
+              },
+              "padding": "sm",
+              "borderRadius": { "topLeft": 7, "topRight": 7 },
+              "children": [
+                {
+                  "type": "ROW",
+                  "mainAxisAlignment": "spaceBetween",
+                  "crossAxisAlignment": "center",
+                  "children": [
+                    {
+                      "type": "RICH_TEXT",
+                      "segments": [
+                        { "text": "Own ", "style": "title.medium.primary" },
+                        {
+                          "text": "\u20b9{{projectedValue}}",
+                          "style": "title.medium.accent"
+                        },
+                        {
+                          "text": " worth of gold by ",
+                          "style": "title.medium.primary"
+                        },
+                        {
+                          "text": "age {{targetAge}}",
+                          "style": "title.medium.accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "IMAGE",
+                      "source": "asset://gold_glasses_icon.png",
+                      "width": 26,
+                      "height": 14
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "input_panel",
+      "type": "CONTAINER",
+      "background": "surface.default",
+      "borderRadius": { "topLeft": 16, "topRight": 16 },
+      "padding": "md",
+      "gap": "md",
+      "children": [
+        {
+          "id": "frequency_tabs",
+          "type": "SEGMENTED_TABS",
+          "tabs": [
+            { "id": "daily", "label": "Daily" },
+            { "id": "weekly", "label": "Weekly" },
+            { "id": "monthly", "label": "Monthly" },
+            { "id": "one_time", "label": "One-time" }
+          ],
+          "selectedTab": "{{state.frequency}}",
+          "style": {
+            "trackColor": "#F0EFFD",
+            "trackBorderColor": "#C4C1F8",
+            "trackBorderRadius": 24,
+            "thumbColor": "surface.default",
+            "thumbBorderColor": "#403C8E",
+            "thumbBorderRadius": 16,
+            "selectedTextColor": "#403C8E",
+            "unselectedTextColor": "#A6A2F4",
+            "height": 40
+          },
+          "action": {
+            "type": "NATIVE_CALL",
+            "method": "onFrequencyChanged",
+            "params": { "stateKey": "frequency" }
+          }
+        },
+
+        {
+          "id": "day_selector",
+          "type": "DROPDOWN",
+          "visibility": {
+            "field": "state.frequency",
+            "operator": "!=",
+            "value": "one_time"
+          },
+          "selectedValue": "{{state.day}}",
+          "placeholder": "Select day",
+          "optionSets": {
+            "daily": {
+              "condition": {
+                "field": "state.frequency",
+                "operator": "==",
+                "value": "daily"
+              },
+              "options": [{ "value": "everyday", "label": "Every day" }]
+            },
+            "weekly": {
+              "condition": {
+                "field": "state.frequency",
+                "operator": "==",
+                "value": "weekly"
+              },
+              "options": [
+                { "value": "monday", "label": "Every Monday" },
+                { "value": "tuesday", "label": "Every Tuesday" },
+                { "value": "wednesday", "label": "Every Wednesday" },
+                { "value": "thursday", "label": "Every Thursday" },
+                { "value": "friday", "label": "Every Friday" },
+                { "value": "saturday", "label": "Every Saturday" },
+                { "value": "sunday", "label": "Every Sunday" }
+              ]
+            },
+            "monthly": {
+              "condition": {
+                "field": "state.frequency",
+                "operator": "==",
+                "value": "monthly"
+              },
+              "options": [
+                { "value": "1", "label": "1st of every month" },
+                { "value": "5", "label": "5th of every month" },
+                { "value": "10", "label": "10th of every month" },
+                { "value": "15", "label": "15th of every month" },
+                { "value": "20", "label": "20th of every month" },
+                { "value": "25", "label": "25th of every month" }
+              ]
+            }
+          },
+          "style": {
+            "background": "#F8F7FE",
+            "borderColor": "#C4C1F8",
+            "borderRadius": "md",
+            "padding": { "horizontal": 12, "vertical": 8 },
+            "backdropBlur": 7,
+            "textStyle": "body.medium.primary",
+            "iconName": "keyboard_arrow_down",
+            "iconSize": 12,
+            "dropdownBackground": "surface.default",
+            "dropdownBorderColor": "#C4C1F8",
+            "dropdownBorderRadius": "md",
+            "selectedItemColor": "#F8F7FE",
+            "selectedTextColor": "#403C8E"
+          },
+          "action": {
+            "type": "NATIVE_CALL",
+            "method": "onDayChanged",
+            "params": { "stateKey": "day" }
+          }
+        },
+
+        {
+          "id": "amount_input",
+          "type": "STEPPER_INPUT",
+          "value": "{{state.amount}}",
+          "inputMode": "{{state.inputMode}}",
+          "modes": {
+            "amount": {
+              "prefix": "\u20b9",
+              "min": 100,
+              "max": 500000,
+              "step": 500,
+              "decimals": 0
+            },
+            "quantity": {
+              "suffix": "g",
+              "min": 0.1,
+              "max": 100,
+              "step": 0.5,
+              "decimals": 1,
+              "presets": [2, 5, 10]
+            }
+          },
+          "conversion": {
+            "rate": "{{unitRate}}",
+            "rateUnit": "/g",
+            "label": {
+              "amount": "You're buying {{converted}} of 24K Gold",
+              "quantity": "You're buying gold worth \u20b9{{converted}}"
+            }
+          },
+          "style": {
+            "borderColor": "#C4C1F8",
+            "borderRadius": 12,
+            "stepperColor": "#403C8E",
+            "stepperBorderColor": "#C4C1F8",
+            "conversionBackground": "#FFF6CA",
+            "conversionTextColor": "#CA7719",
+            "valueFontSize": 48,
+            "prefixFontSize": 22
+          },
+          "slider": {
+            "enabled": true,
+            "trackColor": "#C4C1F8",
+            "activeGradient": ["#FFEC8D", "#FFC14B"],
+            "thumbGradient": ["#FFEC8D", "#FFC14B"],
+            "thumbBorderColor": "#D18B3B",
+            "thumbSize": 30
+          },
+          "action": {
+            "type": "NATIVE_CALL",
+            "method": "onAmountChanged",
+            "params": { "stateKey": "amount" }
+          }
+        },
+
+        {
+          "id": "price_lock",
+          "type": "CONTAINER",
+          "alignment": "center",
+          "background": "#FFF7E1",
+          "borderRadius": 6,
+          "padding": { "horizontal": 6, "vertical": 4 },
+          "children": [
+            {
+              "type": "ROW",
+              "gap": "xs",
+              "crossAxisAlignment": "center",
+              "mainAxisAlignment": "center",
+              "children": [
+                {
+                  "type": "ICON",
+                  "name": "lock_clock",
+                  "size": 11,
+                  "color": "#B57000"
+                },
+                {
+                  "type": "COUNTDOWN",
+                  "startedAt": "{{rateFetchedAt}}",
+                  "durationSeconds": 420,
+                  "format": "mm:ss",
+                  "prefix": "LOCKED FOR ",
+                  "style": "label.small.warning",
+                  "onExpired": {
+                    "type": "NATIVE_CALL",
+                    "method": "onRateLockExpired"
+                  }
+                },
+                {
+                  "type": "TEXT",
+                  "text": "\u2022",
+                  "style": "label.small.warning"
+                },
+                {
+                  "type": "TEXT",
+                  "text": "@ \u20b9{{unitRate}}/g",
+                  "style": "label.medium.warning"
+                }
+              ]
+            }
+          ]
+        },
+
+        {
+          "id": "rate_timestamp",
+          "type": "TEXT",
+          "text": "Rate fetched at {{rateFetchedAt}}",
+          "textAlign": "center",
+          "style": "body.small.secondary",
+          "visibility": {
+            "field": "rateFetchedAt",
+            "operator": "!=",
+            "value": null
+          }
+        },
+
+        {
+          "id": "confirm_cta",
+          "type": "BUTTON",
+          "label": "Confirm amount",
+          "variant": "CTA_PRIMARY",
+          "fullWidth": true,
+          "action": {
+            "type": "SHOW_BOTTOM_SHEET",
+            "templateId": "gold_purchase_confirm",
+            "params": {
+              "frequency": "{{state.frequency}}",
+              "amount": "{{state.amount}}",
+              "inputMode": "{{state.inputMode}}"
+            }
+          }
+        },
+
+        { "$ref": "trust_badge_safegold" }
+      ]
+    }
+  ]
+}

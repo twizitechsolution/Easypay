@@ -1,0 +1,246 @@
+import '../models/recharge_model.dart';
+
+class MockRechargeData {
+  static const List<TelecomOperator> operators = [
+    TelecomOperator(
+      id: 'jio',
+      name: 'Reliance Jio',
+      logoCode: 'JIO',
+      primaryColorHex: '0A3C94',
+    ),
+    TelecomOperator(
+      id: 'airtel',
+      name: 'Bharti Airtel',
+      logoCode: 'AIRTEL',
+      primaryColorHex: 'ED1C24',
+    ),
+    TelecomOperator(
+      id: 'vi',
+      name: 'Vodafone Idea (Vi)',
+      logoCode: 'VI',
+      primaryColorHex: 'FFC20E',
+    ),
+    TelecomOperator(
+      id: 'bsnl',
+      name: 'BSNL Mobile',
+      logoCode: 'BSNL',
+      primaryColorHex: '006FB4',
+    ),
+  ];
+
+  static const List<String> circles = [
+    'Maharashtra & Goa',
+    'Delhi NCR',
+    'Karnataka',
+    'Mumbai',
+    'Tamil Nadu',
+    'Gujarat',
+    'Andhra Pradesh & Telangana',
+    'Uttar Pradesh (East)',
+    'West Bengal & Kolkata',
+  ];
+
+  static const List<String> planCategories = [
+    'Recommended',
+    'Truly Unlimited',
+    '5G Data Booster',
+    'Annual Packs',
+    'Talktime Top-Up',
+  ];
+
+  static const List<RechargePlan> plans = [
+    RechargePlan(
+      id: 'plan_299',
+      operatorId: 'jio',
+      price: 299,
+      validity: '28 Days',
+      data: '1.5 GB/day',
+      voice: 'Unlimited Calls',
+      sms: '100 SMS/day',
+      category: 'Truly Unlimited',
+      description: 'Truly Unlimited 5G Data with eligible devices. Unlimited voice and national roaming.',
+      perks: ['Unlimited 5G Data', 'JioCinema Premium Access', 'JioTV Free'],
+      isPopular: true,
+    ),
+    RechargePlan(
+      id: 'plan_349',
+      operatorId: 'jio',
+      price: 349,
+      validity: '28 Days',
+      data: '2.0 GB/day',
+      voice: 'Unlimited Calls',
+      sms: '100 SMS/day',
+      category: 'Truly Unlimited',
+      description: 'High-speed 2GB/day with True 5G connectivity and all OTT streaming apps.',
+      perks: ['Unlimited 5G Data', 'JioCinema', 'JioCloud 50GB'],
+      isPopular: false,
+    ),
+    RechargePlan(
+      id: 'plan_666',
+      operatorId: 'jio',
+      price: 666,
+      validity: '70 Days',
+      data: '1.5 GB/day',
+      voice: 'Unlimited Calls',
+      sms: '100 SMS/day',
+      category: 'Recommended',
+      description: 'Value pack for 70 days uninterrupted connectivity with high-speed quota.',
+      perks: ['Unlimited 5G Data', 'JioCinema', 'Free Hellotunes'],
+      isPopular: true,
+    ),
+    RechargePlan(
+      id: 'plan_899',
+      operatorId: 'jio',
+      price: 899,
+      validity: '90 Days',
+      data: '2.0 GB/day + 20GB extra',
+      voice: 'Unlimited Calls',
+      sms: '100 SMS/day',
+      category: 'Recommended',
+      description: 'Quarterly power plan with extra 20GB high-speed bonus data.',
+      perks: ['Unlimited 5G', 'Disney+ Hotstar Mobile 90 Days', 'JioCinema'],
+      isPopular: true,
+    ),
+    RechargePlan(
+      id: 'plan_3599',
+      operatorId: 'jio',
+      price: 3599,
+      validity: '365 Days',
+      data: '2.5 GB/day',
+      voice: 'Unlimited Calls',
+      sms: '100 SMS/day',
+      category: 'Annual Packs',
+      description: 'Full 1-year annual plan with massive 2.5GB daily high-speed 5G data.',
+      perks: ['Unlimited 5G Data', 'FanCode Subscription', 'Priority Support'],
+      isPopular: true,
+    ),
+    RechargePlan(
+      id: 'plan_61',
+      operatorId: 'jio',
+      price: 61,
+      validity: 'Existing Plan',
+      data: '6 GB High Speed Data',
+      voice: 'NA',
+      sms: 'NA',
+      category: '5G Data Booster',
+      description: '5G upgrade booster data pack valid till your active base plan validity.',
+      perks: ['High-speed 4G/5G Addon'],
+      isPopular: false,
+    ),
+    RechargePlan(
+      id: 'plan_151',
+      operatorId: 'jio',
+      price: 151,
+      validity: '30 Days',
+      data: '9 GB Data + Disney+ Hotstar',
+      voice: 'NA',
+      sms: 'NA',
+      category: '5G Data Booster',
+      description: 'Cricket & Entertainment pack with 3-month Disney+ Hotstar mobile included.',
+      perks: ['Disney+ Hotstar 3 Months'],
+      isPopular: true,
+    ),
+
+    // Airtel Plans
+    RechargePlan(
+      id: 'airtel_299',
+      operatorId: 'airtel',
+      price: 299,
+      validity: '28 Days',
+      data: '1.5 GB/day',
+      voice: 'Unlimited Calls',
+      sms: '100 SMS/day',
+      category: 'Truly Unlimited',
+      description: 'Airtel Truly Unlimited with Apollo 24/7 Circle, Wynk Music, and free Hellotunes.',
+      perks: ['Unlimited 5G Data', 'Apollo 24/7 Circle', 'Free Wynk Music'],
+      isPopular: true,
+    ),
+    RechargePlan(
+      id: 'airtel_549',
+      operatorId: 'airtel',
+      price: 549,
+      validity: '56 Days',
+      data: '2.0 GB/day',
+      voice: 'Unlimited Calls',
+      sms: '100 SMS/day',
+      category: 'Recommended',
+      description: 'Double month unlimited pack with high-speed data & Airtel Xstream Play.',
+      perks: ['Airtel Xstream Play 20+ OTTs', 'Wynk Music'],
+      isPopular: true,
+    ),
+  ];
+
+  static const List<DthProvider> dthProviders = [
+    DthProvider(id: 'tata_play', name: 'Tata Play (formerly Tata Sky)', primaryColorHex: 'ED1B2D'),
+    DthProvider(id: 'airtel_dth', name: 'Airtel Digital TV', primaryColorHex: 'ED1C24'),
+    DthProvider(id: 'dish_tv', name: 'Dish TV India', primaryColorHex: 'EC1C24'),
+    DthProvider(id: 'sun_direct', name: 'Sun Direct DTH', primaryColorHex: 'F7941D'),
+    DthProvider(id: 'd2h', name: 'Videocon D2H', primaryColorHex: '2B3990'),
+  ];
+
+  static const List<FastagBank> fastagBanks = [
+    FastagBank(id: 'icici', bankName: 'ICICI Bank FASTag'),
+    FastagBank(id: 'hdfc', bankName: 'HDFC Bank FASTag'),
+    FastagBank(id: 'paytm', bankName: 'Paytm Payments Bank FASTag'),
+    FastagBank(id: 'sbi', bankName: 'State Bank of India (SBI) FASTag'),
+    FastagBank(id: 'axis', bankName: 'Axis Bank FASTag'),
+    FastagBank(id: 'kotak', bankName: 'Kotak Mahindra Bank FASTag'),
+  ];
+
+  static const List<UtilityBiller> utilityBillers = [
+    UtilityBiller(
+      id: 'adani_elec',
+      name: 'Adani Electricity Mumbai Limited',
+      state: 'Maharashtra',
+      category: 'Electricity',
+    ),
+    UtilityBiller(
+      id: 'bescom',
+      name: 'Bangalore Electricity Supply (BESCOM)',
+      state: 'Karnataka',
+      category: 'Electricity',
+    ),
+    UtilityBiller(
+      id: 'tata_power_delhi',
+      name: 'Tata Power DDL (Delhi)',
+      state: 'Delhi',
+      category: 'Electricity',
+    ),
+    UtilityBiller(
+      id: 'msedcl',
+      name: 'Mahavitaran (MSEDCL)',
+      state: 'Maharashtra',
+      category: 'Electricity',
+    ),
+    UtilityBiller(
+      id: 'tangedco',
+      name: 'Tamil Nadu Generation & Distribution (TANGEDCO)',
+      state: 'Tamil Nadu',
+      category: 'Electricity',
+    ),
+    UtilityBiller(
+      id: 'bwssb',
+      name: 'Bangalore Water Supply & Sewerage Board (BWSSB)',
+      state: 'Karnataka',
+      category: 'Water',
+    ),
+    UtilityBiller(
+      id: 'delhi_jal_board',
+      name: 'Delhi Jal Board (DJB)',
+      state: 'Delhi',
+      category: 'Water',
+    ),
+    UtilityBiller(
+      id: 'mahanagar_gas',
+      name: 'Mahanagar Gas Limited (MGL)',
+      state: 'Maharashtra',
+      category: 'Piped Gas',
+    ),
+    UtilityBiller(
+      id: 'indraprastha_gas',
+      name: 'Indraprastha Gas Limited (IGL)',
+      state: 'Delhi',
+      category: 'Piped Gas',
+    ),
+  ];
+}

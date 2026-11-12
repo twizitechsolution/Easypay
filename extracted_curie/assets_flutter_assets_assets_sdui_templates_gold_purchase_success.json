@@ -1,0 +1,313 @@
+{
+  "$schema": "https://curie.money/schemas/sdui/v3.json",
+  "schemaVersion": "3.0.0",
+  "minAppVersion": "3.2.0",
+  "screen": {
+    "id": "gold_purchase_success",
+    "title": "Purchase Success",
+    "analytics": { "name": "gold_purchase_success", "class": "GoldPurchaseSuccessScreen" },
+    "theme": {
+      "backgroundColor": "#FFF7DF",
+      "statusBarStyle": "dark"
+    }
+  },
+  "config": {
+    "cache": { "ttl": 0, "staleWhileRevalidate": false },
+    "unknownWidgetBehavior": "hide"
+  },
+  "refs": {
+    "trust_badge_safegold": {
+      "type": "ROW",
+      "mainAxisAlignment": "center",
+      "gap": "xs",
+      "children": [
+        { "type": "TEXT", "text": "Securely stored with", "style": "body.small.secondary" },
+        { "type": "IMAGE", "source": "asset://safegold_logo.png", "width": 10, "height": 10 },
+        { "type": "TEXT", "text": "SafeGold", "style": "body.small.secondary" },
+        { "type": "TEXT", "text": "\u2022", "style": "body.small.secondary" },
+        { "type": "TEXT", "text": "99.5% purity", "style": "body.small.secondary" }
+      ]
+    }
+  },
+
+  "body": [
+    {
+      "id": "success_header",
+      "type": "GRADIENT_CONTAINER",
+      "gradient": {
+        "colors": ["#FFB43A", "#FFE799"],
+        "begin": "topCenter",
+        "end": "bottomCenter"
+      },
+      "height": 360,
+      "borderRadius": { "bottomLeft": 16, "bottomRight": 16 },
+      "padding": { "left": 24, "top": 54, "right": 24 },
+      "decorations": [
+        {
+          "type": "image",
+          "source": "asset://gold_bars.png",
+          "position": { "right": 0, "top": 100 },
+          "width": 168,
+          "height": 110
+        }
+      ],
+      "children": [
+        {
+          "type": "TEXT",
+          "text": "You now own gold worth",
+          "style": "title.small.primary"
+        },
+        {
+          "type": "MONEY_DISPLAY",
+          "amount": "{{amount}}",
+          "currency": "INR",
+          "amountStyle": "heading.large.primary"
+        },
+        {
+          "type": "BADGE",
+          "text": "{{timestamp}}",
+          "variant": "dark",
+          "size": "small"
+        }
+      ]
+    },
+
+    {
+      "id": "order_card",
+      "comment": "margin.top: -142 couples to success_header.height (360). Update together.",
+      "type": "CARD",
+      "margin": { "horizontal": 24, "top": -142 },
+      "background": "surface.default",
+      "borderColor": "#252529",
+      "borderWidth": 1,
+      "borderRadius": 16,
+      "padding": "md",
+      "gap": "md",
+      "children": [
+        {
+          "id": "order_header",
+          "type": "ROW",
+          "gap": "sm",
+          "crossAxisAlignment": "center",
+          "children": [
+            {
+              "type": "TEXT",
+              "text": "GOLD ORDER DETAILS",
+              "style": "label.small.primary.bold"
+            },
+            {
+              "type": "DIVIDER",
+              "direction": "horizontal",
+              "flex": 1,
+              "lineStyle": "dashed"
+            }
+          ]
+        },
+
+        {
+          "id": "product_card",
+          "type": "CARD",
+          "background": "#FFFDF2",
+          "borderColor": "#FFEF9A",
+          "borderWidth": 1,
+          "borderRadius": 12,
+          "padding": "none",
+          "gap": "sm",
+          "children": [
+            {
+              "type": "CONTAINER",
+              "background": "#FFF7CC",
+              "borderRadius": { "topLeft": 11, "topRight": 11 },
+              "padding": { "horizontal": 15, "vertical": 7 },
+              "children": [
+                {
+                  "type": "ROW",
+                  "gap": "sm",
+                  "crossAxisAlignment": "center",
+                  "children": [
+                    {
+                      "type": "CONTAINER",
+                      "background": "surface.default",
+                      "borderColor": "#E1E0FB",
+                      "borderWidth": 1,
+                      "borderRadius": 6,
+                      "width": 32,
+                      "height": 32
+                    },
+                    {
+                      "type": "COLUMN",
+                      "gap": "none",
+                      "crossAxisAlignment": "start",
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "text": "24-Karat Gold",
+                          "style": "body.medium.primary"
+                        },
+                        {
+                          "type": "ROW",
+                          "gap": "xs",
+                          "crossAxisAlignment": "center",
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "text": "Securely stored with",
+                              "style": "body.small.secondary"
+                            },
+                            {
+                              "type": "IMAGE",
+                              "source": "asset://safegold_logo.png",
+                              "width": 11,
+                              "height": 11
+                            },
+                            { "type": "TEXT", "text": "SafeGold", "style": "body.small.secondary" }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ROW",
+              "mainAxisAlignment": "spaceBetween",
+              "padding": { "horizontal": 15 },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "text": "Gold purchased in grams",
+                  "style": "body.small.secondary"
+                },
+                {
+                  "type": "TEXT",
+                  "text": "{{grams}}g",
+                  "style": "body.small.primary"
+                }
+              ]
+            },
+            {
+              "type": "ROW",
+              "mainAxisAlignment": "spaceBetween",
+              "padding": { "horizontal": 15 },
+              "children": [
+                { "type": "TEXT", "text": "Purchase price", "style": "body.small.secondary" },
+                {
+                  "type": "TEXT",
+                  "text": "\u20b9{{pricePerGram}}/g +3% GST",
+                  "style": "body.small.primary"
+                }
+              ]
+            },
+            {
+              "type": "CONTAINER",
+              "padding": { "horizontal": 14, "bottom": 12 },
+              "children": [
+                {
+                  "type": "BADGE",
+                  "text": "Paid",
+                  "icon": "check_circle",
+                  "variant": "success",
+                  "size": "small"
+                }
+              ]
+            }
+          ]
+        },
+
+        {
+          "id": "sip_autopay_success",
+          "type": "CONTAINER",
+          "background": "#F0FFF4",
+          "borderRadius": 12,
+          "padding": "md",
+          "gap": "xs",
+          "visibility": {
+            "field": "isSip",
+            "operator": "==",
+            "value": "true"
+          },
+          "children": [
+            {
+              "type": "ROW",
+              "gap": "sm",
+              "crossAxisAlignment": "center",
+              "children": [
+                {
+                  "type": "ICON",
+                  "name": "check_circle",
+                  "size": 20,
+                  "color": "#2E7D32"
+                },
+                {
+                  "type": "TEXT",
+                  "text": "UPI AutoPay set successful",
+                  "style": {
+                    "fontSize": 14,
+                    "fontWeight": "semibold",
+                    "color": "#2E7D32"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "text": "{{sipScheduleText}}",
+              "style": "body.small.secondary"
+            }
+          ]
+        },
+
+        {
+          "id": "transfer_info",
+          "type": "COLUMN",
+          "gap": "none",
+          "crossAxisAlignment": "start",
+          "children": [
+            { "type": "TEXT", "text": "Transferred from", "style": "body.small.secondary" },
+            {
+              "type": "TEXT",
+              "text": "{{bankName}} ***{{bankLast4}}",
+              "style": "body.medium.primary"
+            }
+          ]
+        },
+
+        {
+          "id": "download_invoice",
+          "type": "BUTTON",
+          "label": "Download invoice",
+          "variant": "OUTLINED",
+          "size": "small",
+          "action": {
+            "type": "NATIVE_CALL",
+            "method": "downloadInvoice",
+            "params": {
+              "transactionId": "{{transactionId}}"
+            }
+          }
+        }
+      ]
+    },
+
+    { "type": "SPACER", "flex": 1 },
+
+    {
+      "id": "bottom_cta",
+      "type": "CONTAINER",
+      "background": "#E6FFFFFF",
+      "borderColor": "surface.default",
+      "borderRadius": { "topLeft": 16, "topRight": 16 },
+      "padding": { "horizontal": 24, "top": 16, "bottom": 42 },
+      "children": [
+        {
+          "type": "BUTTON",
+          "label": "Go to Home",
+          "variant": "CTA_PRIMARY",
+          "fullWidth": true,
+          "action": { "type": "NAVIGATE", "route": "/home" }
+        }
+      ]
+    }
+  ]
+}

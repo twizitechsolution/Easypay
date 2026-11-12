@@ -1,0 +1,395 @@
+{
+  "$schema": "https://curie.money/schemas/sdui/v3.json",
+  "schemaVersion": "3.0.0",
+  "minAppVersion": "3.2.0",
+  "screen": {
+    "id": "gold_purchase_confirm",
+    "title": "Confirm Purchase",
+    "analytics": {
+      "name": "gold_purchase_confirm",
+      "class": "GoldPurchaseConfirmScreen"
+    },
+    "presentation": "bottomSheet",
+    "bottomSheet": {
+      "dragHandle": true,
+      "dragHandleColor": "#D9D9D9",
+      "borderRadius": 24,
+      "maxHeight": 0.85
+    }
+  },
+  "config": {
+    "cache": { "ttl": 0, "staleWhileRevalidate": false },
+    "unknownWidgetBehavior": "hide"
+  },
+  "refs": {
+    "trust_badge_safegold": {
+      "type": "ROW",
+      "mainAxisAlignment": "center",
+      "gap": "xs",
+      "children": [
+        {
+          "type": "TEXT",
+          "text": "Securely stored with",
+          "style": {
+            "fontSize": 10,
+            "fontWeight": "medium",
+            "color": "#7D7D85",
+            "letterSpacing": 0.1
+          }
+        },
+        {
+          "type": "IMAGE",
+          "source": "asset://safegold_logo.png",
+          "width": 10,
+          "height": 10
+        },
+        {
+          "type": "TEXT",
+          "text": "SafeGold",
+          "style": {
+            "fontSize": 10,
+            "fontWeight": "medium",
+            "color": "#7D7D85",
+            "letterSpacing": 0.1
+          }
+        },
+        {
+          "type": "TEXT",
+          "text": "\u2022",
+          "style": {
+            "fontSize": 10,
+            "fontWeight": "medium",
+            "color": "#7D7D85"
+          }
+        },
+        {
+          "type": "TEXT",
+          "text": "99.5% purity",
+          "style": {
+            "fontSize": 10,
+            "fontWeight": "medium",
+            "color": "#7D7D85",
+            "letterSpacing": 0.1
+          }
+        }
+      ]
+    }
+  },
+
+  "body": [
+    {
+      "id": "purchase_summary",
+      "type": "SECTION",
+      "padding": { "horizontal": 0 },
+      "gap": "sm",
+      "children": [
+        {
+          "type": "ROW",
+          "mainAxisAlignment": "spaceBetween",
+          "crossAxisAlignment": "start",
+          "padding": { "right": 12 },
+          "children": [
+            {
+              "type": "COLUMN",
+              "gap": "xs",
+              "crossAxisAlignment": "start",
+              "children": [
+                {
+                  "type": "TEXT",
+                  "text": "{{confirmTitle}}",
+                  "style": {
+                    "fontSize": 22,
+                    "fontWeight": "semibold",
+                    "color": "#252529",
+                    "lineHeight": 1.27
+                  }
+                },
+                {
+                  "id": "sip_amount_row",
+                  "type": "ROW",
+                  "gap": "xs",
+                  "crossAxisAlignment": "baseline",
+                  "visibility": {
+                    "field": "isSip",
+                    "operator": "==",
+                    "value": "true"
+                  },
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "text": "\u20b9{{totalAmount}}",
+                      "style": {
+                        "fontSize": 22,
+                        "fontWeight": "semibold",
+                        "color": "#252529",
+                        "lineHeight": 1.27
+                      }
+                    },
+                    {
+                      "type": "TEXT",
+                      "text": "worth of 24K gold",
+                      "style": {
+                        "fontSize": 16,
+                        "fontWeight": "semibold",
+                        "color": "#CA7719",
+                        "letterSpacing": 0.15,
+                        "lineHeight": 1.5
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "onetime_grams_row",
+                  "type": "ROW",
+                  "gap": "xs",
+                  "crossAxisAlignment": "baseline",
+                  "visibility": {
+                    "field": "isSip",
+                    "operator": "==",
+                    "value": "false"
+                  },
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "text": "{{goldQuantity}}g",
+                      "style": {
+                        "fontSize": 22,
+                        "fontWeight": "semibold",
+                        "color": "#252529",
+                        "lineHeight": 1.27
+                      }
+                    },
+                    {
+                      "type": "TEXT",
+                      "text": "of 24K gold",
+                      "style": {
+                        "fontSize": 16,
+                        "fontWeight": "semibold",
+                        "color": "#CA7719",
+                        "letterSpacing": 0.15,
+                        "lineHeight": 1.5
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "CONTAINER",
+              "borderColor": "#E1E0FB",
+              "borderWidth": 1,
+              "borderRadius": 8,
+              "width": 44,
+              "height": 44
+            }
+          ]
+        },
+        {
+          "type": "TEXT",
+          "text": "Includes 3% GST.",
+          "style": {
+            "fontSize": 12,
+            "fontWeight": "regular",
+            "color": "#7D7D85",
+            "letterSpacing": 0.2,
+            "lineHeight": 1.33
+          }
+        }
+      ]
+    },
+
+    {
+      "type": "DIVIDER",
+      "lineStyle": "dashed",
+      "color": "#E0E0E0"
+    },
+
+    {
+      "id": "payment_section",
+      "type": "SECTION",
+      "gap": "sm",
+      "children": [
+        {
+          "type": "TEXT",
+          "text": "Paying via",
+          "style": {
+            "fontSize": 16,
+            "fontWeight": "semibold",
+            "color": "#252529",
+            "letterSpacing": 0.15,
+            "lineHeight": 1.5
+          }
+        },
+        {
+          "type": "ROW",
+          "mainAxisAlignment": "spaceBetween",
+          "crossAxisAlignment": "center",
+          "padding": { "right": 12, "vertical": 4 },
+          "children": [
+            {
+              "type": "ROW",
+              "gap": "sm",
+              "crossAxisAlignment": "center",
+              "children": [
+                {
+                  "type": "AVATAR",
+                  "source": "{{bankLogo}}",
+                  "size": 40,
+                  "borderRadius": 6,
+                  "borderColor": "#252529",
+                  "borderWidth": 1
+                },
+                {
+                  "type": "COLUMN",
+                  "gap": "none",
+                  "crossAxisAlignment": "start",
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "text": "{{bankName}}",
+                      "style": {
+                        "fontSize": 14,
+                        "fontWeight": "semibold",
+                        "color": "#252529",
+                        "letterSpacing": 0.1,
+                        "lineHeight": 1.43
+                      }
+                    },
+                    {
+                      "type": "TEXT",
+                      "text": "**{{bankLast4}}",
+                      "style": {
+                        "fontSize": 12,
+                        "fontWeight": "semibold",
+                        "color": "#7D7D85",
+                        "letterSpacing": 0.1,
+                        "lineHeight": 1.33
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "switch_account",
+              "type": "BUTTON",
+              "label": "Switch/Add account",
+              "variant": "PILL",
+              "size": "small",
+              "style": {
+                "background": "#FFF7CC",
+                "borderColor": "#FFDF35",
+                "borderWidth": 1,
+                "borderRadius": 28,
+                "textColor": "#665601",
+                "fontSize": 11,
+                "fontWeight": "medium",
+                "letterSpacing": 0.2,
+                "shadow": { "x": 1, "y": 1, "blur": 0, "color": "#E1C21E" }
+              },
+              "action": {
+                "type": "NATIVE_CALL",
+                "method": "switchBankAccount"
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "sip_autopay_notice",
+      "type": "SECTION",
+      "gap": "xs",
+      "visibility": {
+        "field": "isSip",
+        "operator": "==",
+        "value": "true"
+      },
+      "children": [
+        {
+          "type": "CONTAINER",
+          "background": "#F8F7FE",
+          "borderColor": "#F0EFFD",
+          "borderWidth": 1,
+          "borderRadius": 8,
+          "padding": { "vertical": 8 },
+          "children": [
+            {
+              "type": "ROW",
+              "gap": "xs",
+              "crossAxisAlignment": "center",
+              "mainAxisAlignment": "center",
+              "children": [
+                {
+                  "type": "ICON",
+                  "name": "lock",
+                  "size": 11,
+                  "color": "#403C8E"
+                },
+                {
+                  "type": "TEXT",
+                  "text": "Auto-debit {{frequencyLabel}} via UPI Autopay \u2022 Cancel anytime",
+                  "style": {
+                    "fontSize": 11,
+                    "fontWeight": "regular",
+                    "color": "#403C8E",
+                    "letterSpacing": 0.2,
+                    "lineHeight": 1.45
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "ROW",
+          "mainAxisAlignment": "center",
+          "gap": 2,
+          "crossAxisAlignment": "end",
+          "children": [
+            {
+              "type": "TEXT",
+              "text": "Powered by",
+              "style": {
+                "fontSize": 11,
+                "fontWeight": "medium",
+                "color": "#7D7D85",
+                "letterSpacing": 0.2,
+                "lineHeight": 1.45
+              }
+            },
+            {
+              "type": "IMAGE",
+              "source": "asset://upi_autopay_logo.png",
+              "width": 88,
+              "height": 12,
+              "fit": "contain"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "confirm_cta",
+      "type": "BUTTON",
+      "label": "{{confirmCta}}",
+      "variant": "CTA_PRIMARY",
+      "fullWidth": true,
+      "action": {
+        "type": "NATIVE_CALL",
+        "method": "executePurchase",
+        "params": {
+          "frequency": "{{frequency}}",
+          "totalAmount": "{{totalAmount}}",
+          "goldQuantity": "{{goldQuantity}}",
+          "rateId": "{{previewRateId}}",
+          "bankAccountId": "{{bankAccountId}}"
+        }
+      }
+    },
+
+    { "$ref": "trust_badge_safegold" }
+  ]
+}

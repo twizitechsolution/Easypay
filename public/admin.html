@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bachat Pay — Enterprise Control & Orchestration Center</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-navy: #0F172A;
+      --primary-blue: #1E3A8A;
+      --accent-blue: #2563EB;
+      --accent-emerald: #059669;
+      --bg-dashboard: #F1F5F9;
+      --surface-white: #FFFFFF;
+      --text-main: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #94A3B8;
+      --border-color: #E2E8F0;
+      --font-heading: 'Plus Jakarta Sans', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dashboard);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background-color: #0F172A;
+      color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .brand-section {
+      padding: 24px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #1E293B;
+    }
+
+    .brand-logo-img {
+      height: 32px;
+      object-fit: contain;
+    }
+
+    .brand-text {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 16px;
+      color: #FFFFFF;
+    }
+
+    .nav-list {
+      list-style: none;
+      padding: 20px 12px;
+      flex: 1;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: #94A3B8;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 4px;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      color: #FFFFFF;
+      background-color: #1E293B;
+    }
+
+    .nav-item.active {
+      background-color: #2563EB;
+      color: #FFFFFF;
+    }
+
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid #1E293B;
+      font-size: 11px;
+      color: #64748B;
+    }
+
+    /* Main Area */
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .top-header {
+      background-color: var(--surface-white);
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-header-action {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+    .btn-header-action.primary {
+      background: var(--accent-blue);
+      color: white;
+      border-color: var(--accent-blue);
+    }
+
+    /* Dashboard Content */
+    .dashboard-body {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .metric-card {
+      background: var(--surface-white);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .metric-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .metric-value {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .metric-sub {
+      font-size: 11px;
+      color: var(--accent-emerald);
+      font-weight: 600;
+    }
+
+    /* Content Cards */
+    .content-card {
+      background: var(--surface-white);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .card-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .card-heading {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Table */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 12px 14px;
+      background-color: #F8FAFC;
+      border-bottom: 1.5px solid var(--border-color);
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .data-table td {
+      padding: 14px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .status-badge {
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      display: inline-block;
+    }
+    .status-badge.active {
+      background: #ECFDF5;
+      color: #059669;
+    }
+    .status-badge.inactive {
+      background: #FEF2F2;
+      color: #DC2626;
+    }
+
+    /* Action buttons in table */
+    .btn-action-small {
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: white;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.15s;
+    }
+    .btn-action-small:hover {
+      background: #F1F5F9;
+      color: var(--accent-blue);
+    }
+
+    /* Modal Form */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-backdrop.show {
+      display: flex;
+    }
+    .modal-box {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      width: 100%;
+      max-width: 460px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    .form-field {
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-field label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .form-field input, .form-field select {
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border-color);
+      font-size: 13px;
+      outline: none;
+    }
+    .form-field input:focus, .form-field select:focus {
+      border-color: var(--accent-blue);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand-section">
+      <img src="/assets/bachatpay/home/logo.png" alt="Bachat Pay" class="brand-logo-img">
+      <div class="brand-text">Admin Ops</div>
+    </div>
+
+    <ul class="nav-list">
+      <li class="nav-item active" onclick="switchAdminTab('overview', this)">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Overview & Metrics</span>
+      </li>
+      <li class="nav-item" onclick="switchAdminTab('investment-plans', this)">
+        <i class="fa-solid fa-hand-holding-dollar"></i>
+        <span>Investment Plan Management</span>
+      </li>
+      <li class="nav-item" onclick="switchAdminTab('brands', this)">
+        <i class="fa-solid fa-gift"></i>
+        <span>Brand Gift Cards</span>
+      </li>
+      <li class="nav-item" onclick="switchAdminTab('recharge', this)">
+        <i class="fa-solid fa-bolt"></i>
+        <span>BBPS Recharges</span>
+      </li>
+      <li class="nav-item" onclick="switchAdminTab('vouchers', this)">
+        <i class="fa-solid fa-ticket"></i>
+        <span>Issued Vouchers</span>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div>Bachat Pay Enterprise Engine</div>
+      <div style="margin-top: 4px; color: #475569;">v2.5.0-PROD • Woohoo Active</div>
+    </div>
+  </aside>
+
+  <!-- Main View -->
+  <div class="main-wrapper">
+    <header class="top-header">
+      <div class="header-title" id="pageTitle">Enterprise Dashboard</div>
+      <div class="header-actions">
+        <button class="btn-header-action" onclick="fetchAdminData()">
+          <i class="fa-solid fa-rotate"></i> Refresh Data
+        </button>
+        <a href="/" target="_blank" class="btn-header-action primary">
+          <i class="fa-solid fa-mobile-screen"></i> Launch User App
+        </a>
+      </div>
+    </header>
+
+    <div class="dashboard-body">
+      
+      <!-- Metrics Overview -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Total Platform GMV</div>
+          <div class="metric-value" id="valTotalGmv">₹12,84,500</div>
+          <div class="metric-sub"><i class="fa-solid fa-arrow-trend-up"></i> +18.4% this month</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Gift Cards Issued</div>
+          <div class="metric-value" id="valGiftCardsSold">4,820</div>
+          <div class="metric-sub">Woohoo / Pine Labs Rail</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">BBPS Recharges Done</div>
+          <div class="metric-value" id="valRechargesDone">9,320</div>
+          <div class="metric-sub">NPCI Bharat Connect</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Platform Margin Earned</div>
+          <div class="metric-value" id="valCommission">₹64,225</div>
+          <div class="metric-sub">Net Enterprise Profit</div>
+        </div>
+      </div>
+
+      <!-- Section: Investment Plan Management (Monthly Yield & Daily Wallet Credit) -->
+      <div class="content-card" id="sectionInvestmentPlans">
+        <div class="card-title-row">
+          <div>
+            <div class="card-heading">Investment Plan Management (Monthly Yield & Daily Wallet Credit)</div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Control plans, monthly interest rates (% per month), minimum amounts (starting at ₹1,000), starting tenure (6 months), and daily interest payouts</div>
+          </div>
+          <button class="btn-header-action primary" onclick="openAddPlanModal()">
+            <i class="fa-solid fa-plus"></i> Add New Plan
+          </button>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Plan Name & Institution</th>
+              <th>Category</th>
+              <th>Monthly Interest Rate</th>
+              <th>Min Investment</th>
+              <th>Starting Duration</th>
+              <th>Daily Payout to Wallet</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="investPlansTableBody">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Section: Brand Gift Cards Management -->
+      <div class="content-card" id="sectionBrands">
+        <div class="card-title-row">
+          <div>
+            <div class="card-heading">Woohoo Brand Catalog & Cashback Engine</div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Control live discounts and availability across mobile and web clients</div>
+          </div>
+          <button class="btn-header-action primary" onclick="openAddBrandModal()">
+            <i class="fa-solid fa-plus"></i> Add New Brand
+          </button>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Brand Name</th>
+              <th>Category</th>
+              <th>Instant Bachat Rate</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="brandTableBody">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Section: Real-Time Issued Vouchers -->
+      <div class="content-card" id="sectionVouchers">
+        <div class="card-title-row">
+          <div>
+            <div class="card-heading">Live Issued Vouchers (Encrypted Vault Ledger)</div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Synchronized in real-time when users purchase gift cards</div>
+          </div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Voucher ID</th>
+              <th>Brand</th>
+              <th>Denomination</th>
+              <th>Voucher Code</th>
+              <th>Security PIN</th>
+              <th>Expiry Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="vouchersTableBody">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal: Add New Investment Plan -->
+  <div class="modal-backdrop" id="addPlanModal">
+    <div class="modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="font-family: var(--font-heading); font-size: 16px;">Add New Investment Plan</h3>
+        <button style="border: none; background: none; cursor: pointer; font-size: 16px;" onclick="closeAddPlanModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="form-field">
+        <label>Plan Name & Institution</label>
+        <input type="text" id="newPlanTitle" placeholder="e.g. Suryoday SF Bank 9.5% Plan">
+      </div>
+
+      <div class="form-field">
+        <label>Category</label>
+        <select id="newPlanCategory">
+          <option value="Fixed Deposit">Fixed Deposit (SFB)</option>
+          <option value="Bonds">Senior Secured Corporate Bonds</option>
+          <option value="Recurring Deposit">Recurring Deposit (RD)</option>
+          <option value="FD card">FD Card</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label>Monthly Interest Rate (% per month)</label>
+        <input type="number" id="newPlanMonthlyRate" value="8.60" step="0.10">
+      </div>
+
+      <div class="form-field">
+        <label>Minimum Investment (₹)</label>
+        <input type="number" id="newPlanMinAmount" value="1000" step="500">
+      </div>
+
+      <div class="form-field">
+        <label>Starting Duration</label>
+        <select id="newPlanDuration">
+          <option value="6">Starts from 6 Months</option>
+          <option value="12">12 Months (1 Year)</option>
+          <option value="24">24 Months (2 Years)</option>
+          <option value="36">36 Months (3 Years)</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label>Lock-in & Daily Payout Notice</label>
+        <input type="text" id="newPlanNotice" value="Starts from 6 months with daily interest credited to wallet" placeholder="Policy details">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px;">
+        <button class="btn-header-action" onclick="closeAddPlanModal()">Cancel</button>
+        <button class="btn-header-action primary" onclick="submitNewPlan()">Save & Publish Plan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Add New Brand -->
+  <div class="modal-backdrop" id="addBrandModal">
+    <div class="modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="font-family: var(--font-heading); font-size: 16px;">Add Brand Gift Card</h3>
+        <button style="border: none; background: none; cursor: pointer; font-size: 16px;" onclick="closeAddBrandModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="form-field">
+        <label>Brand Name</label>
+        <input type="text" id="newBrandName" placeholder="e.g. Starbucks">
+      </div>
+
+      <div class="form-field">
+        <label>Category</label>
+        <select id="newBrandCategory">
+          <option value="Food & Dining">Food & Dining</option>
+          <option value="E-Commerce">E-Commerce</option>
+          <option value="Fashion">Fashion</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Travel">Travel</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label>Instant Cashback Rate (%)</label>
+        <input type="number" id="newBrandCashback" value="5.0" step="0.5">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px;">
+        <button class="btn-header-action" onclick="closeAddBrandModal()">Cancel</button>
+        <button class="btn-header-action primary" onclick="submitNewBrand()">Save & Publish</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let adminData = {};
+
+    async function fetchAdminData() {
+      try {
+        const res = await fetch('/api/data');
+        if (res.ok) {
+          adminData = await res.json();
+          renderAdminDashboard();
+        }
+      } catch (e) {
+        console.error('Failed to fetch admin data:', e);
+      }
+    }
+
+    function renderAdminDashboard() {
+      // Metrics
+      if (adminData.analytics) {
+        document.getElementById('valTotalGmv').innerText = '₹' + (adminData.analytics.totalGmv || 1284500).toLocaleString('en-IN');
+        document.getElementById('valGiftCardsSold').innerText = (adminData.analytics.giftCardsSold || 0).toLocaleString('en-IN');
+        document.getElementById('valRechargesDone').innerText = (adminData.analytics.rechargesDone || 0).toLocaleString('en-IN');
+        document.getElementById('valCommission').innerText = '₹' + Math.round(adminData.analytics.platformCommissionEarned || 0).toLocaleString('en-IN');
+      }
+
+      // Investment Plans Table
+      const planBody = document.getElementById('investPlansTableBody');
+      if (planBody && adminData.bonds) {
+        planBody.innerHTML = adminData.bonds.map(p => `
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 28px; height: 28px; border-radius: 8px; background: #059669; color: white; display: flex; align-items: center; justify-content: center; font-size: 13px;">
+                  <i class="fa-solid ${p.icon || 'fa-vault'}"></i>
+                </div>
+                <div>
+                  <strong>${p.title}</strong>
+                  <div style="font-size: 10px; color: #64748B;">ID: ${p.id}</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="status-badge" style="background: #F1F5F9; color: #334155;">${p.category || 'Fixed Deposit'}</span></td>
+            <td>
+              <span style="color: #059669; font-weight: 800; font-size: 14px;">${p.monthlyRate || p.newRate || 8.60}% / month</span>
+            </td>
+            <td><strong>₹${(p.minAmount || 1000).toLocaleString('en-IN')}</strong></td>
+            <td>
+              <span class="status-badge active">6 Months</span>
+            </td>
+            <td>
+              <span style="font-size: 11px; font-weight: 700; color: #059669; display: inline-flex; align-items: center; gap: 4px;">
+                <i class="fa-solid fa-circle-check"></i> Daily Wallet Payout
+              </span>
+            </td>
+            <td>
+              <span class="status-badge ${p.active !== false ? 'active' : 'inactive'}">
+                ${p.active !== false ? 'Active (Live)' : 'Disabled'}
+              </span>
+            </td>
+            <td>
+              <button class="btn-action-small" onclick="togglePlanStatus('${p.id}')">
+                ${p.active !== false ? 'Disable' : 'Enable'}
+              </button>
+              <button class="btn-action-small" onclick="promptUpdatePlanRate('${p.id}', ${p.monthlyRate || p.newRate || 8.60})">
+                Adjust % / Month
+              </button>
+              <button class="btn-action-small" onclick="promptUpdatePlanMin('${p.id}', ${p.minAmount || 1000})">
+                Min Amt
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // Brands Table
+      const brandBody = document.getElementById('brandTableBody');
+      if (brandBody && adminData.giftCards) {
+        brandBody.innerHTML = adminData.giftCards.map(c => `
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <img src="${c.logo || '/assets/bachatpay/home/app_icon.png'}" style="width: 24px; height: 24px; object-fit: contain;" onerror="this.src='/assets/bachatpay/home/app_icon.png'">
+                <strong>${c.name}</strong>
+              </div>
+            </td>
+            <td>${c.category || 'Voucher'}</td>
+            <td>
+              <span style="color: #059669; font-weight: 700;">${c.cashbackRate || 5}% Instant</span>
+            </td>
+            <td>
+              <span class="status-badge ${c.active !== false ? 'active' : 'inactive'}">
+                ${c.active !== false ? 'Active (Live)' : 'Disabled'}
+              </span>
+            </td>
+            <td>
+              <button class="btn-action-small" onclick="toggleBrandStatus('${c.id}')">
+                ${c.active !== false ? 'Disable' : 'Enable'}
+              </button>
+              <button class="btn-action-small" onclick="promptUpdateRate('${c.id}', ${c.cashbackRate || 5})">
+                Adjust %
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // Vouchers Table
+      const vBody = document.getElementById('vouchersTableBody');
+      if (vBody && adminData.vouchers) {
+        vBody.innerHTML = adminData.vouchers.map(v => `
+          <tr>
+            <td><code>${v.id}</code></td>
+            <td><strong>${v.brand}</strong></td>
+            <td>₹${v.amount}</td>
+            <td><code style="color: #2563EB; font-weight: 700;">${v.voucherCode}</code></td>
+            <td><code style="letter-spacing: 2px;">${v.pin}</code></td>
+            <td>${v.expiryDate || '1 Year'}</td>
+            <td><span class="status-badge active">${v.status || 'ACTIVE'}</span></td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    // Investment Plan Admin Actions
+    async function togglePlanStatus(id) {
+      await fetch('/api/admin/invest-plans/toggle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+      fetchAdminData();
+    }
+
+    async function promptUpdatePlanRate(id, currentRate) {
+      const newRate = prompt('Enter new Monthly Interest Rate (% per month) for this plan:', currentRate);
+      if (newRate !== null && !isNaN(parseFloat(newRate))) {
+        await fetch('/api/admin/invest-plans/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, monthlyRate: parseFloat(newRate) })
+        });
+        fetchAdminData();
+      }
+    }
+
+    async function promptUpdatePlanMin(id, currentMin) {
+      const newMin = prompt('Enter new Minimum Investment Amount (₹) for this plan:', currentMin);
+      if (newMin !== null && !isNaN(parseFloat(newMin))) {
+        await fetch('/api/admin/invest-plans/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, minAmount: parseFloat(newMin) })
+        });
+        fetchAdminData();
+      }
+    }
+
+    function openAddPlanModal() {
+      document.getElementById('addPlanModal').classList.add('show');
+    }
+    function closeAddPlanModal() {
+      document.getElementById('addPlanModal').classList.remove('show');
+    }
+
+    async function submitNewPlan() {
+      const title = document.getElementById('newPlanTitle').value.trim();
+      const category = document.getElementById('newPlanCategory').value;
+      const monthlyRate = parseFloat(document.getElementById('newPlanMonthlyRate').value) || 8.6;
+      const minAmount = parseFloat(document.getElementById('newPlanMinAmount').value) || 1000;
+      const lockInNotice = document.getElementById('newPlanNotice').value;
+
+      if (!title) {
+        alert('Please enter Plan Title');
+        return;
+      }
+
+      await fetch('/api/admin/invest-plans/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, category, monthlyRate, minAmount, lockInNotice })
+      });
+
+      closeAddPlanModal();
+      fetchAdminData();
+    }
+
+    async function toggleBrandStatus(id) {
+      await fetch('/api/gift-cards/toggle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+      fetchAdminData();
+    }
+
+    async function promptUpdateRate(id, currentRate) {
+      const newRate = prompt('Enter new cashback percentage for this brand:', currentRate);
+      if (newRate !== null && !isNaN(parseFloat(newRate))) {
+        await fetch('/api/gift-cards/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, cashbackRate: parseFloat(newRate) })
+        });
+        fetchAdminData();
+      }
+    }
+
+    function openAddBrandModal() {
+      document.getElementById('addBrandModal').classList.add('show');
+    }
+    function closeAddBrandModal() {
+      document.getElementById('addBrandModal').classList.remove('show');
+    }
+
+    async function submitNewBrand() {
+      const name = document.getElementById('newBrandName').value.trim();
+      const category = document.getElementById('newBrandCategory').value;
+      const cashbackRate = parseFloat(document.getElementById('newBrandCashback').value) || 5;
+
+      if (!name) {
+        alert('Please enter brand name');
+        return;
+      }
+
+      await fetch('/api/gift-cards/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, category, cashbackRate })
+      });
+
+      closeAddBrandModal();
+      fetchAdminData();
+    }
+
+    function switchAdminTab(tab, el) {
+      document.querySelectorAll('.sidebar .nav-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
+
+      if (tab === 'investment-plans') {
+        document.getElementById('sectionInvestmentPlans').scrollIntoView({ behavior: 'smooth' });
+      } else if (tab === 'brands') {
+        document.getElementById('sectionBrands').scrollIntoView({ behavior: 'smooth' });
+      } else if (tab === 'vouchers') {
+        document.getElementById('sectionVouchers').scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Initialize
+    fetchAdminData();
+  </script>
+</body>
+</html>
