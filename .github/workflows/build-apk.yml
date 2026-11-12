@@ -53,19 +53,18 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.0
-          name: "EasyPay Android APK v1.0.0 (Production Release)"
+          tag_name: v1.0.1
+          name: "EasyPay Android APK v1.0.1 (Production Release)"
           body: |
-            ## EasyPay Mobile Application APK
+            ## EasyPay Mobile Application APK v1.0.1
             Official Production Release APK for EasyPay Enterprise Financial Platform.
             
-            ### Included Features:
-            - **Authentic Flame Splash Screen** with smooth typewriter animation.
-            - **Mobile Login & 4-digit OTP Verification Flow**.
-            - **Mobile Recharge & Bill Payments** with instant plan search filter.
-            - **High Yield Bonds (12%)** with live connecting radar animation.
-            - **Official Brand Gift Cards** with instant auto-discount & dynamic payment buttons.
-            - **Profile & Security PIN Setup** with registered mobile OTP authentication.
+            ### Included Features & Fixes:
+            - **No Tester Bar**: 100% production-grade clean UI.
+            - **Splash -> Login -> OTP -> Home Flow**: Mandatory secure authentic onboarding.
+            - **All 32+ Gift Card Brands Loaded**: Official vector brand logos, rotating deals, instant auto-discount calculation.
+            - **Bonds & Fixed Deposits**: "What's on your mind?" removed, live connecting radar animation & investment booking modal.
+            - **Profile Menu Fully Operational**: Edit profile, QR code display, passbook history, Set PIN with mobile OTP, and payment settings.
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
