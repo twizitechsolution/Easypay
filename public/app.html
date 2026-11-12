@@ -293,7 +293,7 @@
     }
 
     body {
-      background-color: #0B1120;
+      background-color: #F8FAFC;
       color: var(--text-main);
       font-family: var(--font-body);
       min-height: 100vh;
@@ -302,90 +302,32 @@
       align-items: center;
       justify-content: flex-start;
       padding: 0;
+      margin: 0;
       overflow-x: hidden;
     }
 
-    /* Top Tester & Switcher Bar */
-    .top-tester-bar {
-      width: 100%;
-      background: #0F172A;
-      color: #FFFFFF;
-      padding: 8px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 13px;
-      z-index: 1000;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    }
-    .tester-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .tester-badge {
-      background: #059669;
-      color: white;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: var(--radius-pill);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .tester-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .btn-test {
-      background: #1E293B;
-      border: 1px solid #334155;
-      color: #E2E8F0;
-      padding: 5px 10px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .btn-test:hover {
-      background: #334155;
-      color: #FFFFFF;
-    }
-    .btn-test.admin-btn {
-      background: #059669;
-      border-color: #047857;
-      color: #FFFFFF;
-    }
-
-    /* Responsive Mobile Frame Wrapper */
+    /* Production Clean Viewport */
     .app-viewport-wrapper {
       width: 100%;
-      max-width: 440px;
+      max-width: 480px;
       min-height: 100vh;
       background: var(--bg-page);
       position: relative;
-      box-shadow: 0 0 50px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
     }
 
-    @media (min-width: 768px) {
+    @media (max-width: 480px) {
       body {
-        padding: 16px 0;
+        background-color: var(--bg-page);
       }
       .app-viewport-wrapper {
-        min-height: 900px;
-        max-height: 940px;
-        border-radius: 40px;
-        border: 10px solid #1E293B;
-        overflow-y: auto;
+        max-width: 100%;
+        min-height: 100dvh;
+        box-shadow: none;
+        border-radius: 0;
       }
     }
 
@@ -3483,31 +3425,6 @@
 </head>
 <body>
 
-  <!-- TOP TESTER & STATUS BAR -->
-  <div class="top-tester-bar">
-    <div class="tester-left">
-      <span class="tester-badge">LIVE TESTER</span>
-      <span style="font-weight: 600;">EasyPay Enterprise Platform</span>
-    </div>
-    <div class="tester-controls">
-      <button class="btn-test" onclick="launchEasyPaySplash()" title="Test Splash typewriter animation">
-        <i class="fa-solid fa-play"></i> Splash Screen
-      </button>
-      <button class="btn-test" onclick="goToEasyPayLogin()" title="Direct to Freecharge-style Login screen">
-        <i class="fa-solid fa-arrow-right-to-bracket"></i> Login Screen
-      </button>
-      <button class="btn-test" onclick="goToEasyPayOtp()" title="Direct to 4-digit OTP screen">
-        <i class="fa-solid fa-key"></i> OTP Screen
-      </button>
-      <button class="btn-test" onclick="openNeedHelpScreen()" title="Direct to Need Help FAQ screen">
-        <i class="fa-solid fa-circle-question"></i> Need Help
-      </button>
-      <a href="/admin" target="_blank" class="btn-test admin-btn">
-        <i class="fa-solid fa-shield-halved"></i> Admin Panel
-      </a>
-    </div>
-  </div>
-
   <!-- RESPONSIVE MOBILE VIEWPORT -->
   <div class="app-viewport-wrapper">
 
@@ -6134,10 +6051,18 @@
       }
     }
 
-    // Direct URL hash / initial tab listener
+    // Direct URL hash / initial tab listener with production Auth Guard
     function handleInitialRoute() {
       const hash = (window.location.hash || '').replace('#', '').toLowerCase();
       const path = (window.location.pathname || '').replace('/', '').toLowerCase();
+
+      const isAuthed = sessionStorage.getItem('easypay_auth_completed') === 'true';
+
+      // If user is not authenticated in this session, ALWAYS start with Splash -> Login -> OTP sequence
+      if (!isAuthed) {
+        launchEasyPaySplash();
+        return;
+      }
 
       if (hash === 'auth' || hash === 'splash' || path === 'auth' || path === 'splash') {
         launchEasyPaySplash();
@@ -6157,13 +6082,19 @@
       }
 
       const validTabs = ['home', 'giftcards', 'bonds', 'shopping', 'passbook', 'profile'];
-      const target = validTabs.find(t => t === hash || t === path);
-      if (target) {
-        switchNavTab(target);
-      }
+      const target = validTabs.find(t => t === hash || t === path) || 'home';
+      switchNavTab(target);
     }
     window.addEventListener('hashchange', handleInitialRoute);
     window.addEventListener('DOMContentLoaded', handleInitialRoute);
+
+    function logoutUser() {
+      sessionStorage.removeItem('easypay_auth_completed');
+      showToast('Logged out of EasyPay');
+      setTimeout(() => {
+        launchEasyPaySplash();
+      }, 500);
+    }
 
     function openModal(id) { document.getElementById(id).classList.add('active'); }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
