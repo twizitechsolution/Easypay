@@ -53,28 +53,23 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.8
-          name: "EasyPay Android APK v1.0.8 (Home Cards Interactivity, Invest Transition, Web Audio Chime & Passbook)"
+          tag_name: v1.0.9
+          name: "EasyPay Android APK v1.0.9 (Fixed Menu Button, Restored Bottom Nav & All Tab Routing)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.8 (Comprehensive Directive Enhancements)
-            Production release with complete interactive Home Page service cards, authentic Bottom Nav with animated Invest center button, Web Audio payment success chime, Passbook All Transactions fix, and scaled-down Gift Card checkout.
+            ## EasyPay Mobile Application APK v1.0.9 (Root Cause Resolution & Permanent Fix)
+            Production release completely resolving the missing menu bar, top header alignment, gift cards routing, and home page touchable interactions.
             
-            ### Fixes & Enhancements in v1.0.8:
-            1. **Home Page & Section Interactions**:
-               - All interactive touchables wired: Check Balance, Transfer to Bank/Self, Pay ID/Mobile, Recharges & Utility Bills, and My Bills.
-            2. **Bottom Navigation Bar Redesign**:
-               - Four tabs in exact order: Home, Invest (center elevated button with 12% badge), Shopping, and Profile.
-               - Active tab state applies active orange color (`#FF5722`) to both icon and label simultaneously.
-            3. **Invest Page Introductory Animation**:
-               - Restored pre-transition radar connecting animation sequence (pulse ripples, DICGC insurance banner, and user/bank badges) before opening the Bonds & Fixed Deposits dashboard.
-            4. **My Profile & Passbook Enhancements**:
-               - Bank accounts management modal and PIN settings fully interactive.
-               - Passbook "All Transactions" view fixed to load and render the complete transaction history ledger dynamically.
-            5. **Gift Card Checkout, Inline PIN Error & Web Audio Chime**:
-               - Sizing and padding scaled down to eliminate screen overflow clipping.
-               - Inline "Wrong PIN" error inside PIN modal without abrupt dismissal.
-               - Authentic Web Audio payment success chime (C5-E5-G5 harmonic chord) on correct PIN validation.
-               - Fullscreen Success Modal with green check badge, UTR, Voucher Code, PIN, and Passbook logging.
+            ### Root Cause & Permanent Fixes in v1.0.9:
+            1. **Restored Bottom Navigation Bar**: Removed conflicting inline `display: none` from `#appBottomNav` and ensured bottom navigation stays permanently visible across the app.
+            2. **Top Header Alignment & Hamburger Menu**: Restored the hamburger menu icon (`fa-bars`) and side drawer menu, perfectly centering the EasyPay logo, search, bell notification dot, and avatar.
+            3. **Gift Vouchers Routing (Zero White Screen)**: Standardized all tab alias triggers (`giftCard`, `giftcards`, `gifts`, `shopping`) inside `switchNavTab` so the Gift Vouchers catalog opens instantly without blank white screens.
+            4. **Home Interactive Modals Wired**:
+               - Send Money (`openSendMoneyModal` -> `p2pPaymentModal`)
+               - Check Balance (`openBalanceModal` -> `checkBalanceModal`)
+               - Transfer to Bank (`openToBankModal` -> `transferToBankModal`)
+               - Recharges & Utilities (`openRechargeModal` -> `rechargeModal`)
+               - My Bills (`openMyBillsModal` -> `myBillsModal`)
+               - My QR & Scanner modals fully interactive.
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -252,6 +252,50 @@
       if (el3) el3.innerText = fmt;
     }
 
+
+    function openSideDrawerMenu() {
+      openModal('sideDrawerMenuModal');
+    }
+
+    function openSendMoneyModal(presetRecipient) {
+      if (presetRecipient) {
+        const inp = document.getElementById('p2pAmountInput');
+        if (inp) inp.focus();
+      }
+      openModal('p2pPaymentModal');
+    }
+
+    function openBalanceModal() {
+      if (appData && appData.user) {
+        const el = document.getElementById('balanceModalWalletDisplay');
+        if (el) el.innerText = '₹' + (appData.user.walletBalance || 5450).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+      }
+      openModal('checkBalanceModal');
+    }
+
+    function openToBankModal() {
+      openModal('transferToBankModal');
+    }
+
+    function openMyBillsModal() {
+      openModal('myBillsModal');
+    }
+
+    function openRechargeModal(serviceName) {
+      const title = document.getElementById('rechargeModalTitle');
+      const label = document.getElementById('rechargeInputLabel');
+      if (title) title.innerText = serviceName || 'Mobile Recharge';
+      if (label) {
+        if ((serviceName || '').includes('Electricity')) label.innerText = 'Consumer Account Number';
+        else if ((serviceName || '').includes('FASTag')) label.innerText = 'Vehicle Registration Number';
+        else if ((serviceName || '').includes('DTH')) label.innerText = 'Smart Card / Viewing Card No';
+        else if ((serviceName || '').includes('Credit')) label.innerText = 'Credit Card Number';
+        else if ((serviceName || '').includes('Gas')) label.innerText = 'Customer ID / LPG Number';
+        else label.innerText = '10-Digit Mobile Number';
+      }
+      openModal('rechargeModal');
+    }
+
 </script>
   <script>
     // ==============================================================
@@ -3771,6 +3815,32 @@
       margin: 10px 0 !important;
     }
 </style>
+<style>
+    /* MASTER FIX: Bottom Navigation ALWAYS visible inside app */
+    .app-bottom-nav {
+      position: fixed !important;
+      bottom: 0 !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: 100% !important;
+      max-width: 440px !important;
+      background: #FFFFFF !important;
+      border-top: 1px solid #EEEEEE !important;
+      border-radius: 24px 24px 0 0 !important;
+      display: flex !important;
+      justify-content: space-around !important;
+      align-items: flex-end !important;
+      padding: 8px 16px 12px !important;
+      box-sizing: border-box !important;
+      z-index: 1000 !important;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.07) !important;
+    }
+    /* When auth fullscreen (splash/login/otp) is active, hide bottom nav */
+    body:has(.ep-auth-fullscreen.active) .app-bottom-nav,
+    .ep-auth-fullscreen.active ~ .app-bottom-nav {
+      display: none !important;
+    }
+</style>
 </head>
 <body>
 
@@ -3980,28 +4050,34 @@
 
     <!-- HOME STICKY HEADER -->
     <!-- HOME STICKY HEADER (SCREENSHOT 3) -->
-    <header class="app-header" id="homeMainHeader" style="background:#FFFFFF; border-bottom:1px solid #F0F0F0; padding:12px 16px;">
-      <div class="header-brand" style="display:flex; align-items:center; gap:8px;">
-        <div style="display:flex; align-items:center; justify-content:center;">
-          <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <header class="app-header" id="homeMainHeader" style="background:#FFFFFF; border-bottom:1px solid #F0F0F0; padding:10px 16px; display:flex; align-items:center; justify-content:space-between; height:58px; box-sizing:border-box; position:sticky; top:0; z-index:500;">
+      <!-- Left: Hamburger Menu Button + EasyPay Brand Logo -->
+      <div style="display:flex; align-items:center; gap:10px;">
+        <button class="header-icon-btn" onclick="openSideDrawerMenu()" title="Menu" style="background:none; border:none; font-size:20px; color:#1A1A1A; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center; padding:0;">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div style="display:flex; align-items:center; gap:6px; cursor:pointer;" onclick="switchNavTab('home')">
+          <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22 68L56 18L54 44L78 40L38 84L42 56L22 68Z" fill="#FF5722"/>
             <path d="M42 56L54 44L56 18L22 68L42 56Z" fill="#E64A19"/>
             <path d="M54 44L78 40L38 84L42 56L54 44Z" fill="#FF7043"/>
           </svg>
-        </div>
-        <div>
-          <span style="font-family:var(--font-heading); font-size:21px; font-weight:800; color:#1A1A1A; letter-spacing:-0.3px;">EasyPay</span>
+          <span style="font-family:var(--font-heading); font-size:20px; font-weight:800; color:#1A1A1A; letter-spacing:-0.3px;">EasyPay</span>
         </div>
       </div>
-      <div class="header-actions" style="display:flex; align-items:center; gap:12px;">
-        <button class="header-icon-btn" onclick="openGlobalSearch()" title="Search" style="background:none; border:none; font-size:18px; color:#1A1A1A; cursor:pointer;">
+
+      <!-- Right: Search + Notifications + User Avatar -->
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button class="header-icon-btn" onclick="openGlobalSearch()" title="Search" style="background:none; border:none; font-size:18px; color:#1A1A1A; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center;">
           <i class="fa-solid fa-magnifying-glass"></i>
         </button>
-        <button class="header-icon-btn" onclick="openNotificationsModal()" title="Notifications" style="background:none; border:none; font-size:18px; color:#1A1A1A; cursor:pointer; position:relative;">
+        
+        <button class="header-icon-btn" onclick="openNotificationsModal()" title="Notifications" style="background:none; border:none; font-size:18px; color:#1A1A1A; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center; position:relative;">
           <i class="fa-regular fa-bell"></i>
-          <span style="position:absolute; top:2px; right:2px; width:7px; height:7px; background:#FF5722; border-radius:50%;"></span>
+          <span style="position:absolute; top:7px; right:7px; width:7px; height:7px; background:#FF5722; border-radius:50%; border:1.5px solid #FFFFFF;"></span>
         </button>
-        <div class="header-user-avatar" onclick="switchNavTab('profile')" title="View Profile" style="width:34px; height:34px; border-radius:50%; background:#FFF1EE; color:#FF5722; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; cursor:pointer; border:1px solid #FFE0B2;">
+
+        <div class="header-user-avatar" onclick="switchNavTab('profile')" title="View Profile" style="width:34px; height:34px; border-radius:50%; background:#FFF1EE; border:1.5px solid #FFCCBC; color:#FF5722; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center; cursor:pointer; margin-left:4px;">
           NB
         </div>
       </div>
@@ -5278,7 +5354,7 @@
          5. Profile
          ============================================================== -->
     <!-- APP BOTTOM NAVIGATION (HOME, GIFT CARD, BONDS, SHOPPING, PROFILE) -->
-    <nav class="app-bottom-nav" id="appBottomNav" style="display: none;">
+    <nav class="app-bottom-nav" id="appBottomNav">
       <!-- 1. Home Tab -->
       <div class="nav-tab-item active" id="tabHome" onclick="switchNavTab('home')">
         <i class="fa-solid fa-house" style="font-size: 20px;"></i>
@@ -8202,16 +8278,33 @@
 
     // Navigation Switcher (Exact 5 Items)
     function switchNavTab(tab) {
-      currentNavTab = tab;
+      if (!tab) tab = 'home';
+      const cleanTab = tab.toString().toLowerCase().trim();
+      currentNavTab = cleanTab;
+
+      // Ensure Bottom Navigation is ALWAYS visible when navigating
+      const navEl = document.getElementById('appBottomNav');
+      if (navEl) navEl.style.display = 'flex';
 
       // Update active states on bottom nav tabs (Requirement 2)
       document.querySelectorAll('.app-bottom-nav .nav-tab-item').forEach(el => el.classList.remove('active'));
-      const activeTabEl = document.getElementById(
-        tab === 'home' ? 'tabHome' :
-        tab === 'shopping' || tab === 'gift' ? 'tabShopping' :
-        tab === 'profile' ? 'tabProfile' : ''
-      );
-      if (activeTabEl) activeTabEl.classList.add('active');
+
+      const isHome = cleanTab === 'home';
+      const isInvest = ['bonds', 'invest', 'loan', 'loans'].includes(cleanTab);
+      const isShopping = ['shopping', 'gift', 'giftcard', 'giftcards', 'gifts', 'vouchers'].includes(cleanTab);
+      const isProfile = cleanTab === 'profile';
+      const isPassbook = ['passbook', 'history', 'txns', 'portfolio'].includes(cleanTab);
+
+      if (isHome) {
+        const el = document.getElementById('tabHome');
+        if (el) el.classList.add('active');
+      } else if (isShopping) {
+        const el = document.getElementById('tabShopping');
+        if (el) el.classList.add('active');
+      } else if (isProfile) {
+        const el = document.getElementById('tabProfile');
+        if (el) el.classList.add('active');
+      }
 
       const mainHeader = document.getElementById('homeMainHeader');
       const subHeader = document.getElementById('subpageTopHeader');
@@ -8225,7 +8318,7 @@
       };
 
       // Requirement 3: Animated Transition for Invest Section
-      if (tab === 'bonds' || tab === 'invest') {
+      if (isInvest) {
         const radarModal = document.getElementById('curieRadarModal');
         if (radarModal) {
           radarModal.classList.add('active');
@@ -8237,14 +8330,14 @@
         }
       }
 
-      // Hide all panels
+      // Hide all panels first
       Object.values(views).forEach(v => { if (v) v.style.display = 'none'; });
 
-      if (tab === 'home') {
-        if (mainHeader) mainHeader.style.display = 'block';
+      if (isHome) {
+        if (mainHeader) mainHeader.style.display = 'flex';
         if (subHeader) subHeader.style.display = 'none';
         if (views.home) views.home.style.display = 'block';
-      } else if (tab === 'bonds' || tab === 'invest') {
+      } else if (isInvest) {
         if (mainHeader) mainHeader.style.display = 'none';
         if (subHeader) {
           subHeader.style.display = 'flex';
@@ -8253,7 +8346,7 @@
         }
         if (views.bonds) views.bonds.style.display = 'block';
         if (typeof renderBookedBondsList === 'function') renderBookedBondsList();
-      } else if (tab === 'shopping' || tab === 'gift') {
+      } else if (isShopping) {
         if (mainHeader) mainHeader.style.display = 'none';
         if (subHeader) {
           subHeader.style.display = 'flex';
@@ -8264,12 +8357,12 @@
         if (giftView) giftView.style.display = 'block';
         else if (views.shopping) views.shopping.style.display = 'block';
         if (typeof renderGiftBrandsCatalog === 'function') renderGiftBrandsCatalog();
-      } else if (tab === 'profile') {
+      } else if (isProfile) {
         if (mainHeader) mainHeader.style.display = 'none';
         if (subHeader) subHeader.style.display = 'none';
         if (views.profile) views.profile.style.display = 'block';
         if (typeof populateProfileData === 'function') populateProfileData();
-      } else if (tab === 'passbook') {
+      } else if (isPassbook) {
         if (mainHeader) mainHeader.style.display = 'none';
         if (subHeader) {
           subHeader.style.display = 'flex';
@@ -10377,6 +10470,64 @@
         </button>
       </div>
 
+    </div>
+  </div>
+
+
+  <!-- ==============================================================
+       SIDE DRAWER MENU MODAL
+       ============================================================== -->
+  <div class="modal-overlay" id="sideDrawerMenuModal" style="z-index: 2800; justify-content: flex-start; align-items: stretch;">
+    <div style="background: #FFFFFF; width: 280px; max-width: 80vw; height: 100%; display: flex; flex-direction: column; box-shadow: 4px 0 24px rgba(0,0,0,0.15); animation: slideRight 0.25s ease;">
+      <!-- Drawer Header -->
+      <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 24px 18px 20px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; color: #FF5722; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center;">
+            NB
+          </div>
+          <div>
+            <div style="font-weight: 800; font-size: 16px;">Nirod Behera</div>
+            <div style="font-size: 11px; opacity: 0.9;">+91 9876548808</div>
+          </div>
+        </div>
+        <button onclick="closeModal('sideDrawerMenuModal')" style="background: none; border: none; color: #FFFFFF; font-size: 18px; cursor: pointer;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Drawer Links -->
+      <div style="padding: 16px 0; overflow-y: auto; flex: 1;">
+        <div class="drawer-menu-item" onclick="closeModal('sideDrawerMenuModal'); switchNavTab('home')" style="padding: 12px 20px; display: flex; align-items: center; gap: 14px; font-size: 14px; font-weight: 700; color: #0F172A; cursor: pointer;">
+          <i class="fa-solid fa-house" style="color: #FF5722; width: 20px;"></i> Home
+        </div>
+        <div class="drawer-menu-item" onclick="closeModal('sideDrawerMenuModal'); switchNavTab('shopping')" style="padding: 12px 20px; display: flex; align-items: center; gap: 14px; font-size: 14px; font-weight: 700; color: #0F172A; cursor: pointer;">
+          <i class="fa-solid fa-gift" style="color: #FF5722; width: 20px;"></i> Gift Cards & Vouchers
+        </div>
+        <div class="drawer-menu-item" onclick="closeModal('sideDrawerMenuModal'); switchNavTab('bonds')" style="padding: 12px 20px; display: flex; align-items: center; gap: 14px; font-size: 14px; font-weight: 700; color: #0F172A; cursor: pointer;">
+          <i class="fa-solid fa-chart-line" style="color: #FF5722; width: 20px;"></i> 12% Bonds & Invest
+        </div>
+        <div class="drawer-menu-item" onclick="closeModal('sideDrawerMenuModal'); openPassbookFromProfile()" style="padding: 12px 20px; display: flex; align-items: center; gap: 14px; font-size: 14px; font-weight: 700; color: #0F172A; cursor: pointer;">
+          <i class="fa-solid fa-clock-rotate-left" style="color: #FF5722; width: 20px;"></i> Passbook & Transactions
+        </div>
+        <div class="drawer-menu-item" onclick="closeModal('sideDrawerMenuModal'); openQrCodeModal()" style="padding: 12px 20px; display: flex; align-items: center; gap: 14px; font-size: 14px; font-weight: 700; color: #0F172A; cursor: pointer;">
+          <i class="fa-solid fa-qrcode" style="color: #FF5722; width: 20px;"></i> My Merchant QR
+        </div>
+        <div class="drawer-menu-item" onclick="closeModal('sideDrawerMenuModal'); openModal('bankAccountsModal')" style="padding: 12px 20px; display: flex; align-items: center; gap: 14px; font-size: 14px; font-weight: 700; color: #0F172A; cursor: pointer;">
+          <i class="fa-solid fa-building-columns" style="color: #FF5722; width: 20px;"></i> Bank Accounts & UPI
+        </div>
+        <div class="drawer-menu-item" onclick="closeModal('sideDrawerMenuModal'); openModal('changePinModal')" style="padding: 12px 20px; display: flex; align-items: center; gap: 14px; font-size: 14px; font-weight: 700; color: #0F172A; cursor: pointer;">
+          <i class="fa-solid fa-key" style="color: #FF5722; width: 20px;"></i> Security PIN Settings
+        </div>
+        <div class="drawer-menu-item" onclick="closeModal('sideDrawerMenuModal'); switchNavTab('profile')" style="padding: 12px 20px; display: flex; align-items: center; gap: 14px; font-size: 14px; font-weight: 700; color: #0F172A; cursor: pointer;">
+          <i class="fa-solid fa-user-gear" style="color: #FF5722; width: 20px;"></i> My Profile Settings
+        </div>
+      </div>
+
+      <div style="padding: 16px 20px; border-top: 1px solid #F1F5F9;">
+        <button onclick="closeModal('sideDrawerMenuModal'); goToEasyPayLogin();" style="width: 100%; background: #FEE2E2; color: #DC2626; border: none; border-radius: 10px; padding: 10px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+        </button>
+      </div>
     </div>
   </div>
 
