@@ -72,6 +72,5 @@ jobs:
             6. **Gift Catalog Populated**: Top Brands and New Arrivals populated with verified brand vouchers (Apple, Domino's, Amazon, Myntra).
             7. **All Recharge, Utility, and Profile Actions 100% Functional**.
           files: android/app/build/outputs/apk/debug/app-debug.apk
-          files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
