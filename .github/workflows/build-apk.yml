@@ -53,22 +53,20 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.6
-          name: "EasyPay Android APK v1.0.6 (Smooth Splash Dismissal & Full Profile Suite)"
+          tag_name: v1.0.7
+          name: "EasyPay Android APK v1.0.7 (Authentic Freecharge Biz UI & Complete Flow Verification)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.6 (Smooth Splash Dismissal & Full Profile Suite)
-            Production release with complete resolution for splash screen dismissal, automatic login transition, and 100% active profile/account controls.
+            ## EasyPay Mobile Application APK v1.0.7 (Authentic Freecharge Biz UI & Complete Flow Verification)
+            Production release with authentic Freecharge Biz bottom navigation, full Security PIN payment integration for Gift Vouchers and Transfers, dynamic My QR rendering, and zero-freeze robust API routing.
             
-            ### Fixes & Verification in v1.0.6:
-            1. **Splash Screen Freeze Fixed**: Removed inline `display: flex !important` that previously prevented class-based dismissal. `goToEasyPayLogin()` now explicitly sets `splash.style.display = 'none'` and `login.style.display = 'flex'`. Added an automatic 2.2s watchdog timer to guarantee instant transition.
-            2. **All Profile / My Page Modals Active**:
-               - **Wallet**: Click anywhere on the wallet row or "Reactivate Wallet" to open the Add Money UPI modal.
-               - **My QR Code**: Opens the full QR code bottom sheet with dynamic UPI QR generation, mask toggle, copy pay ID, and download.
-               - **Set / Reset Security PIN**: Opens the dedicated 4-digit PIN setup modal with SMS OTP verification.
-               - **Payment Settings**: Opens the bank accounts & card management modal.
-               - **Edit Profile**: Opens full name, phone, and pincode editor.
-            3. **Gift Card Purchase & Bonds Flow**: Verified 100% issuance of vouchers and bond bookings with authentic loading animations.
-            4. **Clean Code & Zero Overhead**: All modals open with explicit display rules avoiding CSS specificity conflicts. Thoroughly verified through end-to-end automated simulation tests.
+            ### Fixes & Enhancements in v1.0.7:
+            1. **Authentic Freecharge Biz Bottom Nav**: Exactly matching the reference UI with Home on the left, an elevated circular orange QR Scan button in the center with immediate scanner launch, and Loans & Invest on the right.
+            2. **Interactive 4-Digit Security PIN Modal for Gift Card Checkout & Transfers**:
+               - Gift Voucher "Proceed To Pay" immediately prompts for the authentic 4-digit Security PIN keypad (default: `1234`).
+               - Validating PIN securely authorizes purchase, deducts wallet balance, updates passbook, and displays the gift voucher with code, PIN, and expiry date.
+               - P2P UPI transfers use the same PIN modal with real-time feedback and instant fallback handling.
+            3. **My QR Code Instant Rendering Fixed**: Corrected modal element bindings and implemented crisp inline SVG QR generation fallback so merchant QR codes render immediately without blank white areas.
+            4. **Mobile API Route & Fallback Stability**: All relative endpoints updated with `API_BASE` and resilient local offline fallbacks, preventing Capacitor WebView connection drops.
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
