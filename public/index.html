@@ -144,6 +144,8 @@
           closeModal('bondBookingModal');
           openModal('bondSuccessModal');
           loadData();
+    renderGiftCards();
+    renderShoppingProducts(); // INITIAL AUTO-LOAD
     startGiftCardTopDealsCarousel();
           showToast('🎉 Investment of ₹' + amt + ' confirmed successfully!');
         } else {
@@ -2418,9 +2420,12 @@
        ============================================================== */
     .gift-purchase-page {
       position: fixed;
-      inset: 0;
-      width: 100vw;
-      max-width: 100vw;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100% !important;
+      max-width: 100% !important;
       background: #F8FAFC;
       z-index: 2500;
       display: none;
@@ -2428,6 +2433,8 @@
       overflow-y: auto;
       overflow-x: hidden !important;
       box-sizing: border-box !important;
+      padding: 0 !important;
+      margin: 0 !important;
     }
     
     html, body, .mobile-frame, .app-container {
@@ -2459,13 +2466,15 @@
     /* Gradient Hero Card (Screenshot 1) */
     .purchase-hero-card {
       background: linear-gradient(135deg, #025492 0%, #0078D7 100%);
-      border-radius: 28px;
-      margin: 16px;
-      padding: 24px 20px 22px;
+      border-radius: 24px;
+      margin: 0 0 16px 0 !important;
+      padding: 22px 18px 20px;
       color: #FFFFFF;
       text-align: center;
       box-shadow: 0 10px 25px rgba(2, 84, 146, 0.25);
       position: relative;
+      width: 100%;
+      box-sizing: border-box;
     }
     .purchase-brand-row {
       display: inline-flex;
@@ -2526,7 +2535,9 @@
       gap: 8px;
       overflow-x: auto;
       scrollbar-width: none;
-      padding: 4px 16px 14px;
+      padding: 0 0 16px 0 !important;
+      width: 100%;
+      box-sizing: border-box;
     }
     .price-chips-scroll-wrap::-webkit-scrollbar {
       display: none;
@@ -3568,6 +3579,7 @@
       100% { top: 0%; opacity: 0.8; }
     }
 </style>
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 </head>
 <body>
 
@@ -4198,7 +4210,62 @@
           <div class="brand-container-card">
             <div class="brand-container-header">Top Brands</div>
             <div class="brand-4col-grid" id="topBrandsGridContainer">
-              <!-- Rendered dynamically -->
+          <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('apple_app_store')">
+            <div class="brand-4col-icon" style="background: #0071E3;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple App Store" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            </div>
+            <span class="brand-save-text">Save 4%</span>
+            <span class="brand-sub-title">App Store Code</span>
+          </div>
+          <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('dominos')">
+            <div class="brand-4col-icon" style="background: #006491;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Dominos_pizza_logo.svg" alt="Domino's Pizza" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            </div>
+            <span class="brand-save-text">Save 12%</span>
+            <span class="brand-sub-title">Domino's</span>
+          </div>
+          <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('amazon_shopping')">
+            <div class="brand-4col-icon" style="background: #232F3E;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" alt="Amazon Shopping" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            </div>
+            <span class="brand-save-text">Save 1.5%</span>
+            <span class="brand-sub-title">Amazon shopping voucher</span>
+          </div>
+          <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('myntra')">
+            <div class="brand-4col-icon" style="background: #FF3F6C;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Myntra_logo.png" alt="Myntra Fashion" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            </div>
+            <span class="brand-save-text">Save 4%</span>
+            <span class="brand-sub-title">Myntra</span>
+          </div>
+          <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('amazon_prime')">
+            <div class="brand-4col-icon" style="background: #00A8E1;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Amazon_Prime_Video_logo.svg" alt="Amazon Prime Video" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            </div>
+            <span class="brand-save-text">Save 16%</span>
+            <span class="brand-sub-title">amazon prime</span>
+          </div>
+          <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('smart_bazaar')">
+            <div class="brand-4col-icon" style="background: #E11926;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Reliance_Retail_logo.svg" alt="Smart Bazaar Reliance" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            </div>
+            <span class="brand-save-text">Save 3%</span>
+            <span class="brand-sub-title">SMART BAZAAR</span>
+          </div>
+          <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('bgmi')">
+            <div class="brand-4col-icon" style="background: #1A1A1A;">
+              <img src="https://upload.wikimedia.org/wikipedia/en/9/9f/Battlegrounds_Mobile_India_logo.png" alt="BGMI Krafton Swag" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            </div>
+            <span class="brand-save-text">Save 10%</span>
+            <span class="brand-sub-title">BGMI KRAFTON</span>
+          </div>
+          <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('decathlon')">
+            <div class="brand-4col-icon" style="background: #0082C3;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Decathlon_Logo.png" alt="Decathlon Sports" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            </div>
+            <span class="brand-save-text">Save 4%</span>
+            <span class="brand-sub-title">DECATHLON</span>
+          </div>
             </div>
           </div>
 
@@ -4222,7 +4289,62 @@
           <div class="brand-container-card">
             <div class="brand-container-header">New Arrivals</div>
             <div class="brand-4col-grid" id="newArrivalsGridContainer">
-              <!-- Rendered dynamically -->
+          <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('klook')">
+            <div class="brand-4col-icon" style="background: #FF5722;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Klook_Logo.png" alt="Klook Travel & Tours" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            </div>
+            <span class="brand-save-text">Save 6%</span>
+            <span class="brand-sub-title">klook</span>
+          </div>
+          <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('urban_company')">
+            <div class="brand-4col-icon" style="background: #1A1A1A;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Urban_Company_Logo.svg" alt="Urban Company" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            </div>
+            <span class="brand-save-text">Save 3%</span>
+            <span class="brand-sub-title">Urban Company</span>
+          </div>
+          <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('eazydiner')">
+            <div class="brand-4col-icon" style="background: #8E24AA;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/EazyDiner_Logo.png" alt="EazyDiner Prime Dining" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            </div>
+            <span class="brand-save-text">Save 10%</span>
+            <span class="brand-sub-title">eazydiner PRIME</span>
+          </div>
+          <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('real_cricket')">
+            <div class="brand-4col-icon" style="background: #0D47A1;">
+              <img src="https://upload.wikimedia.org/wikipedia/en/e/e6/Real_Cricket_logo.png" alt="Real Cricket 24" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            </div>
+            <span class="brand-save-text">Save 8%</span>
+            <span class="brand-sub-title">REAL CRICKET</span>
+          </div>
+          <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('pronto')">
+            <div class="brand-4col-icon" style="background: #00BFA5;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Pronto_Logo.png" alt="Pronto Delivery" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            </div>
+            <span class="brand-save-text">Save 15%</span>
+            <span class="brand-sub-title">Pronto</span>
+          </div>
+          <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('wendys')">
+            <div class="brand-4col-icon" style="background: #D32F2F;">
+              <img src="https://upload.wikimedia.org/wikipedia/en/3/32/Wendy%27s_full_logo_2012.svg" alt="Wendy's Burgers" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            </div>
+            <span class="brand-save-text">Save 9%</span>
+            <span class="brand-sub-title">Wendy's</span>
+          </div>
+          <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('noise')">
+            <div class="brand-4col-icon" style="background: #1A1A1A;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/4/43/Noise_Logo.png" alt="Noise Smartwatches" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            </div>
+            <span class="brand-save-text">Save 6%</span>
+            <span class="brand-sub-title">NOISE</span>
+          </div>
+          <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('house_of_rare')">
+            <div class="brand-4col-icon" style="background: #18181B;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Rare_Rabbit_Logo.png" alt="The House of Rare" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            </div>
+            <span class="brand-save-text">Save 7%</span>
+            <span class="brand-sub-title">THE HOUSE OF RARE</span>
+          </div>
             </div>
           </div>
 
@@ -4295,14 +4417,14 @@
            ============================================================== -->
       <div id="viewGiftCardPurchase" class="gift-purchase-page">
         <!-- Top Navigation -->
-        <div class="purchase-top-bar">
+        <div class="purchase-top-bar" style="width: 100%; box-sizing: border-box; max-width: 480px; margin: 0 auto;">
           <button class="gift-nav-btn" onclick="closeGiftCardPurchasePage()" title="Back">
             <i class="fa-solid fa-arrow-left"></i>
           </button>
           <div class="purchase-top-title" id="purchasePageBrandTitle">Flipkart Gift Voucher</div>
         </div>
 
-        <div style="padding: 10px 16px 80px; box-sizing: border-box; max-width: 480px; margin: 0 auto;">
+        <div style="padding: 14px 16px 120px; box-sizing: border-box; max-width: 480px; margin: 0 auto; width: 100%;">
           <!-- 1. Gradient Hero Card (Screenshot 1) -->
           <div class="purchase-hero-card" id="purchaseHeroCardGradient">
             <div class="purchase-brand-row">
@@ -5023,7 +5145,7 @@
               <span style="color:#FF5722;"><i class="fa-solid fa-bag-shopping"></i></span> EasyPay Mall
             </div>
             <div style="display:flex; align-items:center; gap:12px;">
-              <button onclick="showToast('Your Cart is Empty')" style="background:none; border:none; font-size:18px; color:#1A1A1A; cursor:pointer; position:relative;">
+              <button onclick="openCartModal()" style="background:none; border:none; font-size:18px; color:#1A1A1A; cursor:pointer; position:relative;">
                 <i class="fa-solid fa-cart-shopping"></i>
                 <span id="shopCartCountBadge" style="position:absolute; top:-4px; right:-6px; width:16px; height:16px; background:#FF5722; color:white; border-radius:50%; font-size:10px; font-weight:800; display:flex; align-items:center; justify-content:center;">0</span>
               </button>
@@ -5056,7 +5178,98 @@
 
         <!-- 2-Column Product Grid -->
         <div class="shop-products-grid" id="shopProductsGrid">
-          <!-- Populated by JavaScript -->
+          <div class="shop-product-card" onclick="openProductBuyModal('prod_1')">
+            <div class="shop-product-img-box">
+              <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60" class="shop-product-img" alt="boAt Airdopes 141 ANC">
+              <span class="shop-product-badge">Best Seller</span>
+            </div>
+            <div class="shop-product-info">
+              <span class="shop-product-brand">boAt</span>
+              <div class="shop-product-title">boAt Airdopes 141 ANC TWS Earbuds 42H Playtime</div>
+              <div class="shop-product-price-row">
+                <span class="shop-product-price">₹999</span>
+                <span class="shop-product-orig-price">₹4,490</span>
+                <span class="shop-product-discount">77% OFF</span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 6px; padding: 0 10px 10px;">
+              <button class="btn-buy-product" style="flex: 1; margin: 0; background: #FFF1EE; color: #FF5722; border: 1.5px solid #FF5722;" onclick="event.stopPropagation(); addToCart('prod_1')">
+                <i class="fa-solid fa-cart-plus"></i> Cart
+              </button>
+              <button class="btn-buy-product" style="flex: 1; margin: 0;" onclick="event.stopPropagation(); openProductBuyModal('prod_1')">
+                <i class="fa-solid fa-bolt"></i> Buy
+              </button>
+            </div>
+          </div>
+          <div class="shop-product-card" onclick="openProductBuyModal('prod_2')">
+            <div class="shop-product-img-box">
+              <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60" class="shop-product-img" alt="Fire-Boltt Smartwatch">
+              <span class="shop-product-badge">Trending</span>
+            </div>
+            <div class="shop-product-info">
+              <span class="shop-product-brand">Fire-Boltt</span>
+              <div class="shop-product-title">Fire-Boltt Ninja Call Pro Plus 1.83" Bluetooth Watch</div>
+              <div class="shop-product-price-row">
+                <span class="shop-product-price">₹1,199</span>
+                <span class="shop-product-orig-price">₹9,999</span>
+                <span class="shop-product-discount">88% OFF</span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 6px; padding: 0 10px 10px;">
+              <button class="btn-buy-product" style="flex: 1; margin: 0; background: #FFF1EE; color: #FF5722; border: 1.5px solid #FF5722;" onclick="event.stopPropagation(); addToCart('prod_2')">
+                <i class="fa-solid fa-cart-plus"></i> Cart
+              </button>
+              <button class="btn-buy-product" style="flex: 1; margin: 0;" onclick="event.stopPropagation(); openProductBuyModal('prod_2')">
+                <i class="fa-solid fa-bolt"></i> Buy
+              </button>
+            </div>
+          </div>
+          <div class="shop-product-card" onclick="openProductBuyModal('prod_3')">
+            <div class="shop-product-img-box">
+              <img src="https://images.unsplash.com/photo-1609592426815-1888a7c295c3?w=500&auto=format&fit=crop&q=60" class="shop-product-img" alt="Mi Power Bank 3i">
+              <span class="shop-product-badge">Essential</span>
+            </div>
+            <div class="shop-product-info">
+              <span class="shop-product-brand">Xiaomi</span>
+              <div class="shop-product-title">Mi Power Bank 3i 20000mAh 18W Fast Charging</div>
+              <div class="shop-product-price-row">
+                <span class="shop-product-price">₹1,299</span>
+                <span class="shop-product-orig-price">₹2,199</span>
+                <span class="shop-product-discount">41% OFF</span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 6px; padding: 0 10px 10px;">
+              <button class="btn-buy-product" style="flex: 1; margin: 0; background: #FFF1EE; color: #FF5722; border: 1.5px solid #FF5722;" onclick="event.stopPropagation(); addToCart('prod_3')">
+                <i class="fa-solid fa-cart-plus"></i> Cart
+              </button>
+              <button class="btn-buy-product" style="flex: 1; margin: 0;" onclick="event.stopPropagation(); openProductBuyModal('prod_3')">
+                <i class="fa-solid fa-bolt"></i> Buy
+              </button>
+            </div>
+          </div>
+          <div class="shop-product-card" onclick="openProductBuyModal('prod_4')">
+            <div class="shop-product-img-box">
+              <img src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=500&auto=format&fit=crop&q=60" class="shop-product-img" alt="Noise ColorFit">
+              <span class="shop-product-badge">Top Rated</span>
+            </div>
+            <div class="shop-product-info">
+              <span class="shop-product-brand">Noise</span>
+              <div class="shop-product-title">Noise ColorFit Pulse 2 Max 1.85" Display Smartwatch</div>
+              <div class="shop-product-price-row">
+                <span class="shop-product-price">₹1,399</span>
+                <span class="shop-product-orig-price">₹5,999</span>
+                <span class="shop-product-discount">76% OFF</span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 6px; padding: 0 10px 10px;">
+              <button class="btn-buy-product" style="flex: 1; margin: 0; background: #FFF1EE; color: #FF5722; border: 1.5px solid #FF5722;" onclick="event.stopPropagation(); addToCart('prod_4')">
+                <i class="fa-solid fa-cart-plus"></i> Cart
+              </button>
+              <button class="btn-buy-product" style="flex: 1; margin: 0;" onclick="event.stopPropagation(); openProductBuyModal('prod_4')">
+                <i class="fa-solid fa-bolt"></i> Buy
+              </button>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -5457,11 +5670,7 @@
       </div>
 
       <!-- Bank / Wallet Pill -->
-      <div style="display: inline-flex; align-items: center; gap: 6px; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; color: #1E293B; margin-bottom: 20px;">
-        <span style="color: #0284C7; font-weight: 900;">BOI ★</span>
-        <span id="myQrBankText">BANK OF INDIA ...0975</span>
-        <i class="fa-solid fa-angle-down" style="font-size: 10px; color: #94A3B8;"></i>
-      </div>
+      
 
       <!-- CRISP QR CODE CONTAINER (WITH CENTER EPAY BIZ LOGO) -->
       <div style="margin: 0 auto 16px; width: 220px; height: 220px; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 18px; padding: 12px; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 4px 18px rgba(0,0,0,0.06);">
@@ -5489,7 +5698,7 @@
       </div>
 
       <!-- Generate QR with Amount Button -->
-      <button style="width: 100%; background: #FF5722; color: white; border: none; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 14px rgba(255,87,34,0.3);" onclick="promptGenerateQrWithAmount()">
+      <button style="width: 100%; background: #FF5722; color: white; border: none; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 14px rgba(255,87,34,0.3);" onclick="openGenerateAmountQrModal()">
         Generate QR with Amount
       </button>
     </div>
@@ -5504,61 +5713,42 @@
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
         <div style="font-size: 16px; font-weight: 800; color: #0F172A; display: flex; align-items: center; gap: 8px;">
           <i class="fa-solid fa-qrcode" style="color: #FF5722;"></i>
-          <span>Scan EasyPay QR</span>
+          <span>Scan EasyPay / UPI QR</span>
         </div>
-        <button style="background:none; border:none; font-size:18px; color:#64748B; cursor:pointer;" onclick="closeModal('qrScannerModal')">
+        <button style="background:none; border:none; font-size:18px; color:#64748B; cursor:pointer;" onclick="closeQrScannerModal()">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
       <!-- Scanner Viewfinder Box with Live Video -->
       <div style="position: relative; width: 100%; height: 260px; background: #000000; border-radius: 18px; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(0,0,0,0.3); margin-bottom: 16px;">
-        <video id="qrScannerVideo" playsinline autoplay muted style="width: 100%; height: 100%; object-fit: cover;"></video>
-        
+        <video id="qrScannerVideo" playsinline autoplay muted style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;"></video>
         <!-- Camera Target Bounding Box -->
-        <div style="position: absolute; width: 190px; height: 190px; border: 2.5px solid #FF5722; border-radius: 16px; box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45); pointer-events: none;">
-          <!-- Laser Sweep Line -->
-          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: #FF5722; box-shadow: 0 0 12px #FF5722; animation: laserSweep 2s ease-in-out infinite;"></div>
+        <div style="position: absolute; width: 200px; height: 200px; border: 2.5px solid #FF5722; border-radius: 20px; box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5); pointer-events: none;">
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: #FF5722; box-shadow: 0 0 14px #FF5722; animation: laserSweep 2s ease-in-out infinite;"></div>
         </div>
-
-        <div style="position: absolute; bottom: 12px; color: #FFFFFF; font-size: 11px; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.8); background: rgba(0,0,0,0.5); padding: 4px 10px; border-radius: 20px;">
-          <i class="fa-solid fa-camera"></i> Live Camera Active • Point at QR
-        </div>
-      </div>
-        </div>
-        <div style="position: absolute; bottom: 12px; color: white; font-size: 11px; font-weight: 600; opacity: 0.9; background: rgba(0,0,0,0.6); padding: 3px 10px; border-radius: 12px;">
-          Align EasyPay QR Code inside box
+        <div style="position: absolute; bottom: 12px; color: #FFFFFF; font-size: 11px; font-weight: 700; background: rgba(0,0,0,0.65); padding: 5px 12px; border-radius: 20px;">
+          <i class="fa-solid fa-camera"></i> Live Camera Active • Point at any QR
         </div>
       </div>
 
-      <!-- Simulated Instant Test Scans (To test without live webcam if unavailable) -->
-      <div style="font-size: 11px; font-weight: 700; color: #64748B; margin-bottom: 8px;">OR TAP A VERIFIED PEER USER:</div>
-      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
-        <div style="display: flex; align-items: center; justify-content: space-between; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 10px 12px; border-radius: 12px; cursor: pointer;" onclick="simulateQrScanSuccess('9876543210@easypay')">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="width: 32px; height: 32px; border-radius: 50%; background: #EFF6FF; color: #2563EB; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px;">RS</div>
-            <div>
-              <div style="font-size: 12px; font-weight: 800; color: #0F172A;">Rahul Sharma <i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 10px;"></i></div>
-              <div style="font-size: 10px; color: #64748B;">9876543210@easypay • EPY43210</div>
-            </div>
-          </div>
-          <span style="font-size: 11px; font-weight: 700; color: #FF5722;">Pay Now &rarr;</span>
-        </div>
-
-        <div style="display: flex; align-items: center; justify-content: space-between; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 10px 12px; border-radius: 12px; cursor: pointer;" onclick="simulateQrScanSuccess('9812345678@easypay')">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="width: 32px; height: 32px; border-radius: 50%; background: #FDF2F8; color: #DB2777; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px;">PP</div>
-            <div>
-              <div style="font-size: 12px; font-weight: 800; color: #0F172A;">Priya Patel <i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 10px;"></i></div>
-              <div style="font-size: 10px; color: #64748B;">9812345678@easypay • EPY12345</div>
-            </div>
-          </div>
-          <span style="font-size: 11px; font-weight: 700; color: #FF5722;">Pay Now &rarr;</span>
-        </div>
+      <div style="text-align: center; font-size: 12px; color: #64748B; margin-bottom: 16px; font-weight: 600;">
+        Align any EasyPay QR or standard UPI QR inside the frame to scan & pay automatically.
       </div>
 
-      <button style="width: 100%; background: #F1F5F9; color: #475569; border: none; border-radius: 12px; padding: 12px; font-size: 13px; font-weight: 700; cursor: pointer;" onclick="closeModal('qrScannerModal')">
-        Close Scanner
+      <!-- Actions Row: Upload from Gallery & Manual UPI -->
+      <input type="file" id="qrGalleryFileInput" accept="image/*" style="display: none;" onchange="scanQrFromGalleryInput(this)">
+      <div style="display: flex; gap: 10px; margin-bottom: 14px;">
+        <button type="button" onclick="document.getElementById('qrGalleryFileInput').click()" style="flex: 1; height: 44px; background: #FFF1EE; border: 1.5px solid #FFCCBC; border-radius: 12px; color: #D84315; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <i class="fa-regular fa-image"></i> Upload from Gallery
+        </button>
+        <button type="button" onclick="closeQrScannerModal(); openSendMoneyModal();" style="flex: 1; height: 44px; background: #F1F5F9; border: 1.5px solid #E2E8F0; border-radius: 12px; color: #334155; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <i class="fa-solid fa-keyboard"></i> Enter UPI ID
+        </button>
+      </div>
+
+      <button style="width: 100%; background: #F8FAFC; color: #64748B; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px; font-size: 13px; font-weight: 700; cursor: pointer;" onclick="closeQrScannerModal()">
+        Cancel
       </button>
     </div>
   </div>
@@ -8013,23 +8203,87 @@
       const cleanTab = tab.toString().toLowerCase().trim();
       currentNavTab = cleanTab;
 
-      // Ensure Bottom Navigation is ALWAYS visible when navigating
+      // Ensure Bottom Navigation is ALWAYS visible
       const navEl = document.getElementById('appBottomNav');
       if (navEl) navEl.style.display = 'flex';
 
-      // Update active states on bottom nav tabs (Requirement 2)
+      // Remove active class from all tabs
       document.querySelectorAll('.app-bottom-nav .nav-tab-item').forEach(el => el.classList.remove('active'));
 
       const isHome = cleanTab === 'home';
+      const isGift = ['gift', 'giftcard', 'giftcards', 'gifts', 'vouchers'].includes(cleanTab);
       const isInvest = ['bonds', 'invest', 'loan', 'loans'].includes(cleanTab);
-      const isShopping = ['shopping', 'gift', 'giftcard', 'giftcards', 'gifts', 'vouchers'].includes(cleanTab);
+      const isShopping = cleanTab === 'shopping';
       const isProfile = cleanTab === 'profile';
       const isPassbook = ['passbook', 'history', 'txns', 'portfolio'].includes(cleanTab);
 
       if (isHome) {
-        const el = document.getElementById('tabHome');
-        if (el) el.classList.add('active');
+        document.getElementById('tabHome')?.classList.add('active');
+      } else if (isGift) {
+        document.getElementById('tabGift')?.classList.add('active');
+      } else if (isInvest) {
+        document.getElementById('tabBonds')?.classList.add('active');
       } else if (isShopping) {
+        document.getElementById('tabShopping')?.classList.add('active');
+      } else if (isProfile) {
+        document.getElementById('tabProfile')?.classList.add('active');
+      }
+
+      const mainHeader = document.getElementById('homeMainHeader');
+      const subHeader = document.getElementById('subpageTopHeader');
+      
+      const views = {
+        home: document.getElementById('viewHome'),
+        gift: document.getElementById('viewGiftCards'),
+        bonds: document.getElementById('viewBonds'),
+        shopping: document.getElementById('viewShopping'),
+        profile: document.getElementById('viewProfile'),
+        passbook: document.getElementById('viewPassbook')
+      };
+
+      // Hide all views first
+      Object.values(views).forEach(v => { if (v) v.style.display = 'none'; });
+
+      if (isHome) {
+        if (mainHeader) mainHeader.style.display = 'flex';
+        if (subHeader) subHeader.style.display = 'none';
+        if (views.home) views.home.style.display = 'block';
+      } else if (isGift) {
+        if (mainHeader) mainHeader.style.display = 'none';
+        if (subHeader) subHeader.style.display = 'none';
+        if (views.gift) {
+          views.gift.style.display = 'block';
+          renderGiftCards();
+        }
+      } else if (isInvest) {
+        if (mainHeader) mainHeader.style.display = 'none';
+        if (subHeader) subHeader.style.display = 'none';
+        if (views.bonds) {
+          views.bonds.style.display = 'block';
+          renderBookedBonds();
+        }
+      } else if (isShopping) {
+        if (mainHeader) mainHeader.style.display = 'none';
+        if (subHeader) subHeader.style.display = 'none';
+        if (views.shopping) {
+          views.shopping.style.display = 'block';
+          renderShoppingProducts();
+        }
+      } else if (isProfile) {
+        if (mainHeader) mainHeader.style.display = 'none';
+        if (subHeader) subHeader.style.display = 'none';
+        if (views.profile) views.profile.style.display = 'block';
+      } else if (isPassbook) {
+        if (mainHeader) mainHeader.style.display = 'none';
+        if (subHeader) subHeader.style.display = 'none';
+        if (views.passbook) {
+          views.passbook.style.display = 'block';
+          renderTransactions();
+        }
+      }
+
+      window.scrollTo(0, 0);
+    } else if (isShopping) {
         const el = document.getElementById('tabShopping');
         if (el) el.classList.add('active');
       } else if (isProfile) {
@@ -8841,7 +9095,7 @@
         `;
       }
 
-      openModal('rechargeFlowModal');
+      openModal('rechargeModal');
     }
 
     function selectRechargeOperator(op, btn) {
@@ -8906,12 +9160,21 @@
     // PROFESSIONAL PHONEPE / GOOGLE PAY UPI PAYMENT FUNCTIONS
     // ==============================================================
     function openSendMoneyModal(presetRecipient) {
-      const modal = document.getElementById('upiSendMoneyModal');
       if (presetRecipient) {
-        const inp = document.getElementById('upiSendRecipientInput');
-        if (inp) inp.value = presetRecipient;
-        handleUpiRecipientInput(presetRecipient);
+        if (typeof presetRecipient === 'string') {
+          activeP2pRecipient = {
+            id: 'EPY' + Math.floor(10000 + Math.random() * 90000),
+            name: presetRecipient.split('@')[0] || 'Recipient',
+            payId: presetRecipient,
+            mobile: '9876543210'
+          };
+        } else {
+          activeP2pRecipient = presetRecipient;
+        }
       }
+      setupP2pPaymentModal();
+      openModal('p2pPaymentModal');
+    }
       updateUpiPayButton();
       if (modal) modal.classList.add('active');
     }
@@ -9331,7 +9594,170 @@
       }
     }
 
+    
+    // Dynamic QR Generator with Amount
+    function openGenerateAmountQrModal() {
+      openModal('generateAmountQrModal');
+    }
+
+    function submitGenerateQrWithAmount() {
+      const amtVal = parseFloat(document.getElementById('customQrAmountInput')?.value) || 500;
+      const u = appData.user || {};
+      const payId = u.payId || '9876548808@easypay';
+      const fullName = u.name || 'Nirod behera';
+      const upiUri = 'upi://pay?pa=' + payId + '&pn=' + encodeURIComponent(fullName) + '&am=' + amtVal + '&cu=INR';
+      
+      closeModal('generateAmountQrModal');
+      generateAndDisplayQr(upiUri, 'Requested Amount: ₹' + amtVal.toFixed(2));
+      showToast('Dynamic QR created for ₹' + amtVal);
+      try { playWebAudioTone(660, 0.15); } catch(e){}
+    }
+
+    // Real-Time Camera QR Scanning Engine
+    let liveQrScannerStream = null;
+    let qrScanLoopActive = false;
+    let hiddenScanCanvas = null;
+
+    function openQrScannerModal() {
+      openModal('qrScannerModal');
+      startLiveCameraQrScanner();
+    }
+
+    function startLiveCameraQrScanner() {
+      const video = document.getElementById('qrScannerVideo');
+      if (!video) return;
+
+      if (!hiddenScanCanvas) {
+        hiddenScanCanvas = document.createElement('canvas');
+      }
+
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+          .then(stream => {
+            liveQrScannerStream = stream;
+            video.srcObject = stream;
+            video.setAttribute('playsinline', 'true');
+            video.setAttribute('autoplay', 'true');
+            video.setAttribute('muted', 'true');
+            video.play().catch(e => console.log('Video play caught:', e));
+            qrScanLoopActive = true;
+            requestAnimationFrame(scanVideoFrame);
+          })
+          .catch(err => {
+            console.log('Camera error or permission denied:', err.message);
+            showToast('Point camera at QR or upload from Gallery');
+          });
+      }
+    }
+
+    function scanVideoFrame() {
+      if (!qrScanLoopActive) return;
+      const video = document.getElementById('qrScannerVideo');
+      if (video && video.readyState === video.HAVE_ENOUGH_DATA && window.jsQR) {
+        hiddenScanCanvas.width = video.videoWidth;
+        hiddenScanCanvas.height = video.videoHeight;
+        const ctx = hiddenScanCanvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, hiddenScanCanvas.width, hiddenScanCanvas.height);
+        const imageData = ctx.getImageData(0, 0, hiddenScanCanvas.width, hiddenScanCanvas.height);
+        const code = jsQR(imageData.data, imageData.width, imageData.height, {
+          inversionAttempts: 'dontInvert'
+        });
+        if (code && code.data && code.data.trim()) {
+          handleQrDetectionSuccess(code.data.trim());
+          return;
+        }
+      }
+      if (qrScanLoopActive) {
+        requestAnimationFrame(scanVideoFrame);
+      }
+    }
+
+    function stopLiveCameraQrScanner() {
+      qrScanLoopActive = false;
+      if (liveQrScannerStream) {
+        liveQrScannerStream.getTracks().forEach(t => t.stop());
+        liveQrScannerStream = null;
+      }
+      const video = document.getElementById('qrScannerVideo');
+      if (video) video.srcObject = null;
+    }
+
     function closeQrScannerModal() {
+      stopLiveCameraQrScanner();
+      closeModal('qrScannerModal');
+    }
+
+    function handleQrDetectionSuccess(qrData) {
+      stopLiveCameraQrScanner();
+      closeModal('qrScannerModal');
+      try { playWebAudioTone(880, 0.2); } catch(e){}
+
+      let recipientPayId = '9876543210@easypay';
+      let recipientName = 'EasyPay Merchant';
+      let detectedAmount = 0;
+
+      if (qrData.startsWith('upi://pay')) {
+        try {
+          const url = new URL(qrData);
+          recipientPayId = url.searchParams.get('pa') || recipientPayId;
+          recipientName = url.searchParams.get('pn') ? decodeURIComponent(url.searchParams.get('pn')) : recipientName;
+          detectedAmount = parseFloat(url.searchParams.get('am')) || 0;
+        } catch(e) {
+          // regex fallback
+          const paMatch = qrData.match(/pa=([^&]+)/);
+          const pnMatch = qrData.match(/pn=([^&]+)/);
+          const amMatch = qrData.match(/am=([^&]+)/);
+          if (paMatch) recipientPayId = decodeURIComponent(paMatch[1]);
+          if (pnMatch) recipientName = decodeURIComponent(pnMatch[1]);
+          if (amMatch) detectedAmount = parseFloat(amMatch[1]) || 0;
+        }
+      } else if (qrData.includes('@') || /^[0-9]{10}$/.test(qrData)) {
+        recipientPayId = qrData;
+        recipientName = qrData.split('@')[0] || 'Verified User';
+      }
+
+      activeP2pRecipient = {
+        id: 'EPY' + Math.floor(10000 + Math.random() * 90000),
+        name: recipientName,
+        payId: recipientPayId,
+        mobile: '9876543210'
+      };
+      if (detectedAmount > 0) {
+        currentP2pAmount = detectedAmount;
+      }
+      setupP2pPaymentModal();
+      openModal('p2pPaymentModal');
+      showToast('QR Scanned: ' + recipientName);
+    }
+
+    function scanQrFromGalleryInput(input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const c = document.createElement('canvas');
+          c.width = img.width;
+          c.height = img.height;
+          const ctx = c.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          const imgData = ctx.getImageData(0, 0, c.width, c.height);
+          if (window.jsQR) {
+            const code = jsQR(imgData.data, imgData.width, imgData.height);
+            if (code && code.data) {
+              handleQrDetectionSuccess(code.data);
+            } else {
+              showToast('No QR code detected in selected image');
+            }
+          }
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function _oldCloseQrScannerModal() {
       if (scannerStream) {
         scannerStream.getTracks().forEach(t => t.stop());
         scannerStream = null;
@@ -9368,17 +9794,22 @@
     // Old prompt-based openSendMoneyModal removed. Now using professional bottom-sheet.
 
     function setupP2pPaymentModal() {
-      const rec = activeP2pRecipient || {};
+      const rec = activeP2pRecipient || { name: 'Rahul Sharma', payId: '9876543210@easypay', id: 'EPY43210' };
       const nameEl = document.getElementById('p2pRecipientName');
       const payIdEl = document.getElementById('p2pRecipientPayId');
       const avatarEl = document.getElementById('p2pRecipientAvatar');
+      const amtInput = document.getElementById('p2pAmountInput');
+      const btn = document.getElementById('btnProceedP2p');
 
-      if (nameEl) nameEl.innerText = rec.name || 'EasyPay User';
-      if (payIdEl) payIdEl.innerText = 'Pay ID: ' + (rec.payId || 'user@easypay');
+      if (nameEl) nameEl.innerText = rec.name || 'EasyPay Recipient';
+      if (payIdEl) payIdEl.innerText = 'Pay ID: ' + (rec.payId || rec.mobile || '9876543210@easypay');
       if (avatarEl) {
-        const init = (rec.name ? rec.name.split(' ').map(w=>w[0]).join('') : 'EP').slice(0, 2).toUpperCase();
-        avatarEl.innerText = init;
+        const initials = (rec.name || 'EP').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+        avatarEl.innerText = initials || 'EP';
       }
+      if (amtInput) amtInput.value = currentP2pAmount || 500;
+      updateP2pAmountBtn();
+    }
 
       setP2pAmount(500);
       openModal('p2pPaymentModal');
@@ -10528,6 +10959,85 @@
       openModal('profileEditModal');
     }
 </script>
+
+
+  <!-- Generate QR with Specific Amount Modal -->
+  <div class="modal-overlay" id="generateAmountQrModal" style="align-items: flex-end; z-index: 10005;">
+    <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 20px; max-height: 90vh;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div style="font-size: 16px; font-weight: 800; color: #0F172A; display: flex; align-items: center; gap: 8px;">
+          <i class="fa-solid fa-qrcode" style="color: #FF5722;"></i>
+          <span>Generate QR with Amount</span>
+        </div>
+        <button style="background:none; border:none; font-size:18px; color:#64748B; cursor:pointer;" onclick="closeModal('generateAmountQrModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div style="font-size: 13px; color: #64748B; margin-bottom: 16px;">
+        Specify the exact amount to receive. Anyone scanning this QR will automatically see this amount filled in.
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <label style="font-size: 12px; font-weight: 700; color: #475569; display: block; margin-bottom: 6px;">Enter Amount to Request</label>
+        <div style="position: relative;">
+          <span style="position: absolute; left: 14px; top: 12px; font-size: 20px; font-weight: 800; color: #0F172A;">₹</span>
+          <input type="number" id="customQrAmountInput" placeholder="500" value="500" style="width: 100%; border: 2px solid #CBD5E1; border-radius: 12px; padding: 12px 14px 12px 34px; font-size: 20px; font-weight: 800; color: #0F172A; outline: none;">
+        </div>
+      </div>
+
+      <!-- Quick Chips -->
+      <div style="display: flex; gap: 8px; margin-bottom: 20px;">
+        <button type="button" class="denom-chip" onclick="document.getElementById('customQrAmountInput').value=100">₹100</button>
+        <button type="button" class="denom-chip active" onclick="document.getElementById('customQrAmountInput').value=500">₹500</button>
+        <button type="button" class="denom-chip" onclick="document.getElementById('customQrAmountInput').value=1000">₹1,000</button>
+        <button type="button" class="denom-chip" onclick="document.getElementById('customQrAmountInput').value=2000">₹2,000</button>
+      </div>
+
+      <button class="btn-primary-action" onclick="submitGenerateQrWithAmount()">
+        <i class="fa-solid fa-bolt"></i> Generate Dynamic QR
+      </button>
+    </div>
+  </div>
+
+  <!-- EasyPay Shopping Cart Modal -->
+  <div class="modal-overlay" id="easyPayCartModal" style="align-items: flex-end; z-index: 10005;">
+    <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 20px; max-height: 90vh;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div style="font-size: 17px; font-weight: 800; color: #0F172A; display: flex; align-items: center; gap: 8px;">
+          <i class="fa-solid fa-bag-shopping" style="color: #FF5722;"></i>
+          <span>EasyPay Mall Cart</span>
+        </div>
+        <button style="background:none; border:none; font-size:18px; color:#64748B; cursor:pointer;" onclick="closeModal('easyPayCartModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div id="cartItemsList" style="max-height: 280px; overflow-y: auto; margin-bottom: 16px;">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Cart Bill Breakdown -->
+      <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 12px 14px; margin-bottom: 18px;">
+        <div style="display: flex; justify-content: space-between; font-size: 13px; color: #64748B; margin-bottom: 6px;">
+          <span>Items Subtotal</span>
+          <span id="cartSubtotalAmount">₹0</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 13px; color: #059669; margin-bottom: 6px;">
+          <span>Delivery Charges</span>
+          <span>FREE (EasyPay Super Saver)</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 800; color: #0F172A; border-top: 1px dashed #CBD5E1; padding-top: 8px;">
+          <span>Total Payable</span>
+          <span style="color: #FF5722;" id="cartTotalPayable">₹0</span>
+        </div>
+      </div>
+
+      <button class="btn-primary-action" onclick="checkoutCart()">
+        <i class="fa-solid fa-shield-halved"></i> Pay via EasyPay Wallet & Place Order
+      </button>
+    </div>
+  </div>
 
 </body>
 </html>

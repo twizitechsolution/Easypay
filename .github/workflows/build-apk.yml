@@ -37,6 +37,10 @@ jobs:
           npx cap add android
           npx cap copy android
 
+      - name: Add Android Camera & Media Permissions to Manifest
+        run: |
+          sed -i '/<manifest xmlns:android/a \    <uses-permission android:name="android.permission.CAMERA" />\n    <uses-feature android:name="android.hardware.camera" android:required="false" />\n    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />\n    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />' android/app/src/main/AndroidManifest.xml
+
       - name: Build Android Debug APK
         run: |
           cd android
@@ -53,24 +57,33 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.10
-          name: "EasyPay Android APK v1.0.10 (5-Tab Bottom Nav, Clean Header, Live Camera Scan & PIN Modal Fix)"
+          tag_name: v1.0.11
+          name: "EasyPay Android APK v1.0.11 (Full Live QR Camera Scanner, Amount QR Generator, EasyPay Mall & Gift Cards Fix)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.10 (Production Grade Master Release)
-            Complete resolution of all UI layout anomalies, clean header without unwanted icons, exact 5-tab bottom navigation, live camera QR scanning, fixed PIN modal markup, and isolated page routing.
+            ## EasyPay Mobile Application APK v1.0.11 (Master Release)
+            Complete resolution of all user requested issues:
             
-            ### Fixes & Enhancements in v1.0.10:
-            1. **Authentic 5-Tab Bottom Navigation**:
-               - Exact requested order: **Home | Gift | Invest (12% Bonds) | Shopping | Profile**.
-               - Clicking any tab exclusively renders its dedicated page without bleed or overlap.
-            2. **Clean Top Header**:
-               - Left: EasyPay brand logo + "EasyPay" text (removed 3-lines menu).
-               - Right: Search button + Notification bell button (removed "NB" label).
-            3. **Title Updated**: Renamed "UPI Money Transfer" to "Money Transfer".
-            4. **Security PIN Modal Markup Fixed**: Eliminated leaked raw HTML text; restored clean 4-dot display with inline error and 3x4 keypad.
-            5. **Live Camera Feed in QR Scanner**: Real-time camera viewfinder streaming with laser sweep overlay.
-            6. **Gift Catalog Populated**: Top Brands and New Arrivals populated with verified brand vouchers (Apple, Domino's, Amazon, Myntra).
-            7. **All Recharge, Utility, and Profile Actions 100% Functional**.
+            ### Fixes & Enhancements in v1.0.11:
+            1. **My QR Code Screen**:
+               - Completely removed "Bank of India" pill text.
+               - Added "Generate QR with Amount" feature with quick amount chips (+₹100, +₹500, +₹1,000, +₹2,000) that generates dynamic QR with requested amount and visual badge.
+            2. **Scan EasyPay / UPI QR Code**:
+               - Integrated real-time camera viewfinder with jsQR automatic detection.
+               - Detects EasyPay QR codes and standard UPI IDs (e.g. `upi://pay?pa=...`), automatically pre-filling recipient & amount into the PhonePe/GPay send money flow.
+               - Clean, polished bottom sheet with Gallery upload button, manual UPI ID option, and neon laser scanning guide.
+            3. **Eliminated "OR TAP A VERIFIED PEER USER"**:
+               - Completely removed from all pages across the application.
+            4. **Gift Cards Catalog & Purchase Alignment**:
+               - Fixed `.gift-purchase-page` CSS and spacing so the entire page is perfectly centered without shifting to the right or over-stretching.
+               - Populated full 32-brand catalog with Top Brands and New Arrivals static pre-rendering.
+            5. **EasyPay Mall / Shopping Section**:
+               - Restored full e-commerce storefront with 8+ verified products across Audio, Smartwatches, Electronics, Fashion.
+               - Added functional "Add to Cart" and Cart Bottom-Sheet with live item counter, quantities, and wallet checkout flow.
+            6. **Home Page Quick Services & UPI**:
+               - Restored all 8 recharge & bill payment touchables (Mobile, Postpaid, Electricity, FASTag, DTH, Gas, Broadband, Credit Card).
+               - Restored "Pay via UPI ID" and "Pay ID / Mobile" leading directly to verified recipient transfer flow.
+            7. **Strict 5-Tab Isolated Bottom Navigation**:
+               - Home | Gift | Invest (12% Bonds) | Shopping | Profile.
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
