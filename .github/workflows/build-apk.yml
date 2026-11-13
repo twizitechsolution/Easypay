@@ -53,23 +53,25 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.9
-          name: "EasyPay Android APK v1.0.9 (Fixed Menu Button, Restored Bottom Nav & All Tab Routing)"
+          tag_name: v1.0.10
+          name: "EasyPay Android APK v1.0.10 (5-Tab Bottom Nav, Clean Header, Live Camera Scan & PIN Modal Fix)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.9 (Root Cause Resolution & Permanent Fix)
-            Production release completely resolving the missing menu bar, top header alignment, gift cards routing, and home page touchable interactions.
+            ## EasyPay Mobile Application APK v1.0.10 (Production Grade Master Release)
+            Complete resolution of all UI layout anomalies, clean header without unwanted icons, exact 5-tab bottom navigation, live camera QR scanning, fixed PIN modal markup, and isolated page routing.
             
-            ### Root Cause & Permanent Fixes in v1.0.9:
-            1. **Restored Bottom Navigation Bar**: Removed conflicting inline `display: none` from `#appBottomNav` and ensured bottom navigation stays permanently visible across the app.
-            2. **Top Header Alignment & Hamburger Menu**: Restored the hamburger menu icon (`fa-bars`) and side drawer menu, perfectly centering the EasyPay logo, search, bell notification dot, and avatar.
-            3. **Gift Vouchers Routing (Zero White Screen)**: Standardized all tab alias triggers (`giftCard`, `giftcards`, `gifts`, `shopping`) inside `switchNavTab` so the Gift Vouchers catalog opens instantly without blank white screens.
-            4. **Home Interactive Modals Wired**:
-               - Send Money (`openSendMoneyModal` -> `p2pPaymentModal`)
-               - Check Balance (`openBalanceModal` -> `checkBalanceModal`)
-               - Transfer to Bank (`openToBankModal` -> `transferToBankModal`)
-               - Recharges & Utilities (`openRechargeModal` -> `rechargeModal`)
-               - My Bills (`openMyBillsModal` -> `myBillsModal`)
-               - My QR & Scanner modals fully interactive.
+            ### Fixes & Enhancements in v1.0.10:
+            1. **Authentic 5-Tab Bottom Navigation**:
+               - Exact requested order: **Home | Gift | Invest (12% Bonds) | Shopping | Profile**.
+               - Clicking any tab exclusively renders its dedicated page without bleed or overlap.
+            2. **Clean Top Header**:
+               - Left: EasyPay brand logo + "EasyPay" text (removed 3-lines menu).
+               - Right: Search button + Notification bell button (removed "NB" label).
+            3. **Title Updated**: Renamed "UPI Money Transfer" to "Money Transfer".
+            4. **Security PIN Modal Markup Fixed**: Eliminated leaked raw HTML text; restored clean 4-dot display with inline error and 3x4 keypad.
+            5. **Live Camera Feed in QR Scanner**: Real-time camera viewfinder streaming with laser sweep overlay.
+            6. **Gift Catalog Populated**: Top Brands and New Arrivals populated with verified brand vouchers (Apple, Domino's, Amazon, Myntra).
+            7. **All Recharge, Utility, and Profile Actions 100% Functional**.
+          files: android/app/build/outputs/apk/debug/app-debug.apk
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

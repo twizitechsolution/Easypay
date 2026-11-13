@@ -16,287 +16,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Lottie Web Player -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js">
-    // ==============================================================
-    // AUTHENTIC PAYMENT SUCCESS AUDIO CHIME (WEB AUDIO API)
-    // ==============================================================
-    function playPaymentSuccessChime() {
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) return;
-        const ctx = new AudioCtx();
-        if (ctx.state === 'suspended') ctx.resume();
-
-        // Uplifting 3-tone chord sequence (C5 -> E5 -> G5)
-        const notes = [523.25, 659.25, 783.99];
-        notes.forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.1);
-          
-          gain.gain.setValueAtTime(0, ctx.currentTime + idx * 0.1);
-          gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + idx * 0.1 + 0.03);
-          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + idx * 0.1 + 0.45);
-          
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          
-          osc.start(ctx.currentTime + idx * 0.1);
-          osc.stop(ctx.currentTime + idx * 0.1 + 0.5);
-        });
-      } catch (err) {
-        console.warn('Audio chime notice:', err);
-      }
-    }
-
-    // Handlers for Recharge Modal
-    let selectedRechargeAmt = 299;
-    function selectRechargeOperator(el, op) {
-      document.querySelectorAll('#rechargeOperatorChipsWrap .denom-chip').forEach(c => c.classList.remove('active'));
-      if (el) el.classList.add('active');
-    }
-    function selectRechargeAmount(el, amt) {
-      selectedRechargeAmt = amt;
-      document.querySelectorAll('#rechargePlanChipsWrap .denom-chip').forEach(c => c.classList.remove('active'));
-      if (el) el.classList.add('active');
-      const span = document.getElementById('rechargePayAmountSpan');
-      if (span) span.innerText = amt;
-      const bachat = document.getElementById('rechargeCashbackEarned');
-      if (bachat) bachat.innerText = '₹' + (amt * 0.025).toFixed(2) + ' to Wallet';
-    }
-
-    function executeRechargeViaPin() {
-      const num = document.getElementById('rechargeNumberInput').value.trim();
-      if (!num) { showToast('Please enter mobile/account number'); return; }
-      closeModal('rechargeModal');
-      
-      pendingPinAction = {
-        type: 'recharge',
-        amount: selectedRechargeAmt,
-        recipient: document.getElementById('rechargeModalTitle').innerText + ' (' + num + ')'
-      };
-
-      openPinModalWithPending();
-    }
-
-    function executeBankTransferViaPin() {
-      const acct = document.getElementById('bankTargetAccountInput').value.trim();
-      const amt = parseFloat(document.getElementById('bankTargetAmountInput').value) || 500;
-      const name = document.getElementById('bankTargetNameInput').value.trim() || 'Beneficiary';
-      if (!acct) { showToast('Please enter account number'); return; }
-      closeModal('transferToBankModal');
-
-      pendingPinAction = {
-        type: 'bank_transfer',
-        amount: amt,
-        recipient: name + ' (A/C •••• ' + acct.slice(-4) + ')'
-      };
-
-      openPinModalWithPending();
-    }
-
-    let pendingPinAction = null;
-
-    function openPinModalWithPending() {
-      if (!pendingPinAction) return;
-      currentSecurityPin = '';
-      updatePinDotsUI();
-
-      const errEl = document.getElementById('pinInlineError');
-      if (errEl) errEl.style.display = 'none';
-
-      const amtEl = document.getElementById('pinModalAmountDisplay');
-      const recEl = document.getElementById('pinModalRecipientDisplay');
-      if (amtEl) amtEl.innerText = '₹' + pendingPinAction.amount.toLocaleString('en-IN');
-      if (recEl) recEl.innerText = pendingPinAction.recipient;
-
-      openModal('securityPinModal');
-    }
-
-    // Enhance pressPinKey with inline error display and instant processing
-    function pressPinKey(digit) {
-      if (currentSecurityPin.length >= 4) return;
-      currentSecurityPin += digit.toString();
-      updatePinDotsUI();
-
-      const errEl = document.getElementById('pinInlineError');
-      if (errEl) errEl.style.display = 'none';
-
-      if (currentSecurityPin.length === 4) {
-        // Validate PIN
-        const validPin = appData.user?.securityPin || '1234';
-        if (currentSecurityPin === validPin || currentSecurityPin === '1234') {
-          // PIN IS CORRECT
-          playPaymentSuccessChime();
-          closeModal('securityPinModal');
-
-          if (pendingGiftCardPurchase) {
-            finalizeGiftCardSuccess(pendingGiftCardPurchase);
-            pendingGiftCardPurchase = null;
-          } else if (pendingPinAction) {
-            finalizeGenericPaymentSuccess(pendingPinAction);
-            pendingPinAction = null;
-          } else {
-            finalizeP2pSuccess();
-          }
-        } else {
-          // PIN IS INCORRECT: Inline error message without closing modal!
-          if (errEl) {
-            errEl.style.display = 'block';
-            errEl.innerText = 'Wrong PIN. Please try again (Default: 1234)';
-          }
-          // Shake dots
-          const dotsWrap = document.getElementById('pinDotsWrap');
-          if (dotsWrap) {
-            dotsWrap.style.animation = 'none';
-            dotsWrap.offsetHeight;
-            dotsWrap.style.animation = 'pinErrorShake 0.4s ease';
-          }
-          // Clear entered PIN after brief pause
-          setTimeout(() => {
-            currentSecurityPin = '';
-            updatePinDotsUI();
-          }, 600);
-        }
-      }
-    }
-
-    function finalizeGiftCardSuccess(p) {
-      // Deduct wallet balance
-      if (appData.user) {
-        appData.user.walletBalance = Math.max(0, (appData.user.walletBalance || 5450) - p.netPayable);
-        updateUserBalanceDisplays();
-      }
-
-      // Generate random voucher code & PIN
-      const randomCode = 'EPY-' + p.brand.name.substring(0, 4).toUpperCase() + '-' + Math.floor(1000 + Math.random() * 9000) + '-' + Math.floor(1000 + Math.random() * 9000);
-      const randomPin = Math.floor(1000 + Math.random() * 9000);
-      const utr = 'UTR' + Date.now().toString().slice(-10);
-
-      // Log transaction to Passbook
-      if (!appData.transactions) appData.transactions = [];
-      appData.transactions.unshift({
-        id: utr,
-        title: 'Gift Voucher — ' + p.brand.name,
-        type: 'DEBIT',
-        amount: p.netPayable,
-        status: 'SUCCESS',
-        date: 'Just now'
-      });
-
-      // Update Fullscreen Success Modal
-      document.getElementById('successModalHeading').innerText = 'Gift Voucher Issued Successfully!';
-      document.getElementById('successModalSubtext').innerText = 'Amount deducted from EasyPay Wallet';
-      document.getElementById('successModalAmountValue').innerText = '₹' + p.netPayable.toLocaleString('en-IN');
-      document.getElementById('successModalUtrValue').innerText = utr;
-
-      // Show Voucher Details Wrap
-      const vWrap = document.getElementById('successGiftVoucherDetailsWrap');
-      if (vWrap) {
-        vWrap.style.display = 'block';
-        document.getElementById('successVoucherBrandName').innerText = p.brand.name + ' Gift Voucher';
-        document.getElementById('successVoucherCodeSpan').innerText = randomCode;
-        document.getElementById('successVoucherPinSpan').innerText = randomPin;
-        document.getElementById('successVoucherExpirySpan').innerText = '12 Months (Valid till Nov 2027)';
-      }
-
-      openModal('paymentSuccessFullscreenModal');
-    }
-
-    function finalizeGenericPaymentSuccess(act) {
-      if (appData.user) {
-        appData.user.walletBalance = Math.max(0, (appData.user.walletBalance || 5450) - act.amount);
-        updateUserBalanceDisplays();
-      }
-
-      const utr = 'UTR' + Date.now().toString().slice(-10);
-
-      if (!appData.transactions) appData.transactions = [];
-      appData.transactions.unshift({
-        id: utr,
-        title: act.recipient,
-        type: 'DEBIT',
-        amount: act.amount,
-        status: 'SUCCESS',
-        date: 'Just now'
-      });
-
-      document.getElementById('successModalHeading').innerText = 'Payment Successful';
-      document.getElementById('successModalSubtext').innerText = 'Authorized to ' + act.recipient;
-      document.getElementById('successModalAmountValue').innerText = '₹' + act.amount.toLocaleString('en-IN');
-      document.getElementById('successModalUtrValue').innerText = utr;
-
-      const vWrap = document.getElementById('successGiftVoucherDetailsWrap');
-      if (vWrap) vWrap.style.display = 'none';
-
-      openModal('paymentSuccessFullscreenModal');
-    }
-
-    function finalizeP2pSuccess() {
-      finalizeGenericPaymentSuccess({
-        amount: activeP2pRecipient?.amount || 500,
-        recipient: 'Transfer to ' + (activeP2pRecipient?.name || 'Rahul Sharma')
-      });
-    }
-
-    function updateUserBalanceDisplays() {
-      const bal = appData.user?.walletBalance || 0;
-      const fmt = '₹' + bal.toLocaleString('en-IN', { minimumFractionDigits: 2 });
-      
-      const el1 = document.getElementById('balanceModalWalletDisplay');
-      if (el1) el1.innerText = fmt;
-      const el2 = document.getElementById('homeWalletBalance');
-      if (el2) el2.innerText = fmt;
-      const el3 = document.getElementById('walletBalanceDisplay');
-      if (el3) el3.innerText = fmt;
-    }
-
-
-    function openSideDrawerMenu() {
-      openModal('sideDrawerMenuModal');
-    }
-
-    function openSendMoneyModal(presetRecipient) {
-      if (presetRecipient) {
-        const inp = document.getElementById('p2pAmountInput');
-        if (inp) inp.focus();
-      }
-      openModal('p2pPaymentModal');
-    }
-
-    function openBalanceModal() {
-      if (appData && appData.user) {
-        const el = document.getElementById('balanceModalWalletDisplay');
-        if (el) el.innerText = '₹' + (appData.user.walletBalance || 5450).toLocaleString('en-IN', { minimumFractionDigits: 2 });
-      }
-      openModal('checkBalanceModal');
-    }
-
-    function openToBankModal() {
-      openModal('transferToBankModal');
-    }
-
-    function openMyBillsModal() {
-      openModal('myBillsModal');
-    }
-
-    function openRechargeModal(serviceName) {
-      const title = document.getElementById('rechargeModalTitle');
-      const label = document.getElementById('rechargeInputLabel');
-      if (title) title.innerText = serviceName || 'Mobile Recharge';
-      if (label) {
-        if ((serviceName || '').includes('Electricity')) label.innerText = 'Consumer Account Number';
-        else if ((serviceName || '').includes('FASTag')) label.innerText = 'Vehicle Registration Number';
-        else if ((serviceName || '').includes('DTH')) label.innerText = 'Smart Card / Viewing Card No';
-        else if ((serviceName || '').includes('Credit')) label.innerText = 'Credit Card Number';
-        else if ((serviceName || '').includes('Gas')) label.innerText = 'Customer ID / LPG Number';
-        else label.innerText = '10-Digit Mobile Number';
-      }
-      openModal('rechargeModal');
-    }
-
-</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
   <script>
     // ==============================================================
     // RECHARGE PLAN SEARCH FILTER
@@ -3841,6 +3561,13 @@
       display: none !important;
     }
 </style>
+<style>
+    @keyframes laserSweep {
+      0% { top: 0%; opacity: 0.8; }
+      50% { top: 96%; opacity: 1; }
+      100% { top: 0%; opacity: 0.8; }
+    }
+</style>
 </head>
 <body>
 
@@ -4050,36 +3777,27 @@
 
     <!-- HOME STICKY HEADER -->
     <!-- HOME STICKY HEADER (SCREENSHOT 3) -->
-    <header class="app-header" id="homeMainHeader" style="background:#FFFFFF; border-bottom:1px solid #F0F0F0; padding:10px 16px; display:flex; align-items:center; justify-content:space-between; height:58px; box-sizing:border-box; position:sticky; top:0; z-index:500;">
-      <!-- Left: Hamburger Menu Button + EasyPay Brand Logo -->
-      <div style="display:flex; align-items:center; gap:10px;">
-        <button class="header-icon-btn" onclick="openSideDrawerMenu()" title="Menu" style="background:none; border:none; font-size:20px; color:#1A1A1A; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center; padding:0;">
-          <i class="fa-solid fa-bars"></i>
-        </button>
-        <div style="display:flex; align-items:center; gap:6px; cursor:pointer;" onclick="switchNavTab('home')">
-          <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22 68L56 18L54 44L78 40L38 84L42 56L22 68Z" fill="#FF5722"/>
-            <path d="M42 56L54 44L56 18L22 68L42 56Z" fill="#E64A19"/>
-            <path d="M54 44L78 40L38 84L42 56L54 44Z" fill="#FF7043"/>
-          </svg>
-          <span style="font-family:var(--font-heading); font-size:20px; font-weight:800; color:#1A1A1A; letter-spacing:-0.3px;">EasyPay</span>
-        </div>
+    <header class="app-header" id="homeMainHeader" style="background:#FFFFFF; border-bottom:1px solid #F0F0F0; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; height:58px; box-sizing:border-box; position:sticky; top:0; z-index:500;">
+      <!-- Left: EasyPay Brand Logo and Text ONLY (No Hamburger / 3 lines) -->
+      <div style="display:flex; align-items:center; gap:8px; cursor:pointer;" onclick="switchNavTab('home')">
+        <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 68L56 18L54 44L78 40L38 84L42 56L22 68Z" fill="#FF5722"/>
+          <path d="M42 56L54 44L56 18L22 68L42 56Z" fill="#E64A19"/>
+          <path d="M54 44L78 40L38 84L42 56L54 44Z" fill="#FF7043"/>
+        </svg>
+        <span style="font-family:var(--font-heading); font-size:20px; font-weight:800; color:#1A1A1A; letter-spacing:-0.3px;">EasyPay</span>
       </div>
 
-      <!-- Right: Search + Notifications + User Avatar -->
-      <div style="display:flex; align-items:center; gap:8px;">
-        <button class="header-icon-btn" onclick="openGlobalSearch()" title="Search" style="background:none; border:none; font-size:18px; color:#1A1A1A; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center;">
+      <!-- Right: Search Icon and Notifications Icon ONLY (No NB) -->
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button class="header-icon-btn" onclick="openGlobalSearch()" title="Search" style="background:none; border:none; font-size:18px; color:#1A1A1A; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center; padding:0;">
           <i class="fa-solid fa-magnifying-glass"></i>
         </button>
         
-        <button class="header-icon-btn" onclick="openNotificationsModal()" title="Notifications" style="background:none; border:none; font-size:18px; color:#1A1A1A; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center; position:relative;">
+        <button class="header-icon-btn" onclick="openNotificationsModal()" title="Notifications" style="background:none; border:none; font-size:18px; color:#1A1A1A; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center; padding:0; position:relative;">
           <i class="fa-regular fa-bell"></i>
           <span style="position:absolute; top:7px; right:7px; width:7px; height:7px; background:#FF5722; border-radius:50%; border:1.5px solid #FFFFFF;"></span>
         </button>
-
-        <div class="header-user-avatar" onclick="switchNavTab('profile')" title="View Profile" style="width:34px; height:34px; border-radius:50%; background:#FFF1EE; border:1.5px solid #FFCCBC; color:#FF5722; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center; cursor:pointer; margin-left:4px;">
-          NB
-        </div>
       </div>
     </header>
 
@@ -4190,7 +3908,7 @@
           <div class="fc-upi-card-header" style="display: flex; align-items: center; justify-content: space-between;">
             <!-- Left: UPI Money Transfer -->
             <div class="fc-upi-title-wrap">
-              <span class="fc-upi-main-title">UPI Money Transfer</span>
+              <span class="fc-upi-main-title">Money Transfer</span>
             </div>
             <!-- Right: Powered by Epay (3-dots removed as requested) -->
             <span class="fc-upi-powered-tag" style="background:#FFF1EE; color:#FF5722; font-weight:800; font-size:10px; padding:3px 8px; border-radius:6px; border:1px solid #FFE0B2;">
@@ -5357,28 +5075,34 @@
     <nav class="app-bottom-nav" id="appBottomNav">
       <!-- 1. Home Tab -->
       <div class="nav-tab-item active" id="tabHome" onclick="switchNavTab('home')">
-        <i class="fa-solid fa-house" style="font-size: 20px;"></i>
+        <i class="fa-solid fa-house" style="font-size: 19px;"></i>
         <span style="font-size: 11px; font-weight: 700; margin-top: 3px;">Home</span>
       </div>
 
-      <!-- 2. Invest Center Highlighted Button (Requirement 2 & 3) -->
+      <!-- 2. Gift Tab -->
+      <div class="nav-tab-item" id="tabGift" onclick="switchNavTab('gift')">
+        <i class="fa-solid fa-gift" style="font-size: 19px;"></i>
+        <span style="font-size: 11px; font-weight: 700; margin-top: 3px;">Gift</span>
+      </div>
+
+      <!-- 3. Invest Center Highlighted Button -->
       <div class="nav-tab-center-scan" id="tabInvestCenter" onclick="switchNavTab('bonds')">
-        <div class="nav-center-scan-circle" style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); box-shadow: 0 4px 16px rgba(255, 87, 34, 0.45); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <div class="nav-center-scan-circle" style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); box-shadow: 0 4px 16px rgba(255, 87, 34, 0.45); display: flex; flex-direction: column; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%;">
           <span style="font-family: var(--font-heading); font-size: 15px; font-weight: 900; color: #FFFFFF; line-height: 1;">12%</span>
           <span style="font-size: 8px; font-weight: 800; color: #FFE0B2; text-transform: uppercase; letter-spacing: 0.5px;">Bonds</span>
         </div>
-        <span class="nav-center-scan-label" style="font-weight: 800; color: #FF5722;">Invest</span>
+        <span class="nav-center-scan-label" style="font-weight: 800; color: #FF5722; font-size: 11px; margin-top: 4px;">Invest</span>
       </div>
 
-      <!-- 3. Shopping Tab (Requirement 2) -->
+      <!-- 4. Shopping Tab -->
       <div class="nav-tab-item" id="tabShopping" onclick="switchNavTab('shopping')">
-        <i class="fa-solid fa-bag-shopping" style="font-size: 20px;"></i>
+        <i class="fa-solid fa-bag-shopping" style="font-size: 19px;"></i>
         <span style="font-size: 11px; font-weight: 700; margin-top: 3px;">Shopping</span>
       </div>
 
-      <!-- 4. Profile Tab (Requirement 2) -->
+      <!-- 5. Profile Tab -->
       <div class="nav-tab-item" id="tabProfile" onclick="switchNavTab('profile')">
-        <i class="fa-solid fa-user" style="font-size: 20px;"></i>
+        <i class="fa-solid fa-user" style="font-size: 19px;"></i>
         <span style="font-size: 11px; font-weight: 700; margin-top: 3px;">Profile</span>
       </div>
     </nav>
@@ -5787,13 +5511,20 @@
         </button>
       </div>
 
-      <!-- Scanner Viewfinder Box -->
-      <div style="position: relative; width: 100%; height: 230px; background: #0F172A; border-radius: 18px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 14px;">
-        <video id="scannerVideoFeed" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
-        <!-- Viewfinder Overlay Box -->
-        <div style="width: 160px; height: 160px; border: 2px solid #00E676; border-radius: 16px; position: relative; box-shadow: 0 0 0 9999px rgba(0,0,0,0.55);">
-          <!-- Animated Laser Beam -->
-          <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: #00E676; box-shadow: 0 0 8px #00E676; animation: scanLaser 2s infinite ease-in-out;"></div>
+      <!-- Scanner Viewfinder Box with Live Video -->
+      <div style="position: relative; width: 100%; height: 260px; background: #000000; border-radius: 18px; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(0,0,0,0.3); margin-bottom: 16px;">
+        <video id="qrScannerVideo" playsinline autoplay muted style="width: 100%; height: 100%; object-fit: cover;"></video>
+        
+        <!-- Camera Target Bounding Box -->
+        <div style="position: absolute; width: 190px; height: 190px; border: 2.5px solid #FF5722; border-radius: 16px; box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45); pointer-events: none;">
+          <!-- Laser Sweep Line -->
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: #FF5722; box-shadow: 0 0 12px #FF5722; animation: laserSweep 2s ease-in-out infinite;"></div>
+        </div>
+
+        <div style="position: absolute; bottom: 12px; color: #FFFFFF; font-size: 11px; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.8); background: rgba(0,0,0,0.5); padding: 4px 10px; border-radius: 20px;">
+          <i class="fa-solid fa-camera"></i> Live Camera Active • Point at QR
+        </div>
+      </div>
         </div>
         <div style="position: absolute; bottom: 12px; color: white; font-size: 11px; font-weight: 600; opacity: 0.9; background: rgba(0,0,0,0.6); padding: 3px 10px; border-radius: 12px;">
           Align EasyPay QR Code inside box
@@ -5911,8 +5642,8 @@
       </div>
 
       <!-- 4 PIN Dots -->
-      <div id="pinDotsWrap"
-      <div id="pinInlineError" style="display: none; color: #EF4444; font-size: 13px; font-weight: 700; margin-top: 10px; text-align: center;"></div> style="display: flex; justify-content: center; gap: 18px; margin: 20px 0 24px;">
+      <div id="pinInlineError" style="display: none; color: #EF4444; font-size: 13px; font-weight: 700; margin-bottom: 12px; background: #FEF2F2; padding: 6px 12px; border-radius: 8px; border: 1px solid #FCA5A5; text-align: center;">Wrong PIN. Please try again (Default: 1234)</div>
+      <div id="pinDotsWrap" style="display: flex; justify-content: center; gap: 18px; margin: 16px 0 20px;">
         <div class="pin-dot" id="pindot-0" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #CBD5E1; background: #F8FAFC;"></div>
         <div class="pin-dot" id="pindot-1" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #CBD5E1; background: #F8FAFC;"></div>
         <div class="pin-dot" id="pindot-2" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #CBD5E1; background: #F8FAFC;"></div>
@@ -5924,7 +5655,7 @@
       </div>
 
       <!-- Numeric Keypad -->
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 280px; margin: 0 auto 16px;">
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 280px; width: 100%; margin: 0 auto 16px; box-sizing: border-box;">
         <button type="button" class="pin-key-btn" onclick="pressPinKey('1')">1</button>
         <button type="button" class="pin-key-btn" onclick="pressPinKey('2')">2</button>
         <button type="button" class="pin-key-btn" onclick="pressPinKey('3')">3</button>
@@ -10530,6 +10261,273 @@
       </div>
     </div>
   </div>
+
+
+<script>
+    // Camera Stream Controller for Scan QR
+    let liveQrMediaStream = null;
+
+    function openQrScannerModal() {
+      openModal('qrScannerModal');
+      const video = document.getElementById('qrScannerVideo');
+      if (video && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+          .then(stream => {
+            liveQrMediaStream = stream;
+            video.srcObject = stream;
+          })
+          .catch(err => {
+            console.log('Camera notice (permission or simulated):', err.message);
+          });
+      }
+    }
+
+    function closeQrScannerModal() {
+      if (liveQrMediaStream) {
+        liveQrMediaStream.getTracks().forEach(track => track.stop());
+        liveQrMediaStream = null;
+      }
+      closeModal('qrScannerModal');
+    }
+
+    function simulateQrDetected() {
+      closeQrScannerModal();
+      activeP2pRecipient = {
+        id: 'EPY43210',
+        name: 'Apollo Pharmacy & Store',
+        mobile: '9876543210',
+        amount: 250
+      };
+      const nameEl = document.getElementById('p2pRecipientName');
+      const idEl = document.getElementById('p2pRecipientPayId');
+      const amtEl = document.getElementById('p2pAmountInput');
+      if (nameEl) nameEl.innerText = activeP2pRecipient.name;
+      if (idEl) idEl.innerText = activeP2pRecipient.id + '@easypay';
+      if (amtEl) amtEl.value = '250';
+      openModal('p2pPaymentModal');
+    }
+
+    // Master 5-Tab Navigation Router
+    function switchNavTab(tab) {
+      if (!tab) tab = 'home';
+      const cleanTab = tab.toString().toLowerCase().trim();
+      currentNavTab = cleanTab;
+
+      // Ensure Bottom Navigation is visible
+      const navEl = document.getElementById('appBottomNav');
+      if (navEl) navEl.style.display = 'flex';
+
+      // Clear all active nav tab styles
+      document.querySelectorAll('.app-bottom-nav .nav-tab-item').forEach(el => el.classList.remove('active'));
+
+      // Determine view targets
+      const isHome = cleanTab === 'home';
+      const isGift = ['gift', 'giftcard', 'giftcards', 'gifts', 'voucher', 'vouchers'].includes(cleanTab);
+      const isInvest = ['bonds', 'invest', 'loan', 'loans'].includes(cleanTab);
+      const isShopping = cleanTab === 'shopping' || cleanTab === 'mall';
+      const isProfile = cleanTab === 'profile';
+      const isPassbook = ['passbook', 'txns', 'history', 'portfolio'].includes(cleanTab);
+
+      // Highlight active bottom tab
+      if (isHome) {
+        document.getElementById('tabHome')?.classList.add('active');
+      } else if (isGift) {
+        document.getElementById('tabGift')?.classList.add('active');
+      } else if (isShopping) {
+        document.getElementById('tabShopping')?.classList.add('active');
+      } else if (isProfile) {
+        document.getElementById('tabProfile')?.classList.add('active');
+      }
+
+      const mainHeader = document.getElementById('homeMainHeader');
+      const subHeader = document.getElementById('subpageTopHeader');
+
+      const views = {
+        home: document.getElementById('viewHome'),
+        gift: document.getElementById('viewGiftCards'),
+        bonds: document.getElementById('viewBonds'),
+        shopping: document.getElementById('viewShopping'),
+        profile: document.getElementById('viewProfile'),
+        passbook: document.getElementById('viewPassbook')
+      };
+
+      // Invest Introductory Animation
+      if (isInvest) {
+        const radarModal = document.getElementById('curieRadarModal');
+        if (radarModal) {
+          radarModal.classList.add('active');
+          radarModal.style.display = 'flex';
+          setTimeout(() => {
+            radarModal.classList.remove('active');
+            radarModal.style.display = 'none';
+          }, 1500);
+        }
+      }
+
+      // Hide all panels
+      Object.values(views).forEach(v => { if (v) v.style.display = 'none'; });
+
+      // Show requested panel
+      if (isHome) {
+        if (mainHeader) mainHeader.style.display = 'flex';
+        if (subHeader) subHeader.style.display = 'none';
+        if (views.home) views.home.style.display = 'block';
+      } else if (isGift) {
+        if (mainHeader) mainHeader.style.display = 'none';
+        if (subHeader) {
+          subHeader.style.display = 'flex';
+          const title = document.getElementById('subpageHeaderTitle');
+          if (title) title.innerText = 'Gift Vouchers & Brands';
+        }
+        if (views.gift) views.gift.style.display = 'block';
+        if (typeof renderGiftBrandsCatalog === 'function') renderGiftBrandsCatalog();
+      } else if (isInvest) {
+        if (mainHeader) mainHeader.style.display = 'none';
+        if (subHeader) {
+          subHeader.style.display = 'flex';
+          const title = document.getElementById('subpageHeaderTitle');
+          if (title) title.innerText = '12% Bonds & Fixed Deposits';
+        }
+        if (views.bonds) views.bonds.style.display = 'block';
+        if (typeof renderBookedBondsList === 'function') renderBookedBondsList();
+      } else if (isShopping) {
+        if (mainHeader) mainHeader.style.display = 'none';
+        if (subHeader) {
+          subHeader.style.display = 'flex';
+          const title = document.getElementById('subpageHeaderTitle');
+          if (title) title.innerText = 'EasyPay Mall & Shopping';
+        }
+        if (views.shopping) views.shopping.style.display = 'block';
+      } else if (isProfile) {
+        if (mainHeader) mainHeader.style.display = 'none';
+        if (subHeader) subHeader.style.display = 'none';
+        if (views.profile) views.profile.style.display = 'block';
+        if (typeof populateProfileData === 'function') populateProfileData();
+      } else if (isPassbook) {
+        if (mainHeader) mainHeader.style.display = 'none';
+        if (subHeader) {
+          subHeader.style.display = 'flex';
+          const title = document.getElementById('subpageHeaderTitle');
+          if (title) title.innerText = 'Passbook & Portfolio';
+        }
+        if (views.passbook) views.passbook.style.display = 'block';
+        switchPassbookSegment('portfolio');
+      }
+    }
+
+    // Security PIN Keypad Actions
+    function deletePinKey() {
+      if (currentSecurityPin.length > 0) {
+        currentSecurityPin = currentSecurityPin.slice(0, -1);
+        updatePinDotsUI();
+        const errEl = document.getElementById('pinInlineError');
+        if (errEl) errEl.style.display = 'none';
+      }
+    }
+
+    function pressPinKey(digit) {
+      if (currentSecurityPin.length >= 4) return;
+      currentSecurityPin += digit.toString();
+      updatePinDotsUI();
+
+      const errEl = document.getElementById('pinInlineError');
+      if (errEl) errEl.style.display = 'none';
+
+      if (currentSecurityPin.length === 4) {
+        const validPin = appData.user?.securityPin || '1234';
+        if (currentSecurityPin === validPin || currentSecurityPin === '1234') {
+          // Success
+          playPaymentSuccessChime();
+          closeModal('securityPinModal');
+
+          if (pendingGiftCardPurchase) {
+            finalizeGiftCardSuccess(pendingGiftCardPurchase);
+            pendingGiftCardPurchase = null;
+          } else if (pendingPinAction) {
+            finalizeGenericPaymentSuccess(pendingPinAction);
+            pendingPinAction = null;
+          } else {
+            finalizeP2pSuccess();
+          }
+        } else {
+          // Error: Show inline message without closing modal!
+          if (errEl) {
+            errEl.style.display = 'block';
+            errEl.innerText = 'Wrong PIN. Please try again (Default: 1234)';
+          }
+          const dotsWrap = document.getElementById('pinDotsWrap');
+          if (dotsWrap) {
+            dotsWrap.style.animation = 'none';
+            dotsWrap.offsetHeight;
+            dotsWrap.style.animation = 'pinErrorShake 0.4s ease';
+          }
+          setTimeout(() => {
+            currentSecurityPin = '';
+            updatePinDotsUI();
+          }, 600);
+        }
+      }
+    }
+
+    function updatePinDotsUI() {
+      for (let i = 0; i < 4; i++) {
+        const dot = document.getElementById('pindot-' + i);
+        if (dot) {
+          if (i < currentSecurityPin.length) {
+            dot.style.background = '#FF5722';
+            dot.style.borderColor = '#FF5722';
+            dot.style.transform = 'scale(1.15)';
+          } else {
+            dot.style.background = '#FFFFFF';
+            dot.style.borderColor = '#CBD5E1';
+            dot.style.transform = 'scale(1)';
+          }
+        }
+      }
+    }
+
+    // Web Audio Chime
+    function playPaymentSuccessChime() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        if (ctx.state === 'suspended') ctx.resume();
+
+        const notes = [523.25, 659.25, 783.99];
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.1);
+          gain.gain.setValueAtTime(0, ctx.currentTime + idx * 0.1);
+          gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + idx * 0.1 + 0.03);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + idx * 0.1 + 0.45);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.1);
+          osc.stop(ctx.currentTime + idx * 0.1 + 0.5);
+        });
+      } catch (e) {
+        console.warn('Audio chime notice:', e);
+      }
+    }
+
+    // Profile page helpers (All buttons 100% interactive)
+    function openPassbookFromProfile() {
+      switchNavTab('passbook');
+    }
+    function openProfileEditModal() {
+      const u = appData.user || {};
+      const nameInp = document.getElementById('editFullNameInput');
+      const phoneInp = document.getElementById('editPhoneInput');
+      const pinInp = document.getElementById('editPinCodeInput');
+      if (nameInp) nameInp.value = u.name || 'Nirod Behera';
+      if (phoneInp) phoneInp.value = u.mobile || '9876548808';
+      if (pinInp) pinInp.value = u.pincode || '400001';
+      openModal('profileEditModal');
+    }
+</script>
 
 </body>
 </html>
