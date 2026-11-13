@@ -8283,80 +8283,6 @@
       }
 
       window.scrollTo(0, 0);
-    } else if (isShopping) {
-        const el = document.getElementById('tabShopping');
-        if (el) el.classList.add('active');
-      } else if (isProfile) {
-        const el = document.getElementById('tabProfile');
-        if (el) el.classList.add('active');
-      }
-
-      const mainHeader = document.getElementById('homeMainHeader');
-      const subHeader = document.getElementById('subpageTopHeader');
-      
-      const views = {
-        home: document.getElementById('viewHome'),
-        bonds: document.getElementById('viewBonds'),
-        shopping: document.getElementById('viewShopping') || document.getElementById('viewGiftCards'),
-        profile: document.getElementById('viewProfile'),
-        passbook: document.getElementById('viewPassbook')
-      };
-
-      // Requirement 3: Animated Transition for Invest Section
-      if (isInvest) {
-        const radarModal = document.getElementById('curieRadarModal');
-        if (radarModal) {
-          radarModal.classList.add('active');
-          radarModal.style.display = 'flex';
-          setTimeout(() => {
-            radarModal.classList.remove('active');
-            radarModal.style.display = 'none';
-          }, 1600);
-        }
-      }
-
-      // Hide all panels first
-      Object.values(views).forEach(v => { if (v) v.style.display = 'none'; });
-
-      if (isHome) {
-        if (mainHeader) mainHeader.style.display = 'flex';
-        if (subHeader) subHeader.style.display = 'none';
-        if (views.home) views.home.style.display = 'block';
-      } else if (isInvest) {
-        if (mainHeader) mainHeader.style.display = 'none';
-        if (subHeader) {
-          subHeader.style.display = 'flex';
-          const titleEl = document.getElementById('subpageHeaderTitle');
-          if (titleEl) titleEl.innerText = '12% Bonds & Fixed Deposits';
-        }
-        if (views.bonds) views.bonds.style.display = 'block';
-        if (typeof renderBookedBondsList === 'function') renderBookedBondsList();
-      } else if (isShopping) {
-        if (mainHeader) mainHeader.style.display = 'none';
-        if (subHeader) {
-          subHeader.style.display = 'flex';
-          const titleEl = document.getElementById('subpageHeaderTitle');
-          if (titleEl) titleEl.innerText = 'Gift Vouchers & Shopping';
-        }
-        const giftView = document.getElementById('viewGiftCards');
-        if (giftView) giftView.style.display = 'block';
-        else if (views.shopping) views.shopping.style.display = 'block';
-        if (typeof renderGiftBrandsCatalog === 'function') renderGiftBrandsCatalog();
-      } else if (isProfile) {
-        if (mainHeader) mainHeader.style.display = 'none';
-        if (subHeader) subHeader.style.display = 'none';
-        if (views.profile) views.profile.style.display = 'block';
-        if (typeof populateProfileData === 'function') populateProfileData();
-      } else if (isPassbook) {
-        if (mainHeader) mainHeader.style.display = 'none';
-        if (subHeader) {
-          subHeader.style.display = 'flex';
-          const titleEl = document.getElementById('subpageHeaderTitle');
-          if (titleEl) titleEl.innerText = 'Passbook & Portfolio';
-        }
-        if (views.passbook) views.passbook.style.display = 'block';
-        switchPassbookSegment('portfolio');
-      }
     }
 
     // Direct URL hash / initial tab listener with production Auth Guard
@@ -9175,9 +9101,6 @@
       setupP2pPaymentModal();
       openModal('p2pPaymentModal');
     }
-      updateUpiPayButton();
-      if (modal) modal.classList.add('active');
-    }
 
     function handleUpiRecipientInput(val) {
       const v = (val || '').trim();
@@ -9809,10 +9732,6 @@
       }
       if (amtInput) amtInput.value = currentP2pAmount || 500;
       updateP2pAmountBtn();
-    }
-
-      setP2pAmount(500);
-      openModal('p2pPaymentModal');
     }
 
     function setP2pAmount(amt) {
