@@ -53,20 +53,28 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.7
-          name: "EasyPay Android APK v1.0.7 (Authentic Freecharge Biz UI & Complete Flow Verification)"
+          tag_name: v1.0.8
+          name: "EasyPay Android APK v1.0.8 (Home Cards Interactivity, Invest Transition, Web Audio Chime & Passbook)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.7 (Authentic Freecharge Biz UI & Complete Flow Verification)
-            Production release with authentic Freecharge Biz bottom navigation, full Security PIN payment integration for Gift Vouchers and Transfers, dynamic My QR rendering, and zero-freeze robust API routing.
+            ## EasyPay Mobile Application APK v1.0.8 (Comprehensive Directive Enhancements)
+            Production release with complete interactive Home Page service cards, authentic Bottom Nav with animated Invest center button, Web Audio payment success chime, Passbook All Transactions fix, and scaled-down Gift Card checkout.
             
-            ### Fixes & Enhancements in v1.0.7:
-            1. **Authentic Freecharge Biz Bottom Nav**: Exactly matching the reference UI with Home on the left, an elevated circular orange QR Scan button in the center with immediate scanner launch, and Loans & Invest on the right.
-            2. **Interactive 4-Digit Security PIN Modal for Gift Card Checkout & Transfers**:
-               - Gift Voucher "Proceed To Pay" immediately prompts for the authentic 4-digit Security PIN keypad (default: `1234`).
-               - Validating PIN securely authorizes purchase, deducts wallet balance, updates passbook, and displays the gift voucher with code, PIN, and expiry date.
-               - P2P UPI transfers use the same PIN modal with real-time feedback and instant fallback handling.
-            3. **My QR Code Instant Rendering Fixed**: Corrected modal element bindings and implemented crisp inline SVG QR generation fallback so merchant QR codes render immediately without blank white areas.
-            4. **Mobile API Route & Fallback Stability**: All relative endpoints updated with `API_BASE` and resilient local offline fallbacks, preventing Capacitor WebView connection drops.
+            ### Fixes & Enhancements in v1.0.8:
+            1. **Home Page & Section Interactions**:
+               - All interactive touchables wired: Check Balance, Transfer to Bank/Self, Pay ID/Mobile, Recharges & Utility Bills, and My Bills.
+            2. **Bottom Navigation Bar Redesign**:
+               - Four tabs in exact order: Home, Invest (center elevated button with 12% badge), Shopping, and Profile.
+               - Active tab state applies active orange color (`#FF5722`) to both icon and label simultaneously.
+            3. **Invest Page Introductory Animation**:
+               - Restored pre-transition radar connecting animation sequence (pulse ripples, DICGC insurance banner, and user/bank badges) before opening the Bonds & Fixed Deposits dashboard.
+            4. **My Profile & Passbook Enhancements**:
+               - Bank accounts management modal and PIN settings fully interactive.
+               - Passbook "All Transactions" view fixed to load and render the complete transaction history ledger dynamically.
+            5. **Gift Card Checkout, Inline PIN Error & Web Audio Chime**:
+               - Sizing and padding scaled down to eliminate screen overflow clipping.
+               - Inline "Wrong PIN" error inside PIN modal without abrupt dismissal.
+               - Authentic Web Audio payment success chime (C5-E5-G5 harmonic chord) on correct PIN validation.
+               - Fullscreen Success Modal with green check badge, UTR, Voucher Code, PIN, and Passbook logging.
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

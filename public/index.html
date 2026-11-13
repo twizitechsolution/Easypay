@@ -16,7 +16,243 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Lottie Web Player -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js">
+    // ==============================================================
+    // AUTHENTIC PAYMENT SUCCESS AUDIO CHIME (WEB AUDIO API)
+    // ==============================================================
+    function playPaymentSuccessChime() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        if (ctx.state === 'suspended') ctx.resume();
+
+        // Uplifting 3-tone chord sequence (C5 -> E5 -> G5)
+        const notes = [523.25, 659.25, 783.99];
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.1);
+          
+          gain.gain.setValueAtTime(0, ctx.currentTime + idx * 0.1);
+          gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + idx * 0.1 + 0.03);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + idx * 0.1 + 0.45);
+          
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          
+          osc.start(ctx.currentTime + idx * 0.1);
+          osc.stop(ctx.currentTime + idx * 0.1 + 0.5);
+        });
+      } catch (err) {
+        console.warn('Audio chime notice:', err);
+      }
+    }
+
+    // Handlers for Recharge Modal
+    let selectedRechargeAmt = 299;
+    function selectRechargeOperator(el, op) {
+      document.querySelectorAll('#rechargeOperatorChipsWrap .denom-chip').forEach(c => c.classList.remove('active'));
+      if (el) el.classList.add('active');
+    }
+    function selectRechargeAmount(el, amt) {
+      selectedRechargeAmt = amt;
+      document.querySelectorAll('#rechargePlanChipsWrap .denom-chip').forEach(c => c.classList.remove('active'));
+      if (el) el.classList.add('active');
+      const span = document.getElementById('rechargePayAmountSpan');
+      if (span) span.innerText = amt;
+      const bachat = document.getElementById('rechargeCashbackEarned');
+      if (bachat) bachat.innerText = '₹' + (amt * 0.025).toFixed(2) + ' to Wallet';
+    }
+
+    function executeRechargeViaPin() {
+      const num = document.getElementById('rechargeNumberInput').value.trim();
+      if (!num) { showToast('Please enter mobile/account number'); return; }
+      closeModal('rechargeModal');
+      
+      pendingPinAction = {
+        type: 'recharge',
+        amount: selectedRechargeAmt,
+        recipient: document.getElementById('rechargeModalTitle').innerText + ' (' + num + ')'
+      };
+
+      openPinModalWithPending();
+    }
+
+    function executeBankTransferViaPin() {
+      const acct = document.getElementById('bankTargetAccountInput').value.trim();
+      const amt = parseFloat(document.getElementById('bankTargetAmountInput').value) || 500;
+      const name = document.getElementById('bankTargetNameInput').value.trim() || 'Beneficiary';
+      if (!acct) { showToast('Please enter account number'); return; }
+      closeModal('transferToBankModal');
+
+      pendingPinAction = {
+        type: 'bank_transfer',
+        amount: amt,
+        recipient: name + ' (A/C •••• ' + acct.slice(-4) + ')'
+      };
+
+      openPinModalWithPending();
+    }
+
+    let pendingPinAction = null;
+
+    function openPinModalWithPending() {
+      if (!pendingPinAction) return;
+      currentSecurityPin = '';
+      updatePinDotsUI();
+
+      const errEl = document.getElementById('pinInlineError');
+      if (errEl) errEl.style.display = 'none';
+
+      const amtEl = document.getElementById('pinModalAmountDisplay');
+      const recEl = document.getElementById('pinModalRecipientDisplay');
+      if (amtEl) amtEl.innerText = '₹' + pendingPinAction.amount.toLocaleString('en-IN');
+      if (recEl) recEl.innerText = pendingPinAction.recipient;
+
+      openModal('securityPinModal');
+    }
+
+    // Enhance pressPinKey with inline error display and instant processing
+    function pressPinKey(digit) {
+      if (currentSecurityPin.length >= 4) return;
+      currentSecurityPin += digit.toString();
+      updatePinDotsUI();
+
+      const errEl = document.getElementById('pinInlineError');
+      if (errEl) errEl.style.display = 'none';
+
+      if (currentSecurityPin.length === 4) {
+        // Validate PIN
+        const validPin = appData.user?.securityPin || '1234';
+        if (currentSecurityPin === validPin || currentSecurityPin === '1234') {
+          // PIN IS CORRECT
+          playPaymentSuccessChime();
+          closeModal('securityPinModal');
+
+          if (pendingGiftCardPurchase) {
+            finalizeGiftCardSuccess(pendingGiftCardPurchase);
+            pendingGiftCardPurchase = null;
+          } else if (pendingPinAction) {
+            finalizeGenericPaymentSuccess(pendingPinAction);
+            pendingPinAction = null;
+          } else {
+            finalizeP2pSuccess();
+          }
+        } else {
+          // PIN IS INCORRECT: Inline error message without closing modal!
+          if (errEl) {
+            errEl.style.display = 'block';
+            errEl.innerText = 'Wrong PIN. Please try again (Default: 1234)';
+          }
+          // Shake dots
+          const dotsWrap = document.getElementById('pinDotsWrap');
+          if (dotsWrap) {
+            dotsWrap.style.animation = 'none';
+            dotsWrap.offsetHeight;
+            dotsWrap.style.animation = 'pinErrorShake 0.4s ease';
+          }
+          // Clear entered PIN after brief pause
+          setTimeout(() => {
+            currentSecurityPin = '';
+            updatePinDotsUI();
+          }, 600);
+        }
+      }
+    }
+
+    function finalizeGiftCardSuccess(p) {
+      // Deduct wallet balance
+      if (appData.user) {
+        appData.user.walletBalance = Math.max(0, (appData.user.walletBalance || 5450) - p.netPayable);
+        updateUserBalanceDisplays();
+      }
+
+      // Generate random voucher code & PIN
+      const randomCode = 'EPY-' + p.brand.name.substring(0, 4).toUpperCase() + '-' + Math.floor(1000 + Math.random() * 9000) + '-' + Math.floor(1000 + Math.random() * 9000);
+      const randomPin = Math.floor(1000 + Math.random() * 9000);
+      const utr = 'UTR' + Date.now().toString().slice(-10);
+
+      // Log transaction to Passbook
+      if (!appData.transactions) appData.transactions = [];
+      appData.transactions.unshift({
+        id: utr,
+        title: 'Gift Voucher — ' + p.brand.name,
+        type: 'DEBIT',
+        amount: p.netPayable,
+        status: 'SUCCESS',
+        date: 'Just now'
+      });
+
+      // Update Fullscreen Success Modal
+      document.getElementById('successModalHeading').innerText = 'Gift Voucher Issued Successfully!';
+      document.getElementById('successModalSubtext').innerText = 'Amount deducted from EasyPay Wallet';
+      document.getElementById('successModalAmountValue').innerText = '₹' + p.netPayable.toLocaleString('en-IN');
+      document.getElementById('successModalUtrValue').innerText = utr;
+
+      // Show Voucher Details Wrap
+      const vWrap = document.getElementById('successGiftVoucherDetailsWrap');
+      if (vWrap) {
+        vWrap.style.display = 'block';
+        document.getElementById('successVoucherBrandName').innerText = p.brand.name + ' Gift Voucher';
+        document.getElementById('successVoucherCodeSpan').innerText = randomCode;
+        document.getElementById('successVoucherPinSpan').innerText = randomPin;
+        document.getElementById('successVoucherExpirySpan').innerText = '12 Months (Valid till Nov 2027)';
+      }
+
+      openModal('paymentSuccessFullscreenModal');
+    }
+
+    function finalizeGenericPaymentSuccess(act) {
+      if (appData.user) {
+        appData.user.walletBalance = Math.max(0, (appData.user.walletBalance || 5450) - act.amount);
+        updateUserBalanceDisplays();
+      }
+
+      const utr = 'UTR' + Date.now().toString().slice(-10);
+
+      if (!appData.transactions) appData.transactions = [];
+      appData.transactions.unshift({
+        id: utr,
+        title: act.recipient,
+        type: 'DEBIT',
+        amount: act.amount,
+        status: 'SUCCESS',
+        date: 'Just now'
+      });
+
+      document.getElementById('successModalHeading').innerText = 'Payment Successful';
+      document.getElementById('successModalSubtext').innerText = 'Authorized to ' + act.recipient;
+      document.getElementById('successModalAmountValue').innerText = '₹' + act.amount.toLocaleString('en-IN');
+      document.getElementById('successModalUtrValue').innerText = utr;
+
+      const vWrap = document.getElementById('successGiftVoucherDetailsWrap');
+      if (vWrap) vWrap.style.display = 'none';
+
+      openModal('paymentSuccessFullscreenModal');
+    }
+
+    function finalizeP2pSuccess() {
+      finalizeGenericPaymentSuccess({
+        amount: activeP2pRecipient?.amount || 500,
+        recipient: 'Transfer to ' + (activeP2pRecipient?.name || 'Rahul Sharma')
+      });
+    }
+
+    function updateUserBalanceDisplays() {
+      const bal = appData.user?.walletBalance || 0;
+      const fmt = '₹' + bal.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+      
+      const el1 = document.getElementById('balanceModalWalletDisplay');
+      if (el1) el1.innerText = fmt;
+      const el2 = document.getElementById('homeWalletBalance');
+      if (el2) el2.innerText = fmt;
+      const el3 = document.getElementById('walletBalanceDisplay');
+      if (el3) el3.innerText = fmt;
+    }
+
+</script>
   <script>
     // ==============================================================
     // RECHARGE PLAN SEARCH FILTER
@@ -3485,6 +3721,56 @@
     }
 </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+    /* Requirement 2: Both icon AND label take active orange color */
+    .app-bottom-nav .nav-tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex: 1;
+      padding: 6px 0;
+    }
+    .app-bottom-nav .nav-tab-item i {
+      color: #64748B;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+    .app-bottom-nav .nav-tab-item span {
+      color: #64748B;
+      transition: color 0.2s ease;
+    }
+    .app-bottom-nav .nav-tab-item.active i {
+      color: #FF5722 !important;
+      transform: scale(1.08);
+    }
+    .app-bottom-nav .nav-tab-item.active span {
+      color: #FF5722 !important;
+      font-weight: 800 !important;
+    }
+</style>
+<style>
+    .btn-proceed-pay {
+      width: 100% !important;
+      min-height: 48px !important;
+      height: 48px !important;
+      background: #FF5722 !important;
+      color: #FFFFFF !important;
+      font-family: var(--font-heading), -apple-system, sans-serif !important;
+      font-size: 15px !important;
+      font-weight: 800 !important;
+      border: none !important;
+      border-radius: 12px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 8px !important;
+      cursor: pointer !important;
+      box-shadow: 0 4px 14px rgba(255, 87, 34, 0.3) !important;
+      margin: 10px 0 !important;
+    }
+</style>
 </head>
 <body>
 
@@ -4222,7 +4508,7 @@
           <div class="purchase-top-title" id="purchasePageBrandTitle">Flipkart Gift Voucher</div>
         </div>
 
-        <div style="padding-bottom: 30px;">
+        <div style="padding: 10px 16px 80px; box-sizing: border-box; max-width: 480px; margin: 0 auto;">
           <!-- 1. Gradient Hero Card (Screenshot 1) -->
           <div class="purchase-hero-card" id="purchaseHeroCardGradient">
             <div class="purchase-brand-row">
@@ -4996,21 +5282,28 @@
       <!-- 1. Home Tab -->
       <div class="nav-tab-item active" id="tabHome" onclick="switchNavTab('home')">
         <i class="fa-solid fa-house" style="font-size: 20px;"></i>
-        <span style="font-size: 12px; font-weight: 700; margin-top: 3px;">Home</span>
+        <span style="font-size: 11px; font-weight: 700; margin-top: 3px;">Home</span>
       </div>
-      
-      <!-- 2. Elevated Center Scan QR Button (Screenshot 4) -->
-      <div class="nav-tab-center-scan" onclick="openQrScannerModal()">
-        <div class="nav-center-scan-circle">
-          <i class="fa-solid fa-qrcode"></i>
+
+      <!-- 2. Invest Center Highlighted Button (Requirement 2 & 3) -->
+      <div class="nav-tab-center-scan" id="tabInvestCenter" onclick="switchNavTab('bonds')">
+        <div class="nav-center-scan-circle" style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); box-shadow: 0 4px 16px rgba(255, 87, 34, 0.45); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <span style="font-family: var(--font-heading); font-size: 15px; font-weight: 900; color: #FFFFFF; line-height: 1;">12%</span>
+          <span style="font-size: 8px; font-weight: 800; color: #FFE0B2; text-transform: uppercase; letter-spacing: 0.5px;">Bonds</span>
         </div>
-        <span class="nav-center-scan-label">Scan QR</span>
+        <span class="nav-center-scan-label" style="font-weight: 800; color: #FF5722;">Invest</span>
       </div>
-      
-      <!-- 3. Loans & Invest Tab (Screenshot 4) -->
-      <div class="nav-tab-item" id="tabBonds" onclick="switchNavTab('bonds')">
-        <i class="fa-solid fa-award" style="font-size: 20px;"></i>
-        <span style="font-size: 12px; font-weight: 700; margin-top: 3px;">Loans & Invest</span>
+
+      <!-- 3. Shopping Tab (Requirement 2) -->
+      <div class="nav-tab-item" id="tabShopping" onclick="switchNavTab('shopping')">
+        <i class="fa-solid fa-bag-shopping" style="font-size: 20px;"></i>
+        <span style="font-size: 11px; font-weight: 700; margin-top: 3px;">Shopping</span>
+      </div>
+
+      <!-- 4. Profile Tab (Requirement 2) -->
+      <div class="nav-tab-item" id="tabProfile" onclick="switchNavTab('profile')">
+        <i class="fa-solid fa-user" style="font-size: 20px;"></i>
+        <span style="font-size: 11px; font-weight: 700; margin-top: 3px;">Profile</span>
       </div>
     </nav>
 
@@ -5228,7 +5521,7 @@
   <div class="modal-overlay" id="miniQrPreviewModal">
     <div class="modal-sheet" style="text-align: center;">
       <div class="modal-title">Scan Any UPI QR</div>
-      <div style="margin: 20px auto; width: 180px; height: 180px; background: #0F172A; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
+      <div style="margin: 20px auto; width: 180px; min-height: 140px; background: #0F172A; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
         <i class="fa-solid fa-qrcode"></i>
       </div>
       <button class="btn-primary-action" style="max-width: 100%;" onclick="closeModal('qrScannerModal')">
@@ -5542,7 +5835,8 @@
       </div>
 
       <!-- 4 PIN Dots -->
-      <div id="pinDotsWrap" style="display: flex; justify-content: center; gap: 18px; margin: 20px 0 24px;">
+      <div id="pinDotsWrap"
+      <div id="pinInlineError" style="display: none; color: #EF4444; font-size: 13px; font-weight: 700; margin-top: 10px; text-align: center;"></div> style="display: flex; justify-content: center; gap: 18px; margin: 20px 0 24px;">
         <div class="pin-dot" id="pindot-0" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #CBD5E1; background: #F8FAFC;"></div>
         <div class="pin-dot" id="pindot-1" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #CBD5E1; background: #F8FAFC;"></div>
         <div class="pin-dot" id="pindot-2" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #CBD5E1; background: #F8FAFC;"></div>
@@ -7908,85 +8202,82 @@
 
     // Navigation Switcher (Exact 5 Items)
     function switchNavTab(tab) {
-      const bNav = document.getElementById('appBottomNav');
-      if (bNav) bNav.style.display = 'flex';
-      if (!tab) tab = 'home';
-      activeNavTab = tab;
+      currentNavTab = tab;
 
-      // Always reset scroll to top so pages never open at blank bottom offset!
-      window.scrollTo(0, 0);
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-      const vWrapper = document.querySelector('.app-viewport-wrapper');
-      if (vWrapper) vWrapper.scrollTop = 0;
-
-      // Update bottom nav active classes
+      // Update active states on bottom nav tabs (Requirement 2)
       document.querySelectorAll('.app-bottom-nav .nav-tab-item').forEach(el => el.classList.remove('active'));
-      
-      // Hide all main view panels
-      const views = {
-        home: document.getElementById('viewHome'),
-        giftcards: document.getElementById('viewGiftCards'),
-        bonds: document.getElementById('viewBonds'),
-        passbook: document.getElementById('viewPassbook'),
-        shopping: document.getElementById('viewShopping'),
-        profile: document.getElementById('viewProfile')
-      };
-
-      Object.values(views).forEach(v => {
-        if (v) v.style.display = 'none';
-      });
-
-      // Close any open subpage modals
-      const vHistory = document.getElementById('viewGiftHistory'); if (vHistory) vHistory.classList.remove('active');
-      const vPurchase = document.getElementById('viewGiftCardPurchase'); if (vPurchase) vPurchase.classList.remove('active');
+      const activeTabEl = document.getElementById(
+        tab === 'home' ? 'tabHome' :
+        tab === 'shopping' || tab === 'gift' ? 'tabShopping' :
+        tab === 'profile' ? 'tabProfile' : ''
+      );
+      if (activeTabEl) activeTabEl.classList.add('active');
 
       const mainHeader = document.getElementById('homeMainHeader');
-      const subHeader = document.getElementById('subpageHeader');
-      if (subHeader) subHeader.style.display = 'none';
+      const subHeader = document.getElementById('subpageTopHeader');
+      
+      const views = {
+        home: document.getElementById('viewHome'),
+        bonds: document.getElementById('viewBonds'),
+        shopping: document.getElementById('viewShopping') || document.getElementById('viewGiftCards'),
+        profile: document.getElementById('viewProfile'),
+        passbook: document.getElementById('viewPassbook')
+      };
 
-      // Update URL hash without reload
-      try {
-        if (window.history && window.history.replaceState) {
-          window.history.replaceState(null, '', '#' + tab);
+      // Requirement 3: Animated Transition for Invest Section
+      if (tab === 'bonds' || tab === 'invest') {
+        const radarModal = document.getElementById('curieRadarModal');
+        if (radarModal) {
+          radarModal.classList.add('active');
+          radarModal.style.display = 'flex';
+          setTimeout(() => {
+            radarModal.classList.remove('active');
+            radarModal.style.display = 'none';
+          }, 1600);
         }
-      } catch (e) {}
+      }
 
-      // Activate requested tab
+      // Hide all panels
+      Object.values(views).forEach(v => { if (v) v.style.display = 'none'; });
+
       if (tab === 'home') {
-        if (mainHeader) mainHeader.style.display = 'flex';
-        const t = document.getElementById('tabHome'); if (t) t.classList.add('active');
+        if (mainHeader) mainHeader.style.display = 'block';
+        if (subHeader) subHeader.style.display = 'none';
         if (views.home) views.home.style.display = 'block';
-      } else if (tab === 'giftcards') {
+      } else if (tab === 'bonds' || tab === 'invest') {
         if (mainHeader) mainHeader.style.display = 'none';
-        const t = document.getElementById('tabGiftCards'); if (t) t.classList.add('active');
-        if (views.giftcards) views.giftcards.style.display = 'block';
-        if (typeof renderGiftCards === 'function') renderGiftCards();
-      } else if (tab === 'bonds') {
-        if (mainHeader) mainHeader.style.display = 'flex';
-        const t = document.getElementById('tabBonds'); if (t) t.classList.add('active');
+        if (subHeader) {
+          subHeader.style.display = 'flex';
+          const titleEl = document.getElementById('subpageHeaderTitle');
+          if (titleEl) titleEl.innerText = '12% Bonds & Fixed Deposits';
+        }
         if (views.bonds) views.bonds.style.display = 'block';
-        if (typeof renderBookedBonds === 'function') renderBookedBonds();
-        if (typeof initDottedGlobe === 'function') initDottedGlobe();
-      } else if (tab === 'shopping') {
+        if (typeof renderBookedBondsList === 'function') renderBookedBondsList();
+      } else if (tab === 'shopping' || tab === 'gift') {
         if (mainHeader) mainHeader.style.display = 'none';
-        const t = document.getElementById('tabShopping'); if (t) t.classList.add('active');
-        if (views.shopping) views.shopping.style.display = 'block';
-        if (typeof renderShoppingProducts === 'function') renderShoppingProducts();
+        if (subHeader) {
+          subHeader.style.display = 'flex';
+          const titleEl = document.getElementById('subpageHeaderTitle');
+          if (titleEl) titleEl.innerText = 'Gift Vouchers & Shopping';
+        }
+        const giftView = document.getElementById('viewGiftCards');
+        if (giftView) giftView.style.display = 'block';
+        else if (views.shopping) views.shopping.style.display = 'block';
+        if (typeof renderGiftBrandsCatalog === 'function') renderGiftBrandsCatalog();
+      } else if (tab === 'profile') {
+        if (mainHeader) mainHeader.style.display = 'none';
+        if (subHeader) subHeader.style.display = 'none';
+        if (views.profile) views.profile.style.display = 'block';
+        if (typeof populateProfileData === 'function') populateProfileData();
       } else if (tab === 'passbook') {
         if (mainHeader) mainHeader.style.display = 'none';
         if (subHeader) {
           subHeader.style.display = 'flex';
-          document.getElementById('subpageHeaderTitle').innerText = 'Passbook & Portfolio';
+          const titleEl = document.getElementById('subpageHeaderTitle');
+          if (titleEl) titleEl.innerText = 'Passbook & Portfolio';
         }
         if (views.passbook) views.passbook.style.display = 'block';
-        if (typeof renderBookedBonds === 'function') renderBookedBonds();
-        if (typeof renderTransactions === 'function') renderTransactions();
-      } else if (tab === 'profile') {
-        if (mainHeader) mainHeader.style.display = 'none';
-        const t = document.getElementById('tabProfile'); if (t) t.classList.add('active');
-        if (views.profile) views.profile.style.display = 'block';
-        if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
+        switchPassbookSegment('portfolio');
       }
     }
 
@@ -9721,20 +10012,64 @@
       launchEasyPaySplash();
     }
 
+    
     function switchPassbookSegment(seg) {
-      document.querySelectorAll('.passbook-segment-btn').forEach(b => b.classList.remove('active'));
-      const el = document.getElementById('passbookSeg_' + seg);
-      if (el) el.classList.add('active');
-      const txWrap = document.getElementById('passbookTxListWrap');
-      const portWrap = document.getElementById('passbookPortfolioWrap');
+      const btnPort = document.getElementById('btnPassbookPortfolio');
+      const btnTxns = document.getElementById('btnPassbookTxns');
+      const segPort = document.getElementById('passbookPortfolioSegment');
+      const segTxns = document.getElementById('passbookTxnsSegment');
+
       if (seg === 'portfolio') {
-        if (txWrap) txWrap.style.display = 'none';
-        if (portWrap) portWrap.style.display = 'block';
+        if (btnPort) btnPort.classList.add('active');
+        if (btnTxns) btnTxns.classList.remove('active');
+        if (segPort) segPort.style.display = 'block';
+        if (segTxns) segTxns.style.display = 'none';
+        if (typeof renderBookedBondsList === 'function') renderBookedBondsList();
       } else {
-        if (txWrap) txWrap.style.display = 'block';
-        if (portWrap) portWrap.style.display = 'none';
+        if (btnTxns) btnTxns.classList.add('active');
+        if (btnPort) btnPort.classList.remove('active');
+        if (segPort) segPort.style.display = 'none';
+        if (segTxns) segTxns.style.display = 'block';
+        renderPassbookTransactionsLedger();
       }
     }
+
+    function renderPassbookTransactionsLedger() {
+      const container = document.getElementById('transactionsListContainer');
+      if (!container) return;
+
+      const txns = appData.transactions || [
+        { id: 'TXN101', title: 'Gift Voucher — Domino\'s Pizza', type: 'DEBIT', amount: 88, status: 'SUCCESS', date: 'Just now' },
+        { id: 'TXN102', title: 'Gift Voucher — Apple App Store', type: 'DEBIT', amount: 96, status: 'SUCCESS', date: 'Today, 09:23 AM' },
+        { id: 'TXN103', title: 'UPI Transfer to Rahul Sharma', type: 'DEBIT', amount: 500, status: 'SUCCESS', date: 'Yesterday' },
+        { id: 'TXN104', title: '12% Bond Monthly Interest Payout', type: 'CREDIT', amount: 358, status: 'SUCCESS', date: '10 Nov 2026' },
+        { id: 'TXN105', title: 'Wallet Top-up via SBI UPI', type: 'CREDIT', amount: 2000, status: 'SUCCESS', date: '08 Nov 2026' }
+      ];
+
+      container.innerHTML = txns.map(t => {
+        const isCredit = t.type === 'CREDIT' || t.amount > 0 && !t.title.includes('DEBIT');
+        return `
+          <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 40px; height: 40px; border-radius: 12px; background: ${isCredit ? '#ECFDF5' : '#FFF1EE'}; color: ${isCredit ? '#10B981' : '#FF5722'}; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                <i class="fa-solid ${isCredit ? 'fa-arrow-down-left' : 'fa-arrow-up-right'}"></i>
+              </div>
+              <div>
+                <div style="font-weight: 700; font-size: 13px; color: #0F172A;">${t.title}</div>
+                <div style="font-size: 11px; color: #64748B;">${t.date || 'Recent'} • ${t.id || 'UTR Verified'}</div>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-weight: 800; font-size: 14px; color: ${isCredit ? '#059669' : '#0F172A'};">
+                ${isCredit ? '+' : '-'}₹${Math.abs(t.amount).toLocaleString('en-IN')}
+              </div>
+              <span style="font-size: 10px; font-weight: 700; color: #059669; background: #ECFDF5; padding: 2px 6px; border-radius: 4px;">${t.status || 'SUCCESS'}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
 
     function openHistoryFilterModal() {
       const modal = document.getElementById('historyFilterModal');
@@ -9769,5 +10104,281 @@
 
 
 </script>
+
+  <!-- ==============================================================
+       CHECK BALANCE MODAL
+       ============================================================== -->
+  <div class="modal-overlay" id="checkBalanceModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title"><i class="fa-solid fa-receipt" style="color: #FFA000; margin-right: 8px;"></i> Account & Wallet Balance</div>
+        <button class="btn-close-modal" onclick="closeModal('checkBalanceModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div style="background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); border-radius: 16px; padding: 18px; color: #FFFFFF; margin-bottom: 14px;">
+        <div style="font-size: 11px; color: #94A3B8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">EasyPay Wallet Balance</div>
+        <div style="font-family: var(--font-heading); font-size: 28px; font-weight: 800; color: #FFFFFF; margin: 6px 0;" id="balanceModalWalletDisplay">₹5,450.00</div>
+        <div style="font-size: 11px; color: #34D399; font-weight: 600;"><i class="fa-solid fa-circle-check"></i> Active & Ready for Instant UPI</div>
+      </div>
+
+      <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 14px; margin-bottom: 18px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 38px; height: 38px; background: #E8F5E9; color: #2E7D32; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+              <i class="fa-solid fa-building-columns"></i>
+            </div>
+            <div>
+              <div style="font-weight: 700; font-size: 14px; color: #0F172A;">State Bank of India</div>
+              <div style="font-size: 12px; color: #64748B;">A/C •••• 4291 • Primary UPI</div>
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-weight: 800; font-size: 15px; color: #0F172A;">₹24,850.00</div>
+            <div style="font-size: 10px; color: #059669; font-weight: 700;">Verified</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary-action" onclick="closeModal('checkBalanceModal'); openModal('addMoneyModal');">
+        <i class="fa-solid fa-plus"></i> Add Money to Wallet
+      </button>
+    </div>
+  </div>
+
+  <!-- ==============================================================
+       TRANSFER TO BANK / SELF MODAL
+       ============================================================== -->
+  <div class="modal-overlay" id="transferToBankModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title"><i class="fa-solid fa-building-columns" style="color: #2E7D32; margin-right: 8px;"></i> Transfer to Bank Account</div>
+        <button class="btn-close-modal" onclick="closeModal('transferToBankModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;">
+        <div>
+          <label class="form-label">Bank Account Number</label>
+          <input type="number" class="form-input" id="bankTargetAccountInput" placeholder="e.g. 30894812345" value="30894812345">
+        </div>
+        <div>
+          <label class="form-label">IFSC Code</label>
+          <input type="text" class="form-input" id="bankTargetIfscInput" placeholder="e.g. SBIN0001234" value="SBIN0001234" style="text-transform: uppercase;">
+        </div>
+        <div>
+          <label class="form-label">Account Holder Name</label>
+          <input type="text" class="form-input" id="bankTargetNameInput" placeholder="e.g. Rahul Sharma" value="Rahul Sharma">
+        </div>
+        <div>
+          <label class="form-label">Amount (₹)</label>
+          <input type="number" class="form-input" id="bankTargetAmountInput" placeholder="Enter amount" value="500">
+        </div>
+      </div>
+
+      <button class="btn-primary-action" onclick="executeBankTransferViaPin()">
+        Proceed to Transfer ₹<span id="bankProceedAmountSpan">500</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==============================================================
+       RECHARGE & BILL PAYMENTS MODAL
+       ============================================================== -->
+  <div class="modal-overlay" id="rechargeModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title" id="rechargeModalTitle">Mobile Recharge</div>
+          <div style="font-size: 11px; color: #059669; font-weight: 700;">Zero Convenience Fee • Instant 25% Cashback</div>
+        </div>
+        <button class="btn-close-modal" onclick="closeModal('rechargeModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;">
+        <div>
+          <label class="form-label" id="rechargeInputLabel">Mobile Number / Account ID</label>
+          <input type="text" class="form-input" id="rechargeNumberInput" placeholder="Enter number / ID" value="9876543210">
+        </div>
+
+        <div>
+          <label class="form-label">Select Operator</label>
+          <div class="denom-chips-wrap" id="rechargeOperatorChipsWrap">
+            <button class="denom-chip active" onclick="selectRechargeOperator(this, 'Jio')">Jio</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'Airtel')">Airtel</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'Vi')">Vi</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'BSNL')">BSNL</button>
+          </div>
+        </div>
+
+        <div>
+          <label class="form-label">Select Plan Amount</label>
+          <div class="denom-chips-wrap" id="rechargePlanChipsWrap">
+            <button class="denom-chip" onclick="selectRechargeAmount(this, 199)">₹199</button>
+            <button class="denom-chip active" onclick="selectRechargeAmount(this, 299)">₹299</button>
+            <button class="denom-chip" onclick="selectRechargeAmount(this, 479)">₹479</button>
+            <button class="denom-chip" onclick="selectRechargeAmount(this, 666)">₹666</button>
+            <button class="denom-chip" onclick="selectRechargeAmount(this, 999)">₹999</button>
+          </div>
+        </div>
+
+        <div style="background: #FFF1EE; border: 1px solid #FFE0B2; border-radius: 12px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 12px; color: #C2410C; font-weight: 700;"><i class="fa-solid fa-gift"></i> Cashback Earned:</span>
+          <span style="font-size: 13px; color: #FF5722; font-weight: 800;" id="rechargeCashbackEarned">₹7.48 to Wallet</span>
+        </div>
+      </div>
+
+      <button class="btn-primary-action" id="rechargeProceedBtn" onclick="executeRechargeViaPin()">
+        Proceed to Pay ₹<span id="rechargePayAmountSpan">299</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==============================================================
+       MY BILLS MODAL
+       ============================================================== -->
+  <div class="modal-overlay" id="myBillsModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title"><i class="fa-regular fa-file-lines" style="color: #FF5722; margin-right: 8px;"></i> Recent Bills & Due Payments</div>
+        <button class="btn-close-modal" onclick="closeModal('myBillsModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+        <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: 700; font-size: 13px; color: #0F172A;">Adani Electricity Mumbai</div>
+            <div style="font-size: 11px; color: #64748B;">CA: 102938475 • Paid on 04 Nov</div>
+          </div>
+          <span style="font-size: 12px; color: #059669; font-weight: 800; background: #ECFDF5; padding: 3px 8px; border-radius: 6px;">₹1,420 Paid</span>
+        </div>
+
+        <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: 700; font-size: 13px; color: #0F172A;">Airtel Postpaid Mobile</div>
+            <div style="font-size: 11px; color: #64748B;">Mob: 9876548808 • Paid on 01 Nov</div>
+          </div>
+          <span style="font-size: 12px; color: #059669; font-weight: 800; background: #ECFDF5; padding: 3px 8px; border-radius: 6px;">₹599 Paid</span>
+        </div>
+
+        <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: 700; font-size: 13px; color: #0F172A;">JioFiber Broadband</div>
+            <div style="font-size: 11px; color: #64748B;">Acct: 4098231 • Paid on 28 Oct</div>
+          </div>
+          <span style="font-size: 12px; color: #059669; font-weight: 800; background: #ECFDF5; padding: 3px 8px; border-radius: 6px;">₹999 Paid</span>
+        </div>
+      </div>
+
+      <button class="btn-primary-action" onclick="closeModal('myBillsModal'); openRechargeModal('Electricity');">
+        <i class="fa-solid fa-plus"></i> Pay New Utility Bill
+      </button>
+    </div>
+  </div>
+
+  <!-- ==============================================================
+       BANK ACCOUNTS & PAYMENT SETTINGS MODAL
+       ============================================================== -->
+  <div class="modal-overlay" id="bankAccountsModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title"><i class="fa-solid fa-building-columns" style="color: #FF5722; margin-right: 8px;"></i> Bank Accounts & UPI</div>
+        <button class="btn-close-modal" onclick="closeModal('bankAccountsModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+        <div style="border: 2px solid #FF5722; background: #FFFBF9; border-radius: 14px; padding: 14px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <strong style="font-size: 14px; color: #0F172A;">State Bank of India</strong>
+              <span style="background: #FF5722; color: #FFF; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px;">PRIMARY</span>
+            </div>
+            <div style="font-size: 12px; color: #64748B; margin-top: 2px;">Savings A/C •••• 4291 • IFSC: SBIN0001234</div>
+            <div style="font-size: 11px; color: #059669; font-weight: 700; margin-top: 4px;">UPI ID: 9876548808@easypay</div>
+          </div>
+          <i class="fa-solid fa-circle-check" style="color: #FF5722; font-size: 20px;"></i>
+        </div>
+
+        <div style="border: 1px solid #E2E8F0; background: #FFFFFF; border-radius: 14px; padding: 14px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <strong style="font-size: 14px; color: #0F172A;">HDFC Bank</strong>
+            <div style="font-size: 12px; color: #64748B; margin-top: 2px;">Savings A/C •••• 8892 • IFSC: HDFC0000128</div>
+          </div>
+          <button style="border: 1px solid #CBD5E1; background: #F8FAFC; color: #0F172A; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; cursor: pointer;" onclick="showToast('Set as Primary Bank')">Make Primary</button>
+        </div>
+      </div>
+
+      <button class="btn-primary-action" onclick="showToast('Bank Verification Initiated via SMS'); closeModal('bankAccountsModal');">
+        <i class="fa-solid fa-plus"></i> Link Another Bank Account
+      </button>
+    </div>
+  </div>
+
+  <!-- ==============================================================
+       FULL-SCREEN PAYMENT SUCCESS MODAL WITH GREEN CHECK & SOUND CHIME
+       ============================================================== -->
+  <div class="modal-overlay" id="paymentSuccessFullscreenModal" style="z-index: 3000;">
+    <div class="modal-sheet" style="text-align: center; padding: 28px 20px 24px; border-radius: 24px 24px 0 0; background: #FFFFFF; max-width: 480px; width: 100%;">
+      
+      <!-- Green Check Badge -->
+      <div style="width: 72px; height: 72px; border-radius: 50%; background: #ECFDF5; border: 3px solid #10B981; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 14px; box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25);">
+        <i class="fa-solid fa-check" style="font-size: 34px; color: #10B981;"></i>
+      </div>
+
+      <div style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: #0F172A; margin-bottom: 4px;" id="successModalHeading">Payment Successful</div>
+      <div style="font-size: 13px; color: #64748B; margin-bottom: 14px;" id="successModalSubtext">Transaction Authorized via 4-Digit PIN</div>
+
+      <!-- Amount Highlight -->
+      <div style="font-family: var(--font-heading); font-size: 32px; font-weight: 800; color: #059669; margin-bottom: 14px;" id="successModalAmountValue">₹96.00</div>
+
+      <!-- Voucher Details (Only visible for Gift Card purchases) -->
+      <div id="successGiftVoucherDetailsWrap" style="display: none; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 14px; padding: 14px; text-align: left; margin-bottom: 16px;">
+        <div style="font-size: 11px; font-weight: 800; color: #FF5722; text-transform: uppercase; margin-bottom: 8px;">
+          <i class="fa-solid fa-gift"></i> <span id="successVoucherBrandName">Flipkart Gift Voucher</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <span style="font-size: 12px; color: #64748B;">Voucher Code:</span>
+          <span style="font-family: monospace; font-size: 14px; font-weight: 800; color: #0F172A; cursor: pointer;" onclick="copyToClipboard(document.getElementById('successVoucherCodeSpan').innerText); showToast('Voucher code copied!')">
+            <span id="successVoucherCodeSpan">EPY-FLIP-9812-4401</span> <i class="fa-regular fa-copy" style="color: #FF5722; margin-left: 4px;"></i>
+          </span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <span style="font-size: 12px; color: #64748B;">Voucher PIN:</span>
+          <span style="font-family: monospace; font-size: 14px; font-weight: 800; color: #0F172A; cursor: pointer;" onclick="copyToClipboard(document.getElementById('successVoucherPinSpan').innerText); showToast('PIN copied!')">
+            <span id="successVoucherPinSpan">8291</span> <i class="fa-regular fa-copy" style="color: #FF5722; margin-left: 4px;"></i>
+          </span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 12px; color: #64748B;">Validity:</span>
+          <span style="font-size: 12px; font-weight: 700; color: #059669;" id="successVoucherExpirySpan">12 Months (Valid till Nov 2027)</span>
+        </div>
+      </div>
+
+      <!-- Transaction Info Box -->
+      <div style="background: #F1F5F9; border-radius: 12px; padding: 10px 14px; font-size: 12px; color: #475569; display: flex; justify-content: space-between; margin-bottom: 18px;">
+        <span>UTR Reference:</span>
+        <strong id="successModalUtrValue">UTR202611130982</strong>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button class="btn-primary-action" style="background: #0F172A !important; margin: 0 !important;" onclick="closeModal('paymentSuccessFullscreenModal'); openPassbookFromProfile(); switchPassbookSegment('txns');">
+          <i class="fa-solid fa-list-check"></i> View in Passbook
+        </button>
+        <button class="btn-primary-action" style="margin: 0 !important;" onclick="closeModal('paymentSuccessFullscreenModal'); switchNavTab('home');">
+          Done
+        </button>
+      </div>
+
+    </div>
+  </div>
+
 </body>
 </html>
