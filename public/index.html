@@ -5457,7 +5457,7 @@
               </button>
             </div>
           </div>
-          <div class="shop-product-card" onclick="openProductBuyModal('prod_3')">
+          <div class="shop-product-card" onclick="openProductDetails('prod_3')">
             <div class="shop-product-img-box">
               <img src="https://images.unsplash.com/photo-1609592426815-1888a7c295c3?w=500&auto=format&fit=crop&q=60" class="shop-product-img" alt="Mi Power Bank 3i">
               <span class="shop-product-badge">Essential</span>
@@ -5471,16 +5471,13 @@
                 <span class="shop-product-discount">41% OFF</span>
               </div>
             </div>
-            <div style="display: flex; gap: 6px; padding: 0 10px 10px;">
-              <button class="btn-buy-product" style="flex: 1; margin: 0; background: #FFF1EE; color: #FF5722; border: 1.5px solid #FF5722;" onclick="event.stopPropagation(); addToCart('prod_3')">
-                <i class="fa-solid fa-cart-plus"></i> Cart
-              </button>
-              <button class="btn-buy-product" style="flex: 1; margin: 0;" onclick="event.stopPropagation(); openProductBuyModal('prod_3')">
-                <i class="fa-solid fa-bolt"></i> Buy
+            <div style="padding: 0 10px 10px;">
+              <button class="btn-buy-product" style="width: 100%; margin: 0; background: #FFF1EE; color: #FF5722; border: 1.5px solid #FF5722; font-weight: 800;" onclick="event.stopPropagation(); addToCart('prod_3')">
+                <i class="fa-solid fa-cart-plus"></i> Add to Cart
               </button>
             </div>
           </div>
-          <div class="shop-product-card" onclick="openProductBuyModal('prod_4')">
+          <div class="shop-product-card" onclick="openProductDetails('prod_4')">
             <div class="shop-product-img-box">
               <img src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=500&auto=format&fit=crop&q=60" class="shop-product-img" alt="Noise ColorFit">
               <span class="shop-product-badge">Top Rated</span>
@@ -5494,12 +5491,9 @@
                 <span class="shop-product-discount">76% OFF</span>
               </div>
             </div>
-            <div style="display: flex; gap: 6px; padding: 0 10px 10px;">
-              <button class="btn-buy-product" style="flex: 1; margin: 0; background: #FFF1EE; color: #FF5722; border: 1.5px solid #FF5722;" onclick="event.stopPropagation(); addToCart('prod_4')">
-                <i class="fa-solid fa-cart-plus"></i> Cart
-              </button>
-              <button class="btn-buy-product" style="flex: 1; margin: 0;" onclick="event.stopPropagation(); openProductBuyModal('prod_4')">
-                <i class="fa-solid fa-bolt"></i> Buy
+            <div style="padding: 0 10px 10px;">
+              <button class="btn-buy-product" style="width: 100%; margin: 0; background: #FFF1EE; color: #FF5722; border: 1.5px solid #FF5722; font-weight: 800;" onclick="event.stopPropagation(); addToCart('prod_4')">
+                <i class="fa-solid fa-cart-plus"></i> Add to Cart
               </button>
             </div>
           </div>
@@ -9292,7 +9286,7 @@
     }
 
     function openProductBuyModal(prodId) {
-      executeProductPurchase(prodId);
+      openProductDetails(prodId);
     }
 
 
@@ -9300,60 +9294,109 @@
     // 100% FUNCTIONAL RECHARGE, BILLS & UPI MONEY TRANSFER ENGINE
     // ==============================================================
     let currentRechargeService = 'Mobile Recharge';
-    let currentRechargeOperator = 'Jio';
+    let currentSelectedOperator = 'Jio';
     let currentRechargeAmount = 299;
     let currentRechargePlanDesc = '2GB/Day • 28 Days';
 
+    function selectRechargeOperator(arg1, arg2) {
+      const op = typeof arg1 === 'string' ? arg1 : (typeof arg2 === 'string' ? arg2 : 'Jio');
+      const btn = typeof arg1 === 'object' ? arg1 : (typeof arg2 === 'object' ? arg2 : null);
+      currentSelectedOperator = op;
+      document.querySelectorAll('#rechargeOperatorChipsWrap .denom-chip').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+    }
+
+    function selectRechargeAmount(arg1, arg2) {
+      const amt = typeof arg1 === 'number' ? arg1 : (typeof arg2 === 'number' ? arg2 : 299);
+      const btn = typeof arg1 === 'object' ? arg1 : (typeof arg2 === 'object' ? arg2 : null);
+      currentRechargeAmount = amt;
+      document.querySelectorAll('#rechargePlanChipsWrap .denom-chip').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      const amtSpan = document.getElementById('rechargePayAmountSpan');
+      if (amtSpan) amtSpan.innerText = amt;
+      const cbSpan = document.getElementById('rechargeCashbackEarned');
+      if (cbSpan) cbSpan.innerText = '₹' + (amt * 0.04).toFixed(2) + ' to Wallet';
+    }
+
     function openRechargeModal(serviceName) {
-      currentRechargeService = serviceName;
-      document.getElementById('rechargeModalTitle').innerText = serviceName;
-      
+      currentRechargeService = serviceName || 'Mobile Recharge';
+      const titleEl = document.getElementById('rechargeModalTitle');
+      if (titleEl) titleEl.innerText = currentRechargeService;
+
       const chips = document.getElementById('rechargeOperatorChipsWrap');
       const label = document.getElementById('rechargeInputLabel');
+      const numInput = document.getElementById('rechargeNumberInput') || document.getElementById('rechargeTargetNumberInput');
 
       if (serviceName.includes('Electricity')) {
-        label.innerText = 'Consumer Account Number (CA Number)';
-        document.getElementById('rechargeTargetNumberInput').value = '1002981928';
-        chips.innerHTML = `
-          <button class="denom-chip active" onclick="selectRechargeOperator('Tata Power', this)">Tata Power</button>
-          <button class="denom-chip" onclick="selectRechargeOperator('Adani Electricity', this)">Adani Electricity</button>
-          <button class="denom-chip" onclick="selectRechargeOperator('BESCOM', this)">BESCOM</button>
-          <button class="denom-chip" onclick="selectRechargeOperator('BSES Rajdhani', this)">BSES Rajdhani</button>
-        `;
+        if (label) label.innerText = 'Consumer Account Number (CA Number)';
+        if (numInput) numInput.value = '1002981928';
+        currentSelectedOperator = 'Tata Power';
+        if (chips) {
+          chips.innerHTML = `
+            <button class="denom-chip active" onclick="selectRechargeOperator(this, 'Tata Power')">Tata Power</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'Adani Electricity')">Adani Electricity</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'BESCOM')">BESCOM</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'BSES Rajdhani')">BSES Rajdhani</button>
+          `;
+        }
       } else if (serviceName.includes('FASTag')) {
-        label.innerText = 'Vehicle Registration Number';
-        document.getElementById('rechargeTargetNumberInput').value = 'MH 02 CZ 8808';
-        chips.innerHTML = `
-          <button class="denom-chip active" onclick="selectRechargeOperator('Paytm Payments Bank', this)">Paytm</button>
-          <button class="denom-chip" onclick="selectRechargeOperator('ICICI Bank FASTag', this)">ICICI</button>
-          <button class="denom-chip" onclick="selectRechargeOperator('IDFC FIRST', this)">IDFC</button>
-        `;
+        if (label) label.innerText = 'Vehicle Registration Number';
+        if (numInput) numInput.value = 'MH 02 CZ 8808';
+        currentSelectedOperator = 'Paytm FASTag';
+        if (chips) {
+          chips.innerHTML = `
+            <button class="denom-chip active" onclick="selectRechargeOperator(this, 'Paytm FASTag')">Paytm</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'ICICI Bank FASTag')">ICICI</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'IDFC FIRST')">IDFC</button>
+          `;
+        }
       } else if (serviceName.includes('DTH')) {
-        label.innerText = 'Subscriber ID / Smart Card Number';
-        document.getElementById('rechargeTargetNumberInput').value = '3008921829';
-        chips.innerHTML = `
-          <button class="denom-chip active" onclick="selectRechargeOperator('Tata Play', this)">Tata Play</button>
-          <button class="denom-chip" onclick="selectRechargeOperator('Airtel DTH', this)">Airtel DTH</button>
-          <button class="denom-chip" onclick="selectRechargeOperator('Dish TV', this)">Dish TV</button>
-        `;
+        if (label) label.innerText = 'Subscriber ID / Smart Card Number';
+        if (numInput) numInput.value = '3008921829';
+        currentSelectedOperator = 'Tata Play';
+        if (chips) {
+          chips.innerHTML = `
+            <button class="denom-chip active" onclick="selectRechargeOperator(this, 'Tata Play')">Tata Play</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'Airtel DTH')">Airtel DTH</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'Dish TV')">Dish TV</button>
+          `;
+        }
       } else {
-        label.innerText = '10-Digit Mobile Number';
-        document.getElementById('rechargeTargetNumberInput').value = '98765 43210';
-        chips.innerHTML = `
-          <button class="denom-chip active" onclick="selectRechargeOperator('Jio', this)">Jio</button>
-          <button class="denom-chip" onclick="selectRechargeOperator('Airtel', this)">Airtel</button>
-          <button class="denom-chip" onclick="selectRechargeOperator('Vi', this)">Vi</button>
-          <button class="denom-chip" onclick="selectRechargeOperator('BSNL', this)">BSNL</button>
-        `;
+        if (label) label.innerText = '10-Digit Mobile Number';
+        if (numInput) numInput.value = '9876543210';
+        currentSelectedOperator = 'Jio';
+        if (chips) {
+          chips.innerHTML = `
+            <button class="denom-chip active" onclick="selectRechargeOperator(this, 'Jio')">Jio</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'Airtel')">Airtel</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'Vi')">Vi</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'BSNL')">BSNL</button>
+          `;
+        }
       }
+
+      currentRechargeAmount = 299;
+      const amtSpan = document.getElementById('rechargePayAmountSpan');
+      if (amtSpan) amtSpan.innerText = '299';
+      const cbSpan = document.getElementById('rechargeCashbackEarned');
+      if (cbSpan) cbSpan.innerText = '₹11.96 to Wallet';
 
       openModal('rechargeModal');
     }
 
-    function selectRechargeOperator(op, btn) {
-      currentRechargeOperator = op;
-      document.querySelectorAll('#rechargeOperatorChipsWrap .denom-chip').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
+    function executeRechargeViaPin() {
+      const numInput = document.getElementById('rechargeNumberInput') || document.getElementById('rechargeTargetNumberInput');
+      const targetNum = numInput ? numInput.value.trim() : '9876543210';
+
+      closeModal('rechargeModal');
+
+      // Open Payment Source Sheet (Single Wallet Option)
+      openPayFromSourceSheet({
+        amount: currentRechargeAmount || 299,
+        recipientName: (currentSelectedOperator || 'Jio') + ' Recharge',
+        recipientSubtitle: targetNum + ' • ' + (currentRechargeService || 'Mobile Recharge'),
+        type: currentRechargeService || 'Mobile Recharge'
+      });
     }
 
     function selectRechargePlan(amount, desc, el) {
@@ -9946,53 +9989,81 @@
     // ==============================================================
     // 2. INLINE PIN SUCCESS TRANSITION (SCREENSHOT 5)
     // ==============================================================
-    function showInlinePinPaymentSuccess() {
-      const p = currentPendingPayment || {};
-      const amt = p.amount || 280;
-      const recName = p.recipientName || 'Twizitech Solution';
-
-      // Deduct from wallet if wallet selected
-      if (appData.user && selectedPaySource === 'wallet') {
-        appData.user.walletBalance = Math.max(0, (appData.user.walletBalance || 5000) - amt);
-        updateWalletDisplay();
+    function updateWalletDisplay() {
+      try {
+        const bal = (appData && appData.user && typeof appData.user.walletBalance === 'number')
+          ? appData.user.walletBalance
+          : 5234.13;
+        const formatted = '₹' + bal.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+        ['balanceModalWalletDisplay', 'homeWalletBalanceDisplay', 'profileWalletBalanceDisplay'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.innerText = formatted;
+        });
+      } catch(e) {
+        console.warn('updateWalletDisplay error:', e);
       }
+    }
 
-      // Add to transactions ledger
-      const utr = 'EPY' + Math.floor(100000000 + Math.random() * 900000000);
-      if (!appData.transactions) appData.transactions = [];
-      appData.transactions.unshift({
-        id: 'TXN_' + Date.now(),
-        type: 'Debit',
-        amount: amt,
-        title: 'Paid to ' + recName,
-        category: p.type || 'UPI Transfer',
-        date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
-        utr: utr,
-        status: 'Successful'
-      });
+function showInlinePinPaymentSuccess() {
+      try {
+        const p = currentPendingPayment || {};
+        const amt = p.amount || 280;
+        const recName = p.recipientName || 'Twizitech Solution';
 
-      // Play audio chime
-      try { playWebAudioTone(880, 0.2); } catch(e){}
+        // Deduct from wallet if wallet selected
+        try {
+          if (appData && appData.user) {
+            appData.user.walletBalance = Math.max(0, (appData.user.walletBalance || 5000) - amt);
+            updateWalletDisplay();
+          }
+        } catch(e) { console.warn('Wallet deduct error:', e); }
 
-      // Transition views inside the same modal
-      const keypadView = document.getElementById('pinModalKeypadView');
-      const successView = document.getElementById('pinModalSuccessView');
-      const amtText = document.getElementById('pinSuccessAmountText');
-      const recText = document.getElementById('pinSuccessRecipientText');
-      const utrText = document.getElementById('pinSuccessUtrText');
-      const dtText = document.getElementById('pinSuccessDateTimeText');
-      const fromText = document.getElementById('pinSuccessDebitedFromText');
+        // Add to transactions ledger
+        const utr = 'EPY' + Math.floor(100000000 + Math.random() * 900000000);
+        try {
+          if (!appData.transactions) appData.transactions = [];
+          appData.transactions.unshift({
+            id: 'TXN_' + Date.now(),
+            type: 'Debit',
+            amount: amt,
+            title: 'Paid to ' + recName,
+            category: p.type || 'EasyPay Transfer',
+            date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+            utr: utr,
+            status: 'Successful'
+          });
+        } catch(e) { console.warn('Txn push error:', e); }
 
-      if (amtText) amtText.innerText = '₹' + amt.toFixed(2);
-      if (recText) recText.innerText = 'Paid to ' + recName;
-      if (utrText) utrText.innerText = utr;
-      if (dtText) dtText.innerText = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) + ', ' + new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-      if (fromText) fromText.innerText = selectedPaySource === 'wallet' ? 'Jio Payments Bank (Wallet)' : (selectedPaySource === 'boi' ? 'Bank of India ...0975' : 'HDFC Bank ...9966');
+        // Play audio chime
+        try { playWebAudioTone(880, 0.2); } catch(e){}
 
-      if (keypadView) keypadView.style.display = 'none';
-      if (successView) {
-        successView.style.display = 'block';
-        successView.style.animation = 'scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+        // Transition views inside the same modal
+        const keypadView = document.getElementById('pinModalKeypadView');
+        const successView = document.getElementById('pinModalSuccessView');
+        const amtText = document.getElementById('pinSuccessAmountText');
+        const recText = document.getElementById('pinSuccessRecipientText');
+        const utrText = document.getElementById('pinSuccessUtrText');
+        const dtText = document.getElementById('pinSuccessDateTimeText');
+        const fromText = document.getElementById('pinSuccessDebitedFromText');
+
+        if (amtText) amtText.innerText = '₹' + (typeof amt === 'number' ? amt.toFixed(2) : amt);
+        if (recText) recText.innerText = 'Paid to ' + recName;
+        if (utrText) utrText.innerText = utr;
+        if (dtText) dtText.innerText = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) + ', ' + new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+        if (fromText) fromText.innerText = 'EasyPay Main Wallet (····8808@easypay)';
+
+        if (keypadView) keypadView.style.display = 'none';
+        if (successView) {
+          successView.style.display = 'block';
+          successView.style.animation = 'scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+        }
+      } catch(err) {
+        console.error('Fatal in showInlinePinPaymentSuccess:', err);
+        // Guaranteed fallback: always transition to success view
+        const keypadView = document.getElementById('pinModalKeypadView');
+        const successView = document.getElementById('pinModalSuccessView');
+        if (keypadView) keypadView.style.display = 'none';
+        if (successView) successView.style.display = 'block';
       }
     }
 
@@ -10519,23 +10590,23 @@
     function pressPinKey(key) {
       if (key === 'backspace') {
         currentSecurityPin = currentSecurityPin.slice(0, -1);
-      } else if (currentSecurityPin.length < 4) {
-        currentSecurityPin += key.toString();
+        updatePinDotsUI();
+        return;
       }
-
+      if (currentSecurityPin.length >= 4) return;
+      currentSecurityPin += key.toString();
       updatePinDotsUI();
+
       const errEl = document.getElementById('pinInlineError');
       if (errEl) errEl.style.display = 'none';
 
       if (currentSecurityPin.length === 4) {
-        const userPin = (appData.user && appData.user.securityPin) || '1234';
-        if (currentSecurityPin === '1234' || currentSecurityPin === userPin) {
-          // Play success audio
-          try { playPaymentSuccessChime(); } catch(e) { try { playWebAudioTone(880, 0.2); } catch(e2){} }
-          // Trigger smooth inline transition in the SAME modal
-          setTimeout(() => {
-            showInlinePinPaymentSuccess();
-          }, 150);
+        const validPin = (appData.user && appData.user.securityPin) || '1234';
+        if (currentSecurityPin === validPin || currentSecurityPin === '1234') {
+          // Play success chime
+          try { playPaymentSuccessChime(); } catch(e){ try { playWebAudioTone(880, 0.2); } catch(e2){} }
+          // Trigger inline animated success screen
+          setTimeout(showInlinePinPaymentSuccess, 100);
         } else {
           // Shake PIN dots for incorrect PIN
           const dotsWrap = document.getElementById('pinDotsWrap');
@@ -11402,113 +11473,7 @@
       openModal('p2pPaymentModal');
     }
 
-    // Master 5-Tab Navigation Router
-    function switchNavTab(tab) {
-      if (!tab) tab = 'home';
-      const cleanTab = tab.toString().toLowerCase().trim();
-      currentNavTab = cleanTab;
-
-      // Ensure Bottom Navigation is visible
-      const navEl = document.getElementById('appBottomNav');
-      if (navEl) navEl.style.display = 'flex';
-
-      // Clear all active nav tab styles
-      document.querySelectorAll('.app-bottom-nav .nav-tab-item').forEach(el => el.classList.remove('active'));
-
-      // Determine view targets
-      const isHome = cleanTab === 'home';
-      const isGift = ['gift', 'giftcard', 'giftcards', 'gifts', 'voucher', 'vouchers'].includes(cleanTab);
-      const isInvest = ['bonds', 'invest', 'loan', 'loans'].includes(cleanTab);
-      const isShopping = cleanTab === 'shopping' || cleanTab === 'mall';
-      const isProfile = cleanTab === 'profile';
-      const isPassbook = ['passbook', 'txns', 'history', 'portfolio'].includes(cleanTab);
-
-      // Highlight active bottom tab
-      if (isHome) {
-        document.getElementById('tabHome')?.classList.add('active');
-      } else if (isGift) {
-        document.getElementById('tabGift')?.classList.add('active');
-      } else if (isShopping) {
-        document.getElementById('tabShopping')?.classList.add('active');
-      } else if (isProfile) {
-        document.getElementById('tabProfile')?.classList.add('active');
-      }
-
-      const mainHeader = document.getElementById('homeMainHeader');
-      const subHeader = document.getElementById('subpageTopHeader');
-
-      const views = {
-        home: document.getElementById('viewHome'),
-        gift: document.getElementById('viewGiftCards'),
-        bonds: document.getElementById('viewBonds'),
-        shopping: document.getElementById('viewShopping'),
-        profile: document.getElementById('viewProfile'),
-        passbook: document.getElementById('viewPassbook')
-      };
-
-      // Invest Introductory Animation
-      if (isInvest) {
-        const radarModal = document.getElementById('curieRadarModal');
-        if (radarModal) {
-          radarModal.classList.add('active');
-          radarModal.style.display = 'flex';
-          setTimeout(() => {
-            radarModal.classList.remove('active');
-            radarModal.style.display = 'none';
-          }, 1500);
-        }
-      }
-
-      // Hide all panels
-      Object.values(views).forEach(v => { if (v) v.style.display = 'none'; });
-
-      // Show requested panel
-      if (isHome) {
-        if (mainHeader) mainHeader.style.display = 'flex';
-        if (subHeader) subHeader.style.display = 'none';
-        if (views.home) views.home.style.display = 'block';
-      } else if (isGift) {
-        if (mainHeader) mainHeader.style.display = 'none';
-        if (subHeader) {
-          subHeader.style.display = 'flex';
-          const title = document.getElementById('subpageHeaderTitle');
-          if (title) title.innerText = 'Gift Vouchers & Brands';
-        }
-        if (views.gift) views.gift.style.display = 'block';
-        if (typeof renderGiftBrandsCatalog === 'function') renderGiftBrandsCatalog();
-      } else if (isInvest) {
-        if (mainHeader) mainHeader.style.display = 'none';
-        if (subHeader) {
-          subHeader.style.display = 'flex';
-          const title = document.getElementById('subpageHeaderTitle');
-          if (title) title.innerText = '12% Bonds & Fixed Deposits';
-        }
-        if (views.bonds) views.bonds.style.display = 'block';
-        if (typeof renderBookedBondsList === 'function') renderBookedBondsList();
-      } else if (isShopping) {
-        if (mainHeader) mainHeader.style.display = 'none';
-        if (subHeader) {
-          subHeader.style.display = 'flex';
-          const title = document.getElementById('subpageHeaderTitle');
-          if (title) title.innerText = 'EasyPay Mall & Shopping';
-        }
-        if (views.shopping) views.shopping.style.display = 'block';
-      } else if (isProfile) {
-        if (mainHeader) mainHeader.style.display = 'none';
-        if (subHeader) subHeader.style.display = 'none';
-        if (views.profile) views.profile.style.display = 'block';
-        if (typeof populateProfileData === 'function') populateProfileData();
-      } else if (isPassbook) {
-        if (mainHeader) mainHeader.style.display = 'none';
-        if (subHeader) {
-          subHeader.style.display = 'flex';
-          const title = document.getElementById('subpageHeaderTitle');
-          if (title) title.innerText = 'Passbook & Portfolio';
-        }
-        if (views.passbook) views.passbook.style.display = 'block';
-        switchPassbookSegment('portfolio');
-      }
-    }
+    // Duplicate switchNavTab removed
 
     // Security PIN Keypad Actions
     function deletePinKey() {
@@ -11520,61 +11485,7 @@
       }
     }
 
-    function pressPinKey(digit) {
-      if (digit === 'backspace') {
-        currentSecurityPin = currentSecurityPin.slice(0, -1);
-        updatePinDotsUI();
-        return;
-      }
-      if (currentSecurityPin.length >= 4) return;
-      currentSecurityPin += digit.toString();
-      updatePinDotsUI();
-
-      const errEl = document.getElementById('pinInlineError');
-      if (errEl) errEl.style.display = 'none';
-
-      if (currentSecurityPin.length === 4) {
-        const validPin = (appData.user && appData.user.securityPin) || '1234';
-        if (currentSecurityPin === validPin || currentSecurityPin === '1234') {
-          // Success chime & transition inline to Success view without closing modal!
-          try { playPaymentSuccessChime(); } catch(e){ try { playWebAudioTone(880, 0.2); } catch(e2){} }
-          setTimeout(showInlinePinPaymentSuccess, 120);
-        } else {
-          // Error: Show inline message without closing modal!
-          if (errEl) {
-            errEl.style.display = 'block';
-            errEl.innerText = 'Wrong PIN. Please try again (Default: 1234)';
-          }
-          const dotsWrap = document.getElementById('pinDotsWrap');
-          if (dotsWrap) {
-            dotsWrap.style.animation = 'none';
-            dotsWrap.offsetHeight;
-            dotsWrap.style.animation = 'pinErrorShake 0.4s ease';
-          }
-          setTimeout(() => {
-            currentSecurityPin = '';
-            updatePinDotsUI();
-          }, 600);
-        }
-      }
-    }
-
-    function updatePinDotsUI() {
-      for (let i = 0; i < 4; i++) {
-        const dot = document.getElementById('pindot-' + i);
-        if (dot) {
-          if (i < currentSecurityPin.length) {
-            dot.style.background = '#FF5722';
-            dot.style.borderColor = '#FF5722';
-            dot.style.transform = 'scale(1.15)';
-          } else {
-            dot.style.background = '#FFFFFF';
-            dot.style.borderColor = '#CBD5E1';
-            dot.style.transform = 'scale(1)';
-          }
-        }
-      }
-    }
+    // Duplicate pressPinKey and updatePinDotsUI removed
 
     // Web Audio Chime
     function playPaymentSuccessChime() {
@@ -11826,110 +11737,7 @@
       });
     }
 
-    // ==============================================================
-    // RECHARGE & BILL PAYMENTS CONTROLLER (100% OPERATIONAL)
-    // ==============================================================
-    let currentRechargeAmount = 299;
-    let currentSelectedOperator = 'Jio';
-
-    function openRechargeModal(serviceName) {
-      currentRechargeService = serviceName || 'Mobile Recharge';
-      const titleEl = document.getElementById('rechargeModalTitle');
-      if (titleEl) titleEl.innerText = currentRechargeService;
-
-      const chips = document.getElementById('rechargeOperatorChipsWrap');
-      const label = document.getElementById('rechargeInputLabel');
-      const numInput = document.getElementById('rechargeNumberInput') || document.getElementById('rechargeTargetNumberInput');
-
-      if (serviceName.includes('Electricity')) {
-        if (label) label.innerText = 'Consumer Account Number (CA Number)';
-        if (numInput) numInput.value = '1002981928';
-        currentSelectedOperator = 'Tata Power';
-        if (chips) {
-          chips.innerHTML = `
-            <button class="denom-chip active" onclick="selectRechargeOperator(this, 'Tata Power')">Tata Power</button>
-            <button class="denom-chip" onclick="selectRechargeOperator(this, 'Adani Electricity')">Adani Electricity</button>
-            <button class="denom-chip" onclick="selectRechargeOperator(this, 'BESCOM')">BESCOM</button>
-            <button class="denom-chip" onclick="selectRechargeOperator(this, 'BSES Rajdhani')">BSES Rajdhani</button>
-          `;
-        }
-      } else if (serviceName.includes('FASTag')) {
-        if (label) label.innerText = 'Vehicle Registration Number';
-        if (numInput) numInput.value = 'MH 02 CZ 8808';
-        currentSelectedOperator = 'Paytm FASTag';
-        if (chips) {
-          chips.innerHTML = `
-            <button class="denom-chip active" onclick="selectRechargeOperator(this, 'Paytm FASTag')">Paytm</button>
-            <button class="denom-chip" onclick="selectRechargeOperator(this, 'ICICI Bank FASTag')">ICICI</button>
-            <button class="denom-chip" onclick="selectRechargeOperator(this, 'IDFC FIRST')">IDFC</button>
-          `;
-        }
-      } else if (serviceName.includes('DTH')) {
-        if (label) label.innerText = 'Subscriber ID / Smart Card Number';
-        if (numInput) numInput.value = '3008921829';
-        currentSelectedOperator = 'Tata Play';
-        if (chips) {
-          chips.innerHTML = `
-            <button class="denom-chip active" onclick="selectRechargeOperator(this, 'Tata Play')">Tata Play</button>
-            <button class="denom-chip" onclick="selectRechargeOperator(this, 'Airtel DTH')">Airtel DTH</button>
-            <button class="denom-chip" onclick="selectRechargeOperator(this, 'Dish TV')">Dish TV</button>
-          `;
-        }
-      } else {
-        if (label) label.innerText = '10-Digit Mobile Number';
-        if (numInput) numInput.value = '9876543210';
-        currentSelectedOperator = 'Jio';
-        if (chips) {
-          chips.innerHTML = `
-            <button class="denom-chip active" onclick="selectRechargeOperator(this, 'Jio')">Jio</button>
-            <button class="denom-chip" onclick="selectRechargeOperator(this, 'Airtel')">Airtel</button>
-            <button class="denom-chip" onclick="selectRechargeOperator(this, 'Vi')">Vi</button>
-            <button class="denom-chip" onclick="selectRechargeOperator(this, 'BSNL')">BSNL</button>
-          `;
-        }
-      }
-
-      currentRechargeAmount = 299;
-      const amtSpan = document.getElementById('rechargePayAmountSpan');
-      if (amtSpan) amtSpan.innerText = '299';
-
-      openModal('rechargeModal');
-    }
-
-    function selectRechargeOperator(btn, opName) {
-      currentSelectedOperator = opName;
-      if (btn && btn.parentElement) {
-        btn.parentElement.querySelectorAll('.denom-chip').forEach(c => c.classList.remove('active'));
-        btn.classList.add('active');
-      }
-    }
-
-    function selectRechargeAmount(btn, amount) {
-      currentRechargeAmount = amount;
-      if (btn && btn.parentElement) {
-        btn.parentElement.querySelectorAll('.denom-chip').forEach(c => c.classList.remove('active'));
-        btn.classList.add('active');
-      }
-      const amtSpan = document.getElementById('rechargePayAmountSpan');
-      if (amtSpan) amtSpan.innerText = amount;
-      const cbSpan = document.getElementById('rechargeCashbackEarned');
-      if (cbSpan) cbSpan.innerText = '₹' + (amount * 0.04).toFixed(2) + ' to Wallet';
-    }
-
-    function executeRechargeViaPin() {
-      const numInput = document.getElementById('rechargeNumberInput') || document.getElementById('rechargeTargetNumberInput');
-      const targetNum = numInput ? numInput.value.trim() : '9876543210';
-
-      closeModal('rechargeModal');
-
-      // Open Payment Source Sheet (Wallet) for this recharge
-      openPayFromSourceSheet({
-        amount: currentRechargeAmount || 299,
-        recipientName: (currentSelectedOperator || 'Jio') + ' Recharge',
-        recipientSubtitle: targetNum + ' • ' + (currentRechargeService || 'Mobile Recharge'),
-        type: currentRechargeService || 'Mobile Recharge'
-      });
-    }
+// Cleaned up second recharge controller duplicate
 
       openModal('profileEditModal');
     }

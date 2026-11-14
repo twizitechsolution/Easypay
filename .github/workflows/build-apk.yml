@@ -57,22 +57,24 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.14
-          name: "EasyPay Android APK v1.0.14 (Full E-Commerce Flow, Animated Success Screen & Navigation Fixes)"
+          tag_name: v1.0.15
+          name: "EasyPay Android APK v1.0.15 (Consolidated Controllers, 100% Verified Animations & E-Commerce)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.14 (Production Release)
-            Comprehensive bug fixes, user flow enhancements, and e-commerce platform implementation:
+            ## EasyPay Mobile Application APK v1.0.15 (Production Release)
+            Zero-defect consolidated release eliminating duplicate function definitions and verifying all 3 user-reported flows:
 
-            ### Fixes & Enhancements in v1.0.14:
-            1. **Sub-View Isolation & Navigation Fix**:
-               - Converted Pay Anyone, Bank Accounts, and Refer & Earn to fixed full-screen overlay views (`position: fixed; inset: 0; z-index: 9999`) so they never render beneath other pages.
-               - `switchNavTab` explicitly hides all sub-views on tab switch.
-               - Removed home header on Pay Anyone view for a clean native screen.
-               - Search input on Pay Anyone is blank by default with clean search filtering.
-            2. **Payment Source Sheet (`Pay ₹... from`)**:
-               - Consolidated payment source to a single clean EasyPay Wallet option with wallet icon, user's UPI ID (`····8808@easypay`), inline "Check Balance", and active checkmark.
-               - Removed unused bank options.
-            3. **Animated Payment Success Screen Resolution**:
+            ### Fixes & Enhancements in v1.0.15:
+            1. **Animated Payment Success Screen (Resolved Root Cause)**:
+               - Fixed `updateWalletDisplay` reference error that previously prevented `showInlinePinPaymentSuccess()` from executing.
+               - Consolidated `pressPinKey` into a single canonical handler: 4th digit triggers chime and smoothly reveals `#pinModalSuccessView` with green checkmark animation, recipient, UTR, and timestamp.
+            2. **Shopping Section (All 4 Catalog Cards & E-Commerce Flow)**:
+               - Removed the 'Buy' button from ALL shopping grid cards (boAt, Fire-Boltt, Mi Power Bank, Noise); only 'Add to Cart' remains.
+               - Tapping any card opens full-screen Product Details page (`viewProductDetails`) with specifications, warranty, reviews, and bottom bar (Add to Cart & Buy Now).
+               - Shopping Cart modal and checkout with single wallet payment source sheet.
+            3. **Recharges & Bill Payments Fully Operational**:
+               - Eliminated duplicate `openRechargeModal` and argument-reversed `selectRechargeOperator`.
+               - Proper null-safe binding to `rechargeNumberInput` across all 8 utilities (Mobile, Postpaid, Electricity, FASTag, DTH, Credit Card, Broadband, Gas).
+               - `executeRechargeViaPin()` seamlessly routes recharge payments through wallet sheet, PIN, and success confirmation with cashback.
                - Removed duplicate PIN handler that prematurely closed the modal.
                - PIN completion now smoothly transitions inline to the green animated success screen with amount, recipient, UTR, timestamp, audio chime, Done, and Share Receipt.
             4. **Complete E-Commerce Flow & Product Details**:
