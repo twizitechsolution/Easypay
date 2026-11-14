@@ -3937,7 +3937,7 @@
               <span class="fc-upi-action-label">Scan QR</span>
             </button>
 
-            <button class="fc-upi-action-btn" onclick="openSendMoneyModal()">
+            <button class="fc-upi-action-btn" onclick="openPayAnyoneView()">
               <div class="fc-upi-action-icon-box" style="background: #FCE4EC; color: #E91E63;">
                 <i class="fa-solid fa-paper-plane"></i>
               </div>
@@ -3951,7 +3951,7 @@
               <span class="fc-upi-action-label">Check Balance</span>
             </button>
 
-            <button class="fc-upi-action-btn" onclick="openToBankModal()">
+            <button class="fc-upi-action-btn" onclick="openToBankOrSelfTransfer()">
               <div class="fc-upi-action-icon-box" style="background: #E8F5E9; color: #2E7D32;">
                 <i class="fa-solid fa-building-columns"></i>
               </div>
@@ -3960,7 +3960,7 @@
           </div>
 
           <!-- Pay Search Bar -->
-          <div class="fc-upi-search-input-box" onclick="openSendMoneyModal()">
+          <div class="fc-upi-search-input-box" onclick="openPayAnyoneView()">
             <i class="fa-regular fa-user"></i>
             <span>Pay to Contacts, Phone No or UPI ID</span>
           </div>
@@ -4966,7 +4966,7 @@
           </div>
 
           <!-- Payment Settings -->
-          <div class="profile-menu-row" onclick="openModal('paymentSettingsModal')">
+          <div class="profile-menu-row" onclick="openBankAccountsView()">
             <div class="profile-menu-left">
               <div class="profile-menu-icon" style="background:#FFF8E1; color:#F57F17;">
                 <i class="fa-solid fa-gear"></i>
@@ -5000,6 +5000,21 @@
               <span>Add money & use wallet balance.</span>
               <strong style="color:#E65100; cursor:pointer;" onclick="openAddMoneyModal()">REACTIVATE WALLET</strong>
             </div>
+          </div>
+
+          
+          <!-- Refer & Earn (Screenshot 3 Match) -->
+          <div class="profile-menu-row" onclick="openReferEarnView()">
+            <div class="profile-menu-left">
+              <div class="profile-menu-icon" style="background:#E0F2FE; color:#0284C7;">
+                <i class="fa-solid fa-bullhorn"></i>
+              </div>
+              <div class="profile-menu-text-wrap">
+                <span class="profile-menu-item-title">Refer & Earn</span>
+                <span class="profile-menu-item-sub">Invite friends & get assured ₹400 Cashback</span>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color:#BDBDBD; font-size:13px;"></i>
           </div>
 
           <!-- Cashback & Rewards -->
@@ -5136,6 +5151,230 @@
       <!-- ==============================================================
            SHOPPING DROPSHIPPING VIEW (E-COMMERCE REPLACING PASSBOOK TAB)
            ============================================================== -->
+      
+      <!-- ==============================================================
+           PAY ANYONE / SEARCH CONTACTS & UPI ID (SCREENSHOT 2)
+           ============================================================== -->
+      <div class="view-panel" id="viewPayAnyone" style="display: none; background: #F8FAFC; min-height: 100vh;">
+        <!-- Top App Bar -->
+        <div style="background: #FFFFFF; padding: 14px 16px; border-bottom: 1px solid #E2E8F0; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <button onclick="closePayAnyoneView()" style="background: none; border: none; font-size: 18px; color: #0F172A; cursor: pointer; display: flex; align-items: center;">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #0F172A;">Pay Anyone</div>
+          </div>
+        </div>
+
+        <div style="padding: 16px; max-width: 480px; margin: 0 auto;">
+          <!-- Search Input Box (Screenshot 2) -->
+          <div style="display: flex; align-items: center; background: #FFFFFF; border: 1.5px solid #2563EB; border-radius: 14px; padding: 12px 14px; gap: 10px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(37,99,235,0.08);">
+            <input type="text" id="payAnyoneSearchInput" placeholder="Enter mobile number or UPI ID" value="7013893165" oninput="filterPayAnyoneContacts(this.value)" style="border: none; background: transparent; outline: none; font-size: 16px; font-weight: 700; width: 100%; color: #0F172A;">
+            <div style="border-left: 1px solid #CBD5E1; padding-left: 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer;" onclick="showToast('Accessing Phone Contacts...')">
+              <i class="fa-regular fa-address-book" style="color: #2563EB; font-size: 18px;"></i>
+              <span style="font-size: 9px; font-weight: 700; color: #64748B; margin-top: 2px;">Contacts</span>
+            </div>
+          </div>
+
+          <!-- Section Label -->
+          <div style="font-size: 13px; font-weight: 800; color: #0F172A; margin-bottom: 12px;" id="payAnyoneSectionLabel">
+            New number <span style="font-weight: 500; color: #64748B;">(Not in your contact list)</span>
+          </div>
+
+          <!-- Contact Results Container (Screenshot 2) -->
+          <div id="payAnyoneResultsList" style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- Twizitech Solution (Screenshot 2 Match) -->
+            <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 14px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 48px; height: 48px; border-radius: 50%; background: #FFD54F; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 900; color: #000000; border: 2px solid #FFCA28; flex-shrink: 0;">
+                  TS
+                </div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="font-size: 15px; font-weight: 800; color: #0F172A;">Twizitech Solution</span>
+                    <i class="fa-solid fa-circle-check" style="color: #0284C7; font-size: 13px;"></i>
+                  </div>
+                  <div style="font-size: 13px; font-weight: 700; color: #0F172A; margin-top: 1px;">+91 7013893165</div>
+                  <div style="font-size: 11px; color: #64748B; margin-top: 2px; display: flex; align-items: center; gap: 4px;">
+                    <span style="color: #FF5722;">▲</span> Bank A/c linked on UPI
+                  </div>
+                </div>
+              </div>
+              <button onclick="initiatePaymentToRecipient('Twizitech Solution', '7013893165', 'twizitech.solutions@kotak', 280)" style="background: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE; border-radius: 20px; padding: 8px 18px; font-size: 13px; font-weight: 800; cursor: pointer;">
+                Pay
+              </button>
+            </div>
+
+            <!-- Rahul Sharma -->
+            <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 14px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 48px; height: 48px; border-radius: 50%; background: #EFF6FF; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 900; color: #2563EB; border: 2px solid #BFDBFE; flex-shrink: 0;">
+                  RS
+                </div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="font-size: 15px; font-weight: 800; color: #0F172A;">Rahul Sharma</span>
+                    <i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 13px;"></i>
+                  </div>
+                  <div style="font-size: 13px; font-weight: 700; color: #0F172A; margin-top: 1px;">+91 9876543210</div>
+                  <div style="font-size: 11px; color: #64748B; margin-top: 2px; display: flex; align-items: center; gap: 4px;">
+                    <span style="color: #FF5722;">▲</span> 9876543210@easypay
+                  </div>
+                </div>
+              </div>
+              <button onclick="initiatePaymentToRecipient('Rahul Sharma', '9876543210', '9876543210@easypay', 500)" style="background: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE; border-radius: 20px; padding: 8px 18px; font-size: 13px; font-weight: 800; cursor: pointer;">
+                Pay
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+      <!-- ==============================================================
+           REFER & EARN / WIN REWARDS (SCREENSHOT 3)
+           ============================================================== -->
+      <div class="view-panel" id="viewReferEarn" style="display: none; background: #EDF7F2; min-height: 100vh;">
+        <!-- Top App Bar -->
+        <div style="background: #EDF7F2; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;">
+          <button onclick="closeReferEarnView()" style="background: none; border: none; font-size: 18px; color: #0F172A; cursor: pointer; display: flex; align-items: center;">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <div style="text-align: center;">
+            <div style="font-family: var(--font-heading); font-size: 16px; font-weight: 900; color: #002E6E; letter-spacing: 0.5px;">EasyPay</div>
+            <div style="font-size: 9px; font-weight: 800; color: #002E6E; letter-spacing: 1px;">REFER & WIN</div>
+          </div>
+          <button onclick="showToast('Referral Program Terms: Earn ₹400 for every 5 successful invites!')" style="background: none; border: none; font-size: 12px; font-weight: 800; color: #0284C7; cursor: pointer;">
+            T&C
+          </button>
+        </div>
+
+        <div style="padding: 16px 16px 80px; max-width: 480px; margin: 0 auto;">
+          <!-- Hero Headline (Screenshot 3) -->
+          <div style="text-align: center; margin: 12px 0 20px;">
+            <div style="font-size: 18px; font-weight: 800; color: #1E293B;">Refer 5 friends & win assured</div>
+            <div style="font-size: 34px; font-weight: 900; color: #0284C7; margin: 4px 0 6px;">₹400 Cashback</div>
+            <div style="font-size: 12px; font-weight: 600; color: #64748B;">Reward expires in <strong style="color: #0F172A;">53d 22h 54m 50s</strong></div>
+          </div>
+
+          <!-- 5-Step Milestone Progression Bar (Screenshot 3) -->
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; position: relative;">
+            <div style="position: absolute; top: 18px; left: 24px; right: 24px; height: 3px; background: #CBD5E1; z-index: 1;"></div>
+            
+            <div style="display: flex; flex-direction: column; align-items: center; z-index: 2;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #E0F2FE; border: 2px solid #0284C7; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: #0284C7; box-shadow: 0 2px 6px rgba(2,132,199,0.3);">
+                ₹70
+              </div>
+              <span style="font-size: 10px; font-weight: 800; color: #0284C7; margin-top: 6px;">Win ₹70</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; align-items: center; z-index: 2;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #FFFFFF; border: 2px solid #94A3B8; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #94A3B8;">
+                <i class="fa-solid fa-lock"></i>
+              </div>
+              <span style="font-size: 10px; font-weight: 700; color: #64748B; margin-top: 6px;">Win ₹70</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; align-items: center; z-index: 2;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #FFFFFF; border: 2px solid #94A3B8; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #94A3B8;">
+                <i class="fa-solid fa-lock"></i>
+              </div>
+              <span style="font-size: 10px; font-weight: 700; color: #64748B; margin-top: 6px;">Win ₹80</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; align-items: center; z-index: 2;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #FFFFFF; border: 2px solid #94A3B8; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #94A3B8;">
+                <i class="fa-solid fa-lock"></i>
+              </div>
+              <span style="font-size: 10px; font-weight: 700; color: #64748B; margin-top: 6px;">Win ₹80</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; align-items: center; z-index: 2;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #FFFFFF; border: 2px solid #94A3B8; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #94A3B8;">
+                <i class="fa-solid fa-lock"></i>
+              </div>
+              <span style="font-size: 10px; font-weight: 700; color: #64748B; margin-top: 6px;">Win ₹100</span>
+            </div>
+          </div>
+
+          <!-- Buttons (WhatsApp & Share) (Screenshot 3) -->
+          <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <button onclick="shareReferralViaWhatsApp()" style="flex: 1; height: 50px; background: #0052CC; color: #FFFFFF; border: none; border-radius: 25px; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 14px rgba(0,82,204,0.3);">
+              <i class="fa-brands fa-whatsapp" style="font-size: 20px; color: #25D366;"></i> Refer via Whatsapp
+            </button>
+            <button onclick="shareReferralLink()" style="width: 50px; height: 50px; border-radius: 50%; background: #FFFFFF; border: 1.5px solid #CBD5E1; color: #0F172A; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+              <i class="fa-solid fa-arrow-up-from-bracket"></i>
+            </button>
+          </div>
+
+          <!-- Social Proof Strip -->
+          <div style="background: rgba(255,255,255,0.7); border-radius: 12px; padding: 10px 14px; text-align: center; font-size: 12px; color: #475569; font-weight: 600; margin-bottom: 20px;">
+            👥 <strong>1,00,000+ users</strong> invite friends to EasyPay every day
+          </div>
+
+          <!-- HOW IT WORKS CARD (Screenshot 3) -->
+          <div style="background: #FFFFFF; border-radius: 20px; padding: 20px 18px; box-shadow: 0 2px 10px rgba(0,0,0,0.04);">
+            <div style="font-size: 11px; font-weight: 800; color: #64748B; letter-spacing: 0.5px; text-align: center; margin-bottom: 18px;">
+              HOW IT WORKS
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; text-align: center;">
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0 4px;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #EFF6FF; color: #2563EB; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 8px;">
+                  <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <span style="font-size: 12px; font-weight: 700; color: #0F172A;">Invite your friend</span>
+              </div>
+
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0 4px;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 8px;">
+                  <i class="fa-solid fa-mobile-screen"></i>
+                </div>
+                <span style="font-size: 12px; font-weight: 700; color: #0F172A;">They join & make first payment</span>
+              </div>
+
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0 4px;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #DCFCE7; color: #16A34A; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 8px;">
+                  <i class="fa-solid fa-gift"></i>
+                </div>
+                <span style="font-size: 12px; font-weight: 800; color: #16A34A;">Assured ₹400 Cashback</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+      <!-- ==============================================================
+           BANK ACCOUNTS MANAGEMENT VIEW (SCREENSHOT 4)
+           ============================================================== -->
+      <div class="view-panel" id="viewBankAccounts" style="display: none; background: #F8FAFC; min-height: 100vh;">
+        <!-- Top App Bar (Screenshot 4) -->
+        <div style="background: #FFFFFF; padding: 14px 16px; border-bottom: 1px solid #E2E8F0; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <button onclick="closeBankAccountsView()" style="background: none; border: none; font-size: 18px; color: #0F172A; cursor: pointer; display: flex; align-items: center;">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #0F172A;">Bank Accounts</div>
+          </div>
+          <button onclick="openAddNewBankModal()" style="background: none; border: none; font-size: 15px; font-weight: 800; color: #0284C7; cursor: pointer;">
+            Add
+          </button>
+        </div>
+
+        <div style="padding: 16px; max-width: 480px; margin: 0 auto;">
+          <!-- Subtitle (Screenshot 4) -->
+          <div style="font-size: 13px; font-weight: 700; color: #64748B; margin-bottom: 12px;">
+            Your Bank Details
+          </div>
+
+          <!-- Saved Bank List Container -->
+          <div id="savedBankCardsList" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+            <!-- Populated dynamically via renderSavedBankAccounts() -->
+          </div>
+        </div>
+      </div>
+
       <div class="view-panel" id="viewShopping" style="display: none;">
         
         <!-- Shopping Top Bar -->
@@ -5818,54 +6057,101 @@
   <!-- 5. 4-DIGIT SECURITY PIN VERIFICATION MODAL -->
   <!-- ========================================== -->
   <div class="modal-overlay" id="securityPinModal" style="align-items: flex-end; z-index: 10002;">
-    <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 24px 20px 20px; text-align: center;">
-      <!-- Header -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <div style="font-size: 15px; font-weight: 800; color: #0F172A;">ENTER 4-DIGIT SECURITY PIN</div>
-        <button style="background:none; border:none; font-size:18px; color:#64748B; cursor:pointer;" onclick="closeModal('securityPinModal')">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+    <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 24px 20px 20px; text-align: center; min-height: 380px;">
+      
+      <!-- VIEW 1: PIN ENTRY KEYPAD -->
+      <div id="pinModalKeypadView">
+        <!-- Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div style="font-size: 15px; font-weight: 800; color: #0F172A;">ENTER 4-DIGIT SECURITY PIN</div>
+          <button style="background:none; border:none; font-size:18px; color:#64748B; cursor:pointer;" onclick="closeModal('securityPinModal')">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div style="font-size: 12px; color: #64748B; margin-bottom: 16px;">
+          Transferring <strong style="color: #0F172A;" id="pinModalAmountDisplay">₹500</strong> to <strong style="color: #0F172A;" id="pinModalRecipientDisplay">Twizitech Solution</strong>
+        </div>
+
+        <!-- 4 PIN Dots -->
+        <div id="pinInlineError" style="display: none; color: #EF4444; font-size: 13px; font-weight: 700; margin-bottom: 12px; background: #FEF2F2; padding: 6px 12px; border-radius: 8px; border: 1px solid #FCA5A5; text-align: center;">Wrong PIN. Please try again (Default: 1234)</div>
+        <div id="pinDotsWrap" style="display: flex; justify-content: center; gap: 18px; margin: 16px 0 20px;">
+          <div class="pin-dot" id="pindot-0" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #CBD5E1; background: #F8FAFC;"></div>
+          <div class="pin-dot" id="pindot-1" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #CBD5E1; background: #F8FAFC;"></div>
+          <div class="pin-dot" id="pindot-2" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #CBD5E1; background: #F8FAFC;"></div>
+          <div class="pin-dot" id="pindot-3" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #CBD5E1; background: #F8FAFC;"></div>
+        </div>
+
+        <div style="font-size: 11px; color: #16A34A; font-weight: 700; margin-bottom: 20px;">
+          <i class="fa-solid fa-lock" style="font-size: 10px;"></i> Secured by EasyPay Multi-Factor PIN (Default: 1234)
+        </div>
+
+        <!-- Numeric Keypad -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 280px; width: 100%; margin: 0 auto 16px; box-sizing: border-box;">
+          <button type="button" class="pin-key-btn" onclick="pressPinKey('1')">1</button>
+          <button type="button" class="pin-key-btn" onclick="pressPinKey('2')">2</button>
+          <button type="button" class="pin-key-btn" onclick="pressPinKey('3')">3</button>
+          <button type="button" class="pin-key-btn" onclick="pressPinKey('4')">4</button>
+          <button type="button" class="pin-key-btn" onclick="pressPinKey('5')">5</button>
+          <button type="button" class="pin-key-btn" onclick="pressPinKey('6')">6</button>
+          <button type="button" class="pin-key-btn" onclick="pressPinKey('7')">7</button>
+          <button type="button" class="pin-key-btn" onclick="pressPinKey('8')">8</button>
+          <button type="button" class="pin-key-btn" onclick="pressPinKey('9')">9</button>
+          <div style="height: 52px;"></div>
+          <button type="button" class="pin-key-btn" onclick="pressPinKey('0')">0</button>
+          <button type="button" class="pin-key-btn" onclick="pressPinKey('backspace')" style="font-size: 16px; color: #475569;">
+            <i class="fa-solid fa-delete-left"></i>
+          </button>
+        </div>
       </div>
 
-      <div style="font-size: 12px; color: #64748B; margin-bottom: 16px;">
-        Transferring <strong style="color: #0F172A;" id="pinModalAmountDisplay">₹500</strong> to <strong style="color: #0F172A;" id="pinModalRecipientDisplay">Rahul Sharma</strong>
+      <!-- VIEW 2: INLINE SUCCESS ANIMATION VIEW (SCREENSHOT 5 RESOLUTION) -->
+      <div id="pinModalSuccessView" style="display: none; padding: 10px 4px 6px;">
+        <!-- Animated Green Checkmark -->
+        <div style="width: 72px; height: 72px; border-radius: 50%; background: #DCFCE7; border: 3px solid #16A34A; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; color: #16A34A; font-size: 34px; box-shadow: 0 0 25px rgba(22, 163, 74, 0.35);">
+          <i class="fa-solid fa-check"></i>
+        </div>
+
+        <div style="font-family: var(--font-heading); font-size: 20px; font-weight: 900; color: #16A34A; margin-bottom: 2px;">
+          Payment Successful!
+        </div>
+        <div style="font-size: 30px; font-weight: 900; color: #0F172A; margin-bottom: 6px;" id="pinSuccessAmountText">
+          ₹280.00
+        </div>
+        <div style="font-size: 13px; font-weight: 700; color: #64748B; margin-bottom: 18px;" id="pinSuccessRecipientText">
+          Paid to Twizitech Solution
+        </div>
+
+        <!-- Transaction Details Card -->
+        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 12px 14px; text-align: left; margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;">
+            <span style="color: #64748B;">Reference / UTR</span>
+            <strong style="color: #0F172A;" id="pinSuccessUtrText">EPY738291048</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;">
+            <span style="color: #64748B;">Date & Time</span>
+            <strong style="color: #0F172A;" id="pinSuccessDateTimeText">Just now</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span style="color: #64748B;">Debited From</span>
+            <strong style="color: #0F172A;" id="pinSuccessDebitedFromText">Jio Payments Bank (Wallet)</strong>
+          </div>
+        </div>
+
+        <!-- Buttons Row -->
+        <div style="display: flex; gap: 10px;">
+          <button onclick="finishPinPaymentSuccess()" style="flex: 1; height: 48px; background: #0052CC; color: #FFFFFF; border: none; border-radius: 14px; font-size: 14px; font-weight: 800; cursor: pointer;">
+            Done
+          </button>
+          <button onclick="sharePaymentReceipt()" style="width: 48px; height: 48px; border-radius: 14px; background: #F1F5F9; border: 1px solid #CBD5E1; color: #334155; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+            <i class="fa-solid fa-share-nodes"></i>
+          </button>
+        </div>
       </div>
 
-      <!-- 4 PIN Dots -->
-      <div id="pinInlineError" style="display: none; color: #EF4444; font-size: 13px; font-weight: 700; margin-bottom: 12px; background: #FEF2F2; padding: 6px 12px; border-radius: 8px; border: 1px solid #FCA5A5; text-align: center;">Wrong PIN. Please try again (Default: 1234)</div>
-      <div id="pinDotsWrap" style="display: flex; justify-content: center; gap: 18px; margin: 16px 0 20px;">
-        <div class="pin-dot" id="pindot-0" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #CBD5E1; background: #F8FAFC;"></div>
-        <div class="pin-dot" id="pindot-1" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #CBD5E1; background: #F8FAFC;"></div>
-        <div class="pin-dot" id="pindot-2" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #CBD5E1; background: #F8FAFC;"></div>
-        <div class="pin-dot" id="pindot-3" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #CBD5E1; background: #F8FAFC;"></div>
-      </div>
-
-      <div style="font-size: 11px; color: #16A34A; font-weight: 700; margin-bottom: 20px;">
-        <i class="fa-solid fa-lock" style="font-size: 10px;"></i> Secured by EasyPay Multi-Factor PIN (Default: 1234)
-      </div>
-
-      <!-- Numeric Keypad -->
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 280px; width: 100%; margin: 0 auto 16px; box-sizing: border-box;">
-        <button type="button" class="pin-key-btn" onclick="pressPinKey('1')">1</button>
-        <button type="button" class="pin-key-btn" onclick="pressPinKey('2')">2</button>
-        <button type="button" class="pin-key-btn" onclick="pressPinKey('3')">3</button>
-        <button type="button" class="pin-key-btn" onclick="pressPinKey('4')">4</button>
-        <button type="button" class="pin-key-btn" onclick="pressPinKey('5')">5</button>
-        <button type="button" class="pin-key-btn" onclick="pressPinKey('6')">6</button>
-        <button type="button" class="pin-key-btn" onclick="pressPinKey('7')">7</button>
-        <button type="button" class="pin-key-btn" onclick="pressPinKey('8')">8</button>
-        <button type="button" class="pin-key-btn" onclick="pressPinKey('9')">9</button>
-        <button type="button" class="pin-key-btn" style="background:none; border:none;" disabled></button>
-        <button type="button" class="pin-key-btn" onclick="pressPinKey('0')">0</button>
-        <button type="button" class="pin-key-btn" onclick="pressPinKey('backspace')"><i class="fa-solid fa-delete-left"></i></button>
-      </div>
     </div>
   </div>
 
-
-  <!-- ========================================== -->
-  <!-- 6. P2P PAYMENT SUCCESS RECEIPT MODAL -->
-  <!-- ========================================== -->
   <div class="modal-overlay" id="p2pSuccessModal" style="align-items: flex-end; z-index: 10003;">
     <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 24px 20px; text-align: center;">
       <!-- Green Success Badge -->
@@ -5930,6 +6216,30 @@
 <script>
     // Application State
     let appData = {
+  
+  "savedBanks": [
+    {
+      "id": "bank_1",
+      "bankName": "Bank of India",
+      "ifsc": "BKID0005108",
+      "accountMasked": "5108XXXXXXXX0975",
+      "accountRaw": "510810110000975",
+      "holderName": "NIRODA BEHERA",
+      "isPrimary": true,
+      "accountType": "Savings A/c"
+    },
+    {
+      "id": "bank_2",
+      "bankName": "HDFC Bank",
+      "ifsc": "HDFC0001234",
+      "accountMasked": "9966XXXXXXXX1421",
+      "accountRaw": "99662010001421",
+      "holderName": "NIROD BEHERA",
+      "isPrimary": false,
+      "accountType": "Savings A/c"
+    }
+  ],
+
   "analytics": {
     "totalGmv": 1371745,
     "totalUsers": 24890,
@@ -8965,6 +9275,20 @@
       }
     }
 
+    
+    function openVoucherPayFromSource() {
+      const faceVal = currentVoucherAmount || 100;
+      const netPay = currentVoucherDiscounted || 96;
+      const brand = currentSelectedBrand || { name: 'Gift Voucher' };
+
+      openPayFromSourceSheet({
+        amount: netPay,
+        recipientName: brand.name + ' Gift Voucher',
+        recipientSub: 'Instant Bachat Auto-Applied',
+        type: 'Gift Voucher Purchase'
+      });
+    }
+
     function openProductBuyModal(prodId) {
       executeProductPurchase(prodId);
     }
@@ -9518,6 +9842,400 @@
     }
 
     
+    
+    // ==============================================================
+    // 1. PAYMENT SOURCE BOTTOM-SHEET ("PAY ₹... FROM") CONTROLLER
+    // ==============================================================
+    let currentPendingPayment = null;
+    let selectedPaySource = 'wallet';
+
+    function openPayFromSourceSheet(options) {
+      currentPendingPayment = options; // { amount, recipientName, recipientSub, type, onProceed }
+      const amt = options.amount || 280;
+      const titleEl = document.getElementById('payFromTitle');
+      const amtSpan = document.getElementById('paySecurelyAmountSpan');
+      const dispAmt = document.getElementById('payFromDisplayAmount');
+      const recName = document.getElementById('payFromRecipientName');
+      const recSub = document.getElementById('payFromRecipientSub');
+      const recAvatar = document.getElementById('payFromRecipientAvatar');
+
+      if (titleEl) titleEl.innerText = 'Pay ₹' + amt + ' from';
+      if (amtSpan) amtSpan.innerText = amt;
+      if (dispAmt) dispAmt.innerText = '₹' + amt;
+      if (recName) recName.innerText = options.recipientName || 'Twizitech Solution';
+      if (recSub) recSub.innerText = options.recipientSub || '+91 7013893165';
+      if (recAvatar) {
+        const initials = (options.recipientName || 'TS').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+        recAvatar.innerText = initials || 'TS';
+      }
+
+      selectPaySource('wallet');
+      openModal('payFromSourceModal');
+    }
+
+    function selectPaySource(sourceKey) {
+      selectedPaySource = sourceKey;
+      ['wallet', 'hdfc', 'boi'].forEach(k => {
+        const card = document.getElementById('paySourceOption' + k.charAt(0).toUpperCase() + k.slice(1));
+        if (card) {
+          if (k === sourceKey) {
+            card.style.borderColor = '#2563EB';
+            card.style.borderWidth = '2px';
+            const radio = card.querySelector('div:last-child');
+            if (radio) {
+              radio.style.background = '#0A2F80';
+              radio.style.borderColor = '#0A2F80';
+              radio.innerHTML = '<i class="fa-solid fa-check" style="color:white; font-size:11px;"></i>';
+            }
+          } else {
+            card.style.borderColor = '#E2E8F0';
+            card.style.borderWidth = '1px';
+            const radio = card.querySelector('div:last-child');
+            if (radio) {
+              radio.style.background = 'transparent';
+              radio.style.borderColor = '#CBD5E1';
+              radio.innerHTML = '';
+            }
+          }
+        }
+      });
+    }
+
+    function checkWalletBalanceInline(btn) {
+      const bal = (appData.user && appData.user.walletBalance) || 5234.13;
+      btn.innerText = 'Available: ₹' + bal.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+      btn.style.color = '#16A34A';
+    }
+
+    function proceedToPinFromPaySource() {
+      closeModal('payFromSourceModal');
+      const amt = (currentPendingPayment && currentPendingPayment.amount) || 280;
+      const rec = (currentPendingPayment && currentPendingPayment.recipientName) || 'Twizitech Solution';
+
+      const amtEl = document.getElementById('pinModalAmountDisplay');
+      const recEl = document.getElementById('pinModalRecipientDisplay');
+      if (amtEl) amtEl.innerText = '₹' + amt;
+      if (recEl) recEl.innerText = rec;
+
+      // Reset PIN state
+      currentSecurityPin = '';
+      updatePinDotsUI();
+      const keypadView = document.getElementById('pinModalKeypadView');
+      const successView = document.getElementById('pinModalSuccessView');
+      if (keypadView) keypadView.style.display = 'block';
+      if (successView) successView.style.display = 'none';
+
+      openModal('securityPinModal');
+    }
+
+    // ==============================================================
+    // 2. INLINE PIN SUCCESS TRANSITION (SCREENSHOT 5)
+    // ==============================================================
+    function showInlinePinPaymentSuccess() {
+      const p = currentPendingPayment || {};
+      const amt = p.amount || 280;
+      const recName = p.recipientName || 'Twizitech Solution';
+
+      // Deduct from wallet if wallet selected
+      if (appData.user && selectedPaySource === 'wallet') {
+        appData.user.walletBalance = Math.max(0, (appData.user.walletBalance || 5000) - amt);
+        updateWalletDisplay();
+      }
+
+      // Add to transactions ledger
+      const utr = 'EPY' + Math.floor(100000000 + Math.random() * 900000000);
+      if (!appData.transactions) appData.transactions = [];
+      appData.transactions.unshift({
+        id: 'TXN_' + Date.now(),
+        type: 'Debit',
+        amount: amt,
+        title: 'Paid to ' + recName,
+        category: p.type || 'UPI Transfer',
+        date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+        utr: utr,
+        status: 'Successful'
+      });
+
+      // Play audio chime
+      try { playWebAudioTone(880, 0.2); } catch(e){}
+
+      // Transition views inside the same modal
+      const keypadView = document.getElementById('pinModalKeypadView');
+      const successView = document.getElementById('pinModalSuccessView');
+      const amtText = document.getElementById('pinSuccessAmountText');
+      const recText = document.getElementById('pinSuccessRecipientText');
+      const utrText = document.getElementById('pinSuccessUtrText');
+      const dtText = document.getElementById('pinSuccessDateTimeText');
+      const fromText = document.getElementById('pinSuccessDebitedFromText');
+
+      if (amtText) amtText.innerText = '₹' + amt.toFixed(2);
+      if (recText) recText.innerText = 'Paid to ' + recName;
+      if (utrText) utrText.innerText = utr;
+      if (dtText) dtText.innerText = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) + ', ' + new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+      if (fromText) fromText.innerText = selectedPaySource === 'wallet' ? 'Jio Payments Bank (Wallet)' : (selectedPaySource === 'boi' ? 'Bank of India ...0975' : 'HDFC Bank ...9966');
+
+      if (keypadView) keypadView.style.display = 'none';
+      if (successView) {
+        successView.style.display = 'block';
+        successView.style.animation = 'scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+      }
+    }
+
+    function finishPinPaymentSuccess() {
+      closeModal('securityPinModal');
+      // If was paying from pay anyone, close that view
+      closePayAnyoneView();
+      // If was buying gift card, return to gift list
+      closeGiftCardPurchasePage();
+      showToast('Payment completed successfully');
+      loadData();
+    }
+
+    function sharePaymentReceipt() {
+      const utr = document.getElementById('pinSuccessUtrText')?.innerText || 'EPY123456';
+      const amt = document.getElementById('pinSuccessAmountText')?.innerText || '₹280';
+      copyToClipboard('EasyPay Payment Receipt: ' + amt + ' successfully transferred. Ref UTR: ' + utr);
+      showToast('Receipt details copied to clipboard!');
+    }
+
+    // ==============================================================
+    // 3. PAY ANYONE VIEW CONTROLLER (SCREENSHOT 2)
+    // ==============================================================
+    const payAnyoneDirectory = [
+      {
+        id: 'twizi_1',
+        name: 'Twizitech Solution',
+        mobile: '7013893165',
+        payId: 'twizitech.solutions@kotak',
+        avatarBg: '#FFD54F',
+        avatarColor: '#000000',
+        initials: 'TS',
+        sub: 'Bank A/c linked on UPI',
+        defaultAmount: 280
+      },
+      {
+        id: 'rahul_1',
+        name: 'Rahul Sharma',
+        mobile: '9876543210',
+        payId: '9876543210@easypay',
+        avatarBg: '#EFF6FF',
+        avatarColor: '#2563EB',
+        initials: 'RS',
+        sub: '9876543210@easypay',
+        defaultAmount: 500
+      },
+      {
+        id: 'priya_1',
+        name: 'Priya Patel',
+        mobile: '9812345678',
+        payId: '9812345678@easypay',
+        avatarBg: '#FDF2F8',
+        avatarColor: '#DB2777',
+        initials: 'PP',
+        sub: '9812345678@easypay',
+        defaultAmount: 250
+      }
+    ];
+
+    function openPayAnyoneView() {
+      document.querySelectorAll('.view-panel').forEach(v => v.style.display = 'none');
+      const v = document.getElementById('viewPayAnyone');
+      if (v) v.style.display = 'block';
+      const inp = document.getElementById('payAnyoneSearchInput');
+      if (inp) {
+        inp.value = '7013893165';
+        filterPayAnyoneContacts('7013893165');
+      }
+      window.scrollTo(0, 0);
+    }
+
+    function closePayAnyoneView() {
+      const v = document.getElementById('viewPayAnyone');
+      if (v) v.style.display = 'none';
+      switchNavTab('home');
+    }
+
+    function filterPayAnyoneContacts(query) {
+      const q = (query || '').toLowerCase().trim();
+      const listEl = document.getElementById('payAnyoneResultsList');
+      const labelEl = document.getElementById('payAnyoneSectionLabel');
+      if (!listEl) return;
+
+      const filtered = payAnyoneDirectory.filter(c => 
+        c.name.toLowerCase().includes(q) ||
+        c.mobile.includes(q) ||
+        c.payId.toLowerCase().includes(q)
+      );
+
+      if (filtered.length > 0) {
+        if (labelEl) labelEl.innerHTML = 'Matching contacts <span style="font-weight: 500; color: #64748B;">(' + filtered.length + ' found)</span>';
+        listEl.innerHTML = filtered.map(c => `
+          <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 14px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 48px; height: 48px; border-radius: 50%; background: ${c.avatarBg}; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 900; color: ${c.avatarColor}; border: 2px solid #CBD5E1; flex-shrink: 0;">
+                ${c.initials}
+              </div>
+              <div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span style="font-size: 15px; font-weight: 800; color: #0F172A;">${c.name}</span>
+                  <i class="fa-solid fa-circle-check" style="color: #0284C7; font-size: 13px;"></i>
+                </div>
+                <div style="font-size: 13px; font-weight: 700; color: #0F172A; margin-top: 1px;">+91 ${c.mobile}</div>
+                <div style="font-size: 11px; color: #64748B; margin-top: 2px; display: flex; align-items: center; gap: 4px;">
+                  <span style="color: #FF5722;">▲</span> ${c.sub}
+                </div>
+              </div>
+            </div>
+            <button onclick="initiatePaymentToRecipient('${c.name}', '${c.mobile}', '${c.payId}', ${c.defaultAmount})" style="background: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE; border-radius: 20px; padding: 8px 18px; font-size: 13px; font-weight: 800; cursor: pointer;">
+              Pay
+            </button>
+          </div>
+        `).join('');
+      } else if (q.length === 10 && /^[0-9]+$/.test(q)) {
+        if (labelEl) labelEl.innerHTML = 'New number <span style="font-weight: 500; color: #64748B;">(Not in your contact list)</span>';
+        listEl.innerHTML = `
+          <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 14px; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 48px; height: 48px; border-radius: 50%; background: #EFF6FF; color: #2563EB; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+                <i class="fa-solid fa-user"></i>
+              </div>
+              <div>
+                <div style="font-size: 15px; font-weight: 800; color: #0F172A;">+91 ${q}</div>
+                <div style="font-size: 11px; color: #16A34A; font-weight: 700;">Verified UPI Recipient</div>
+              </div>
+            </div>
+            <button onclick="initiatePaymentToRecipient('+91 ' + '${q}', '${q}', '${q}@easypay', 250)" style="background: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE; border-radius: 20px; padding: 8px 18px; font-size: 13px; font-weight: 800; cursor: pointer;">
+              Pay
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    function initiatePaymentToRecipient(name, mobile, payId, defaultAmt) {
+      openPayFromSourceSheet({
+        amount: defaultAmt || 280,
+        recipientName: name,
+        recipientSub: payId || ('+91 ' + mobile),
+        type: 'UPI Transfer'
+      });
+    }
+
+    // ==============================================================
+    // 4. REFER & EARN CONTROLLER (SCREENSHOT 3)
+    // ==============================================================
+    function openReferEarnView() {
+      document.querySelectorAll('.view-panel').forEach(v => v.style.display = 'none');
+      const v = document.getElementById('viewReferEarn');
+      if (v) v.style.display = 'block';
+      window.scrollTo(0, 0);
+    }
+
+    function closeReferEarnView() {
+      const v = document.getElementById('viewReferEarn');
+      if (v) v.style.display = 'none';
+      switchNavTab('profile');
+    }
+
+    function shareReferralViaWhatsApp() {
+      const msg = encodeURIComponent("Hey! Join EasyPay using my referral link and win assured ₹400 cashback on your first recharge or money transfer: https://easypay.app/ref/EPY98808");
+      window.open('whatsapp://send?text=' + msg, '_system');
+    }
+
+    function shareReferralLink() {
+      const link = 'https://easypay.app/ref/EPY98808';
+      copyToClipboard(link);
+      showToast('Referral link copied to clipboard!');
+    }
+
+    // ==============================================================
+    // 5. BANK ACCOUNTS & TO BANK/SELF CONTROLLER (SCREENSHOT 4)
+    // ==============================================================
+    function openBankAccountsView() {
+      document.querySelectorAll('.view-panel').forEach(v => v.style.display = 'none');
+      const v = document.getElementById('viewBankAccounts');
+      if (v) v.style.display = 'block';
+      renderSavedBankAccounts();
+      window.scrollTo(0, 0);
+    }
+
+    function closeBankAccountsView() {
+      const v = document.getElementById('viewBankAccounts');
+      if (v) v.style.display = 'none';
+      switchNavTab('profile');
+    }
+
+    function renderSavedBankAccounts() {
+      const listEl = document.getElementById('savedBankCardsList');
+      if (!listEl) return;
+      const banks = (appData && appData.savedBanks) || [];
+
+      listEl.innerHTML = banks.map(b => `
+        <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 16px; padding: 16px; display: flex; align-items: flex-start; justify-content: space-between; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+          <div style="display: flex; gap: 14px;">
+            <div style="width: 44px; height: 44px; border-radius: 10px; background: #F8FAFC; border: 1px solid #E2E8F0; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #475569; flex-shrink: 0;">
+              <i class="fa-solid fa-building-columns"></i>
+            </div>
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 15px; font-weight: 800; color: #0F172A;">${b.bankName}</span>
+                <span style="background: #F1F5F9; color: #64748B; font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 4px;">${b.ifsc}</span>
+              </div>
+              <div style="font-size: 12px; font-weight: 600; color: #64748B; margin-top: 4px; letter-spacing: 0.5px;">
+                ${b.accountMasked}-${b.holderName}
+              </div>
+            </div>
+          </div>
+          ${b.isPrimary ? '<span style="background: #DCFCE7; color: #16A34A; font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 6px;">Primary</span>' : ''}
+        </div>
+      `).join('');
+    }
+
+    function openAddNewBankModal() {
+      openModal('addNewBankModal');
+    }
+
+    function submitAddNewBankAccount() {
+      const name = document.getElementById('newBankNameInput')?.value.trim() || 'State Bank of India';
+      const num = document.getElementById('newBankAccountNumberInput')?.value.trim() || '30981928491';
+      const ifsc = document.getElementById('newBankIfscInput')?.value.trim() || 'SBIN0001234';
+      const holder = document.getElementById('newBankHolderInput')?.value.trim() || 'NIROD BEHERA';
+
+      if (!appData.savedBanks) appData.savedBanks = [];
+      const masked = num.length > 4 ? num.slice(0, 4) + 'XXXXXXXX' + num.slice(-4) : num;
+      appData.savedBanks.push({
+        id: 'bank_' + Date.now(),
+        bankName: name,
+        ifsc: ifsc.toUpperCase(),
+        accountMasked: masked,
+        accountRaw: num,
+        holderName: holder.toUpperCase(),
+        isPrimary: false,
+        accountType: 'Savings A/c'
+      });
+
+      closeModal('addNewBankModal');
+      renderSavedBankAccounts();
+      showToast('Bank Account ' + name + ' added successfully!');
+    }
+
+    // HOME: To Bank/Self Transfer Flow using Saved Banks
+    function openToBankOrSelfTransfer() {
+      const banks = (appData && appData.savedBanks) || [];
+      const primaryBank = banks.find(b => b.isPrimary) || banks[0] || {
+        bankName: 'Bank of India',
+        holderName: 'NIRODA BEHERA',
+        accountMasked: '5108XXXXXXXX0975'
+      };
+
+      openPayFromSourceSheet({
+        amount: 500,
+        recipientName: primaryBank.bankName + ' (' + primaryBank.holderName + ')',
+        recipientSub: primaryBank.accountMasked,
+        type: 'Bank Transfer'
+      });
+    }
+
     // Dynamic QR Generator with Amount
     function openGenerateAmountQrModal() {
       openModal('generateAmountQrModal');
@@ -9786,11 +10504,7 @@
       if (currentSecurityPin.length === 4) {
         const userPin = (appData.user && appData.user.securityPin) || '1234';
         if (currentSecurityPin === '1234' || currentSecurityPin === userPin) {
-          if (pendingGiftCardPurchase) {
-            setTimeout(completeGiftCardPurchaseAfterPin, 150);
-          } else {
-            setTimeout(submitP2pTransfer, 150);
-          }
+          setTimeout(showInlinePinPaymentSuccess, 150);
         } else {
           // Shake PIN dots for incorrect PIN
           const dotsWrap = document.getElementById('pinDotsWrap');
@@ -10954,6 +11668,135 @@
 
       <button class="btn-primary-action" onclick="checkoutCart()">
         <i class="fa-solid fa-shield-halved"></i> Pay via EasyPay Wallet & Place Order
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ==============================================================
+       PAY FROM SOURCE / WALLET SELECTION MODAL (SCREENSHOT 1)
+       ============================================================== -->
+  <div class="modal-overlay" id="payFromSourceModal" style="align-items: flex-end; z-index: 10001;">
+    <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 20px 18px 24px; max-height: 90vh;">
+      <div style="width: 40px; height: 4px; background: #CBD5E1; border-radius: 2px; margin: 0 auto 16px;"></div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div style="font-family: var(--font-heading); font-size: 19px; font-weight: 900; color: #0F172A;" id="payFromTitle">
+          Pay ₹280 from
+        </div>
+        <button style="background: none; border: none; font-size: 18px; color: #64748B; cursor: pointer;" onclick="closeModal('payFromSourceModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Recipient Header Strip -->
+      <div style="display: flex; align-items: center; justify-content: space-between; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 10px 14px; margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #FFD54F; color: #000; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 13px;" id="payFromRecipientAvatar">
+            TS
+          </div>
+          <div>
+            <div style="font-size: 13px; font-weight: 800; color: #0F172A;" id="payFromRecipientName">Twizitech Solution</div>
+            <div style="font-size: 11px; color: #64748B;" id="payFromRecipientSub">twizitech.solutions@kotak</div>
+          </div>
+        </div>
+        <span style="font-size: 18px; font-weight: 900; color: #0F172A;" id="payFromDisplayAmount">₹280</span>
+      </div>
+
+      <!-- Account Selection List (Screenshot 1 Match) -->
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+        
+        <!-- Option 1: EasyPay Wallet / Jio Payments Bank (Default Selected) -->
+        <div class="pay-source-card active" id="paySourceOptionWallet" onclick="selectPaySource('wallet')" style="border: 2px solid #2563EB; background: #FFFFFF; border-radius: 16px; padding: 14px; display: flex; justify-content: space-between; align-items: flex-start; cursor: pointer;">
+          <div style="display: flex; gap: 12px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: #0A2F80; color: #FFFFFF; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;">
+              Jio
+            </div>
+            <div>
+              <div style="font-size: 14px; font-weight: 800; color: #0F172A;">Jio Payments Bank</div>
+              <div style="font-size: 12px; color: #64748B; margin-top: 2px;">Savings A/c: 2055</div>
+              <div style="font-size: 12px; font-weight: 700; color: #0284C7; margin-top: 6px; cursor: pointer;" onclick="event.stopPropagation(); checkWalletBalanceInline(this)">
+                Check Balance
+              </div>
+            </div>
+          </div>
+          <div style="width: 20px; height: 20px; border-radius: 50%; background: #0A2F80; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 11px;">
+            <i class="fa-solid fa-check"></i>
+          </div>
+        </div>
+
+        <!-- Option 2: HDFC Bank -->
+        <div class="pay-source-card" id="paySourceOptionHdfc" onclick="selectPaySource('hdfc')" style="border: 1px solid #E2E8F0; background: #FFFFFF; border-radius: 16px; padding: 14px; display: flex; justify-content: space-between; align-items: flex-start; cursor: pointer;">
+          <div style="display: flex; gap: 12px;">
+            <div style="width: 40px; height: 40px; border-radius: 8px; background: #FFFFFF; border: 1px solid #CBD5E1; color: #0A2F80; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
+              <i class="fa-solid fa-building-columns" style="color: #004C8F;"></i>
+            </div>
+            <div>
+              <div style="font-size: 14px; font-weight: 800; color: #0F172A;">HDFC Bank</div>
+              <div style="font-size: 12px; color: #64748B; margin-top: 2px;">Savings A/c: 9966</div>
+              <div style="font-size: 12px; font-weight: 700; color: #0284C7; margin-top: 6px;" onclick="event.stopPropagation(); openSetPinModal()">
+                Set UPI PIN
+              </div>
+            </div>
+          </div>
+          <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #CBD5E1;"></div>
+        </div>
+
+        <!-- Option 3: Bank of India -->
+        <div class="pay-source-card" id="paySourceOptionBoi" onclick="selectPaySource('boi')" style="border: 1px solid #E2E8F0; background: #FFFFFF; border-radius: 16px; padding: 14px; display: flex; justify-content: space-between; align-items: flex-start; cursor: pointer;">
+          <div style="display: flex; gap: 12px;">
+            <div style="width: 40px; height: 40px; border-radius: 8px; background: #FFFFFF; border: 1px solid #CBD5E1; color: #0A2F80; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
+              <i class="fa-solid fa-building-columns" style="color: #0284C7;"></i>
+            </div>
+            <div>
+              <div style="font-size: 14px; font-weight: 800; color: #0F172A;">Bank of India</div>
+              <div style="font-size: 12px; color: #64748B; margin-top: 2px;">Savings A/c: 0975 (BKID0005108)</div>
+              <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 4px;">Verified Direct Link</div>
+            </div>
+          </div>
+          <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #CBD5E1;"></div>
+        </div>
+
+      </div>
+
+      <!-- Action Button (Screenshot 1 Match: Pay Securely ₹...) -->
+      <button onclick="proceedToPinFromPaySource()" id="btnPaySecurelyAction" style="width: 100%; height: 50px; background: #0052CC; color: #FFFFFF; border: none; border-radius: 25px; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 14px rgba(0,82,204,0.3);">
+        <i class="fa-solid fa-shield-halved"></i> Pay Securely ₹<span id="paySecurelyAmountSpan">280</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Add New Bank Modal -->
+  <div class="modal-overlay" id="addNewBankModal" style="align-items: flex-end; z-index: 10005;">
+    <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div style="font-size: 16px; font-weight: 800; color: #0F172A;">Add Bank Account</div>
+        <button style="background: none; border: none; font-size: 18px; color: #64748B; cursor: pointer;" onclick="closeModal('addNewBankModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px;">
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Bank Name</label>
+          <input type="text" id="newBankNameInput" placeholder="e.g. State Bank of India" value="State Bank of India" style="width: 100%; padding: 10px 12px; border: 1.5px solid #CBD5E1; border-radius: 10px; font-size: 13px; font-weight: 700; outline: none;">
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Account Number</label>
+          <input type="number" id="newBankAccountNumberInput" placeholder="Enter account number" value="30981928491" style="width: 100%; padding: 10px 12px; border: 1.5px solid #CBD5E1; border-radius: 10px; font-size: 13px; font-weight: 700; outline: none;">
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">IFSC Code</label>
+          <input type="text" id="newBankIfscInput" placeholder="e.g. SBIN0001234" value="SBIN0001234" style="width: 100%; padding: 10px 12px; border: 1.5px solid #CBD5E1; border-radius: 10px; font-size: 13px; font-weight: 700; outline: none; text-transform: uppercase;">
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Account Holder Name</label>
+          <input type="text" id="newBankHolderInput" placeholder="Account holder name" value="NIROD BEHERA" style="width: 100%; padding: 10px 12px; border: 1.5px solid #CBD5E1; border-radius: 10px; font-size: 13px; font-weight: 700; outline: none;">
+        </div>
+      </div>
+
+      <button class="btn-primary-action" onclick="submitAddNewBankAccount()">
+        <i class="fa-solid fa-plus"></i> Save Bank Account
       </button>
     </div>
   </div>

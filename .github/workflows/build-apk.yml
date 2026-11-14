@@ -57,22 +57,31 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.12
-          name: "EasyPay Android APK v1.0.12 (Resolved Splash Screen Freeze & 100% Tested JavaScript Runtime)"
+          tag_name: v1.0.13
+          name: "EasyPay Android APK v1.0.13 (5 Major Features & Payment Flow Enhancements)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.12 (Zero-Defect Production Release)
-            Complete resolution of the splash screen freeze issue via automated syntax validation of all inline script tags, plus all v1.0.11 features:
-            
-            ### Fixes & Verifications in v1.0.12:
-            1. **Splash Screen Freeze Resolved**:
-               - Eliminated two orphaned syntax errors in inline JavaScript (leftover tokens from earlier function refactoring) that prevented browser JavaScript execution on launch.
-               - Verified all 3 script blocks with V8 engine compilation (`vm.Script`) with 0 errors.
-               - On launch, splash screen displays typewriter animation for ~1.5s then smoothly transitions to Login, or after entering 10 digits to OTP screen and Home.
-            2. **All Features 100% Tested & Functional**:
-               - Bank of India removed from My QR.
-               - Dynamic QR with Amount generator.
-               - Live camera QR scanning with automatic detection & PhonePe/GPay style recipient transfer.
-               - Gift Vouchers page alignment centered with no rightward shift.
+            ## EasyPay Mobile Application APK v1.0.13 (Production Release)
+            Full implementation and verification of all 5 UI and feature flows requested by the user:
+
+            ### New Features & Enhancements in v1.0.13:
+            1. **Payment Source Selection Sheet (`Pay ₹... from`)**:
+               - Opens whenever proceeding with payment (Voucher purchase, Recharge, Transfer, Shopping checkout).
+               - Select payment method: EasyPay Wallet / Jio Payments Bank with inline "Check Balance", HDFC Bank, or Bank of India.
+               - Includes "Pay Securely ₹..." action button triggering security PIN verification.
+            2. **Pay Anyone Search & Transfer Page (`Pay ID / Mobile`)**:
+               - Clean top bar with search input for 10-digit mobile number or UPI ID.
+               - Pre-populated and searchable contact cards including Twizitech Solution (+91 7013893165, verified badge) and quick Pay CTA.
+            3. **Refer & Earn Page**:
+               - Added "Refer & Earn" menu option in Profile.
+               - Complete milestone cashback rewards (5 tiers: ₹70, ₹70, ₹80, ₹80, ₹100 = ₹400 Cashback).
+               - Direct "Refer via Whatsapp" button and native share link with "How It Works" 3-step guide.
+            4. **Bank Accounts Management (`Payment Settings` in Profile & `To Bank/Self`)**:
+               - Clicking "Payment Settings" opens dedicated Bank Accounts management panel.
+               - Displays saved bank details (Bank of India, HDFC Bank) with option to add new bank accounts.
+               - "To Bank/Self" on Home page opens saved bank selection for self/bank transfer.
+            5. **Inline PIN Success Transition**:
+               - Modal no longer abruptly closes upon entering the 4th PIN digit.
+               - Smoothly morphs inline into an animated green success screen with checkmark, transaction amount, recipient, ref number, Done and Share Receipt buttons.
                - EasyPay Mall with products and active shopping cart.
                - All 8 recharges and UPI payment touchables operational.
           files: android/app/build/outputs/apk/debug/app-debug.apk
