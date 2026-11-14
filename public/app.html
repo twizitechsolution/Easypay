@@ -5155,7 +5155,7 @@
       <!-- ==============================================================
            PAY ANYONE / SEARCH CONTACTS & UPI ID (SCREENSHOT 2)
            ============================================================== -->
-      <div class="view-panel" id="viewPayAnyone" style="display: none; background: #F8FAFC; min-height: 100vh;">
+      <div class="view-panel" id="viewPayAnyone" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
         <!-- Top App Bar -->
         <div style="background: #FFFFFF; padding: 14px 16px; border-bottom: 1px solid #E2E8F0; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;">
           <div style="display: flex; align-items: center; gap: 12px;">
@@ -5234,7 +5234,7 @@
       <!-- ==============================================================
            REFER & EARN / WIN REWARDS (SCREENSHOT 3)
            ============================================================== -->
-      <div class="view-panel" id="viewReferEarn" style="display: none; background: #EDF7F2; min-height: 100vh;">
+      <div class="view-panel" id="viewReferEarn" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; background: #EDF7F2; overflow-y: auto; -webkit-overflow-scrolling: touch;">
         <!-- Top App Bar -->
         <div style="background: #EDF7F2; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;">
           <button onclick="closeReferEarnView()" style="background: none; border: none; font-size: 18px; color: #0F172A; cursor: pointer; display: flex; align-items: center;">
@@ -5348,7 +5348,7 @@
       <!-- ==============================================================
            BANK ACCOUNTS MANAGEMENT VIEW (SCREENSHOT 4)
            ============================================================== -->
-      <div class="view-panel" id="viewBankAccounts" style="display: none; background: #F8FAFC; min-height: 100vh;">
+      <div class="view-panel" id="viewBankAccounts" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
         <!-- Top App Bar (Screenshot 4) -->
         <div style="background: #FFFFFF; padding: 14px 16px; border-bottom: 1px solid #E2E8F0; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;">
           <div style="display: flex; align-items: center; gap: 12px;">
@@ -5417,7 +5417,7 @@
 
         <!-- 2-Column Product Grid -->
         <div class="shop-products-grid" id="shopProductsGrid">
-          <div class="shop-product-card" onclick="openProductBuyModal('prod_1')">
+          <div class="shop-product-card" onclick="openProductDetails('prod_1')">
             <div class="shop-product-img-box">
               <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60" class="shop-product-img" alt="boAt Airdopes 141 ANC">
               <span class="shop-product-badge">Best Seller</span>
@@ -5431,16 +5431,13 @@
                 <span class="shop-product-discount">77% OFF</span>
               </div>
             </div>
-            <div style="display: flex; gap: 6px; padding: 0 10px 10px;">
-              <button class="btn-buy-product" style="flex: 1; margin: 0; background: #FFF1EE; color: #FF5722; border: 1.5px solid #FF5722;" onclick="event.stopPropagation(); addToCart('prod_1')">
-                <i class="fa-solid fa-cart-plus"></i> Cart
-              </button>
-              <button class="btn-buy-product" style="flex: 1; margin: 0;" onclick="event.stopPropagation(); openProductBuyModal('prod_1')">
-                <i class="fa-solid fa-bolt"></i> Buy
+            <div style="padding: 0 10px 10px;">
+              <button class="btn-buy-product" style="width: 100%; margin: 0; background: #FFF1EE; color: #FF5722; border: 1.5px solid #FF5722; font-weight: 800;" onclick="event.stopPropagation(); addToCart('prod_1')">
+                <i class="fa-solid fa-cart-plus"></i> Add to Cart
               </button>
             </div>
           </div>
-          <div class="shop-product-card" onclick="openProductBuyModal('prod_2')">
+          <div class="shop-product-card" onclick="openProductDetails('prod_2')">
             <div class="shop-product-img-box">
               <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60" class="shop-product-img" alt="Fire-Boltt Smartwatch">
               <span class="shop-product-badge">Trending</span>
@@ -5454,12 +5451,9 @@
                 <span class="shop-product-discount">88% OFF</span>
               </div>
             </div>
-            <div style="display: flex; gap: 6px; padding: 0 10px 10px;">
-              <button class="btn-buy-product" style="flex: 1; margin: 0; background: #FFF1EE; color: #FF5722; border: 1.5px solid #FF5722;" onclick="event.stopPropagation(); addToCart('prod_2')">
-                <i class="fa-solid fa-cart-plus"></i> Cart
-              </button>
-              <button class="btn-buy-product" style="flex: 1; margin: 0;" onclick="event.stopPropagation(); openProductBuyModal('prod_2')">
-                <i class="fa-solid fa-bolt"></i> Buy
+            <div style="padding: 0 10px 10px;">
+              <button class="btn-buy-product" style="width: 100%; margin: 0; background: #FFF1EE; color: #FF5722; border: 1.5px solid #FF5722; font-weight: 800;" onclick="event.stopPropagation(); addToCart('prod_2')">
+                <i class="fa-solid fa-cart-plus"></i> Add to Cart
               </button>
             </div>
           </div>
@@ -8551,8 +8545,14 @@
         passbook: document.getElementById('viewPassbook')
       };
 
-      // Hide all views first
+      // Hide all primary tabs
       Object.values(views).forEach(v => { if (v) v.style.display = 'none'; });
+
+      // Always hide all overlay/secondary views when navigating via bottom bar
+      ['viewPayAnyone', 'viewBankAccounts', 'viewReferEarn', 'viewProductDetails'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
 
       if (isHome) {
         if (mainHeader) mainHeader.style.display = 'flex';
@@ -9184,7 +9184,7 @@
         : dropshipProducts.filter(p => p.category === currentShopCategory);
 
       grid.innerHTML = filtered.map(p => `
-        <div class="shop-product-card" onclick="openProductBuyModal('${p.id}')">
+        <div class="shop-product-card" onclick="openProductDetails('${p.id}')">
           <div class="shop-product-img-box">
             <img src="${p.img}" class="shop-product-img" alt="${p.title}">
             <span class="shop-product-badge">${p.badge}</span>
@@ -9198,9 +9198,11 @@
               <span class="shop-product-discount">${p.discount}</span>
             </div>
           </div>
-          <button class="btn-buy-product" onclick="event.stopPropagation(); executeProductPurchase('${p.id}')">
-            <i class="fa-solid fa-bolt"></i> Buy Now
-          </button>
+          <div style="padding: 0 10px 10px;">
+            <button class="btn-buy-product" style="width: 100%; margin: 0; background: #FFF1EE; color: #FF5722; border: 1.5px solid #FF5722; font-weight: 800;" onclick="event.stopPropagation(); addToCart('${p.id}')">
+              <i class="fa-solid fa-cart-plus"></i> Add to Cart
+            </button>
+          </div>
         </div>
       `).join('');
     }
@@ -9850,26 +9852,39 @@
     let selectedPaySource = 'wallet';
 
     function openPayFromSourceSheet(options) {
-      currentPendingPayment = options; // { amount, recipientName, recipientSub, type, onProceed }
-      const amt = options.amount || 280;
+      options = options || {};
+      const amt = options.amount || 500;
+      const recName = options.recipientName || 'Twizitech Solution';
+      const recSubtitle = options.recipientSubtitle || '7013893165@easypay';
+      const initials = (recName.split(' ').map(w => w[0]).join('') || 'EP').slice(0, 2).toUpperCase();
+
+      currentPendingPayment = {
+        amount: amt,
+        recipientName: recName,
+        recipientSubtitle: recSubtitle,
+        type: options.type || 'P2P Transfer'
+      };
+
       const titleEl = document.getElementById('payFromTitle');
-      const amtSpan = document.getElementById('paySecurelyAmountSpan');
-      const dispAmt = document.getElementById('payFromDisplayAmount');
-      const recName = document.getElementById('payFromRecipientName');
-      const recSub = document.getElementById('payFromRecipientSub');
-      const recAvatar = document.getElementById('payFromRecipientAvatar');
+      const recCardName = document.getElementById('payFromRecipientName');
+      const recCardSub = document.getElementById('payFromRecipientSubtitle');
+      const amtDisplay = document.getElementById('payFromAmountDisplay');
+      const avatarEl = document.getElementById('payFromAvatar');
+      const btnText = document.getElementById('payFromProceedBtnText');
 
       if (titleEl) titleEl.innerText = 'Pay ₹' + amt + ' from';
-      if (amtSpan) amtSpan.innerText = amt;
-      if (dispAmt) dispAmt.innerText = '₹' + amt;
-      if (recName) recName.innerText = options.recipientName || 'Twizitech Solution';
-      if (recSub) recSub.innerText = options.recipientSub || '+91 7013893165';
-      if (recAvatar) {
-        const initials = (options.recipientName || 'TS').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-        recAvatar.innerText = initials || 'TS';
-      }
+      if (recCardName) recCardName.innerText = recName;
+      if (recCardSub) recCardSub.innerText = recSubtitle;
+      if (amtDisplay) amtDisplay.innerText = '₹' + amt;
+      if (avatarEl) avatarEl.innerText = initials;
+      if (btnText) btnText.innerText = 'Pay Securely ₹' + amt;
 
-      selectPaySource('wallet');
+      const userPayId = (appData.user && appData.user.payId) || 'xxxxxx8808@easypay';
+      const last4 = userPayId.replace('@easypay', '').slice(-4);
+      const walletSub = document.getElementById('payFromWalletAccountSubtitle');
+      if (walletSub) walletSub.innerText = 'Pay ID: ····' + last4 + '@easypay';
+
+      selectedPaySource = 'wallet';
       openModal('payFromSourceModal');
     }
 
@@ -10038,20 +10053,29 @@
     ];
 
     function openPayAnyoneView() {
-      document.querySelectorAll('.view-panel').forEach(v => v.style.display = 'none');
+      // Hide home and subpage headers completely
+      const mainH = document.getElementById('homeMainHeader');
+      if (mainH) mainH.style.display = 'none';
+      const subH = document.getElementById('subpageTopHeader');
+      if (subH) subH.style.display = 'none';
+
       const v = document.getElementById('viewPayAnyone');
-      if (v) v.style.display = 'block';
+      if (v) {
+        v.style.display = 'block';
+        v.scrollTop = 0;
+      }
       const inp = document.getElementById('payAnyoneSearchInput');
       if (inp) {
-        inp.value = '7013893165';
-        filterPayAnyoneContacts('7013893165');
+        inp.value = ''; // Blank by default as requested!
+        filterPayAnyoneContacts('');
       }
-      window.scrollTo(0, 0);
     }
 
     function closePayAnyoneView() {
       const v = document.getElementById('viewPayAnyone');
       if (v) v.style.display = 'none';
+      const mainH = document.getElementById('homeMainHeader');
+      if (mainH) mainH.style.display = 'flex';
       switchNavTab('home');
     }
 
@@ -10496,26 +10520,33 @@
       if (key === 'backspace') {
         currentSecurityPin = currentSecurityPin.slice(0, -1);
       } else if (currentSecurityPin.length < 4) {
-        currentSecurityPin += key;
+        currentSecurityPin += key.toString();
       }
 
       updatePinDotsUI();
+      const errEl = document.getElementById('pinInlineError');
+      if (errEl) errEl.style.display = 'none';
 
       if (currentSecurityPin.length === 4) {
         const userPin = (appData.user && appData.user.securityPin) || '1234';
         if (currentSecurityPin === '1234' || currentSecurityPin === userPin) {
-          setTimeout(showInlinePinPaymentSuccess, 150);
+          // Play success audio
+          try { playPaymentSuccessChime(); } catch(e) { try { playWebAudioTone(880, 0.2); } catch(e2){} }
+          // Trigger smooth inline transition in the SAME modal
+          setTimeout(() => {
+            showInlinePinPaymentSuccess();
+          }, 150);
         } else {
           // Shake PIN dots for incorrect PIN
           const dotsWrap = document.getElementById('pinDotsWrap');
           if (dotsWrap) {
             dotsWrap.style.transform = 'translateX(-10px)';
-            setTimeout(() => dotsWrap.style.transform = 'translateX(10px)', 70);
-            setTimeout(() => dotsWrap.style.transform = 'translateX(-5px)', 140);
-            setTimeout(() => dotsWrap.style.transform = 'translateX(0)', 210);
+            setTimeout(() => { if (dotsWrap) dotsWrap.style.transform = 'translateX(10px)'; }, 70);
+            setTimeout(() => { if (dotsWrap) dotsWrap.style.transform = 'translateX(-5px)'; }, 140);
+            setTimeout(() => { if (dotsWrap) dotsWrap.style.transform = 'translateX(0)'; }, 210);
           }
           currentSecurityPin = '';
-          updatePinDotsUI();
+          setTimeout(updatePinDotsUI, 220);
           showToast('Incorrect Security PIN. (Default: 1234)');
         }
       }
@@ -11490,6 +11521,11 @@
     }
 
     function pressPinKey(digit) {
+      if (digit === 'backspace') {
+        currentSecurityPin = currentSecurityPin.slice(0, -1);
+        updatePinDotsUI();
+        return;
+      }
       if (currentSecurityPin.length >= 4) return;
       currentSecurityPin += digit.toString();
       updatePinDotsUI();
@@ -11498,21 +11534,11 @@
       if (errEl) errEl.style.display = 'none';
 
       if (currentSecurityPin.length === 4) {
-        const validPin = appData.user?.securityPin || '1234';
+        const validPin = (appData.user && appData.user.securityPin) || '1234';
         if (currentSecurityPin === validPin || currentSecurityPin === '1234') {
-          // Success
-          playPaymentSuccessChime();
-          closeModal('securityPinModal');
-
-          if (pendingGiftCardPurchase) {
-            finalizeGiftCardSuccess(pendingGiftCardPurchase);
-            pendingGiftCardPurchase = null;
-          } else if (pendingPinAction) {
-            finalizeGenericPaymentSuccess(pendingPinAction);
-            pendingPinAction = null;
-          } else {
-            finalizeP2pSuccess();
-          }
+          // Success chime & transition inline to Success view without closing modal!
+          try { playPaymentSuccessChime(); } catch(e){ try { playWebAudioTone(880, 0.2); } catch(e2){} }
+          setTimeout(showInlinePinPaymentSuccess, 120);
         } else {
           // Error: Show inline message without closing modal!
           if (errEl) {
@@ -11589,6 +11615,322 @@
       if (nameInp) nameInp.value = u.name || 'Nirod Behera';
       if (phoneInp) phoneInp.value = u.mobile || '9876548808';
       if (pinInp) pinInp.value = u.pincode || '400001';
+
+    // ==============================================================
+    // COMPLETE E-COMMERCE & SHOPPING CART CONTROLLER
+    // ==============================================================
+    let activeProductDetail = null;
+    let shoppingCart = [
+      { id: 'prod_1', title: 'boAt Airdopes 141 ANC TWS Earbuds', brand: 'boAt', price: 999, origPrice: 4490, qty: 1, img: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60' }
+    ];
+
+    function openProductDetails(prodId) {
+      const p = (typeof dropshipProducts !== 'undefined' ? dropshipProducts : []).find(item => item.id === prodId) || {
+        id: prodId,
+        title: 'boAt Airdopes 141 ANC TWS Earbuds 42H Playtime',
+        brand: 'boAt',
+        price: 999,
+        origPrice: 4490,
+        discount: '77% OFF',
+        badge: 'Best Seller',
+        img: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60'
+      };
+
+      activeProductDetail = p;
+
+      const view = document.getElementById('viewProductDetails');
+      if (view) {
+        view.style.display = 'block';
+        view.scrollTop = 0;
+      }
+
+      // Populate product data
+      const imgEl = document.getElementById('productDetailImg');
+      const badgeEl = document.getElementById('productDetailBadge');
+      const brandEl = document.getElementById('productDetailBrand');
+      const titleEl = document.getElementById('productDetailTitle');
+      const priceEl = document.getElementById('productDetailPrice');
+      const origPriceEl = document.getElementById('productDetailOrigPrice');
+      const discEl = document.getElementById('productDetailDiscount');
+
+      if (imgEl) imgEl.src = p.img;
+      if (badgeEl) badgeEl.innerText = p.badge || 'Trending';
+      if (brandEl) brandEl.innerText = p.brand || 'EasyPay Mall';
+      if (titleEl) titleEl.innerText = p.title;
+      if (priceEl) priceEl.innerText = '₹' + p.price.toLocaleString('en-IN');
+      if (origPriceEl) origPriceEl.innerText = '₹' + (p.origPrice || p.price * 2).toLocaleString('en-IN');
+      if (discEl) discEl.innerText = p.discount || '50% OFF';
+
+      // Specifications list
+      const specsList = document.getElementById('productDetailSpecsList');
+      if (specsList) {
+        specsList.innerHTML = `
+          <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #F1F5F9; padding-bottom: 6px;">
+            <span style="color: #64748B;">Brand</span>
+            <span style="font-weight: 700; color: #0F172A;">${p.brand || 'EasyPay'}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #F1F5F9; padding-bottom: 6px;">
+            <span style="color: #64748B;">Model Name</span>
+            <span style="font-weight: 700; color: #0F172A;">${p.title.split(' ')[0] + ' ' + (p.title.split(' ')[1] || '')}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #F1F5F9; padding-bottom: 6px;">
+            <span style="color: #64748B;">Warranty</span>
+            <span style="font-weight: 700; color: #0F172A;">1 Year Brand Warranty</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: #64748B;">In The Box</span>
+            <span style="font-weight: 700; color: #0F172A;">Product, Charging Cable, User Manual</span>
+          </div>
+        `;
+      }
+
+      updateCartBadgeUI();
+    }
+
+    function closeProductDetailsView() {
+      const view = document.getElementById('viewProductDetails');
+      if (view) view.style.display = 'none';
+    }
+
+    function addToCart(prodId) {
+      const p = (typeof dropshipProducts !== 'undefined' ? dropshipProducts : []).find(item => item.id === prodId) || activeProductDetail || {
+        id: prodId,
+        title: 'boAt Airdopes 141 ANC',
+        brand: 'boAt',
+        price: 999,
+        origPrice: 4490,
+        img: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60'
+      };
+
+      const existing = shoppingCart.find(item => item.id === prodId);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        shoppingCart.push({
+          id: p.id,
+          title: p.title,
+          brand: p.brand,
+          price: p.price,
+          origPrice: p.origPrice || p.price * 2,
+          qty: 1,
+          img: p.img
+        });
+      }
+
+      updateCartBadgeUI();
+      showToast('Added to Cart! (' + shoppingCart.length + ' item' + (shoppingCart.length > 1 ? 's' : '') + ')');
+    }
+
+    function addToCartFromDetail() {
+      if (activeProductDetail) {
+        addToCart(activeProductDetail.id);
+      }
+    }
+
+    function buyNowFromDetail() {
+      if (!activeProductDetail) return;
+      closeProductDetailsView();
+      // Directly initiate Payment Source selection for this item
+      openPayFromSourceSheet({
+        amount: activeProductDetail.price,
+        recipientName: 'EasyPay Mall Store',
+        recipientSubtitle: 'Order: ' + activeProductDetail.title.slice(0, 24) + '...',
+        type: 'Product Purchase'
+      });
+    }
+
+    function updateCartBadgeUI() {
+      const totalCount = shoppingCart.reduce((sum, item) => sum + item.qty, 0);
+      document.querySelectorAll('.cart-badge-count').forEach(el => {
+        el.innerText = totalCount;
+        el.style.display = totalCount > 0 ? 'inline-block' : 'none';
+      });
+    }
+
+    function openCartModal() {
+      renderCartModal();
+      openModal('easyPayCartModal');
+    }
+
+    function renderCartModal() {
+      const listEl = document.getElementById('cartItemsList');
+      const subtotalEl = document.getElementById('cartSubtotalAmount');
+      const totalEl = document.getElementById('cartTotalPayable');
+
+      if (!listEl) return;
+
+      if (shoppingCart.length === 0) {
+        listEl.innerHTML = `
+          <div style="text-align: center; padding: 30px 10px;">
+            <i class="fa-solid fa-cart-shopping" style="font-size: 36px; color: #CBD5E1; margin-bottom: 10px;"></i>
+            <div style="font-size: 15px; font-weight: 700; color: #0F172A;">Your Cart is Empty</div>
+            <div style="font-size: 12px; color: #64748B; margin-top: 4px;">Explore EasyPay Mall & add trending items</div>
+          </div>
+        `;
+        if (subtotalEl) subtotalEl.innerText = '₹0';
+        if (totalEl) totalEl.innerText = '₹0';
+        return;
+      }
+
+      let subtotal = 0;
+      listEl.innerHTML = shoppingCart.map(item => {
+        const itemTotal = item.price * item.qty;
+        subtotal += itemTotal;
+        return `
+          <div style="display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F1F5F9; align-items: center;">
+            <img src="${item.img}" style="width: 54px; height: 54px; border-radius: 10px; object-fit: contain; background: #F8FAFC; border: 1px solid #E2E8F0;">
+            <div style="flex: 1;">
+              <div style="font-size: 13px; font-weight: 700; color: #0F172A; line-height: 1.3;">${item.title}</div>
+              <div style="font-size: 14px; font-weight: 800; color: #FF5722; margin-top: 3px;">₹${item.price.toLocaleString('en-IN')}</div>
+            </div>
+            <!-- Qty Stepper -->
+            <div style="display: flex; align-items: center; gap: 8px; background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 20px; padding: 3px 8px;">
+              <button onclick="updateCartItemQty('${item.id}', -1)" style="background: none; border: none; font-size: 13px; font-weight: 800; color: #0F172A; cursor: pointer; padding: 0 4px;">-</button>
+              <span style="font-size: 13px; font-weight: 700; color: #0F172A;">${item.qty}</span>
+              <button onclick="updateCartItemQty('${item.id}', 1)" style="background: none; border: none; font-size: 13px; font-weight: 800; color: #0F172A; cursor: pointer; padding: 0 4px;">+</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (subtotalEl) subtotalEl.innerText = '₹' + subtotal.toLocaleString('en-IN');
+      if (totalEl) totalEl.innerText = '₹' + subtotal.toLocaleString('en-IN');
+    }
+
+    function updateCartItemQty(prodId, delta) {
+      const item = shoppingCart.find(i => i.id === prodId);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        shoppingCart = shoppingCart.filter(i => i.id !== prodId);
+      }
+      updateCartBadgeUI();
+      renderCartModal();
+    }
+
+    function checkoutCart() {
+      if (shoppingCart.length === 0) {
+        showToast('Your cart is empty!');
+        return;
+      }
+
+      const total = shoppingCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      closeModal('easyPayCartModal');
+
+      // Open Payment Source Bottom Sheet for Cart Total
+      openPayFromSourceSheet({
+        amount: total,
+        recipientName: 'EasyPay Mall Store',
+        recipientSubtitle: shoppingCart.length + ' item' + (shoppingCart.length > 1 ? 's' : '') + ' • Order #' + Math.floor(100000 + Math.random()*900000),
+        type: 'Mall Order Checkout'
+      });
+    }
+
+    // ==============================================================
+    // RECHARGE & BILL PAYMENTS CONTROLLER (100% OPERATIONAL)
+    // ==============================================================
+    let currentRechargeAmount = 299;
+    let currentSelectedOperator = 'Jio';
+
+    function openRechargeModal(serviceName) {
+      currentRechargeService = serviceName || 'Mobile Recharge';
+      const titleEl = document.getElementById('rechargeModalTitle');
+      if (titleEl) titleEl.innerText = currentRechargeService;
+
+      const chips = document.getElementById('rechargeOperatorChipsWrap');
+      const label = document.getElementById('rechargeInputLabel');
+      const numInput = document.getElementById('rechargeNumberInput') || document.getElementById('rechargeTargetNumberInput');
+
+      if (serviceName.includes('Electricity')) {
+        if (label) label.innerText = 'Consumer Account Number (CA Number)';
+        if (numInput) numInput.value = '1002981928';
+        currentSelectedOperator = 'Tata Power';
+        if (chips) {
+          chips.innerHTML = `
+            <button class="denom-chip active" onclick="selectRechargeOperator(this, 'Tata Power')">Tata Power</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'Adani Electricity')">Adani Electricity</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'BESCOM')">BESCOM</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'BSES Rajdhani')">BSES Rajdhani</button>
+          `;
+        }
+      } else if (serviceName.includes('FASTag')) {
+        if (label) label.innerText = 'Vehicle Registration Number';
+        if (numInput) numInput.value = 'MH 02 CZ 8808';
+        currentSelectedOperator = 'Paytm FASTag';
+        if (chips) {
+          chips.innerHTML = `
+            <button class="denom-chip active" onclick="selectRechargeOperator(this, 'Paytm FASTag')">Paytm</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'ICICI Bank FASTag')">ICICI</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'IDFC FIRST')">IDFC</button>
+          `;
+        }
+      } else if (serviceName.includes('DTH')) {
+        if (label) label.innerText = 'Subscriber ID / Smart Card Number';
+        if (numInput) numInput.value = '3008921829';
+        currentSelectedOperator = 'Tata Play';
+        if (chips) {
+          chips.innerHTML = `
+            <button class="denom-chip active" onclick="selectRechargeOperator(this, 'Tata Play')">Tata Play</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'Airtel DTH')">Airtel DTH</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'Dish TV')">Dish TV</button>
+          `;
+        }
+      } else {
+        if (label) label.innerText = '10-Digit Mobile Number';
+        if (numInput) numInput.value = '9876543210';
+        currentSelectedOperator = 'Jio';
+        if (chips) {
+          chips.innerHTML = `
+            <button class="denom-chip active" onclick="selectRechargeOperator(this, 'Jio')">Jio</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'Airtel')">Airtel</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'Vi')">Vi</button>
+            <button class="denom-chip" onclick="selectRechargeOperator(this, 'BSNL')">BSNL</button>
+          `;
+        }
+      }
+
+      currentRechargeAmount = 299;
+      const amtSpan = document.getElementById('rechargePayAmountSpan');
+      if (amtSpan) amtSpan.innerText = '299';
+
+      openModal('rechargeModal');
+    }
+
+    function selectRechargeOperator(btn, opName) {
+      currentSelectedOperator = opName;
+      if (btn && btn.parentElement) {
+        btn.parentElement.querySelectorAll('.denom-chip').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+      }
+    }
+
+    function selectRechargeAmount(btn, amount) {
+      currentRechargeAmount = amount;
+      if (btn && btn.parentElement) {
+        btn.parentElement.querySelectorAll('.denom-chip').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+      }
+      const amtSpan = document.getElementById('rechargePayAmountSpan');
+      if (amtSpan) amtSpan.innerText = amount;
+      const cbSpan = document.getElementById('rechargeCashbackEarned');
+      if (cbSpan) cbSpan.innerText = '₹' + (amount * 0.04).toFixed(2) + ' to Wallet';
+    }
+
+    function executeRechargeViaPin() {
+      const numInput = document.getElementById('rechargeNumberInput') || document.getElementById('rechargeTargetNumberInput');
+      const targetNum = numInput ? numInput.value.trim() : '9876543210';
+
+      closeModal('rechargeModal');
+
+      // Open Payment Source Sheet (Wallet) for this recharge
+      openPayFromSourceSheet({
+        amount: currentRechargeAmount || 299,
+        recipientName: (currentSelectedOperator || 'Jio') + ' Recharge',
+        recipientSubtitle: targetNum + ' • ' + (currentRechargeService || 'Mobile Recharge'),
+        type: currentRechargeService || 'Mobile Recharge'
+      });
+    }
+
       openModal('profileEditModal');
     }
 </script>
@@ -11674,7 +12016,7 @@
 
 
   <!-- ==============================================================
-       PAY FROM SOURCE / WALLET SELECTION MODAL (SCREENSHOT 1)
+       PAY FROM SOURCE / WALLET SELECTION MODAL (SCREENSHOT 1 & 3)
        ============================================================== -->
   <div class="modal-overlay" id="payFromSourceModal" style="align-items: flex-end; z-index: 10001;">
     <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 20px 18px 24px; max-height: 90vh;">
@@ -11682,86 +12024,61 @@
 
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
         <div style="font-family: var(--font-heading); font-size: 19px; font-weight: 900; color: #0F172A;" id="payFromTitle">
-          Pay ₹280 from
+          Pay ₹500 from
         </div>
         <button style="background: none; border: none; font-size: 18px; color: #64748B; cursor: pointer;" onclick="closeModal('payFromSourceModal')">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <!-- Recipient Header Strip -->
-      <div style="display: flex; align-items: center; justify-content: space-between; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 10px 14px; margin-bottom: 16px;">
+      <!-- Recipient Header Card -->
+      <div id="payFromRecipientCard" style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 12px 14px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
         <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: #FFD54F; color: #000; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 13px;" id="payFromRecipientAvatar">
-            TS
+          <div style="width: 40px; height: 4px0px; border-radius: 50%; background: #FDE047; color: #000; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;" id="payFromAvatar">
+            RS
           </div>
           <div>
-            <div style="font-size: 13px; font-weight: 800; color: #0F172A;" id="payFromRecipientName">Twizitech Solution</div>
-            <div style="font-size: 11px; color: #64748B;" id="payFromRecipientSub">twizitech.solutions@kotak</div>
+            <div style="font-size: 14px; font-weight: 800; color: #0F172A;" id="payFromRecipientName">Rahul Sharma</div>
+            <div style="font-size: 11px; color: #64748B;" id="payFromRecipientSubtitle">9876543210@easypay</div>
           </div>
         </div>
-        <span style="font-size: 18px; font-weight: 900; color: #0F172A;" id="payFromDisplayAmount">₹280</span>
+        <div style="font-size: 17px; font-weight: 900; color: #0F172A;" id="payFromAmountDisplay">₹500</div>
       </div>
 
-      <!-- Account Selection List (Screenshot 1 Match) -->
-      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
-        
-        <!-- Option 1: EasyPay Wallet / Jio Payments Bank (Default Selected) -->
-        <div class="pay-source-card active" id="paySourceOptionWallet" onclick="selectPaySource('wallet')" style="border: 2px solid #2563EB; background: #FFFFFF; border-radius: 16px; padding: 14px; display: flex; justify-content: space-between; align-items: flex-start; cursor: pointer;">
-          <div style="display: flex; gap: 12px;">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: #0A2F80; color: #FFFFFF; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;">
-              Jio
+      <!-- SINGLE WALLET PAYMENT OPTION (Consolidated as requested) -->
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px;">
+        <div style="border: 2px solid #0052CC; background: #F0F6FF; border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0, 82, 204, 0.08);">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <!-- Wallet Icon -->
+            <div style="width: 46px; height: 46px; border-radius: 12px; background: #0052CC; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 2px 6px rgba(0, 82, 204, 0.3);">
+              <i class="fa-solid fa-wallet"></i>
             </div>
             <div>
-              <div style="font-size: 14px; font-weight: 800; color: #0F172A;">Jio Payments Bank</div>
-              <div style="font-size: 12px; color: #64748B; margin-top: 2px;">Savings A/c: 2055</div>
-              <div style="font-size: 12px; font-weight: 700; color: #0284C7; margin-top: 6px; cursor: pointer;" onclick="event.stopPropagation(); checkWalletBalanceInline(this)">
-                Check Balance
+              <div style="font-size: 15px; font-weight: 800; color: #0F172A; display: flex; align-items: center; gap: 6px;">
+                <span>EasyPay Wallet</span>
+                <span style="font-size: 10px; background: #DCFCE7; color: #15803D; padding: 1px 6px; border-radius: 10px; font-weight: 700;">Active</span>
+              </div>
+              <div style="font-size: 12px; color: #64748B; font-weight: 600; margin-top: 2px;" id="payFromWalletAccountSubtitle">
+                Pay ID: ····8808@easypay
+              </div>
+              <div style="margin-top: 4px;">
+                <button type="button" onclick="checkWalletBalanceInline(this)" style="background: none; border: none; font-size: 12px; font-weight: 700; color: #0052CC; cursor: pointer; padding: 0; text-decoration: underline;">
+                  Check Balance
+                </button>
               </div>
             </div>
           </div>
-          <div style="width: 20px; height: 20px; border-radius: 50%; background: #0A2F80; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 11px;">
+          <!-- Selected Radio Checkmark -->
+          <div style="width: 24px; height: 24px; border-radius: 50%; background: #0052CC; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 12px;">
             <i class="fa-solid fa-check"></i>
           </div>
         </div>
-
-        <!-- Option 2: HDFC Bank -->
-        <div class="pay-source-card" id="paySourceOptionHdfc" onclick="selectPaySource('hdfc')" style="border: 1px solid #E2E8F0; background: #FFFFFF; border-radius: 16px; padding: 14px; display: flex; justify-content: space-between; align-items: flex-start; cursor: pointer;">
-          <div style="display: flex; gap: 12px;">
-            <div style="width: 40px; height: 40px; border-radius: 8px; background: #FFFFFF; border: 1px solid #CBD5E1; color: #0A2F80; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
-              <i class="fa-solid fa-building-columns" style="color: #004C8F;"></i>
-            </div>
-            <div>
-              <div style="font-size: 14px; font-weight: 800; color: #0F172A;">HDFC Bank</div>
-              <div style="font-size: 12px; color: #64748B; margin-top: 2px;">Savings A/c: 9966</div>
-              <div style="font-size: 12px; font-weight: 700; color: #0284C7; margin-top: 6px;" onclick="event.stopPropagation(); openSetPinModal()">
-                Set UPI PIN
-              </div>
-            </div>
-          </div>
-          <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #CBD5E1;"></div>
-        </div>
-
-        <!-- Option 3: Bank of India -->
-        <div class="pay-source-card" id="paySourceOptionBoi" onclick="selectPaySource('boi')" style="border: 1px solid #E2E8F0; background: #FFFFFF; border-radius: 16px; padding: 14px; display: flex; justify-content: space-between; align-items: flex-start; cursor: pointer;">
-          <div style="display: flex; gap: 12px;">
-            <div style="width: 40px; height: 40px; border-radius: 8px; background: #FFFFFF; border: 1px solid #CBD5E1; color: #0A2F80; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
-              <i class="fa-solid fa-building-columns" style="color: #0284C7;"></i>
-            </div>
-            <div>
-              <div style="font-size: 14px; font-weight: 800; color: #0F172A;">Bank of India</div>
-              <div style="font-size: 12px; color: #64748B; margin-top: 2px;">Savings A/c: 0975 (BKID0005108)</div>
-              <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 4px;">Verified Direct Link</div>
-            </div>
-          </div>
-          <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #CBD5E1;"></div>
-        </div>
-
       </div>
 
-      <!-- Action Button (Screenshot 1 Match: Pay Securely ₹...) -->
-      <button onclick="proceedToPinFromPaySource()" id="btnPaySecurelyAction" style="width: 100%; height: 50px; background: #0052CC; color: #FFFFFF; border: none; border-radius: 25px; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 14px rgba(0,82,204,0.3);">
-        <i class="fa-solid fa-shield-halved"></i> Pay Securely ₹<span id="paySecurelyAmountSpan">280</span>
+      <!-- Proceed Action Button -->
+      <button class="btn-primary-action" id="payFromProceedBtn" onclick="proceedToPinFromPaySource()" style="background: #0052CC; border-radius: 28px; padding: 15px; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span id="payFromProceedBtnText">Pay Securely ₹500</span>
       </button>
     </div>
   </div>
@@ -11800,6 +12117,122 @@
       </button>
     </div>
   </div>
+
+
+      <!-- ==============================================================
+           FULL-SCREEN PRODUCT DETAILS VIEW (E-COMMERCE)
+           ============================================================== -->
+      <div id="viewProductDetails" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; background: #FFFFFF; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+        <!-- Top Sticky Bar -->
+        <div style="background: #FFFFFF; padding: 14px 16px; border-bottom: 1px solid #E2E8F0; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <button onclick="closeProductDetailsView()" style="background: none; border: none; font-size: 18px; color: #0F172A; cursor: pointer; display: flex; align-items: center;">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div style="font-family: var(--font-heading); font-size: 17px; font-weight: 800; color: #0F172A;" id="productDetailTopTitle">Product Details</div>
+          </div>
+          <button onclick="openCartModal()" style="background: none; border: none; font-size: 19px; color: #0F172A; cursor: pointer; position: relative;">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span class="cart-badge-count" style="position: absolute; top: -6px; right: -8px; background: #FF5722; color: #FFF; font-size: 10px; font-weight: 800; border-radius: 10px; padding: 2px 5px; min-width: 16px; text-align: center;">0</span>
+          </button>
+        </div>
+
+        <!-- Product Image Hero -->
+        <div style="position: relative; background: #F8FAFC; text-align: center; padding: 24px 16px; border-bottom: 1px solid #E2E8F0;">
+          <img id="productDetailImg" src="" style="max-height: 260px; max-width: 100%; object-fit: contain; border-radius: 16px;" alt="Product">
+          <span id="productDetailBadge" style="position: absolute; top: 16px; left: 16px; background: #059669; color: #FFF; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 8px;">Best Seller</span>
+        </div>
+
+        <!-- Product Main Info -->
+        <div style="padding: 18px 16px; border-bottom: 8px solid #F1F5F9;">
+          <div style="font-size: 12px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;" id="productDetailBrand">boAt</div>
+          <div style="font-family: var(--font-heading); font-size: 19px; font-weight: 800; color: #0F172A; margin: 4px 0 8px; line-height: 1.3;" id="productDetailTitle">
+            boAt Airdopes 141 ANC TWS Earbuds 42H Playtime
+          </div>
+
+          <!-- Rating -->
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+            <span style="background: #059669; color: #FFF; font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;">
+              4.8 <i class="fa-solid fa-star" style="font-size: 10px;"></i>
+            </span>
+            <span style="font-size: 13px; color: #64748B; font-weight: 600;">1,420 Ratings & 382 Reviews</span>
+          </div>
+
+          <!-- Pricing Row -->
+          <div style="display: flex; align-items: baseline; gap: 10px;">
+            <span style="font-size: 24px; font-weight: 900; color: #0F172A;" id="productDetailPrice">₹999</span>
+            <span style="font-size: 15px; color: #94A3B8; text-decoration: line-through;" id="productDetailOrigPrice">₹4,490</span>
+            <span style="font-size: 14px; font-weight: 800; color: #059669;" id="productDetailDiscount">77% OFF</span>
+          </div>
+          <div style="font-size: 11px; color: #64748B; margin-top: 2px;">Inclusive of all taxes • Free Shipping</div>
+        </div>
+
+        <!-- Delivery & Trust Badges -->
+        <div style="padding: 16px; border-bottom: 8px solid #F1F5F9;">
+          <div style="font-size: 14px; font-weight: 800; color: #0F172A; margin-bottom: 10px;">Delivery Options</div>
+          <div style="display: flex; align-items: center; gap: 10px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 10px 14px;">
+            <i class="fa-solid fa-truck-fast" style="color: #FF5722; font-size: 18px;"></i>
+            <div>
+              <div style="font-size: 13px; font-weight: 700; color: #0F172A;">FREE Delivery by Tomorrow</div>
+              <div style="font-size: 11px; color: #64748B;">Delivering to: <span id="deliveryPincodeSpan" style="font-weight: 700; color: #0F172A;">400001, Mumbai</span></div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px;">
+            <div style="text-align: center; background: #FFF5F7; border: 1px solid #FFE4E6; border-radius: 10px; padding: 10px 6px;">
+              <i class="fa-solid fa-rotate-left" style="color: #E11D48; font-size: 16px; margin-bottom: 4px;"></i>
+              <div style="font-size: 10px; font-weight: 700; color: #0F172A;">7 Days Replacement</div>
+            </div>
+            <div style="text-align: center; background: #F0FDF4; border: 1px solid #DCFCE7; border-radius: 10px; padding: 10px 6px;">
+              <i class="fa-solid fa-shield-check" style="color: #16A34A; font-size: 16px; margin-bottom: 4px;"></i>
+              <div style="font-size: 10px; font-weight: 700; color: #0F172A;">1 Year Warranty</div>
+            </div>
+            <div style="text-align: center; background: #EFF6FF; border: 1px solid #DBEAFE; border-radius: 10px; padding: 10px 6px;">
+              <i class="fa-solid fa-badge-check" style="color: #2563EB; font-size: 16px; margin-bottom: 4px;"></i>
+              <div style="font-size: 10px; font-weight: 700; color: #0F172A;">100% Genuine</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Specifications & Highlights -->
+        <div style="padding: 16px; border-bottom: 8px solid #F1F5F9;">
+          <div style="font-size: 14px; font-weight: 800; color: #0F172A; margin-bottom: 12px;">Product Specifications</div>
+          <div id="productDetailSpecsList" style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: #334155;">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+
+        <!-- Customer Reviews -->
+        <div style="padding: 16px; padding-bottom: 90px;">
+          <div style="font-size: 14px; font-weight: 800; color: #0F172A; margin-bottom: 12px;">Customer Ratings & Reviews</div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="background: #F8FAFC; border-radius: 12px; padding: 12px; border: 1px solid #E2E8F0;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-weight: 700; font-size: 13px; color: #0F172A;">Aditya Verma</span>
+                <span style="color: #EAB308; font-size: 11px;">★★★★★</span>
+              </div>
+              <div style="font-size: 12px; color: #475569; line-height: 1.4;">"Awesome sound quality and super fast delivery. The battery lasts very long as described!"</div>
+            </div>
+            <div style="background: #F8FAFC; border-radius: 12px; padding: 12px; border: 1px solid #E2E8F0;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-weight: 700; font-size: 13px; color: #0F172A;">Sneha K.</span>
+                <span style="color: #EAB308; font-size: 11px;">★★★★☆</span>
+              </div>
+              <div style="font-size: 12px; color: #475569; line-height: 1.4;">"Best value for money. EasyPay shopping experience was smooth and cashback got credited instantly."</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Sticky Action Bar -->
+        <div style="position: fixed; bottom: 0; left: 0; right: 0; background: #FFFFFF; border-top: 1px solid #E2E8F0; padding: 12px 16px; display: flex; gap: 10px; z-index: 1000; box-shadow: 0 -4px 12px rgba(0,0,0,0.06);">
+          <button onclick="addToCartFromDetail()" style="flex: 1; background: #FFF1EE; color: #FF5722; border: 1.5px solid #FF5722; font-weight: 800; font-size: 14px; border-radius: 24px; padding: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <i class="fa-solid fa-cart-shopping"></i> Add to Cart
+          </button>
+          <button onclick="buyNowFromDetail()" style="flex: 1; background: #FF5722; color: #FFFFFF; border: none; font-weight: 800; font-size: 14px; border-radius: 24px; padding: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(255, 87, 34, 0.3);">
+            <i class="fa-solid fa-bolt"></i> Buy Now
+          </button>
+        </div>
+      </div>
 
 </body>
 </html>

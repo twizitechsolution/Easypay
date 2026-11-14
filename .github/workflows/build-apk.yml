@@ -57,31 +57,31 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.13
-          name: "EasyPay Android APK v1.0.13 (5 Major Features & Payment Flow Enhancements)"
+          tag_name: v1.0.14
+          name: "EasyPay Android APK v1.0.14 (Full E-Commerce Flow, Animated Success Screen & Navigation Fixes)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.13 (Production Release)
-            Full implementation and verification of all 5 UI and feature flows requested by the user:
+            ## EasyPay Mobile Application APK v1.0.14 (Production Release)
+            Comprehensive bug fixes, user flow enhancements, and e-commerce platform implementation:
 
-            ### New Features & Enhancements in v1.0.13:
-            1. **Payment Source Selection Sheet (`Pay ₹... from`)**:
-               - Opens whenever proceeding with payment (Voucher purchase, Recharge, Transfer, Shopping checkout).
-               - Select payment method: EasyPay Wallet / Jio Payments Bank with inline "Check Balance", HDFC Bank, or Bank of India.
-               - Includes "Pay Securely ₹..." action button triggering security PIN verification.
-            2. **Pay Anyone Search & Transfer Page (`Pay ID / Mobile`)**:
-               - Clean top bar with search input for 10-digit mobile number or UPI ID.
-               - Pre-populated and searchable contact cards including Twizitech Solution (+91 7013893165, verified badge) and quick Pay CTA.
-            3. **Refer & Earn Page**:
-               - Added "Refer & Earn" menu option in Profile.
-               - Complete milestone cashback rewards (5 tiers: ₹70, ₹70, ₹80, ₹80, ₹100 = ₹400 Cashback).
-               - Direct "Refer via Whatsapp" button and native share link with "How It Works" 3-step guide.
-            4. **Bank Accounts Management (`Payment Settings` in Profile & `To Bank/Self`)**:
-               - Clicking "Payment Settings" opens dedicated Bank Accounts management panel.
-               - Displays saved bank details (Bank of India, HDFC Bank) with option to add new bank accounts.
-               - "To Bank/Self" on Home page opens saved bank selection for self/bank transfer.
-            5. **Inline PIN Success Transition**:
-               - Modal no longer abruptly closes upon entering the 4th PIN digit.
-               - Smoothly morphs inline into an animated green success screen with checkmark, transaction amount, recipient, ref number, Done and Share Receipt buttons.
+            ### Fixes & Enhancements in v1.0.14:
+            1. **Sub-View Isolation & Navigation Fix**:
+               - Converted Pay Anyone, Bank Accounts, and Refer & Earn to fixed full-screen overlay views (`position: fixed; inset: 0; z-index: 9999`) so they never render beneath other pages.
+               - `switchNavTab` explicitly hides all sub-views on tab switch.
+               - Removed home header on Pay Anyone view for a clean native screen.
+               - Search input on Pay Anyone is blank by default with clean search filtering.
+            2. **Payment Source Sheet (`Pay ₹... from`)**:
+               - Consolidated payment source to a single clean EasyPay Wallet option with wallet icon, user's UPI ID (`····8808@easypay`), inline "Check Balance", and active checkmark.
+               - Removed unused bank options.
+            3. **Animated Payment Success Screen Resolution**:
+               - Removed duplicate PIN handler that prematurely closed the modal.
+               - PIN completion now smoothly transitions inline to the green animated success screen with amount, recipient, UTR, timestamp, audio chime, Done, and Share Receipt.
+            4. **Complete E-Commerce Flow & Product Details**:
+               - Removed 'Buy' button from shopping catalog cards; only 'Add to Cart' remains.
+               - Clicking product card opens full-screen Product Details page with specifications, warranty, reviews, and bottom action bar (Add to Cart & Buy Now).
+               - Shopping Cart modal with item counter, quantity stepper (+/-), delivery address, bill breakdown, and checkout.
+            5. **Recharge & Bill Payments Operational**:
+               - Fixed input element ID crash in `openRechargeModal`.
+               - Implemented `executeRechargeViaPin()` seamlessly routing recharge flow through payment source and PIN verification.
                - EasyPay Mall with products and active shopping cart.
                - All 8 recharges and UPI payment touchables operational.
           files: android/app/build/outputs/apk/debug/app-debug.apk
