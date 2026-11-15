@@ -5459,7 +5459,7 @@
           </div>
           <div class="shop-product-card" onclick="openProductDetails('prod_3')">
             <div class="shop-product-img-box">
-              <img src="https://images.unsplash.com/photo-1609592426815-1888a7c295c3?w=500&auto=format&fit=crop&q=60" class="shop-product-img" alt="Mi Power Bank 3i">
+              <img src="https://images.unsplash.com/photo-1609592424109-dd9892f1b177?w=500&auto=format&fit=crop&q=60" class="shop-product-img" alt="Mi Power Bank 3i">
               <span class="shop-product-badge">Essential</span>
             </div>
             <div class="shop-product-info">
@@ -9218,9 +9218,9 @@
       );
 
       grid.innerHTML = filtered.map(p => `
-        <div class="shop-product-card" onclick="openProductBuyModal('${p.id}')">
+        <div class="shop-product-card" onclick="openProductDetails('${p.id}')">
           <div class="shop-product-img-box">
-            <img src="${p.img}" class="shop-product-img" alt="${p.title}">
+            <img src="${p.img}" class="shop-product-img" alt="${p.title}" onerror="this.src='https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500&auto=format&fit=crop&q=60'">
             <span class="shop-product-badge">${p.badge}</span>
           </div>
           <div class="shop-product-info">
@@ -9232,9 +9232,11 @@
               <span class="shop-product-discount">${p.discount}</span>
             </div>
           </div>
-          <button class="btn-buy-product" onclick="event.stopPropagation(); executeProductPurchase('${p.id}')">
-            <i class="fa-solid fa-bolt"></i> Buy Now
-          </button>
+          <div style="padding: 0 10px 10px;">
+            <button class="btn-buy-product" style="width: 100%; margin: 0; background: #FFF1EE; color: #FF5722; border: 1.5px solid #FF5722; font-weight: 800;" onclick="event.stopPropagation(); addToCart('${p.id}')">
+              <i class="fa-solid fa-cart-plus"></i> Add to Cart
+            </button>
+          </div>
         </div>
       `).join('');
     }
@@ -11526,9 +11528,11 @@ function showInlinePinPaymentSuccess() {
       if (nameInp) nameInp.value = u.name || 'Nirod Behera';
       if (phoneInp) phoneInp.value = u.mobile || '9876548808';
       if (pinInp) pinInp.value = u.pincode || '400001';
+      openModal('profileEditModal');
+    }
 
     // ==============================================================
-    // COMPLETE E-COMMERCE & SHOPPING CART CONTROLLER
+    // COMPLETE E-COMMERCE & SHOPPING CART CONTROLLER (GLOBAL SCOPE)
     // ==============================================================
     let activeProductDetail = null;
     let shoppingCart = [
@@ -11737,10 +11741,22 @@ function showInlinePinPaymentSuccess() {
       });
     }
 
-// Cleaned up second recharge controller duplicate
-
-      openModal('profileEditModal');
+// End of E-Commerce Cart Controller (Explicit Global Exports)
+    function openProductBuyModal(prodId) {
+      openProductDetails(prodId);
     }
+
+    window.openProductDetails = openProductDetails;
+    window.closeProductDetailsView = closeProductDetailsView;
+    window.addToCartFromDetail = addToCartFromDetail;
+    window.buyNowFromDetail = buyNowFromDetail;
+    window.addToCart = addToCart;
+    window.updateCartBadgeUI = updateCartBadgeUI;
+    window.openCartModal = openCartModal;
+    window.renderCartModal = renderCartModal;
+    window.updateCartItemQty = updateCartItemQty;
+    window.checkoutCart = checkoutCart;
+    window.openProductBuyModal = openProductBuyModal;
 </script>
 
 
