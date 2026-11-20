@@ -1,10 +1,10 @@
 {
   "analytics": {
-    "totalGmv": 1371745,
+    "totalGmv": 1371845,
     "totalUsers": 24890,
-    "giftCardsSold": 4832,
+    "giftCardsSold": 4834,
     "rechargesDone": 9323,
-    "platformCommissionEarned": 64387.96000000001
+    "platformCommissionEarned": 64389.96000000001
   },
   "user": {
     "id": "EPY98808",
@@ -15,10 +15,11 @@
     "maskedMobile": "xxxxxx8808",
     "email": "nirodbehera220@gmail.com",
     "payId": "9876548808@easypay",
-    "walletBalance": 30284.13,
+    "walletBalance": 30192.13,
     "securityPin": "1234",
     "bankName": "BANK OF INDIA",
-    "bankAccountMasked": "xxxx 0975"
+    "bankAccountMasked": "xxxx 0975",
+    "cashbackEarned": 8
   },
   "giftCards": [
     {
@@ -793,6 +794,68 @@
   ],
   "vouchers": [
     {
+      "id": "vouch_01M7WQWVB8KEWDHV09CE8545Q1",
+      "hubbleOrderId": "01M7WQWVB8KEWDHV09CE8545Q1",
+      "brand": "Apollo",
+      "cardId": "01H846XCZRZYTKA39N1BPZ3WDW",
+      "logo": "https://cdn.myhubble.money/voucher-products/apollo/square-logo/active.webp",
+      "amount": 50,
+      "netPayable": 46,
+      "discount": 4,
+      "cashbackEarned": 4,
+      "voucherCode": "9000000152844246",
+      "pin": "058511",
+      "expiryDate": "2027-11-20",
+      "validTill": "2027-11-20",
+      "purchasedAt": "2026-11-20T15:06:15.031Z",
+      "status": "ACTIVE",
+      "category": "Health & Pharmacy",
+      "cardType": "CARD_AND_PIN_NO_SECURED",
+      "redemptionType": "OFFLINE",
+      "howToUse": [
+        {
+          "retailMode": "OFFLINE",
+          "retailModeName": "Offline",
+          "instructions": [
+            "Visit Apollo Pharmacy to redeem the E-Healing Gift Card",
+            "Share the Gift Card details with the Cashier at the time of payment",
+            "Cashier to use Billing Code to redeem the 16 Digit Card No and its Pin No. Please call Apollo Pharmacy Customer Care 1860 500 0101 for any issues."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vouch_01M7WKDWCEYW41C3DVC987M4T1",
+      "hubbleOrderId": "01M7WKDWCEYW41C3DVC987M4T1",
+      "brand": "Apollo",
+      "cardId": "01H846XCZRZYTKA39N1BPZ3WDW",
+      "logo": "https://cdn.myhubble.money/voucher-products/apollo/square-logo/active.webp",
+      "amount": 50,
+      "netPayable": 46,
+      "discount": 4,
+      "cashbackEarned": 4,
+      "voucherCode": "9000000650078628",
+      "pin": "814337",
+      "expiryDate": "2027-11-20",
+      "validTill": "2027-11-20",
+      "purchasedAt": "2026-11-20T13:48:07.567Z",
+      "status": "ACTIVE",
+      "category": "Health & Pharmacy",
+      "cardType": "CARD_AND_PIN_NO_SECURED",
+      "redemptionType": "OFFLINE",
+      "howToUse": [
+        {
+          "retailMode": "OFFLINE",
+          "retailModeName": "Offline",
+          "instructions": [
+            "Visit Apollo Pharmacy to redeem the E-Healing Gift Card",
+            "Share the Gift Card details with the Cashier at the time of payment",
+            "Cashier to use Billing Code to redeem the 16 Digit Card No and its Pin No. Please call Apollo Pharmacy Customer Care 1860 500 0101 for any issues."
+          ]
+        }
+      ]
+    },
+    {
       "id": "vouch_1794424810903",
       "brand": "Flipkart",
       "cardId": "flipkart",
@@ -976,6 +1039,42 @@
     }
   ],
   "transactions": [
+    {
+      "id": "TXN_87175031",
+      "title": "Apollo Gift Voucher",
+      "category": "Gift Card",
+      "amount": -46,
+      "cashback": 4,
+      "timestamp": "Just now",
+      "status": "SUCCESS",
+      "type": "GIFT_CARD",
+      "icon": "https://cdn.myhubble.money/voucher-products/apollo/square-logo/active.webp",
+      "details": {
+        "voucherCode": "9000000152844246",
+        "pin": "058511",
+        "validTill": "2027-11-20",
+        "paymentMethod": "Wallet",
+        "hubbleOrderId": "01M7WQWVB8KEWDHV09CE8545Q1"
+      }
+    },
+    {
+      "id": "TXN_82487567",
+      "title": "Apollo Gift Voucher",
+      "category": "Gift Card",
+      "amount": -46,
+      "cashback": 4,
+      "timestamp": "Just now",
+      "status": "SUCCESS",
+      "type": "GIFT_CARD",
+      "icon": "https://cdn.myhubble.money/voucher-products/apollo/square-logo/active.webp",
+      "details": {
+        "voucherCode": "9000000650078628",
+        "pin": "814337",
+        "validTill": "2027-11-20",
+        "paymentMethod": "Wallet",
+        "hubbleOrderId": "01M7WKDWCEYW41C3DVC987M4T1"
+      }
+    },
     {
       "id": "TXN_1795163861473",
       "type": "CREDIT",
@@ -2175,6 +2274,22 @@
       "bankName": "STATE BANK OF INDIA",
       "bankAccountMasked": "xxxx 5409",
       "createdAt": "2026-11-20T08:37:41.473Z"
+    },
+    {
+      "id": "EPY31650",
+      "firstName": "arman",
+      "lastName": "khan",
+      "name": "arman khan",
+      "mobile": "7013893165",
+      "maskedMobile": "xxxxxx3165",
+      "email": "armankhan@gmail.com",
+      "payId": "7013893165@easypay",
+      "walletBalance": 25000,
+      "securityPin": "1234",
+      "mpin": "1234",
+      "bankName": "STATE BANK OF INDIA",
+      "bankAccountMasked": "xxxx 3165",
+      "cashbackEarned": 540
     }
   ],
   "adminAuth": {

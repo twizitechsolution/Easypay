@@ -186,6 +186,17 @@ async function requestHandler(req, res) {
         const existingUser = users.find(u => (u.mobile || '').replace(/[^0-9]/g, '').slice(-10) === cleanMobile) ||
           ((data.user && (data.user.mobile || '').replace(/[^0-9]/g, '').slice(-10) === cleanMobile) ? data.user : null);
 
+        // Strict Registration Check: Login is ONLY allowed for registered users
+        if (type === 'login' && !existingUser) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: false,
+            notRegistered: true,
+            error: 'This mobile number is not registered with EasyPay. Please sign up to create your account first.'
+          }));
+          return;
+        }
+
         // Generate 4-digit numeric OTP
         const otp = Math.floor(1000 + Math.random() * 9000).toString();
         activeOtps[cleanMobile] = {
@@ -248,6 +259,14 @@ async function requestHandler(req, res) {
         if (existingUser && type === 'login') {
           data.user = existingUser;
           writeDb(data);
+        } else if (!existingUser && type === 'login') {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: false,
+            notRegistered: true,
+            error: 'This mobile number is not registered. Please sign up to create your account first.'
+          }));
+          return;
         }
 
         res.writeHead(200, { 'Content-Type': 'application/json' });

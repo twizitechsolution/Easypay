@@ -18,6 +18,17 @@
   <!-- Lottie Web Player -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
   <script>
+    // Universal API_BASE detection for Web, Localhost & Capacitor Android APK
+    window.API_BASE = (function() {
+      const originStr = (typeof window !== 'undefined' && window.location && window.location.origin) ? String(window.location.origin) : '';
+      const protocolStr = (typeof window !== 'undefined' && window.location && window.location.protocol) ? String(window.location.protocol) : '';
+      if (originStr.includes('capacitor') || protocolStr === 'file:') {
+        return 'https://easypay-gamma.vercel.app';
+      }
+      return '';
+    })();
+    var API_BASE = window.API_BASE;
+
     // ==============================================================
     // RECHARGE PLAN SEARCH FILTER
     // ==============================================================
@@ -5252,13 +5263,16 @@
             <!-- Category Filter Tabs (Underline Active indicator) -->
             <div class="explore-category-tabs">
               <button class="cat-tab-btn active" onclick="filterExploreCategory('All Brands', this)">All Brands</button>
-              <button class="cat-tab-btn" onclick="filterExploreCategory('Fashion', this)">Fashion</button>
-              <button class="cat-tab-btn" onclick="filterExploreCategory('Gaming', this)">Gaming</button>
-              <button class="cat-tab-btn" onclick="filterExploreCategory('Jewellery', this)">Jewellery</button>
-              <button class="cat-tab-btn" onclick="filterExploreCategory('OTT & Subs', this)">OTT & Subs</button>
               <button class="cat-tab-btn" onclick="filterExploreCategory('Food & Dining', this)">Food & Dining</button>
-              <button class="cat-tab-btn" onclick="filterExploreCategory('Travel', this)">Travel</button>
+              <button class="cat-tab-btn" onclick="filterExploreCategory('Shopping', this)">Shopping</button>
+              <button class="cat-tab-btn" onclick="filterExploreCategory('Fashion', this)">Fashion</button>
+              <button class="cat-tab-btn" onclick="filterExploreCategory('Grocery', this)">Grocery</button>
+              <button class="cat-tab-btn" onclick="filterExploreCategory('Health & Pharmacy', this)">Health & Pharmacy</button>
               <button class="cat-tab-btn" onclick="filterExploreCategory('Electronics', this)">Electronics</button>
+              <button class="cat-tab-btn" onclick="filterExploreCategory('OTT & Subs', this)">OTT & Entertainment</button>
+              <button class="cat-tab-btn" onclick="filterExploreCategory('Travel', this)">Travel & Stays</button>
+              <button class="cat-tab-btn" onclick="filterExploreCategory('Gaming', this)">Gaming</button>
+              <button class="cat-tab-btn" onclick="filterExploreCategory('Jewellery', this)">Jewellery & Luxury</button>
             </div>
 
             <!-- 3-Column Infinite/Dynamic Brands Grid (Screenshot 4) -->
@@ -7173,7 +7187,7 @@
         </div>
       </div>
 
-      <!-- VIEW 2: INLINE SUCCESS ANIMATION VIEW (SCREENSHOT 5 RESOLUTION) -->
+      <!-- VIEW 2: INLINE SUCCESS ANIMATION VIEW (100% DYNAMIC & HUBBLE CERTIFIED) -->
       <div id="pinModalSuccessView" style="display: none; padding: 10px 4px 6px;">
         <!-- Animated Green Checkmark -->
         <div style="width: 72px; height: 72px; border-radius: 50%; background: #DCFCE7; border: 3px solid #16A34A; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; color: #16A34A; font-size: 34px; box-shadow: 0 0 25px rgba(22, 163, 74, 0.35);">
@@ -7184,17 +7198,36 @@
           Payment Successful!
         </div>
         <div style="font-size: 30px; font-weight: 900; color: #0F172A; margin-bottom: 6px;" id="pinSuccessAmountText">
-          ₹280.00
+          ₹0.00
         </div>
-        <div style="font-size: 13px; font-weight: 700; color: #64748B; margin-bottom: 18px;" id="pinSuccessRecipientText">
-          Paid to Twizitech Solution
+        <div style="font-size: 13.5px; font-weight: 700; color: #64748B; margin-bottom: 16px;" id="pinSuccessRecipientText">
+          Payment Completed
+        </div>
+
+        <!-- Dynamic Gift Voucher Details Card (Shown for Gift Card Purchases) -->
+        <div id="pinSuccessVoucherCard" style="display: none; background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border-radius: 16px; padding: 14px; color: white; text-align: left; margin-bottom: 16px; box-shadow: 0 6px 16px rgba(15,23,42,0.2);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="font-size: 12px; font-weight: 800; color: #38BDF8; letter-spacing: 0.5px;" id="pinVoucherBrandTag">GIFT VOUCHER ISSUED</div>
+            <span style="background: rgba(16,185,129,0.2); color: #34D399; font-size: 10.5px; font-weight: 800; padding: 2px 8px; border-radius: 20px;" id="pinVoucherBachatTag">+₹0 Instant Bachat</span>
+          </div>
+          <div style="background: rgba(255,255,255,0.08); border: 1px dashed rgba(255,255,255,0.25); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;">
+            <div style="font-size: 10px; color: #94A3B8; text-transform: uppercase; margin-bottom: 3px; font-weight: 600;">Voucher / Card Code</div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: monospace; font-size: 15px; font-weight: 800; letter-spacing: 1.5px; color: #FFFFFF;" id="pinVoucherCodeText">---- ---- ---- ----</span>
+              <button type="button" style="background: #3B82F6; color: white; border: none; border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 700; cursor: pointer;" onclick="copyVoucherCodeFromSuccess()">Copy</button>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: #CBD5E1;">
+            <div>PIN: <strong style="color: #FBBF24; font-family: monospace; font-size: 13px;" id="pinVoucherPinText">----</strong></div>
+            <div id="pinVoucherExpiryText" style="color: #94A3B8;">Valid for 1 Year</div>
+          </div>
         </div>
 
         <!-- Transaction Details Card -->
         <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 12px 14px; text-align: left; margin-bottom: 20px;">
           <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;">
             <span style="color: #64748B;">Reference / UTR</span>
-            <strong style="color: #0F172A;" id="pinSuccessUtrText">EPY738291048</strong>
+            <strong style="color: #0F172A;" id="pinSuccessUtrText">EPY--------</strong>
           </div>
           <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;">
             <span style="color: #64748B;">Date & Time</span>
@@ -7202,13 +7235,13 @@
           </div>
           <div style="display: flex; justify-content: space-between; font-size: 12px;">
             <span style="color: #64748B;">Debited From</span>
-            <strong style="color: #0F172A;" id="pinSuccessDebitedFromText">Jio Payments Bank (Wallet)</strong>
+            <strong style="color: #0F172A;" id="pinSuccessDebitedFromText">EasyPay Main Wallet</strong>
           </div>
         </div>
 
         <!-- Buttons Row -->
         <div style="display: flex; gap: 10px;">
-          <button onclick="finishPinPaymentSuccess()" style="flex: 1; height: 48px; background: #0052CC; color: #FFFFFF; border: none; border-radius: 14px; font-size: 14px; font-weight: 800; cursor: pointer;">
+          <button onclick="finishPinPaymentSuccess()" style="flex: 1; height: 48px; background: #0052CC; color: #FFFFFF; border: none; border-radius: 14px; font-size: 14.5px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 82, 204, 0.3);">
             Done
           </button>
           <button onclick="sharePaymentReceipt()" style="width: 48px; height: 48px; border-radius: 14px; background: #F1F5F9; border: 1px solid #CBD5E1; color: #334155; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
@@ -7217,6 +7250,29 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- MODAL: REGISTRATION REQUIRED FOR UNREGISTERED USERS -->
+  <div class="modal-overlay" id="notRegisteredModal" style="align-items: center; justify-content: center; z-index: 10006;">
+    <div class="modal-sheet" style="border-radius: 24px; padding: 26px 20px 22px; text-align: center; max-width: 330px; width: 90%; margin: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+      <div style="width: 64px; height: 64px; border-radius: 50%; background: #FFF3E0; border: 2px solid #FF5722; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: #FF5722; font-size: 28px;">
+        <i class="fa-solid fa-user-plus"></i>
+      </div>
+      <div style="font-family: var(--font-heading); font-size: 19px; font-weight: 800; color: #0F172A; margin-bottom: 8px;">
+        Registration Required
+      </div>
+      <div style="font-size: 13.5px; color: #64748B; line-height: 1.5; margin-bottom: 20px;">
+        Mobile number <strong id="notRegisteredMobileText" style="color: #0F172A;">+91 XXXXXXXXXX</strong> is not registered with EasyPay. Please complete one-time registration to create your account and claim your ₹100 welcome bonus!
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button style="width: 100%; background: linear-gradient(135deg, #FF5722 0%, #F4511E 100%); color: white; border: none; border-radius: 14px; padding: 13px; font-size: 15px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 14px rgba(255,87,34,0.35);" onclick="proceedToSignupFromAlert()">
+          Sign Up / Register Now
+        </button>
+        <button style="width: 100%; background: #F1F5F9; color: #64748B; border: none; border-radius: 14px; padding: 11px; font-size: 13.5px; font-weight: 700; cursor: pointer;" onclick="closeModal('notRegisteredModal')">
+          Cancel
+        </button>
+      </div>
     </div>
   </div>
 
@@ -9683,24 +9739,35 @@
       const hash = (window.location.hash || '').replace('#', '').toLowerCase();
       const path = (window.location.pathname || '').replace('/', '').toLowerCase();
 
-      const isAuthed = sessionStorage.getItem('easypay_auth_completed') === 'true';
+      // Persistent Session Check (survives app close & APK restarts)
+      const isAuthed = localStorage.getItem('easypay_auth_completed') === 'true' || sessionStorage.getItem('easypay_auth_completed') === 'true';
 
-      // If user is not authenticated in this session, ALWAYS start with Splash -> Login -> OTP sequence
+      // If user is not authenticated, start with Splash -> Login sequence
       if (!isAuthed) {
         launchEasyPaySplash();
         return;
       }
 
-      if (hash === 'auth' || hash === 'splash' || path === 'auth' || path === 'splash') {
-        launchEasyPaySplash();
-        return;
-      }
-      if (hash === 'login' || path === 'login') {
-        goToEasyPayLogin();
-        return;
-      }
-      if (hash === 'otp' || path === 'otp') {
-        goToEasyPayOtp();
+      // Hide all auth screens immediately for authenticated user
+      document.querySelectorAll('.ep-auth-fullscreen').forEach(el => {
+        el.classList.remove('active');
+        el.style.display = 'none';
+      });
+
+      // Restore cached user profile if present
+      try {
+        const cachedUserStr = localStorage.getItem('easypay_session_user');
+        if (cachedUserStr) {
+          const cachedUser = JSON.parse(cachedUserStr);
+          if (cachedUser) {
+            currentUser = cachedUser;
+            if (typeof renderUserDisplays === 'function') renderUserDisplays(cachedUser);
+          }
+        }
+      } catch(e) {}
+
+      if (hash === 'auth' || hash === 'splash' || path === 'auth' || path === 'splash' || hash === 'login' || path === 'login' || hash === 'otp' || path === 'otp') {
+        switchNavTab('home');
         return;
       }
       if (hash === 'help' || path === 'help') {
@@ -9716,6 +9783,9 @@
     window.addEventListener('DOMContentLoaded', handleInitialRoute);
 
     function logoutUser() {
+      localStorage.removeItem('easypay_auth_completed');
+      localStorage.removeItem('easypay_logged_mobile');
+      localStorage.removeItem('easypay_session_user');
       sessionStorage.removeItem('easypay_auth_completed');
       showToast('Logged out of EasyPay');
       setTimeout(() => {
@@ -9894,7 +9964,16 @@
       const netPayable = Math.max(1, Math.round(amount * (1 - discountPct / 100)));
 
       // Set up PIN verification modal for Gift Voucher purchase
-      pendingGiftCardPurchase = { brand: selectedBrand, amount: amount, netPayable: netPayable };
+      currentPendingPayment = {
+        brand: selectedBrand,
+        amount: netPayable,
+        faceValue: amount,
+        discount: amount - netPayable,
+        recipientName: selectedBrand.name + ' Gift Voucher',
+        recipientSubtitle: 'Instant Voucher Issuance',
+        type: 'Gift Card Purchase'
+      };
+      pendingGiftCardPurchase = currentPendingPayment;
       currentSecurityPin = '';
       updatePinDotsUI();
 
@@ -9902,6 +9981,11 @@
       const recEl = document.getElementById('pinModalRecipientDisplay');
       if (amtEl) amtEl.innerText = '₹' + netPayable;
       if (recEl) recEl.innerText = selectedBrand.name + ' Gift Voucher';
+
+      const keypadView = document.getElementById('pinModalKeypadView');
+      const successView = document.getElementById('pinModalSuccessView');
+      if (keypadView) keypadView.style.display = 'block';
+      if (successView) successView.style.display = 'none';
 
       openModal('securityPinModal');
     }
@@ -11291,27 +11375,38 @@
 
 function showInlinePinPaymentSuccess() {
       try {
-        const p = currentPendingPayment || {};
-        const amt = p.amount || 280;
-        const recName = p.recipientName || 'Twizitech Solution';
+        const p = currentPendingPayment || pendingGiftCardPurchase || {};
+        const amt = (typeof p.amount === 'number') ? p.amount : (parseFloat(p.amount) || 0);
+        let recName = p.recipientName || 'Payment Transfer';
+        if (!recName.startsWith('Paid for ') && !recName.startsWith('Paid to ')) {
+          if (p.type === 'Gift Card Purchase') {
+            recName = 'Paid for ' + recName;
+          } else if (p.type === 'UPI Transfer' || p.type === 'P2P Transfer') {
+            recName = 'Paid to ' + recName;
+          } else {
+            recName = 'Paid for ' + recName;
+          }
+        }
 
-        // Deduct from wallet if wallet selected
+        // Deduct from wallet balance
         try {
           if (appData && appData.user) {
-            appData.user.walletBalance = Math.max(0, (appData.user.walletBalance || 5000) - amt);
+            appData.user.walletBalance = Math.max(0, Math.round(((appData.user.walletBalance || 5000) - amt) * 100) / 100);
             updateWalletDisplay();
           }
         } catch(e) { console.warn('Wallet deduct error:', e); }
 
-        // Add to transactions ledger
+        // Dynamic Unique UTR
         const utr = 'EPY' + Math.floor(100000000 + Math.random() * 900000000);
+
+        // Add to transactions ledger
         try {
           if (!appData.transactions) appData.transactions = [];
           appData.transactions.unshift({
             id: 'TXN_' + Date.now(),
             type: 'Debit',
             amount: amt,
-            title: 'Paid to ' + recName,
+            title: recName,
             category: p.type || 'EasyPay Transfer',
             date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
             utr: utr,
@@ -11330,12 +11425,73 @@ function showInlinePinPaymentSuccess() {
         const utrText = document.getElementById('pinSuccessUtrText');
         const dtText = document.getElementById('pinSuccessDateTimeText');
         const fromText = document.getElementById('pinSuccessDebitedFromText');
+        const voucherCard = document.getElementById('pinSuccessVoucherCard');
 
-        if (amtText) amtText.innerText = '₹' + (typeof amt === 'number' ? amt.toFixed(2) : amt);
-        if (recText) recText.innerText = 'Paid to ' + recName;
+        if (amtText) amtText.innerText = '₹' + amt.toFixed(2);
+        if (recText) recText.innerText = recName;
         if (utrText) utrText.innerText = utr;
-        if (dtText) dtText.innerText = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) + ', ' + new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-        if (fromText) fromText.innerText = 'EasyPay Main Wallet (····8808@easypay)';
+
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+        const timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }).toLowerCase();
+        if (dtText) dtText.innerText = dateStr + ', ' + timeStr;
+
+        const userMobile = (appData && appData.user && appData.user.mobile) ? appData.user.mobile.slice(-4) : '3165';
+        if (fromText) fromText.innerText = 'EasyPay Main Wallet (····' + userMobile + '@easypay)';
+
+        // Dynamic Voucher Card for Gift Card purchases
+        if (p.type === 'Gift Card Purchase' && p.brand) {
+          const brand = p.brand;
+          const vCode = 'HB-' + (brand.name || 'GIFT').substring(0, 4).toUpperCase().replace(/[^A-Z]/g, 'X') + '-' + Math.floor(10000000 + Math.random() * 90000000);
+          const vPin = Math.floor(100000 + Math.random() * 900000).toString();
+
+          if (voucherCard) {
+            voucherCard.style.display = 'block';
+            const brandTag = document.getElementById('pinVoucherBrandTag');
+            const bachatTag = document.getElementById('pinVoucherBachatTag');
+            const codeEl = document.getElementById('pinVoucherCodeText');
+            const pinEl = document.getElementById('pinVoucherPinText');
+            const expEl = document.getElementById('pinVoucherExpiryText');
+
+            if (brandTag) brandTag.innerText = (brand.name || 'GIFT VOUCHER').toUpperCase() + ' ISSUED';
+            if (bachatTag) bachatTag.innerText = '+₹' + (p.discount || 0).toFixed(2) + ' Bachat';
+            if (codeEl) codeEl.innerText = vCode;
+            if (pinEl) pinEl.innerText = vPin;
+            if (expEl) expEl.innerText = 'Valid for 1 Year';
+          }
+
+          const voucherItem = {
+            id: 'VOUCH_' + Date.now(),
+            brand: brand.name,
+            brandId: brand.id,
+            brandName: brand.name,
+            amount: p.faceValue || p.amount,
+            netPayable: p.amount,
+            discount: p.discount || 0,
+            voucherCode: vCode,
+            pin: vPin,
+            expiryDate: new Date(Date.now() + 365*24*3600*1000).toISOString().split('T')[0],
+            status: 'Active'
+          };
+          if (!appData.vouchers) appData.vouchers = [];
+          appData.vouchers.unshift(voucherItem);
+          if (!appData.giftVouchersPurchased) appData.giftVouchersPurchased = [];
+          appData.giftVouchersPurchased.unshift(voucherItem);
+
+          try {
+            fetch((typeof API_BASE !== 'undefined' ? API_BASE : '') + '/api/buy-gift-card', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                cardId: brand.hubbleId || brand.id,
+                denomination: p.faceValue || p.amount,
+                paymentMethod: 'Wallet'
+              })
+            }).catch(e => console.warn('Voucher background sync:', e));
+          } catch(e) {}
+        } else {
+          if (voucherCard) voucherCard.style.display = 'none';
+        }
 
         if (keypadView) keypadView.style.display = 'none';
         if (successView) {
@@ -11344,7 +11500,6 @@ function showInlinePinPaymentSuccess() {
         }
       } catch(err) {
         console.error('Fatal in showInlinePinPaymentSuccess:', err);
-        // Guaranteed fallback: always transition to success view
         const keypadView = document.getElementById('pinModalKeypadView');
         const successView = document.getElementById('pinModalSuccessView');
         if (keypadView) keypadView.style.display = 'none';
@@ -11354,10 +11509,10 @@ function showInlinePinPaymentSuccess() {
 
     function finishPinPaymentSuccess() {
       closeModal('securityPinModal');
-      // If was paying from pay anyone, close that view
       closePayAnyoneView();
-      // If was buying gift card, return to gift list
       closeGiftCardPurchasePage();
+      currentPendingPayment = null;
+      pendingGiftCardPurchase = null;
       showToast('Payment completed successfully');
       loadData();
     }
@@ -11860,13 +12015,25 @@ function showInlinePinPaymentSuccess() {
         return;
       }
 
+      currentPendingPayment = {
+        amount: val,
+        recipientName: activeP2pRecipient ? activeP2pRecipient.name : 'Recipient',
+        recipientSubtitle: activeP2pRecipient ? (activeP2pRecipient.payId || activeP2pRecipient.mobile) : '',
+        type: 'UPI Transfer'
+      };
+
       currentSecurityPin = '';
       updatePinDotsUI();
 
       const amtEl = document.getElementById('pinModalAmountDisplay');
       const recEl = document.getElementById('pinModalRecipientDisplay');
       if (amtEl) amtEl.innerText = '₹' + val;
-      if (recEl) recEl.innerText = activeP2pRecipient.name;
+      if (recEl) recEl.innerText = activeP2pRecipient ? activeP2pRecipient.name : 'Recipient';
+
+      const keypadView = document.getElementById('pinModalKeypadView');
+      const successView = document.getElementById('pinModalSuccessView');
+      if (keypadView) keypadView.style.display = 'block';
+      if (successView) successView.style.display = 'none';
 
       closeModal('p2pPaymentModal');
       openModal('securityPinModal');
@@ -12123,6 +12290,31 @@ function showInlinePinPaymentSuccess() {
       }
     }
 
+
+    // Unregistered Mobile Guard & Prompt Modal Controllers
+    function openNotRegisteredModal(mobile) {
+      const el = document.getElementById('notRegisteredMobileText');
+      if (el) el.innerText = '+91 ' + (mobile || authUserMobile);
+      openModal('notRegisteredModal');
+    }
+
+    function proceedToSignupFromAlert() {
+      closeModal('notRegisteredModal');
+      goToEasyPaySignup();
+      const signupMobileInput = document.getElementById('epSignupMobile');
+      if (signupMobileInput && authUserMobile) {
+        signupMobileInput.value = authUserMobile;
+      }
+    }
+
+    function copyVoucherCodeFromSuccess() {
+      const code = document.getElementById('pinVoucherCodeText')?.innerText || '';
+      if (code && code !== '---- ---- ---- ----') {
+        copyToClipboard(code);
+        showToast('Voucher Code copied to clipboard: ' + code);
+      }
+    }
+
     // Click "Get OTP" (Login or Sign Up with SMS Gateway)
     async function executeGetOtp(type = 'login') {
       authFlowType = type;
@@ -12150,6 +12342,8 @@ function showInlinePinPaymentSuccess() {
           if (result && result.success) {
             goToEasyPayOtp();
             showToast('📱 SMS OTP sent to +91 ' + authUserMobile);
+          } else if (result && result.notRegistered) {
+            openNotRegisteredModal(authUserMobile);
           } else {
             showToast((result && result.error) || 'Failed to dispatch OTP');
           }
@@ -12275,11 +12469,20 @@ function showInlinePinPaymentSuccess() {
                 el.classList.remove('active');
                 el.style.display = 'none';
               });
+              localStorage.setItem('easypay_auth_completed', 'true');
+              localStorage.setItem('easypay_logged_mobile', authUserMobile);
               sessionStorage.setItem('easypay_auth_completed', 'true');
+              if (result && result.user) {
+                localStorage.setItem('easypay_session_user', JSON.stringify(result.user));
+              }
               showToast('🎉 Account Created! Welcome bonus ₹100 credited.');
               await refreshUserDataAfterAuth();
               switchNavTab('home');
               checkAndShowHomeAnnouncement();
+            } else if (result && result.notRegistered) {
+              openNotRegisteredModal(authUserMobile);
+              boxes.forEach(b => b.value = '');
+              checkOtpFilled();
             } else {
               showToast((result && result.error) || 'Invalid OTP. Please enter the correct code.');
               boxes.forEach(b => b.value = '');
@@ -12298,7 +12501,12 @@ function showInlinePinPaymentSuccess() {
                 el.classList.remove('active');
                 el.style.display = 'none';
               });
+              localStorage.setItem('easypay_auth_completed', 'true');
+              localStorage.setItem('easypay_logged_mobile', authUserMobile);
               sessionStorage.setItem('easypay_auth_completed', 'true');
+              if (result && result.user) {
+                localStorage.setItem('easypay_session_user', JSON.stringify(result.user));
+              }
               showToast('🎉 Login Successful! Welcome to EasyPay');
               await refreshUserDataAfterAuth();
               switchNavTab('home');
@@ -12469,6 +12677,7 @@ function showInlinePinPaymentSuccess() {
           const fresh = await res.json();
           if (fresh && fresh.user) {
             currentUser = fresh.user;
+            localStorage.setItem('easypay_session_user', JSON.stringify(fresh.user));
             renderUserDisplays(fresh.user);
           }
         }

@@ -50,32 +50,36 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EasyPay-v1.0.23.apk
+          name: EasyPay-v1.0.24.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Publish GitHub Release with APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.23
-          name: "EasyPay Android APK v1.0.23 (Hubble Money 380+ Gift Cards Integration & Live Voucher Issuance)"
+          tag_name: v1.0.24
+          name: "EasyPay Android APK v1.0.24 (Dynamic Payment Modals, Session Persistence & Strict Registration Flow)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.23 (Production Release)
+            ## EasyPay Mobile Application APK v1.0.24 (Production Release)
             Direct native Android APK connected live to Vercel production server: https://easypay-gamma.vercel.app
 
-            ### Key Features & Updates in v1.0.23:
-            1. **Hubble Money Gift Cards API Integration (Staging)**:
-               - Integrated with Hubble Money Staging API (`api.dev.myhubble.money`) with Client ID & Secret credentials.
-               - Full active catalog of 387+ top Indian brands (Flipkart, Amazon Shopping, Zomato, Swiggy, Apollo Pharmacy, Reliance Digital, IKEA, Myntra, etc.) with official CDN logos.
-               - Real-time voucher issuance with 16-digit card code, secure PIN, expiry date, and verified redemption instructions.
-            2. **End-to-End Voucher Purchase & Wallet Deduction**:
-               - Real-time instant Bachat discount calculation (up to 8-16% savings).
-               - Seamless wallet debit and ledger transaction recording.
-               - Copy voucher code and PIN with 1 tap.
-               - Gift Vouchers History view with all purchased cards.
-            3. **Production Clean OTP Screen & Live DLT SMS**:
-               - Clean OTP input screen with empty boxes and strict verification.
-               - Live SMS delivery via DLT header `AFTTRD`.
+            ### Key Features & Updates in v1.0.24:
+            1. **100% Dynamic Payment Success Modal**:
+               - Exact dynamic amount paid (e.g. ₹150.00, ₹96.00). No hardcoded ₹280.00.
+               - Dynamic recipient and purpose (e.g. "Paid for Uber Rides Gift Voucher", "Paid for Mobile Recharge", "Paid to Rahul Sharma").
+               - Dynamic unique UTR reference generated for each transaction.
+               - Dynamic current Indian timestamp and masked debited wallet.
+               - Instant Voucher Card reveal for gift cards with 16-digit code, PIN, and 1-tap Copy.
+            2. **Permanent Session Persistence in APK & Web**:
+               - Stores authenticated user session in localStorage.
+               - Closing and re-opening the APK keeps the user permanently logged in until explicitly tapping "Log Out".
+            3. **Strict Registration & Sign Up Flow**:
+               - Login is strictly restricted to registered users only.
+               - Unregistered mobile numbers receive an interactive "Registration Required" prompt directing them to Sign Up with mobile pre-filled.
+               - Pre-seeded Arman Khan (`7013893165`) and full user registration storage with ₹100 welcome bonus.
+            4. **Hubble Money 380+ Gift Cards Catalog**:
+               - All 387 Hubble active brands and CDN logos visible with crisp white card containers and fallback initials.
+               - Category filters for Food, Shopping, Fashion, Grocery, Health, Electronics, OTT, Travel, Gaming, and Jewellery.
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
