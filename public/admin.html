@@ -1,0 +1,3116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EasyPay Enterprise — Control & Orchestration Center</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root {
+      --primary-navy: #0B1120;
+      --sidebar-bg: #0F172A;
+      --sidebar-hover: #1E293B;
+      --accent-blue: #2563EB;
+      --accent-blue-hover: #1D4ED8;
+      --accent-emerald: #10B981;
+      --accent-emerald-dark: #059669;
+      --accent-purple: #8B5CF6;
+      --accent-amber: #F59E0B;
+      --accent-rose: #F43F5E;
+      --bg-dashboard: #F8FAFC;
+      --surface-white: #FFFFFF;
+      --text-main: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #94A3B8;
+      --border-color: #E2E8F0;
+      --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+      --card-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+      --font-heading: 'Plus Jakarta Sans', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-dashboard);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ==============================================================
+       LOGIN VIEW STYLES
+       ============================================================== */
+    #adminLoginSection {
+      min-height: 100vh;
+      background: radial-gradient(circle at top right, #1E293B 0%, #0F172A 50%, #0B1120 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-decor-circle {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      opacity: 0.25;
+    }
+    .circle-1 { width: 450px; height: 450px; background: #2563EB; top: -100px; right: -50px; }
+    .circle-2 { width: 400px; height: 400px; background: #10B981; bottom: -80px; left: -80px; }
+
+    .login-card {
+      width: 100%;
+      max-width: 440px;
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 24px;
+      padding: 40px 36px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+      position: relative;
+      z-index: 10;
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .login-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+    .login-logo-badge {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #2563EB, #1D4ED8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.5);
+      margin-bottom: 16px;
+    }
+    .login-title {
+      font-family: var(--font-heading);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.3px;
+    }
+    .login-sub {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .demo-creds-chip {
+      background: #EFF6FF;
+      border: 1px dashed #93C5FD;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .demo-creds-chip:hover {
+      background: #DBEAFE;
+      border-color: #2563EB;
+      transform: translateY(-1px);
+    }
+    .demo-creds-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      color: #1D4ED8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .demo-creds-text {
+      font-size: 12px;
+      color: #1E3A8A;
+      font-family: monospace;
+    }
+
+    .login-form-group {
+      margin-bottom: 18px;
+    }
+    .login-form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .login-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .login-input-icon {
+      position: absolute;
+      left: 14px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .login-input {
+      width: 100%;
+      padding: 12px 40px 12px 40px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border-color);
+      font-size: 14px;
+      font-family: var(--font-body);
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.2s;
+      background: #F8FAFC;
+    }
+    .login-input:focus {
+      border-color: var(--accent-blue);
+      background: #FFFFFF;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+    .login-pass-toggle {
+      position: absolute;
+      right: 14px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .login-pass-toggle:hover { color: var(--text-main); }
+
+    .login-error-msg {
+      background: #FEF2F2;
+      border: 1px solid #FCA5A5;
+      color: #DC2626;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .btn-login-submit {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #2563EB, #1D4ED8);
+      color: white;
+      border: none;
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-login-submit:hover {
+      background: linear-gradient(135deg, #1D4ED8, #1E40AF);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.45);
+    }
+
+    /* ==============================================================
+       MAIN ADMIN CONSOLE LAYOUT
+       ============================================================== */
+    #adminAppSection {
+      display: none;
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* Sidebar */
+    .admin-sidebar {
+      width: 270px;
+      background-color: var(--sidebar-bg);
+      color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      border-right: 1px solid #1E293B;
+      z-index: 100;
+    }
+
+    .sidebar-header {
+      padding: 24px 20px;
+      border-bottom: 1px solid #1E293B;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .sidebar-brand-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sidebar-logo-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #2563EB, #1D4ED8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+    }
+    .sidebar-brand-title {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 800;
+      color: #FFFFFF;
+      letter-spacing: -0.2px;
+    }
+    .sidebar-brand-badge {
+      font-size: 9px;
+      background: #1E293B;
+      color: #10B981;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+      display: inline-block;
+    }
+
+    .sidebar-admin-profile {
+      padding: 16px 20px;
+      border-bottom: 1px solid #1E293B;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .admin-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid #2563EB;
+      object-fit: cover;
+    }
+    .admin-profile-info {
+      flex: 1;
+      overflow: hidden;
+    }
+    .admin-profile-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #FFFFFF;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .admin-profile-role {
+      font-size: 11px;
+      color: #94A3B8;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .role-dot { width: 6px; height: 6px; border-radius: 50%; background: #10B981; }
+
+    .sidebar-nav {
+      list-style: none;
+      padding: 16px 12px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .nav-group-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 12px 14px 6px 14px;
+    }
+    .nav-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      color: #94A3B8;
+      background: transparent;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      text-align: left;
+      margin-bottom: 3px;
+      transition: all 0.15s;
+    }
+    .nav-btn:hover {
+      color: #FFFFFF;
+      background-color: var(--sidebar-hover);
+    }
+    .nav-btn.active {
+      background: linear-gradient(135deg, #2563EB, #1D4ED8);
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    }
+    .nav-btn i { font-size: 15px; width: 20px; text-align: center; }
+    .nav-badge-count {
+      margin-left: auto;
+      background: #1E293B;
+      color: #CBD5E1;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 10px;
+    }
+    .nav-btn.active .nav-badge-count {
+      background: rgba(255, 255, 255, 0.25);
+      color: white;
+    }
+
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid #1E293B;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #64748B;
+    }
+    .btn-logout {
+      background: transparent;
+      border: 1px solid #334155;
+      color: #F87171;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover {
+      background: #7F1D1D;
+      color: white;
+      border-color: #DC2626;
+    }
+
+    /* Main Container */
+    .admin-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow-y: auto;
+    }
+
+    .admin-topbar {
+      background-color: var(--surface-white);
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .topbar-title-box h1 {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.3px;
+    }
+    .topbar-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-topbar {
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .btn-topbar:hover {
+      background: #F1F5F9;
+      color: var(--text-main);
+    }
+    .btn-topbar.primary {
+      background: linear-gradient(135deg, #2563EB, #1D4ED8);
+      color: white;
+      border-color: #2563EB;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+    }
+    .btn-topbar.primary:hover {
+      background: linear-gradient(135deg, #1D4ED8, #1E40AF);
+    }
+    .btn-topbar.success {
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: white;
+      border-color: #10B981;
+    }
+
+    /* Content Area */
+    .admin-content {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .kpi-card {
+      background: var(--surface-white);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--card-shadow-hover);
+    }
+    .kpi-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .kpi-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .kpi-icon-blue { background: #EFF6FF; color: #2563EB; }
+    .kpi-icon-green { background: #ECFDF5; color: #10B981; }
+    .kpi-icon-purple { background: #F5F3FF; color: #8B5CF6; }
+    .kpi-icon-amber { background: #FFFBEB; color: #F59E0B; }
+
+    .kpi-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .kpi-value {
+      font-family: var(--font-heading);
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+    }
+    .kpi-trend {
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .trend-up { color: var(--accent-emerald); }
+    .trend-neutral { color: var(--text-muted); }
+
+    /* Charts Row */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+    .chart-card {
+      background: var(--surface-white);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: var(--card-shadow);
+    }
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Tables & Content Cards */
+    .panel-card {
+      background: var(--surface-white);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .panel-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .search-box-wrap {
+      position: relative;
+      min-width: 280px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 9px 12px 9px 36px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border-color);
+      font-size: 13px;
+      font-family: var(--font-body);
+      outline: none;
+    }
+    .search-input:focus { border-color: var(--accent-blue); }
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+    .enterprise-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+    .enterprise-table th {
+      background-color: #F8FAFC;
+      padding: 14px 16px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      border-bottom: 1.5px solid var(--border-color);
+      white-space: nowrap;
+    }
+    .enterprise-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+      vertical-align: middle;
+    }
+    .enterprise-table tr:last-child td { border-bottom: none; }
+    .enterprise-table tr:hover td { background-color: #F8FAFC; }
+
+    /* Badges */
+    .badge {
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .badge-green { background: #ECFDF5; color: #059669; }
+    .badge-blue { background: #EFF6FF; color: #2563EB; }
+    .badge-purple { background: #F5F3FF; color: #7C3AED; }
+    .badge-amber { background: #FFFBEB; color: #D97706; }
+    .badge-red { background: #FEF2F2; color: #DC2626; }
+    .badge-gray { background: #F1F5F9; color: #475569; }
+
+    /* Action Buttons in tables */
+    .btn-group-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .action-btn {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: white;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s;
+    }
+    .action-btn:hover {
+      background: #F1F5F9;
+      color: var(--accent-blue);
+      border-color: #CBD5E1;
+    }
+    .action-btn.danger:hover {
+      background: #FEF2F2;
+      color: #DC2626;
+      border-color: #FCA5A5;
+    }
+    .action-btn.success:hover {
+      background: #ECFDF5;
+      color: #059669;
+      border-color: #A7F3D0;
+    }
+
+    /* Modal Backdrop */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-backdrop.show { display: flex; }
+    .modal-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 28px;
+      width: 100%;
+      max-width: 540px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border-color);
+    }
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 14px;
+    }
+    .modal-title {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .modal-close-btn:hover { color: var(--text-main); }
+
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border-color);
+      font-size: 13px;
+      font-family: var(--font-body);
+      outline: none;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .modal-foot {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    /* Toast Notification */
+    #adminToast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0F172A;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      z-index: 2000;
+      animation: slideIn 0.25s ease;
+    }
+    @keyframes slideIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Tab views */
+    .tab-view-content { display: none; }
+    .tab-view-content.active { display: flex; flex-direction: column; gap: 24px; }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .charts-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .admin-sidebar { display: none; }
+      .kpi-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==============================================================
+       1. ADMIN LOGIN VIEW
+       ============================================================== -->
+  <section id="adminLoginSection">
+    <div class="login-decor-circle circle-1"></div>
+    <div class="login-decor-circle circle-2"></div>
+
+    <div class="login-card">
+      <div class="login-brand">
+        <div class="login-logo-badge">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div class="login-title">EasyPay Enterprise</div>
+        <div class="login-sub">Secure Orchestration & Control Console</div>
+      </div>
+
+      <!-- Quick 1-Click Demo Login Trigger -->
+      <div class="demo-creds-chip" onclick="fillDemoCreds()" title="Click to auto-fill credentials">
+        <div class="demo-creds-header">
+          <span><i class="fa-solid fa-key"></i> Quick Demo Access</span>
+          <span style="font-size: 10px; background: #DBEAFE; padding: 2px 6px; border-radius: 4px;">Tap to Auto-Fill</span>
+        </div>
+        <div class="demo-creds-text">ID: <strong>admin@easypay.com</strong> • Pass: <strong>EasyPay@Admin2026</strong></div>
+      </div>
+
+      <div class="login-error-msg" id="loginErrorMsg"></div>
+
+      <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+        <div class="login-form-group">
+          <label class="login-form-label">Administrator ID / Email</label>
+          <div class="login-input-wrap">
+            <i class="fa-solid fa-user-shield login-input-icon"></i>
+            <input type="text" id="adminUsernameInput" class="login-input" placeholder="admin@easypay.com" required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="login-form-group">
+          <label class="login-form-label">Security Password</label>
+          <div class="login-input-wrap">
+            <i class="fa-solid fa-lock login-input-icon"></i>
+            <input type="password" id="adminPasswordInput" class="login-input" placeholder="••••••••••••" required autocomplete="current-password">
+            <i class="fa-solid fa-eye login-pass-toggle" id="passToggleIcon" onclick="togglePassVisibility()"></i>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; font-size: 12px; color: var(--text-secondary);">
+          <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+            <input type="checkbox" id="rememberMeCheckbox" checked> Remember Session
+          </label>
+          <span style="color: var(--accent-blue); font-weight: 600; cursor: pointer;" onclick="showToast('Default Super Admin password is EasyPay@Admin2026')">Reset Guide</span>
+        </div>
+
+        <button type="submit" class="btn-login-submit" id="loginSubmitBtn">
+          <span>Authenticate & Access Console</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 24px; font-size: 11px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 6px;">
+        <i class="fa-solid fa-lock"></i> 256-Bit TLS Secured Admin Environment • Port 5000
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       2. MAIN ENTERPRISE ADMIN CONSOLE
+       ============================================================== -->
+  <section id="adminAppSection">
+    
+    <!-- Left Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand-box">
+          <div class="sidebar-logo-icon">
+            <i class="fa-solid fa-layer-group"></i>
+          </div>
+          <div>
+            <div class="sidebar-brand-title">EasyPay Ops</div>
+            <span class="sidebar-brand-badge">ENTERPRISE 3.0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Profile Box -->
+      <div class="sidebar-admin-profile">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Admin" class="admin-avatar" id="sidebarAdminAvatar">
+        <div class="admin-profile-info">
+          <div class="admin-profile-name" id="sidebarAdminName">Super Administrator</div>
+          <div class="admin-profile-role">
+            <span class="role-dot"></span>
+            <span id="sidebarAdminRole">Super Admin (Root)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Menu -->
+      <ul class="sidebar-nav">
+        <div class="nav-group-label">Core Operations</div>
+        <li>
+          <button class="nav-btn active" onclick="switchTab('overview')">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Overview & Metrics</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" onclick="switchTab('plans')">
+            <i class="fa-solid fa-vault"></i>
+            <span>Investment Plans</span>
+            <span class="nav-badge-count" id="badgePlansCount">4</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" onclick="switchTab('investments')">
+            <i class="fa-solid fa-file-contract"></i>
+            <span>Active Investments</span>
+            <span class="nav-badge-count" id="badgeInvestmentsCount">2</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" onclick="switchTab('brands')">
+            <i class="fa-solid fa-gift"></i>
+            <span>Brand Gift Cards</span>
+            <span class="nav-badge-count" id="badgeBrandsCount">32</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" onclick="switchTab('vouchers')">
+            <i class="fa-solid fa-ticket"></i>
+            <span>Issued Vouchers</span>
+            <span class="nav-badge-count" id="badgeVouchersCount">1</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" onclick="switchTab('luckydraw')">
+            <i class="fa-solid fa-gift"></i>
+            <span>Weekly Lucky Draw</span>
+            <span class="nav-badge-count" id="badgeLuckyDrawCount">2</span>
+          </button>
+        </li>
+
+        <div class="nav-group-label">Users & Financials</div>
+        <li>
+          <button class="nav-btn" onclick="switchTab('users')">
+            <i class="fa-solid fa-users"></i>
+            <span>Users & Wallets</span>
+            <span class="nav-badge-count" id="badgeUsersCount">5</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" onclick="switchTab('transactions')">
+            <i class="fa-solid fa-receipt"></i>
+            <span>Transactions Ledger</span>
+          </button>
+        </li>
+
+        <div class="nav-group-label">Administration</div>
+        <li>
+          <button class="nav-btn" onclick="switchTab('settings')">
+            <i class="fa-solid fa-sliders"></i>
+            <span>System Settings</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" onclick="switchTab('reports')">
+            <i class="fa-solid fa-file-excel"></i>
+            <span>Reports & Backup</span>
+          </button>
+        </li>
+      </ul>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div>
+          <div style="color: #94A3B8; font-weight: 700;">Local Rail Online</div>
+          <div style="font-size: 10px;">Port 5000 • EasyPay</div>
+        </div>
+        <button class="btn-logout" onclick="adminLogout()" title="End Admin Session">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <div class="admin-main">
+      
+      <!-- Top Navigation Bar -->
+      <header class="admin-topbar">
+        <div class="topbar-title-box">
+          <h1 id="topbarTitle">Executive Dashboard</h1>
+          <div class="topbar-sub">
+            <span style="color: #10B981; font-weight: 700;"><i class="fa-solid fa-circle" style="font-size: 8px;"></i> DB Synchronized</span>
+            <span>•</span>
+            <span id="topbarTimestamp">Real-Time</span>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="btn-topbar" onclick="refreshAdminData()" title="Reload fresh data from database">
+            <i class="fa-solid fa-arrows-rotate" id="refreshIcon"></i>
+            <span>Sync DB</span>
+          </button>
+
+          <a href="/" target="_blank" class="btn-topbar" title="Open Consumer Super-App in new tab">
+            <i class="fa-solid fa-mobile-screen"></i>
+            <span>User Super-App</span>
+          </a>
+
+          <button class="btn-topbar primary" onclick="openAddPlanModal()">
+            <i class="fa-solid fa-plus"></i>
+            <span>Add Plan</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Views -->
+      <div class="admin-content">
+
+        <!-- ==========================================
+             TAB 1: OVERVIEW & ANALYTICS DASHBOARD
+             ========================================== -->
+        <div id="tabOverview" class="tab-view-content active">
+          
+          <!-- KPI Metrics Row -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-top-row">
+                <span class="kpi-label">Total Platform GMV</span>
+                <div class="kpi-icon-box kpi-icon-blue"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+              </div>
+              <div class="kpi-value" id="kpiTotalGmv">₹13,71,745</div>
+              <div class="kpi-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +24.8% this month</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-top-row">
+                <span class="kpi-label">Platform Margin Profit</span>
+                <div class="kpi-icon-box kpi-icon-green"><i class="fa-solid fa-sack-dollar"></i></div>
+              </div>
+              <div class="kpi-value" id="kpiPlatformMargin">₹64,388</div>
+              <div class="kpi-trend trend-up"><i class="fa-solid fa-shield-check"></i> Net Enterprise Earnings</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-top-row">
+                <span class="kpi-label">Active Users</span>
+                <div class="kpi-icon-box kpi-icon-purple"><i class="fa-solid fa-users"></i></div>
+              </div>
+              <div class="kpi-value" id="kpiTotalUsers">24,890</div>
+              <div class="kpi-trend trend-up"><i class="fa-solid fa-arrow-up-right-dots"></i> 100% KYC Verified</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-top-row">
+                <span class="kpi-label">Vouchers & Recharges</span>
+                <div class="kpi-icon-box kpi-icon-amber"><i class="fa-solid fa-bolt"></i></div>
+              </div>
+              <div class="kpi-value" id="kpiTotalTransactions">14,155</div>
+              <div class="kpi-trend trend-neutral"><i class="fa-solid fa-check-double"></i> Pine Labs & BBPS</div>
+            </div>
+          </div>
+
+          <!-- Charts Row -->
+          <div class="charts-row">
+            <div class="chart-card">
+              <div class="card-head">
+                <div>
+                  <div class="card-title">Platform GMV & Monthly Revenue Growth</div>
+                  <div class="card-subtitle">Aggregated transaction volumes across Bonds, Gift Cards & BBPS</div>
+                </div>
+                <span class="badge badge-blue">FY 2026-27</span>
+              </div>
+              <div style="height: 260px;">
+                <canvas id="gmvChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="card-head">
+                <div>
+                  <div class="card-title">Category Share</div>
+                  <div class="card-subtitle">Volume breakdown by product</div>
+                </div>
+              </div>
+              <div style="height: 260px; display: flex; align-items: center; justify-content: center;">
+                <canvas id="categoryDonutChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity Ledger -->
+          <div class="panel-card">
+            <div class="panel-toolbar">
+              <div>
+                <div class="card-title">Live Transactions & Operations Ledger</div>
+                <div class="card-subtitle">Real-time ledger updates across all consumer actions</div>
+              </div>
+              <button class="action-btn" onclick="switchTab('transactions')">
+                <span>View Complete Ledger</span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Txn ID</th>
+                    <th>Activity Title</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody id="overviewRecentTxnsBody">
+                  <!-- Dynamic rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ==========================================
+             TAB 2: INVESTMENT PLANS MANAGEMENT
+             ========================================== -->
+        <div id="tabPlans" class="tab-view-content">
+          <div class="panel-card">
+            <div class="panel-toolbar">
+              <div>
+                <div class="card-title">Investment Plans & Yield Engine Management</div>
+                <div class="card-subtitle">Configure interest rates (% per month), durations, minimum deposit amounts, and DICGC / SEBI protection</div>
+              </div>
+              <button class="btn-topbar primary" onclick="openAddPlanModal()">
+                <i class="fa-solid fa-plus"></i> Add New Plan
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Plan Name & Institution</th>
+                    <th>Category</th>
+                    <th>Monthly Interest Rate</th>
+                    <th>Min Investment</th>
+                    <th>Starting Lock-in</th>
+                    <th>Daily Payout</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="plansTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 3: ACTIVE USER INVESTMENTS
+             ========================================== -->
+        <div id="tabInvestments" class="tab-view-content">
+          <div class="panel-card">
+            <div class="panel-toolbar">
+              <div>
+                <div class="card-title">Active User Investments & Certificates Ledger</div>
+                <div class="card-subtitle">Track, audit, mature, or issue DICGC-insured investment certificates</div>
+              </div>
+              <button class="btn-topbar success" onclick="openIssueInvestmentModal()">
+                <i class="fa-solid fa-certificate"></i> Issue Manual Certificate
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Certificate ID / Folio</th>
+                    <th>Institution & Plan</th>
+                    <th>Principal</th>
+                    <th>Monthly Yield</th>
+                    <th>Daily Payout</th>
+                    <th>Maturity Amount</th>
+                    <th>Booking / Maturity Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="investmentsTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 4: BRAND GIFT CARDS HUB
+             ========================================== -->
+        <div id="tabBrands" class="tab-view-content">
+          <div class="panel-card">
+            <div class="panel-toolbar">
+              <div>
+                <div class="card-title">Woohoo & Pine Labs Gift Cards Catalog</div>
+                <div class="card-subtitle">Manage 32+ brand gift vouchers, instant cashback rates, denominations, and live status</div>
+              </div>
+              <div style="display: flex; gap: 10px;">
+                <div class="search-box-wrap">
+                  <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                  <input type="text" class="search-input" id="brandSearchInput" placeholder="Filter by brand name..." oninput="filterBrandsTable()">
+                </div>
+                <button class="btn-topbar primary" onclick="openAddBrandModal()">
+                  <i class="fa-solid fa-plus"></i> Add Brand
+                </button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Brand</th>
+                    <th>Category</th>
+                    <th>Instant Cashback Rate</th>
+                    <th>Denominations Supported</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="brandsTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 5: ISSUED VOUCHERS VAULT
+             ========================================== -->
+        <div id="tabVouchers" class="tab-view-content">
+          <div class="panel-card">
+            <div class="panel-toolbar">
+              <div>
+                <div class="card-title">Issued Vouchers Vault Ledger</div>
+                <div class="card-subtitle">Real-time ledger of 16-digit voucher codes and secret PINs purchased by users</div>
+              </div>
+              <button class="btn-topbar primary" onclick="openIssueVoucherModal()">
+                <i class="fa-solid fa-plus"></i> Issue Manual Voucher
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Voucher ID</th>
+                    <th>Brand</th>
+                    <th>Denomination</th>
+                    <th>Voucher Code</th>
+                    <th>PIN</th>
+                    <th>Expiry Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="vouchersTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             TAB: WEEKLY REWARDS & LUCKY DRAW MANAGEMENT
+             ========================================== -->
+        <div id="tabLuckydraw" class="tab-view-content">
+          <div class="panel-card">
+            <div class="panel-toolbar">
+              <div>
+                <div class="card-title">Weekly Rewards & Sunday Lucky Draw Engine</div>
+                <div class="card-subtitle">Manage jackpot pool, entry tiers (₹50, ₹200, ₹300), participant tickets, and conduct weekly Sunday 8:00 PM draws</div>
+              </div>
+              <div style="display: flex; gap: 10px;">
+                <button class="btn-topbar success" onclick="triggerLuckyDrawWinner()" style="background: linear-gradient(135deg, #F59E0B, #D97706); border-color: #F59E0B; color: #451A03; font-weight: 900;">
+                  <i class="fa-solid fa-dice"></i> Conduct Live Draw & Pick Winner
+                </button>
+              </div>
+            </div>
+
+            <!-- Draw Live Metrics -->
+            <div class="kpi-grid" style="margin-bottom: 20px;">
+              <div class="kpi-card" style="border-color: #F59E0B;">
+                <div class="kpi-top-row">
+                  <span class="kpi-label">Draw Schedule</span>
+                  <div class="kpi-icon-box kpi-icon-amber"><i class="fa-solid fa-clock"></i></div>
+                </div>
+                <div class="kpi-value" style="font-size: 18px; color: #D97706;" id="adminLdSchedule">Sunday 8:00 PM</div>
+                <div class="kpi-trend trend-up"><i class="fa-solid fa-calendar-check"></i> Opens Weekly</div>
+              </div>
+
+              <div class="kpi-card">
+                <div class="kpi-top-row">
+                  <span class="kpi-label">Current Enrolled Tickets</span>
+                  <div class="kpi-icon-box kpi-icon-blue"><i class="fa-solid fa-ticket"></i></div>
+                </div>
+                <div class="kpi-value" id="adminLdEnrolledTicketsCount">2</div>
+                <div class="kpi-trend trend-up" id="adminLdTotalChances">6 Total Chances</div>
+              </div>
+
+              <div class="kpi-card">
+                <div class="kpi-top-row">
+                  <span class="kpi-label">Total Jackpot Pool</span>
+                  <div class="kpi-icon-box kpi-icon-green"><i class="fa-solid fa-sack-dollar"></i></div>
+                </div>
+                <div class="kpi-value" id="adminLdPrizePool">₹50,000</div>
+                <div class="kpi-trend trend-up">1st Prize: ₹25,000 Cash</div>
+              </div>
+
+              <div class="kpi-card">
+                <div class="kpi-top-row">
+                  <span class="kpi-label">Draw Status</span>
+                  <div class="kpi-icon-box kpi-icon-purple"><i class="fa-solid fa-bolt"></i></div>
+                </div>
+                <div class="kpi-value" style="font-size: 18px; color: #059669;" id="adminLdStatus">REGISTRATION OPEN</div>
+                <div class="kpi-trend trend-up"><i class="fa-solid fa-circle-check"></i> Active Rail</div>
+              </div>
+            </div>
+
+            <!-- Draw Configuration Form -->
+            <div style="background: #F8FAFC; border: 1.5px solid var(--border-color); border-radius: 14px; padding: 20px; margin-bottom: 24px;">
+              <div style="font-family: var(--font-heading); font-size: 15px; font-weight: 800; margin-bottom: 14px; color: var(--text-main);">
+                <i class="fa-solid fa-sliders" style="color: #2563EB;"></i> Lucky Draw Parameters & Entry Pricing Configuration
+              </div>
+              <form onsubmit="saveLuckyDrawConfig(event)">
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label>Draw Title</label>
+                    <input type="text" id="adminLdTitleInput" value="Weekly Rewards — Sunday Lucky Draw" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Draw Schedule Frequency</label>
+                    <input type="text" id="adminLdScheduleInput" value="Every Sunday at 8:00 PM" required>
+                  </div>
+                </div>
+
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label>Total Prize Pool Amount (₹)</label>
+                    <input type="number" id="adminLdPoolInput" value="50000" step="1000" required>
+                  </div>
+                  <div class="form-group">
+                    <label>1st Jackpot Prize Description</label>
+                    <input type="text" id="adminLdPrize1Input" value="₹25,000 Mega Cash" required>
+                  </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px;">
+                  <div class="form-group">
+                    <label>Silver Entry Price (₹)</label>
+                    <input type="number" id="adminLdTier1Price" value="50" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Gold Entry Price (₹)</label>
+                    <input type="number" id="adminLdTier2Price" value="200" required>
+                  </div>
+                  <div class="form-group">
+                    <label>VIP Diamond Entry Price (₹)</label>
+                    <input type="number" id="adminLdTier3Price" value="300" required>
+                  </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end;">
+                  <button type="submit" class="btn-topbar primary">
+                    <i class="fa-solid fa-floppy-disk"></i> Save Draw Configuration
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Active Enrolled Tickets Table -->
+            <div style="font-family: var(--font-heading); font-size: 15px; font-weight: 800; margin-bottom: 10px;">
+              Enrolled Participant Tickets (Current Active Draw)
+            </div>
+            <div class="table-responsive" style="margin-bottom: 24px;">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Ticket ID</th>
+                    <th>Participant Name</th>
+                    <th>Mobile</th>
+                    <th>Entry Tier</th>
+                    <th>Amount Paid</th>
+                    <th>Winning Chances</th>
+                    <th>Enrolled At</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="adminLdTicketsTableBody">
+                  <!-- Dynamic rows -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Past Draws & Winners History -->
+            <div style="font-family: var(--font-heading); font-size: 15px; font-weight: 800; margin-bottom: 10px;">
+              Past Sunday Draws & Winner Archives
+            </div>
+            <div class="table-responsive">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Draw ID & Date</th>
+                    <th>Winner Name</th>
+                    <th>Winning Ticket</th>
+                    <th>Entry Tier</th>
+                    <th>Prize Won</th>
+                    <th>Participants</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="adminLdPastDrawsTableBody">
+                  <!-- Dynamic rows -->
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 6: USERS & WALLETS MANAGEMENT
+             ========================================== -->
+        <div id="tabUsers" class="tab-view-content">
+          <div class="panel-card">
+            <div class="panel-toolbar">
+              <div>
+                <div class="card-title">User Accounts & Wallet Balances</div>
+                <div class="card-subtitle">Manage customer profiles, security PINs, KYC status, and credit/debit user wallets directly</div>
+              </div>
+              <div style="display: flex; gap: 10px;">
+                <div class="search-box-wrap">
+                  <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                  <input type="text" class="search-input" id="userSearchInput" placeholder="Search user by name, mobile, PayID..." oninput="filterUsersTable()">
+                </div>
+                <button class="btn-topbar primary" onclick="openAddUserModal()">
+                  <i class="fa-solid fa-user-plus"></i> Add User
+                </button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>User ID & Name</th>
+                    <th>Mobile Number</th>
+                    <th>PayID Handle</th>
+                    <th>Wallet Balance</th>
+                    <th>Security PIN</th>
+                    <th>KYC Status</th>
+                    <th>Linked Bank</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 7: TRANSACTIONS & AUDIT LEDGER
+             ========================================== -->
+        <div id="tabTransactions" class="tab-view-content">
+          <div class="panel-card">
+            <div class="panel-toolbar">
+              <div>
+                <div class="card-title">Comprehensive Financial Transactions & Audit Ledger</div>
+                <div class="card-subtitle">Search, filter, and audit every monetary movement across the ecosystem</div>
+              </div>
+              <div style="display: flex; gap: 10px;">
+                <button class="btn-topbar" onclick="exportTransactionsCSV()">
+                  <i class="fa-solid fa-file-csv"></i> Export CSV
+                </button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Txn ID</th>
+                    <th>Timestamp</th>
+                    <th>Title & Description</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="transactionsTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 8: SYSTEM SETTINGS & APP CUSTOMIZATION
+             ========================================== -->
+        <div id="tabSettings" class="tab-view-content">
+          <div class="panel-card">
+            <div class="card-head">
+              <div>
+                <div class="card-title">Platform & Application Orchestration Settings</div>
+                <div class="card-subtitle">Control global app parameters, announcement tickers, maintenance modes, and commission models</div>
+              </div>
+            </div>
+
+            <form id="systemSettingsForm" onsubmit="saveSystemSettings(event)">
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label>Application Name</label>
+                  <input type="text" id="settingAppName" value="EasyPay">
+                </div>
+                <div class="form-group">
+                  <label>Platform Enterprise Title</label>
+                  <input type="text" id="settingPlatformName" value="EasyPay Enterprise Control">
+                </div>
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label>Customer Support Hotline</label>
+                  <input type="text" id="settingSupportPhone" value="+91 1800 200 8899">
+                </div>
+                <div class="form-group">
+                  <label>Support Email Address</label>
+                  <input type="email" id="settingSupportEmail" value="support@easypay.in">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Top Announcement Banner (Displayed in Consumer App)</label>
+                <input type="text" id="settingAnnouncementText" value="Exclusive 12% returns on Suryoday SF Bank FDs — DICGC Insured up to ₹5 Lakhs!">
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label>UPI Handle Domain</label>
+                  <input type="text" id="settingUpiDomain" value="@easypay">
+                </div>
+                <div class="form-group">
+                  <label>Platform Commission Margin (%)</label>
+                  <input type="number" step="0.1" id="settingCommissionRate" value="5.0">
+                </div>
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label>Default Referral Bonus (₹)</label>
+                  <input type="number" id="settingReferralBonus" value="100">
+                </div>
+                <div class="form-group">
+                  <label>System Maintenance Mode</label>
+                  <select id="settingMaintenanceMode">
+                    <option value="false">Disabled (Normal Operations)</option>
+                    <option value="true">Enabled (Consumer App Paused)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="modal-foot" style="margin-top: 10px;">
+                <button type="submit" class="btn-topbar primary">
+                  <i class="fa-solid fa-floppy-disk"></i> Save & Apply Configuration
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 9: REPORTS & BACKUP
+             ========================================== -->
+        <div id="tabReports" class="tab-view-content">
+          <div class="panel-card">
+            <div class="card-head">
+              <div>
+                <div class="card-title">Enterprise Reporting & Database Backups</div>
+                <div class="card-subtitle">Export full system snapshots, audit files, or restore platform state</div>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+              <div style="border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                <div style="width: 50px; height: 50px; border-radius: 14px; background: #EFF6FF; color: #2563EB; display: flex; align-items: center; justify-content: center; font-size: 22px;">
+                  <i class="fa-solid fa-database"></i>
+                </div>
+                <div style="font-family: var(--font-heading); font-size: 15px; font-weight: 800;">Full System JSON Snapshot</div>
+                <div style="font-size: 12px; color: var(--text-muted);">Complete database export containing users, cards, bonds, transactions, and settings.</div>
+                <a href="/api/admin/export-data" target="_blank" class="btn-topbar primary" style="width: 100%; justify-content: center; margin-top: auto;">
+                  <i class="fa-solid fa-download"></i> Download Backup JSON
+                </a>
+              </div>
+
+              <div style="border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                <div style="width: 50px; height: 50px; border-radius: 14px; background: #ECFDF5; color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 22px;">
+                  <i class="fa-solid fa-file-csv"></i>
+                </div>
+                <div style="font-family: var(--font-heading); font-size: 15px; font-weight: 800;">Transactions CSV Report</div>
+                <div style="font-size: 12px; color: var(--text-muted);">Formatted spreadsheet report for accounting and reconciliation.</div>
+                <button class="btn-topbar success" style="width: 100%; justify-content: center; margin-top: auto;" onclick="exportTransactionsCSV()">
+                  <i class="fa-solid fa-file-export"></i> Export CSV
+                </button>
+              </div>
+
+              <div style="border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                <div style="width: 50px; height: 50px; border-radius: 14px; background: #F5F3FF; color: #8B5CF6; display: flex; align-items: center; justify-content: center; font-size: 22px;">
+                  <i class="fa-solid fa-file-invoice-dollar"></i>
+                </div>
+                <div style="font-family: var(--font-heading); font-size: 15px; font-weight: 800;">Bonds Portfolio Report</div>
+                <div style="font-size: 12px; color: var(--text-muted);">Full audit of active customer certificates and upcoming maturity payout dates.</div>
+                <button class="btn-topbar" style="width: 100%; justify-content: center; margin-top: auto;" onclick="exportBondsCSV()">
+                  <i class="fa-solid fa-download"></i> Export Bonds Ledger
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       MODALS FOR COMPLETE END-TO-END CUSTOMIZATION
+       ============================================================== -->
+
+  <!-- 1. Add / Edit Plan Modal -->
+  <div class="modal-backdrop" id="modalPlan">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title" id="modalPlanTitle">Add Investment Plan</div>
+        <button class="modal-close-btn" onclick="closeModal('modalPlan')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitPlanForm(event)">
+        <input type="hidden" id="planEditId">
+        <div class="form-group">
+          <label>Plan Name & Institution</label>
+          <input type="text" id="planTitleInput" placeholder="e.g. Suryoday SF Bank 9.5% Plan" required>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Category</label>
+            <select id="planCategorySelect">
+              <option value="Fixed Deposit">Fixed Deposit (SFB)</option>
+              <option value="Bonds">Senior Secured Corporate Bonds</option>
+              <option value="Recurring Deposit">Recurring Deposit (RD)</option>
+              <option value="FD card">FD Card</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Monthly Interest Rate (% per month)</label>
+            <input type="number" step="0.05" id="planMonthlyRateInput" value="8.60" required>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Minimum Investment (₹)</label>
+            <input type="number" step="100" id="planMinAmountInput" value="1000" required>
+          </div>
+          <div class="form-group">
+            <label>Starting Duration (Months)</label>
+            <select id="planDurationSelect">
+              <option value="6">6 Months</option>
+              <option value="12">12 Months (1 Year)</option>
+              <option value="24">24 Months (2 Years)</option>
+              <option value="36">36 Months (3 Years)</option>
+              <option value="60">60 Months (5 Years)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Badge / Highlight Tag</label>
+          <input type="text" id="planBadgeInput" value="RATE INCREASED" placeholder="e.g. RATE INCREASED, SENIOR SECURED">
+        </div>
+        <div class="form-group">
+          <label>Lock-in & Daily Payout Notice</label>
+          <input type="text" id="planNoticeInput" value="Starts from 6 months with daily interest credited to wallet">
+        </div>
+        <div class="modal-foot">
+          <button type="button" class="btn-topbar" onclick="closeModal('modalPlan')">Cancel</button>
+          <button type="submit" class="btn-topbar primary">Save & Publish Plan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Add / Edit Brand Modal -->
+  <div class="modal-backdrop" id="modalBrand">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title" id="modalBrandTitle">Add Brand Gift Card</div>
+        <button class="modal-close-btn" onclick="closeModal('modalBrand')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitBrandForm(event)">
+        <input type="hidden" id="brandEditId">
+        <div class="form-group">
+          <label>Brand Name</label>
+          <input type="text" id="brandNameInput" placeholder="e.g. Starbucks" required>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Category</label>
+            <select id="brandCategorySelect">
+              <option value="Food & Dining">Food & Dining</option>
+              <option value="E-Commerce">E-Commerce</option>
+              <option value="Fashion">Fashion</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Travel">Travel</option>
+              <option value="Gaming">Gaming</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Instant Cashback Rate (%)</label>
+            <input type="number" step="0.1" id="brandCashbackInput" value="5.0" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Brand Logo Image URL</label>
+          <input type="url" id="brandLogoInput" placeholder="https://example.com/logo.png">
+        </div>
+        <div class="form-group">
+          <label>Supported Denominations (comma-separated)</label>
+          <input type="text" id="brandDenominationsInput" value="100, 250, 500, 1000, 2000, 5000">
+        </div>
+        <div class="modal-foot">
+          <button type="button" class="btn-topbar" onclick="closeModal('modalBrand')">Cancel</button>
+          <button type="submit" class="btn-topbar primary">Save Brand</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Adjust User Wallet Modal -->
+  <div class="modal-backdrop" id="modalWalletAdjust">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title">Adjust User Wallet Balance</div>
+        <button class="modal-close-btn" onclick="closeModal('modalWalletAdjust')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitWalletAdjustment(event)">
+        <input type="hidden" id="adjustUserId">
+        <div style="background: #F1F5F9; border-radius: 12px; padding: 14px; margin-bottom: 16px;">
+          <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">SELECTED USER</div>
+          <div style="font-size: 15px; font-weight: 800;" id="adjustUserName">User</div>
+          <div style="font-size: 13px; color: var(--accent-emerald-dark); font-weight: 700;" id="adjustCurrentBalance">Current Balance: ₹0.00</div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Operation Type</label>
+            <select id="adjustTypeSelect">
+              <option value="CREDIT">Credit Money (+)</option>
+              <option value="DEBIT">Debit Money (-)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Adjustment Amount (₹)</label>
+            <input type="number" step="1" id="adjustAmountInput" placeholder="500" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Reason / Audit Note</label>
+          <input type="text" id="adjustNoteInput" placeholder="e.g. Promotional Cashback Credit, Support Refund">
+        </div>
+
+        <div class="modal-foot">
+          <button type="button" class="btn-topbar" onclick="closeModal('modalWalletAdjust')">Cancel</button>
+          <button type="submit" class="btn-topbar primary">Execute Adjustment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Add User Modal -->
+  <div class="modal-backdrop" id="modalUser">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title" id="modalUserTitle">Add New Customer Account</div>
+        <button class="modal-close-btn" onclick="closeModal('modalUser')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitUserForm(event)">
+        <input type="hidden" id="userEditId">
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" id="userFirstNameInput" placeholder="Rahul" required>
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" id="userLastNameInput" placeholder="Sharma" required>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Mobile Number (+91)</label>
+            <input type="tel" id="userMobileInput" placeholder="9876543210" required>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="userEmailInput" placeholder="user@gmail.com" required>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Initial Wallet Balance (₹)</label>
+            <input type="number" id="userBalanceInput" value="500">
+          </div>
+          <div class="form-group">
+            <label>4-Digit Security PIN</label>
+            <input type="text" maxlength="4" id="userPinInput" value="1234" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Linked Bank Name</label>
+          <input type="text" id="userBankInput" value="STATE BANK OF INDIA">
+        </div>
+        <div class="modal-foot">
+          <button type="button" class="btn-topbar" onclick="closeModal('modalUser')">Cancel</button>
+          <button type="submit" class="btn-topbar primary">Save Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. Issue Manual Voucher Modal -->
+  <div class="modal-backdrop" id="modalVoucher">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title">Issue Digital Gift Voucher</div>
+        <button class="modal-close-btn" onclick="closeModal('modalVoucher')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitIssueVoucher(event)">
+        <div class="form-group">
+          <label>Select Brand</label>
+          <select id="voucherBrandSelect"></select>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Denomination Amount (₹)</label>
+            <input type="number" id="voucherAmountInput" value="500" required>
+          </div>
+          <div class="form-group">
+            <label>Validity (Months)</label>
+            <select id="voucherExpirySelect">
+              <option value="6">6 Months</option>
+              <option value="12" selected>12 Months (1 Year)</option>
+              <option value="24">24 Months (2 Years)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Recipient Mobile Number</label>
+          <input type="tel" id="voucherMobileInput" placeholder="9876548808">
+        </div>
+        <div class="modal-foot">
+          <button type="button" class="btn-topbar" onclick="closeModal('modalVoucher')">Cancel</button>
+          <button type="submit" class="btn-topbar primary">Generate & Issue Voucher</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. Issue Investment Certificate Modal -->
+  <div class="modal-backdrop" id="modalIssueInvestment">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title">Issue Investment Certificate</div>
+        <button class="modal-close-btn" onclick="closeModal('modalIssueInvestment')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitIssueInvestment(event)">
+        <div class="form-group">
+          <label>Select Investment Plan</label>
+          <select id="issueInvPlanSelect"></select>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Principal Amount (₹)</label>
+            <input type="number" id="issueInvPrincipalInput" value="10000" step="500" required>
+          </div>
+          <div class="form-group">
+            <label>Monthly Interest Rate (%)</label>
+            <input type="number" step="0.1" id="issueInvRateInput" value="8.6" required>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Tenure (Months)</label>
+            <select id="issueInvTenureSelect">
+              <option value="6">6 Months</option>
+              <option value="12">12 Months (1 Year)</option>
+              <option value="24">24 Months (2 Years)</option>
+              <option value="36">36 Months (3 Years)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Recipient Mobile</label>
+            <input type="tel" id="issueInvMobileInput" placeholder="9876548808">
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button type="button" class="btn-topbar" onclick="closeModal('modalIssueInvestment')">Cancel</button>
+          <button type="submit" class="btn-topbar primary">Issue Certificate</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 7. Digital Certificate Preview Modal -->
+  <div class="modal-backdrop" id="modalCertPreview">
+    <div class="modal-card" style="max-width: 620px;">
+      <div class="modal-head">
+        <div class="modal-title">DICGC Insured Bond Certificate</div>
+        <button class="modal-close-btn" onclick="closeModal('modalCertPreview')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="certPreviewBody" style="background: #F8FAFC; border: 2px dashed #CBD5E1; border-radius: 16px; padding: 24px; color: #0F172A;">
+        <!-- Populated dynamically -->
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-topbar" onclick="closeModal('modalCertPreview')">Close</button>
+        <button type="button" class="btn-topbar primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Certificate</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="adminToast">
+    <i class="fa-solid fa-circle-check" style="color: #10B981;"></i>
+    <span id="toastMessage">Action completed successfully</span>
+  </div>
+
+  <!-- ==============================================================
+       CLIENT-SIDE JAVASCRIPT LOGIC
+       ============================================================== -->
+  <script>
+    let adminToken = localStorage.getItem('adminToken') || '';
+    let adminData = {};
+    let gmvChartInstance = null;
+    let donutChartInstance = null;
+
+    // Toast Notification Utility
+    function showToast(msg) {
+      const toast = document.getElementById('adminToast');
+      const text = document.getElementById('toastMessage');
+      if (text) text.innerText = msg;
+      toast.style.display = 'flex';
+      setTimeout(() => { toast.style.display = 'none'; }, 3500);
+    }
+
+    // Modal Control
+    function openModal(id) {
+      document.getElementById(id).classList.add('show');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('show');
+    }
+
+    // Password visibility toggle
+    function togglePassVisibility() {
+      const inp = document.getElementById('adminPasswordInput');
+      const icon = document.getElementById('passToggleIcon');
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        inp.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    // 1-Click Demo Credential Autofill
+    function fillDemoCreds() {
+      document.getElementById('adminUsernameInput').value = 'admin@easypay.com';
+      document.getElementById('adminPasswordInput').value = 'EasyPay@Admin2026';
+      showToast('✅ Demo Credentials Filled! Click Authenticate.');
+    }
+
+    // Handle Login
+    async function handleAdminLogin(e) {
+      if (e) e.preventDefault();
+      const username = document.getElementById('adminUsernameInput').value.trim();
+      const password = document.getElementById('adminPasswordInput').value;
+      const errorMsg = document.getElementById('loginErrorMsg');
+      const btn = document.getElementById('loginSubmitBtn');
+
+      errorMsg.style.display = 'none';
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Authenticating...';
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+
+        if (data.success && data.token) {
+          adminToken = data.token;
+          if (document.getElementById('rememberMeCheckbox').checked) {
+            localStorage.setItem('adminToken', adminToken);
+          }
+          showAdminConsole(data.admin);
+          showToast('Welcome, ' + (data.admin?.name || 'Administrator'));
+        } else {
+          errorMsg.innerText = data.error || 'Authentication failed. Invalid username or password.';
+          errorMsg.style.display = 'block';
+        }
+      } catch (err) {
+        errorMsg.innerText = 'Server connection error. Ensure server is online.';
+        errorMsg.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Authenticate & Access Console</span> <i class="fa-solid fa-arrow-right"></i>';
+      }
+    }
+
+    // Show Main Console
+    function showAdminConsole(adminInfo) {
+      document.getElementById('adminLoginSection').style.display = 'none';
+      document.getElementById('adminAppSection').style.display = 'flex';
+      
+      if (adminInfo) {
+        if (adminInfo.name) document.getElementById('sidebarAdminName').innerText = adminInfo.name;
+        if (adminInfo.role) document.getElementById('sidebarAdminRole').innerText = adminInfo.role;
+        if (adminInfo.avatar) document.getElementById('sidebarAdminAvatar').src = adminInfo.avatar;
+      }
+
+      refreshAdminData();
+    }
+
+    // Admin Logout
+    async function adminLogout() {
+      if (confirm('Are you sure you want to end your administrator session?')) {
+        try {
+          await fetch('/api/admin/logout', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + adminToken }
+          });
+        } catch (e) {}
+        localStorage.removeItem('adminToken');
+        adminToken = '';
+        document.getElementById('adminAppSection').style.display = 'none';
+        document.getElementById('adminLoginSection').style.display = 'flex';
+        showToast('Logged out successfully');
+      }
+    }
+
+    // Tab Switching
+    function switchTab(tabId) {
+      // Update sidebar nav buttons
+      document.querySelectorAll('.admin-sidebar .nav-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('.admin-sidebar .nav-btn')).find(b => b.getAttribute('onclick')?.includes(tabId));
+      if (activeBtn) activeBtn.classList.add('active');
+
+      // Update content views
+      document.querySelectorAll('.tab-view-content').forEach(c => c.classList.remove('active'));
+      const targetView = document.getElementById('tab' + tabId.charAt(0).toUpperCase() + tabId.slice(1));
+      if (targetView) targetView.classList.add('active');
+
+      // Update topbar breadcrumbs
+      const titles = {
+        'overview': 'Executive Dashboard & Analytics',
+        'plans': 'Investment Plans & Yield Engine',
+        'investments': 'Active User Investments & Certificates',
+        'brands': 'Brand Gift Cards Catalog (Woohoo)',
+        'vouchers': 'Issued Digital Vouchers Vault',
+        'luckydraw': 'Weekly Rewards & Sunday Lucky Draw Engine',
+        'users': 'Customer Accounts & Wallet Balances',
+        'transactions': 'Financial Transactions Ledger',
+        'settings': 'System Settings & App Customization',
+        'reports': 'Enterprise Reports & Database Backup'
+      };
+      document.getElementById('topbarTitle').innerText = titles[tabId] || 'Admin Console';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Fetch Full Platform Data
+    async function refreshAdminData() {
+      const refreshIcon = document.getElementById('refreshIcon');
+      if (refreshIcon) refreshIcon.classList.add('fa-spin');
+
+      try {
+        const res = await fetch('/api/data');
+        if (res.ok) {
+          adminData = await res.json();
+          renderEverything();
+          document.getElementById('topbarTimestamp').innerText = 'Synced at ' + new Date().toLocaleTimeString();
+        }
+      } catch (e) {
+        console.error('Failed to load admin data:', e);
+      } finally {
+        if (refreshIcon) setTimeout(() => refreshIcon.classList.remove('fa-spin'), 600);
+      }
+    }
+
+    // Render All Components
+    function renderEverything() {
+      renderBadges();
+      renderKPIs();
+      renderCharts();
+      renderOverviewRecentTxns();
+      renderPlansTable();
+      renderInvestmentsTable();
+      renderBrandsTable();
+      renderVouchersTable();
+      renderUsersTable();
+      renderTransactionsTable();
+      renderSettingsForm();
+      renderLuckyDrawAdmin();
+    }
+
+    // Render Badge Counts
+    function renderBadges() {
+      document.getElementById('badgePlansCount').innerText = (adminData.bonds || []).length;
+      document.getElementById('badgeInvestmentsCount').innerText = (adminData.investments || []).length;
+      document.getElementById('badgeBrandsCount').innerText = (adminData.giftCards || []).length;
+      document.getElementById('badgeVouchersCount').innerText = (adminData.vouchers || []).length;
+      if (document.getElementById('badgeLuckyDrawCount')) document.getElementById('badgeLuckyDrawCount').innerText = (adminData.luckyDraw?.tickets || []).length;
+      document.getElementById('badgeUsersCount').innerText = (adminData.users || []).length;
+    }
+
+    // Render KPIs
+    function renderKPIs() {
+      const a = adminData.analytics || {};
+      document.getElementById('kpiTotalGmv').innerText = '₹' + (a.totalGmv || 1371745).toLocaleString('en-IN');
+      document.getElementById('kpiPlatformMargin').innerText = '₹' + Math.round(a.platformCommissionEarned || 64388).toLocaleString('en-IN');
+      document.getElementById('kpiTotalUsers').innerText = (a.totalUsers || 24890).toLocaleString('en-IN');
+      document.getElementById('kpiTotalTransactions').innerText = ((a.giftCardsSold || 0) + (a.rechargesDone || 0) + 12).toLocaleString('en-IN');
+    }
+
+    // Render Charts
+    function renderCharts() {
+      // 1. GMV Line Chart
+      const gmvCtx = document.getElementById('gmvChart');
+      if (gmvCtx) {
+        if (gmvChartInstance) gmvChartInstance.destroy();
+        gmvChartInstance = new Chart(gmvCtx, {
+          type: 'line',
+          data: {
+            labels: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov (Live)'],
+            datasets: [{
+              label: 'Platform GMV (₹)',
+              data: [580000, 720000, 890000, 1050000, 1284500, adminData.analytics?.totalGmv || 1371745],
+              borderColor: '#2563EB',
+              backgroundColor: 'rgba(37, 99, 235, 0.08)',
+              borderWidth: 2.5,
+              tension: 0.35,
+              fill: true,
+              pointBackgroundColor: '#2563EB',
+              pointRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: {
+                beginAtZero: false,
+                ticks: { callback: v => '₹' + (v / 1000) + 'k' }
+              }
+            }
+          }
+        });
+      }
+
+      // 2. Category Share Donut
+      const donutCtx = document.getElementById('categoryDonutChart');
+      if (donutCtx) {
+        if (donutChartInstance) donutChartInstance.destroy();
+        donutChartInstance = new Chart(donutCtx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Bonds & FDs', 'Gift Cards', 'BBPS Utilities', 'P2P UPI'],
+            datasets: [{
+              data: [45, 30, 18, 7],
+              backgroundColor: ['#2563EB', '#10B981', '#F59E0B', '#8B5CF6'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+            },
+            cutout: '72%'
+          }
+        });
+      }
+    }
+
+    // Render Recent Txns in Overview
+    function renderOverviewRecentTxns() {
+      const tbody = document.getElementById('overviewRecentTxnsBody');
+      if (!tbody) return;
+      const txns = (adminData.transactions || []).slice(0, 5);
+      tbody.innerHTML = txns.map(t => `
+        <tr>
+          <td><code>${t.id}</code></td>
+          <td><strong>${t.title}</strong></td>
+          <td><span class="badge badge-gray">${t.category || 'Payment'}</span></td>
+          <td style="font-weight: 800; color: ${t.type?.includes('CREDIT') || t.type === 'WALLET_ADD' ? '#059669' : '#0F172A'};">
+            ${t.type?.includes('CREDIT') || t.type === 'WALLET_ADD' ? '+' : '-'}₹${t.amount?.toLocaleString('en-IN')}
+          </td>
+          <td><span class="badge badge-green"><i class="fa-solid fa-check"></i> ${t.status || 'SUCCESS'}</span></td>
+          <td style="color: #64748B; font-size: 12px;">${t.timestamp || 'Recent'}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Render Plans Table
+    function renderPlansTable() {
+      const tbody = document.getElementById('plansTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = (adminData.bonds || []).map(p => `
+        <tr>
+          <td>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 32px; height: 32px; border-radius: 8px; background: ${p.color || '#059669'}; color: white; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+                <i class="fa-solid ${p.icon || 'fa-vault'}"></i>
+              </div>
+              <div>
+                <strong>${p.title}</strong>
+                <div style="font-size: 11px; color: #64748B;">ID: ${p.id} • ${p.badge || 'ACTIVE'}</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="badge badge-blue">${p.category || 'Fixed Deposit'}</span></td>
+          <td>
+            <span style="color: #059669; font-weight: 800; font-size: 14px;">${p.monthlyRate || p.newRate || 8.6}% / month</span>
+          </td>
+          <td><strong>₹${(p.minAmount || 1000).toLocaleString('en-IN')}</strong></td>
+          <td><span class="badge badge-purple">${p.tenure || '6 Months'}</span></td>
+          <td>
+            <span class="badge badge-green"><i class="fa-solid fa-circle-check"></i> Wallet Daily</span>
+          </td>
+          <td>
+            <span class="badge ${p.active !== false ? 'badge-green' : 'badge-red'}">
+              ${p.active !== false ? 'Live' : 'Disabled'}
+            </span>
+          </td>
+          <td>
+            <div class="btn-group-actions">
+              <button class="action-btn" onclick="openEditPlanModal('${p.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
+              <button class="action-btn" onclick="togglePlanStatus('${p.id}')">${p.active !== false ? 'Disable' : 'Enable'}</button>
+              <button class="action-btn danger" onclick="deletePlan('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Render Active Investments Table
+    function renderInvestmentsTable() {
+      const tbody = document.getElementById('investmentsTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = (adminData.investments || []).map(inv => `
+        <tr>
+          <td>
+            <div><strong>${inv.certNumber || inv.id}</strong></div>
+            <div style="font-size: 11px; color: #64748B;">Folio: ${inv.folioNumber || 'EP-FD'}</div>
+          </td>
+          <td><strong>${inv.institution || 'Suryoday SF Bank'}</strong></td>
+          <td style="font-weight: 800;">₹${(inv.principal || 1000).toLocaleString('en-IN')}</td>
+          <td style="color: #059669; font-weight: 700;">${inv.monthlyRate || 8.6}% (₹${inv.monthlyInterest || 86})</td>
+          <td style="font-weight: 700;">₹${inv.dailyPayout || 2.87}/day</td>
+          <td style="color: #2563EB; font-weight: 800;">₹${(inv.maturityAmount || 1516).toLocaleString('en-IN')}</td>
+          <td>
+            <div style="font-size: 12px;">Booked: ${inv.bookingDate || '11 Nov 2026'}</div>
+            <div style="font-size: 11px; color: #64748B;">Matures: ${inv.maturityDate || '11 May 2027'}</div>
+          </td>
+          <td><span class="badge badge-green">${inv.status || 'ACTIVE'}</span></td>
+          <td>
+            <div class="btn-group-actions">
+              <button class="action-btn" onclick="previewCertificate('${inv.id}')"><i class="fa-solid fa-eye"></i> View</button>
+              <button class="action-btn success" onclick="updateInvStatus('${inv.id}', 'MATURED')">Mature</button>
+              <button class="action-btn danger" onclick="deleteInvestment('${inv.id}')"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Render Brands Table
+    function renderBrandsTable() {
+      const tbody = document.getElementById('brandsTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = (adminData.giftCards || []).map(c => `
+        <tr>
+          <td>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <img src="${c.logo || '/assets/bachatpay/home/app_icon.png'}" style="width: 28px; height: 28px; object-fit: contain;" onerror="this.src='/assets/bachatpay/home/app_icon.png'">
+              <div>
+                <strong>${c.name}</strong>
+                <div style="font-size: 10px; color: #64748B;">ID: ${c.id}</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="badge badge-gray">${c.category || 'Voucher'}</span></td>
+          <td><span style="color: #059669; font-weight: 800; font-size: 14px;">${c.cashbackRate || 5}% Instant</span></td>
+          <td><span style="font-size: 11px; color: #475569;">₹${(c.denominations || [250,500,1000]).join(', ₹')}</span></td>
+          <td>
+            <span class="badge ${c.active !== false ? 'badge-green' : 'badge-red'}">
+              ${c.active !== false ? 'Active' : 'Disabled'}
+            </span>
+          </td>
+          <td>
+            <div class="btn-group-actions">
+              <button class="action-btn" onclick="openEditBrandModal('${c.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
+              <button class="action-btn" onclick="toggleBrandStatus('${c.id}')">${c.active !== false ? 'Disable' : 'Enable'}</button>
+              <button class="action-btn danger" onclick="deleteBrand('${c.id}')"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Render Vouchers Table
+    function renderVouchersTable() {
+      const tbody = document.getElementById('vouchersTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = (adminData.vouchers || []).map(v => `
+        <tr>
+          <td><code>${v.id}</code></td>
+          <td><strong>${v.brand}</strong></td>
+          <td style="font-weight: 800;">₹${v.amount}</td>
+          <td>
+            <code style="color: #2563EB; font-weight: 700; letter-spacing: 1px;">${v.voucherCode}</code>
+            <button class="action-btn" style="padding: 2px 6px; margin-left: 4px;" onclick="copyToClipboard('${v.voucherCode}')" title="Copy Code"><i class="fa-solid fa-copy"></i></button>
+          </td>
+          <td>
+            <code style="letter-spacing: 2px;">${v.pin}</code>
+            <button class="action-btn" style="padding: 2px 6px; margin-left: 4px;" onclick="copyToClipboard('${v.pin}')" title="Copy PIN"><i class="fa-solid fa-copy"></i></button>
+          </td>
+          <td>${v.expiryDate || '1 Year'}</td>
+          <td><span class="badge badge-green">${v.status || 'ACTIVE'}</span></td>
+          <td>
+            <div class="btn-group-actions">
+              <button class="action-btn" onclick="updateVoucherStatus('${v.id}', 'REDEEMED')">Mark Redeemed</button>
+              <button class="action-btn danger" onclick="deleteVoucher('${v.id}')"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Render Users Table
+    function renderUsersTable() {
+      const tbody = document.getElementById('usersTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = (adminData.users || []).map(u => `
+        <tr>
+          <td>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 32px; height: 32px; border-radius: 50%; background: #2563EB; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px;">
+                ${(u.firstName || 'U')[0]}
+              </div>
+              <div>
+                <strong>${u.name || (u.firstName + ' ' + (u.lastName || ''))}</strong>
+                <div style="font-size: 11px; color: #64748B;">ID: ${u.id} • ${u.email}</div>
+              </div>
+            </div>
+          </td>
+          <td><strong>+91 ${u.mobile}</strong></td>
+          <td><code>${u.payId || (u.mobile + '@easypay')}</code></td>
+          <td>
+            <span style="font-weight: 800; font-size: 15px; color: #059669;">₹${(u.walletBalance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+          </td>
+          <td><code>${u.securityPin || '1234'}</code></td>
+          <td><span class="badge badge-green"><i class="fa-solid fa-check"></i> ${u.kycStatus || 'VERIFIED'}</span></td>
+          <td><div style="font-size: 12px;">${u.bankName || 'BANK OF INDIA'}</div></td>
+          <td>
+            <div class="btn-group-actions">
+              <button class="action-btn success" onclick="openWalletAdjustModal('${u.id}', '${u.name || u.firstName}', ${u.walletBalance || 0})">
+                <i class="fa-solid fa-wallet"></i> +/- Wallet
+              </button>
+              <button class="action-btn" onclick="openEditUserModal('${u.id}')"><i class="fa-solid fa-pen"></i></button>
+              <button class="action-btn danger" onclick="deleteUser('${u.id}')"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Render Transactions Table
+    function renderTransactionsTable() {
+      const tbody = document.getElementById('transactionsTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = (adminData.transactions || []).map(t => `
+        <tr>
+          <td><code>${t.id}</code></td>
+          <td style="font-size: 12px; color: #64748B;">${t.timestamp || 'Recently'}</td>
+          <td><strong>${t.title}</strong></td>
+          <td><span class="badge badge-gray">${t.category || 'Payment'}</span></td>
+          <td style="font-weight: 800; color: ${t.type?.includes('CREDIT') || t.type === 'WALLET_ADD' ? '#059669' : '#0F172A'};">
+            ${t.type?.includes('CREDIT') || t.type === 'WALLET_ADD' ? '+' : '-'}₹${t.amount?.toLocaleString('en-IN')}
+          </td>
+          <td><span class="badge badge-blue">${t.type || 'TXN'}</span></td>
+          <td><span class="badge badge-green">${t.status || 'SUCCESS'}</span></td>
+          <td>
+            <button class="action-btn danger" onclick="deleteTransaction('${t.id}')"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Render Settings Form
+    function renderSettingsForm() {
+      const s = adminData.systemSettings || {};
+      if (document.getElementById('settingAppName')) document.getElementById('settingAppName').value = s.appName || 'EasyPay';
+      if (document.getElementById('settingPlatformName')) document.getElementById('settingPlatformName').value = s.platformName || 'EasyPay Enterprise Control';
+      if (document.getElementById('settingSupportPhone')) document.getElementById('settingSupportPhone').value = s.supportPhone || '+91 1800 200 8899';
+      if (document.getElementById('settingSupportEmail')) document.getElementById('settingSupportEmail').value = s.supportEmail || 'support@easypay.in';
+      if (document.getElementById('settingAnnouncementText')) document.getElementById('settingAnnouncementText').value = s.announcementText || '';
+      if (document.getElementById('settingUpiDomain')) document.getElementById('settingUpiDomain').value = s.upiDomain || '@easypay';
+      if (document.getElementById('settingCommissionRate')) document.getElementById('settingCommissionRate').value = s.platformCommissionRate || 5.0;
+      if (document.getElementById('settingReferralBonus')) document.getElementById('settingReferralBonus').value = s.referralBonus || 100;
+      if (document.getElementById('settingMaintenanceMode')) document.getElementById('settingMaintenanceMode').value = String(!!s.maintenanceMode);
+    }
+
+    // ==============================================================
+    // ACTION HANDLERS & API CALLS
+    // ==============================================================
+
+        // ==============================================================
+    // WEEKLY LUCKY DRAW ADMIN HANDLERS
+    // ==============================================================
+    function renderLuckyDrawAdmin() {
+      const ld = adminData.luckyDraw;
+      if (!ld) return;
+
+      const sched = document.getElementById('adminLdSchedule');
+      if (sched) sched.innerText = ld.schedule || 'Sunday 8:00 PM';
+      const ticketsCount = document.getElementById('adminLdEnrolledTicketsCount');
+      if (ticketsCount) ticketsCount.innerText = (ld.tickets || []).length;
+      
+      const totalChances = (ld.tickets || []).reduce((acc, t) => acc + (t.chances || 1), 0);
+      const chancesEl = document.getElementById('adminLdTotalChances');
+      if (chancesEl) chancesEl.innerText = totalChances + ' Total Chances';
+
+      const poolEl = document.getElementById('adminLdPrizePool');
+      if (poolEl) poolEl.innerText = '₹' + (ld.prizePool || 50000).toLocaleString('en-IN');
+      const statusEl = document.getElementById('adminLdStatus');
+      if (statusEl) statusEl.innerText = ld.status || 'REGISTRATION OPEN';
+
+      // Inputs
+      if (document.getElementById('adminLdTitleInput')) document.getElementById('adminLdTitleInput').value = ld.title || '';
+      if (document.getElementById('adminLdScheduleInput')) document.getElementById('adminLdScheduleInput').value = ld.schedule || 'Every Sunday at 8:00 PM';
+      if (document.getElementById('adminLdPoolInput')) document.getElementById('adminLdPoolInput').value = ld.prizePool || 50000;
+      if (document.getElementById('adminLdPrize1Input')) document.getElementById('adminLdPrize1Input').value = ld.firstPrize || '₹25,000 Mega Cash';
+
+      // Tiers
+      if (ld.entryTiers && ld.entryTiers.length >= 3) {
+        if (document.getElementById('adminLdTier1Price')) document.getElementById('adminLdTier1Price').value = ld.entryTiers[0].amount;
+        if (document.getElementById('adminLdTier2Price')) document.getElementById('adminLdTier2Price').value = ld.entryTiers[1].amount;
+        if (document.getElementById('adminLdTier3Price')) document.getElementById('adminLdTier3Price').value = ld.entryTiers[2].amount;
+      }
+
+      // Render Active Tickets Table
+      const ticketsBody = document.getElementById('adminLdTicketsTableBody');
+      if (ticketsBody) {
+        const tkts = ld.tickets || [];
+        if (tkts.length === 0) {
+          ticketsBody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #94A3B8; padding: 20px;">No tickets enrolled in the current draw yet.</td></tr>';
+        } else {
+          ticketsBody.innerHTML = tkts.map(t => `
+            <tr>
+              <td><code style="color: #2563EB; font-weight: 700;">#${t.ticketId}</code></td>
+              <td><strong>${t.userName || 'Participant'}</strong></td>
+              <td>+91 ${t.userMobile || '9876548808'}</td>
+              <td><span class="badge badge-amber">${t.tierName || 'Entry'}</span></td>
+              <td style="font-weight: 800;">₹${t.amount || 50}</td>
+              <td><span class="badge badge-blue">${t.chances || 1}x Chances</span></td>
+              <td style="font-size: 12px; color: #64748B;">${new Date(t.bookedAt || Date.now()).toLocaleTimeString()}</td>
+              <td><span class="badge badge-green">ENROLLED</span></td>
+            </tr>
+          `).join('');
+        }
+      }
+
+      // Render Past Draws Table
+      const pastBody = document.getElementById('adminLdPastDrawsTableBody');
+      if (pastBody) {
+        const past = ld.pastDraws || [];
+        pastBody.innerHTML = past.map(p => `
+          <tr>
+            <td>
+              <div><strong>${p.drawId || 'DRAW'}</strong></div>
+              <div style="font-size: 11px; color: #64748B;">${p.date || 'Sunday 8:00 PM'}</div>
+            </td>
+            <td><strong>${p.winnerName || 'Winner'}</strong></td>
+            <td><code style="color: #059669; font-weight: 700;">#${p.ticketId || 'TKT'}</code></td>
+            <td><span class="badge badge-purple">${p.tier || 'VIP'}</span></td>
+            <td style="font-weight: 800; color: #D97706;">${p.prize || '₹25,000'}</td>
+            <td><strong>${p.totalParticipants || 100} Tickets</strong></td>
+            <td><span class="badge badge-green"><i class="fa-solid fa-circle-check"></i> COMPLETED</span></td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    async function saveLuckyDrawConfig(e) {
+      e.preventDefault();
+      const title = document.getElementById('adminLdTitleInput').value.trim();
+      const schedule = document.getElementById('adminLdScheduleInput').value.trim();
+      const prizePool = parseFloat(document.getElementById('adminLdPoolInput').value) || 50000;
+      const firstPrize = document.getElementById('adminLdPrize1Input').value.trim();
+      
+      const t1 = parseFloat(document.getElementById('adminLdTier1Price').value) || 50;
+      const t2 = parseFloat(document.getElementById('adminLdTier2Price').value) || 200;
+      const t3 = parseFloat(document.getElementById('adminLdTier3Price').value) || 300;
+
+      const entryTiers = [
+        { id: 'tier_50', amount: t1, name: 'Silver Entry', chances: 1, badge: 'Popular', desc: '1 Lucky Draw Ticket' },
+        { id: 'tier_200', amount: t2, name: 'Gold Entry', chances: 5, badge: 'Best Value (5x)', desc: '5 Tickets (5x Chances to Win)' },
+        { id: 'tier_300', amount: t3, name: 'VIP Diamond Entry', chances: 10, badge: 'VIP 10x + Cashback', desc: '10 Tickets + Guaranteed ₹50 Voucher' }
+      ];
+
+      await fetch('/api/admin/luckydraw/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, schedule, prizePool, firstPrize, entryTiers })
+      });
+
+      showToast('Lucky Draw Configuration Saved!');
+      refreshAdminData();
+    }
+
+    async function triggerLuckyDrawWinner() {
+      const ld = adminData.luckyDraw;
+      const tkts = (ld && ld.tickets) || [];
+      if (tkts.length === 0) {
+        alert('Cannot conduct draw: No participant tickets enrolled in the current draw yet.');
+        return;
+      }
+
+      if (confirm('Conduct Lucky Draw now? The system will pick a winner from ' + tkts.length + ' enrolled tickets, announce the result, and credit the prize to the winner wallet!')) {
+        const res = await fetch('/api/admin/luckydraw/draw-winner', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prizeAmount: 25000 })
+        });
+        const data = await res.json();
+        if (data.success && data.winner) {
+          alert('🎉 WINNER DECLARED!\n\nWinner: ' + data.winner.winnerName + '\nTicket: #' + data.winner.ticketId + '\nPrize: ' + data.winner.prizeWon + '\n\nPrize has been credited to wallet and recorded in the audit history!');
+          refreshAdminData();
+        } else {
+          alert(data.error || 'Failed to conduct draw');
+        }
+      }
+    }
+
+    // Copy to clipboard helper
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text);
+      showToast('Copied to clipboard: ' + text);
+    }
+
+    // Filter Brands
+    function filterBrandsTable() {
+      const q = document.getElementById('brandSearchInput').value.toLowerCase();
+      document.querySelectorAll('#brandsTableBody tr').forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(q) ? '' : 'none';
+      });
+    }
+
+    // Filter Users
+    function filterUsersTable() {
+      const q = document.getElementById('userSearchInput').value.toLowerCase();
+      document.querySelectorAll('#usersTableBody tr').forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(q) ? '' : 'none';
+      });
+    }
+
+    // Investment Plan Actions
+    function openAddPlanModal() {
+      document.getElementById('modalPlanTitle').innerText = 'Add Investment Plan';
+      document.getElementById('planEditId').value = '';
+      document.getElementById('planTitleInput').value = '';
+      document.getElementById('planMonthlyRateInput').value = '8.60';
+      document.getElementById('planMinAmountInput').value = '1000';
+      document.getElementById('planBadgeInput').value = 'ACTIVE PLAN';
+      openModal('modalPlan');
+    }
+
+    function openEditPlanModal(id) {
+      const p = (adminData.bonds || []).find(b => b.id === id);
+      if (!p) return;
+      document.getElementById('modalPlanTitle').innerText = 'Edit Investment Plan: ' + p.title;
+      document.getElementById('planEditId').value = p.id;
+      document.getElementById('planTitleInput').value = p.title;
+      document.getElementById('planCategorySelect').value = p.category || 'Fixed Deposit';
+      document.getElementById('planMonthlyRateInput').value = p.monthlyRate || p.newRate || 8.6;
+      document.getElementById('planMinAmountInput').value = p.minAmount || 1000;
+      document.getElementById('planDurationSelect').value = p.tenureMonths || 6;
+      document.getElementById('planBadgeInput').value = p.badge || '';
+      document.getElementById('planNoticeInput').value = p.lockInNotice || '';
+      openModal('modalPlan');
+    }
+
+    async function submitPlanForm(e) {
+      e.preventDefault();
+      const id = document.getElementById('planEditId').value;
+      const title = document.getElementById('planTitleInput').value.trim();
+      const category = document.getElementById('planCategorySelect').value;
+      const monthlyRate = parseFloat(document.getElementById('planMonthlyRateInput').value) || 8.6;
+      const minAmount = parseFloat(document.getElementById('planMinAmountInput').value) || 1000;
+      const tenureMonths = parseInt(document.getElementById('planDurationSelect').value) || 6;
+      const badge = document.getElementById('planBadgeInput').value;
+      const lockInNotice = document.getElementById('planNoticeInput').value;
+
+      const endpoint = id ? '/api/admin/invest-plans/update' : '/api/admin/invest-plans/add';
+      const body = { id, title, category, monthlyRate, minAmount, tenureMonths, badge, lockInNotice };
+
+      await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      closeModal('modalPlan');
+      showToast('Investment plan saved successfully!');
+      refreshAdminData();
+    }
+
+    async function togglePlanStatus(id) {
+      await fetch('/api/admin/invest-plans/toggle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+      showToast('Plan status toggled');
+      refreshAdminData();
+    }
+
+    async function deletePlan(id) {
+      if (confirm('Are you sure you want to delete this investment plan?')) {
+        await fetch('/api/admin/invest-plans/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+        showToast('Plan deleted successfully');
+        refreshAdminData();
+      }
+    }
+
+    // Active Investment Actions
+    async function updateInvStatus(id, status) {
+      await fetch('/api/admin/investments/update-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status })
+      });
+      showToast('Investment marked as ' + status);
+      refreshAdminData();
+    }
+
+    async function deleteInvestment(id) {
+      if (confirm('Delete this investment certificate record?')) {
+        await fetch('/api/admin/investments/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+        showToast('Investment record deleted');
+        refreshAdminData();
+      }
+    }
+
+    function openIssueInvestmentModal() {
+      const select = document.getElementById('issueInvPlanSelect');
+      select.innerHTML = (adminData.bonds || []).map(b => `<option value="${b.id}">${b.title} (${b.monthlyRate}%/mo)</option>`).join('');
+      openModal('modalIssueInvestment');
+    }
+
+    async function submitIssueInvestment(e) {
+      e.preventDefault();
+      const bondId = document.getElementById('issueInvPlanSelect').value;
+      const plan = (adminData.bonds || []).find(b => b.id === bondId);
+      const principal = parseFloat(document.getElementById('issueInvPrincipalInput').value) || 10000;
+      const monthlyRate = parseFloat(document.getElementById('issueInvRateInput').value) || 8.6;
+      const tenureMonths = parseInt(document.getElementById('issueInvTenureSelect').value) || 6;
+      const userMobile = document.getElementById('issueInvMobileInput').value.trim() || '9876548808';
+
+      await fetch('/api/admin/investments/create-manual', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          institution: plan ? plan.title : 'Suryoday SF Bank Plan',
+          bondId,
+          principal,
+          monthlyRate,
+          tenureMonths,
+          userMobile,
+          status: 'ACTIVE'
+        })
+      });
+
+      closeModal('modalIssueInvestment');
+      showToast('Investment Certificate Issued!');
+      refreshAdminData();
+    }
+
+    function previewCertificate(id) {
+      const inv = (adminData.investments || []).find(i => i.id === id);
+      if (!inv) return;
+      const body = document.getElementById('certPreviewBody');
+      body.innerHTML = `
+        <div style="text-align: center; border-bottom: 2px solid #2563EB; padding-bottom: 16px; margin-bottom: 16px;">
+          <div style="font-size: 11px; font-weight: 800; color: #2563EB; letter-spacing: 1px;">GOVERNMENT OF INDIA • RBI REGULATED DEPOSIT</div>
+          <div style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; margin-top: 4px;">DICGC Official Deposit Insurance Certificate</div>
+          <div style="font-size: 12px; color: #64748B;">Insured under DICGC Act, 1961 up to ₹5,00,000 per depositor</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; font-size: 13px;">
+          <div><strong>Certificate No:</strong> ${inv.certNumber || 'DICGC-EP-687013'}</div>
+          <div><strong>Folio Number:</strong> ${inv.folioNumber || 'EP-FD-8517'}</div>
+          <div><strong>Holder Mobile:</strong> +91 ${inv.userMobile || '9876548808'}</div>
+          <div><strong>Institution:</strong> ${inv.institution || 'Suryoday SF Bank'}</div>
+          <div><strong>Principal Amount:</strong> ₹${(inv.principal || 1000).toLocaleString('en-IN')}</div>
+          <div><strong>Monthly Yield:</strong> ${inv.monthlyRate || 8.6}% / month</div>
+          <div><strong>Daily Payout:</strong> ₹${inv.dailyPayout || 2.87} / day</div>
+          <div><strong>Guaranteed Maturity:</strong> ₹${(inv.maturityAmount || 1516).toLocaleString('en-IN')}</div>
+          <div><strong>Booking Date:</strong> ${inv.bookingDate || '11 Nov 2026'}</div>
+          <div><strong>Maturity Date:</strong> ${inv.maturityDate || '11 May 2027'}</div>
+        </div>
+        <div style="margin-top: 20px; padding: 12px; background: #ECFDF5; border-radius: 10px; font-size: 12px; color: #059669; font-weight: 700; text-align: center;">
+          <i class="fa-solid fa-seal-exclamation"></i> 100% Guaranteed Capital Protection & Continuous Daily Yield Verification
+        </div>
+      `;
+      openModal('modalCertPreview');
+    }
+
+    // Brand Actions
+    function openAddBrandModal() {
+      document.getElementById('modalBrandTitle').innerText = 'Add Brand Gift Card';
+      document.getElementById('brandEditId').value = '';
+      document.getElementById('brandNameInput').value = '';
+      document.getElementById('brandCashbackInput').value = '5.0';
+      document.getElementById('brandLogoInput').value = '';
+      openModal('modalBrand');
+    }
+
+    function openEditBrandModal(id) {
+      const c = (adminData.giftCards || []).find(b => b.id === id);
+      if (!c) return;
+      document.getElementById('modalBrandTitle').innerText = 'Edit Brand: ' + c.name;
+      document.getElementById('brandEditId').value = c.id;
+      document.getElementById('brandNameInput').value = c.name;
+      document.getElementById('brandCategorySelect').value = c.category || 'Food & Dining';
+      document.getElementById('brandCashbackInput').value = c.cashbackRate || 5;
+      document.getElementById('brandLogoInput').value = c.logo || '';
+      document.getElementById('brandDenominationsInput').value = (c.denominations || [250,500,1000]).join(', ');
+      openModal('modalBrand');
+    }
+
+    async function submitBrandForm(e) {
+      e.preventDefault();
+      const id = document.getElementById('brandEditId').value;
+      const name = document.getElementById('brandNameInput').value.trim();
+      const category = document.getElementById('brandCategorySelect').value;
+      const cashbackRate = parseFloat(document.getElementById('brandCashbackInput').value) || 5;
+      const logo = document.getElementById('brandLogoInput').value.trim();
+      const denomsRaw = document.getElementById('brandDenominationsInput').value;
+      const denominations = denomsRaw.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+
+      const endpoint = id ? '/api/gift-cards/update' : '/api/gift-cards/add';
+      await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, name, category, cashbackRate, logo, denominations })
+      });
+
+      closeModal('modalBrand');
+      showToast('Brand updated successfully!');
+      refreshAdminData();
+    }
+
+    async function toggleBrandStatus(id) {
+      await fetch('/api/gift-cards/toggle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+      showToast('Brand status toggled');
+      refreshAdminData();
+    }
+
+    async function deleteBrand(id) {
+      if (confirm('Delete this brand gift card?')) {
+        await fetch('/api/gift-cards/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+        showToast('Brand deleted');
+        refreshAdminData();
+      }
+    }
+
+    // Voucher Actions
+    function openIssueVoucherModal() {
+      const select = document.getElementById('voucherBrandSelect');
+      select.innerHTML = (adminData.giftCards || []).map(c => `<option value="${c.name}">${c.name} (${c.cashbackRate}% CB)</option>`).join('');
+      openModal('modalVoucher');
+    }
+
+    async function submitIssueVoucher(e) {
+      e.preventDefault();
+      const brand = document.getElementById('voucherBrandSelect').value;
+      const amount = parseFloat(document.getElementById('voucherAmountInput').value) || 500;
+      const expiryMonths = parseInt(document.getElementById('voucherExpirySelect').value) || 12;
+      const userMobile = document.getElementById('voucherMobileInput').value.trim() || '9876548808';
+
+      await fetch('/api/admin/vouchers/issue', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ brand, amount, expiryMonths, userMobile })
+      });
+
+      closeModal('modalVoucher');
+      showToast('Voucher generated and issued!');
+      refreshAdminData();
+    }
+
+    async function updateVoucherStatus(id, status) {
+      await fetch('/api/admin/vouchers/update-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status })
+      });
+      showToast('Voucher status updated');
+      refreshAdminData();
+    }
+
+    async function deleteVoucher(id) {
+      if (confirm('Delete this voucher record?')) {
+        await fetch('/api/admin/vouchers/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+        showToast('Voucher deleted');
+        refreshAdminData();
+      }
+    }
+
+    // User & Wallet Actions
+    function openWalletAdjustModal(id, name, balance) {
+      document.getElementById('adjustUserId').value = id;
+      document.getElementById('adjustUserName').innerText = name;
+      document.getElementById('adjustCurrentBalance').innerText = 'Current Balance: ₹' + balance.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+      document.getElementById('adjustAmountInput').value = '';
+      document.getElementById('adjustNoteInput').value = '';
+      openModal('modalWalletAdjust');
+    }
+
+    async function submitWalletAdjustment(e) {
+      e.preventDefault();
+      const id = document.getElementById('adjustUserId').value;
+      const type = document.getElementById('adjustTypeSelect').value;
+      const amount = parseFloat(document.getElementById('adjustAmountInput').value) || 0;
+      const note = document.getElementById('adjustNoteInput').value.trim();
+
+      const res = await fetch('/api/admin/users/adjust-wallet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, type, amount, note })
+      });
+      const data = await res.json();
+
+      closeModal('modalWalletAdjust');
+      if (data.success) {
+        showToast('Wallet ' + type + 'ed ₹' + amount + '! New balance: ₹' + data.newBalance);
+        refreshAdminData();
+      } else {
+        alert(data.error || 'Failed to adjust wallet');
+      }
+    }
+
+    function openAddUserModal() {
+      document.getElementById('modalUserTitle').innerText = 'Add New Customer Account';
+      document.getElementById('userEditId').value = '';
+      document.getElementById('userFirstNameInput').value = '';
+      document.getElementById('userLastNameInput').value = '';
+      document.getElementById('userMobileInput').value = '';
+      document.getElementById('userEmailInput').value = '';
+      document.getElementById('userBalanceInput').value = '500';
+      document.getElementById('userPinInput').value = '1234';
+      openModal('modalUser');
+    }
+
+    function openEditUserModal(id) {
+      const u = (adminData.users || []).find(user => user.id === id);
+      if (!u) return;
+      document.getElementById('modalUserTitle').innerText = 'Edit User: ' + u.name;
+      document.getElementById('userEditId').value = u.id;
+      document.getElementById('userFirstNameInput').value = u.firstName || '';
+      document.getElementById('userLastNameInput').value = u.lastName || '';
+      document.getElementById('userMobileInput').value = u.mobile || '';
+      document.getElementById('userEmailInput').value = u.email || '';
+      document.getElementById('userBalanceInput').value = u.walletBalance || 0;
+      document.getElementById('userPinInput').value = u.securityPin || '1234';
+      document.getElementById('userBankInput').value = u.bankName || '';
+      openModal('modalUser');
+    }
+
+    async function submitUserForm(e) {
+      e.preventDefault();
+      const id = document.getElementById('userEditId').value;
+      const firstName = document.getElementById('userFirstNameInput').value.trim();
+      const lastName = document.getElementById('userLastNameInput').value.trim();
+      const mobile = document.getElementById('userMobileInput').value.trim();
+      const email = document.getElementById('userEmailInput').value.trim();
+      const walletBalance = parseFloat(document.getElementById('userBalanceInput').value) || 0;
+      const securityPin = document.getElementById('userPinInput').value.trim();
+      const bankName = document.getElementById('userBankInput').value.trim();
+
+      const endpoint = id ? '/api/admin/users/update' : '/api/admin/users/create';
+      await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, firstName, lastName, mobile, email, walletBalance, securityPin, bankName })
+      });
+
+      closeModal('modalUser');
+      showToast('User account saved successfully!');
+      refreshAdminData();
+    }
+
+    async function deleteUser(id) {
+      if (confirm('Delete this user account permanently?')) {
+        await fetch('/api/admin/users/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+        showToast('User deleted');
+        refreshAdminData();
+      }
+    }
+
+    // Transactions Actions
+    async function deleteTransaction(id) {
+      if (confirm('Remove this transaction record from the audit ledger?')) {
+        await fetch('/api/admin/transactions/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+        showToast('Transaction removed');
+        refreshAdminData();
+      }
+    }
+
+    // Save System Settings
+    async function saveSystemSettings(e) {
+      e.preventDefault();
+      const appName = document.getElementById('settingAppName').value.trim();
+      const platformName = document.getElementById('settingPlatformName').value.trim();
+      const supportPhone = document.getElementById('settingSupportPhone').value.trim();
+      const supportEmail = document.getElementById('settingSupportEmail').value.trim();
+      const announcementText = document.getElementById('settingAnnouncementText').value.trim();
+      const upiDomain = document.getElementById('settingUpiDomain').value.trim();
+      const platformCommissionRate = parseFloat(document.getElementById('settingCommissionRate').value) || 5;
+      const referralBonus = parseFloat(document.getElementById('settingReferralBonus').value) || 100;
+      const maintenanceMode = document.getElementById('settingMaintenanceMode').value === 'true';
+
+      await fetch('/api/admin/settings/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          appName,
+          platformName,
+          supportPhone,
+          supportEmail,
+          announcementText,
+          upiDomain,
+          platformCommissionRate,
+          referralBonus,
+          maintenanceMode
+        })
+      });
+
+      showToast('✅ System Configuration updated and applied!');
+      refreshAdminData();
+    }
+
+    // Export CSVs
+    function exportTransactionsCSV() {
+      const txns = adminData.transactions || [];
+      let csv = 'Txn ID,Timestamp,Title,Category,Amount,Type,Status\n';
+      txns.forEach(t => {
+        csv += `"${t.id}","${t.timestamp || ''}","${t.title || ''}","${t.category || ''}",${t.amount || 0},"${t.type || ''}","${t.status || ''}"\n`;
+      });
+      downloadBlob(csv, 'easypay_transactions_' + Date.now() + '.csv', 'text/csv');
+    }
+
+    function exportBondsCSV() {
+      const invs = adminData.investments || [];
+      let csv = 'Certificate ID,Folio,Institution,Principal,Monthly Rate %,Monthly Interest,Daily Payout,Maturity Amount,Booking Date,Maturity Date,Status\n';
+      invs.forEach(i => {
+        csv += `"${i.certNumber || i.id}","${i.folioNumber || ''}","${i.institution || ''}",${i.principal || 0},${i.monthlyRate || 0},${i.monthlyInterest || 0},${i.dailyPayout || 0},${i.maturityAmount || 0},"${i.bookingDate || ''}","${i.maturityDate || ''}","${i.status || ''}"\n`;
+      });
+      downloadBlob(csv, 'easypay_bonds_portfolio_' + Date.now() + '.csv', 'text/csv');
+    }
+
+    function downloadBlob(content, filename, contentType) {
+      const blob = new Blob([content], { type: contentType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // Auto-check session on page load
+    async function checkExistingSession() {
+      if (!adminToken) return;
+      try {
+        const res = await fetch('/api/admin/verify', {
+          headers: { 'Authorization': 'Bearer ' + adminToken }
+        });
+        const data = await res.json();
+        if (data.success) {
+          showAdminConsole(data.admin);
+        } else {
+          localStorage.removeItem('adminToken');
+          adminToken = '';
+        }
+      } catch (e) {
+        localStorage.removeItem('adminToken');
+        adminToken = '';
+      }
+    }
+
+    // Run session check
+    checkExistingSession();
+  </script>
+</body>
+</html>

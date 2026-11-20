@@ -1,0 +1,6 @@
+node_modules/
+.system_generated/
+*.log
+scripts_*.js
+apply_fixes_*.js
+add_server_*.js

@@ -1,0 +1,1211 @@
+{
+  "$schema": "https://curie.money/schemas/sdui/v3.json",
+  "schemaVersion": "3.0.0",
+  "minAppVersion": "3.2.0",
+  "screen": {
+    "id": "gold_home",
+    "title": "Gold",
+    "analytics": { "name": "gold_home_screen", "class": "GoldHomeScreen" },
+    "theme": {
+      "backgroundColor": "#FFF7DF",
+      "statusBarStyle": "dark"
+    }
+  },
+  "config": {
+    "cache": { "ttl": 60, "staleWhileRevalidate": true },
+    "spacing": { "xs": 4, "sm": 8, "md": 16, "lg": 24, "xl": 32 },
+    "unknownWidgetBehavior": "hide"
+  },
+  "refs": {
+    "faq_style": {
+      "titleStyle": { "fontSize": 14, "fontWeight": "semibold", "color": "#252529" },
+      "background": "#FFFFFF",
+      "borderColor": "#F4E5CC",
+      "borderRadius": 12,
+      "padding": "md"
+    }
+  },
+  "state": {
+    "defaults": {}
+  },
+
+  "body": [
+    {
+      "id": "top_bar",
+      "type": "SECTION",
+      "padding": { "horizontal": 16, "top": 14, "bottom": 8 },
+      "children": [
+        {
+          "type": "ROW",
+          "mainAxisAlignment": "spaceBetween",
+          "crossAxisAlignment": "center",
+          "children": [
+            {
+              "type": "ROW",
+              "gap": "sm",
+              "crossAxisAlignment": "center",
+              "children": [
+                {
+                  "type": "AVATAR",
+                  "source": "{{userAvatar}}",
+                  "fallback": "{{userName}}",
+                  "size": 48,
+                  "borderRadius": 24
+                },
+                {
+                  "type": "ROW",
+                  "gap": "xs",
+                  "crossAxisAlignment": "center",
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "text": "hi, {{userName}}!",
+                      "style": "heading.small.primary"
+                    },
+                    {
+                      "type": "ICON",
+                      "name": "keyboard_arrow_down",
+                      "size": 16,
+                      "color": "#252529"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "live_price_badge",
+              "type": "CONTAINER",
+              "background": "#FFF6CA",
+              "borderColor": "#F4E5CC",
+              "borderRadius": 20,
+              "padding": { "horizontal": 10, "vertical": 6 },
+              "children": [
+                {
+                  "type": "COLUMN",
+                  "gap": "none",
+                  "crossAxisAlignment": "end",
+                  "children": [
+                    {
+                      "type": "ROW",
+                      "gap": "xs",
+                      "crossAxisAlignment": "center",
+                      "children": [
+                        {
+                          "type": "CONTAINER",
+                          "width": 6,
+                          "height": 6,
+                          "borderRadius": 3,
+                          "background": "#2E7D32"
+                        },
+                        {
+                          "type": "TEXT",
+                          "text": "Live Gold Price",
+                          "style": {
+                            "fontSize": 10,
+                            "fontWeight": "medium",
+                            "color": "#A55B07"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TEXT",
+                      "text": "{{livePrice}}/g",
+                      "style": {
+                        "fontSize": 12,
+                        "fontWeight": "semibold",
+                        "color": "#A55B07",
+                        "letterSpacing": 0.2
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "hero_zero_state",
+      "type": "SECTION",
+      "padding": { "horizontal": 16, "top": 0, "bottom": 16 },
+      "visibility": {
+        "field": "hasHoldings",
+        "operator": "==",
+        "value": "false"
+      },
+      "children": [
+        {
+          "type": "COLUMN",
+          "gap": "md",
+          "crossAxisAlignment": "center",
+          "children": [
+            {
+              "type": "IMAGE",
+              "source": "asset://gold_coin_3d.png",
+              "width": 128,
+              "height": 128,
+              "fit": "contain"
+            },
+            {
+              "type": "TEXT",
+              "text": "Invest in 24 Karat Gold",
+              "style": {
+                "fontSize": 20,
+                "fontWeight": "bold",
+                "color": "#252529"
+              },
+              "textAlign": "center"
+            },
+            {
+              "type": "TEXT",
+              "text": "Withdraw as jewellery, coin or cash anytime",
+              "style": "body.medium.secondary",
+              "textAlign": "center"
+            },
+            {
+              "type": "BUTTON",
+              "label": "Start with ₹100",
+              "variant": "CTA_PRIMARY",
+              "fullWidth": true,
+              "action": {
+                "type": "NAVIGATE",
+                "route": "/gold/purchase"
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "hero_holdings",
+      "type": "SECTION",
+      "padding": { "horizontal": 16, "top": 0, "bottom": 16 },
+      "visibility": {
+        "field": "hasHoldings",
+        "operator": "==",
+        "value": "true"
+      },
+      "children": [
+        {
+          "type": "COLUMN",
+          "gap": "md",
+          "crossAxisAlignment": "center",
+          "children": [
+            {
+              "type": "IMAGE",
+              "source": "asset://gold_coin_3d.png",
+              "width": 128,
+              "height": 128,
+              "fit": "contain"
+            },
+            {
+              "type": "TEXT",
+              "text": "Your gold",
+              "style": "body.small.secondary",
+              "textAlign": "center"
+            },
+            {
+              "type": "ROW",
+              "gap": "xs",
+              "mainAxisAlignment": "center",
+              "crossAxisAlignment": "baseline",
+              "children": [
+                {
+                  "type": "TEXT",
+                  "text": "{{holdingsGrams}} g",
+                  "style": {
+                    "fontSize": 32,
+                    "fontWeight": "bold",
+                    "color": "#252529",
+                    "lineHeight": 1.2
+                  }
+                },
+                {
+                  "type": "ICON",
+                  "name": "visibility",
+                  "size": 18,
+                  "color": "#9E9EA3",
+                  "action": {
+                    "type": "NATIVE_CALL",
+                    "method": "toggleHoldingsVisibility"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ROW",
+              "gap": "sm",
+              "children": [
+                {
+                  "type": "BUTTON",
+                  "label": "Start SIP",
+                  "variant": "CTA_PRIMARY",
+                  "flex": 1,
+                  "action": {
+                    "type": "NAVIGATE",
+                    "route": "/gold/purchase",
+                    "params": { "tab": "weekly" }
+                  }
+                },
+                {
+                  "type": "BUTTON",
+                  "label": "Buy gold",
+                  "variant": "CTA_SECONDARY",
+                  "flex": 1,
+                  "action": {
+                    "type": "NAVIGATE",
+                    "route": "/gold/purchase"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "quick_actions",
+      "type": "SECTION",
+      "padding": { "horizontal": 16, "bottom": 16 },
+      "visibility": {
+        "field": "hasHoldings",
+        "operator": "==",
+        "value": "true"
+      },
+      "children": [
+        {
+          "type": "ROW",
+          "mainAxisAlignment": "spaceEvenly",
+          "children": [
+            {
+              "type": "QUICK_ACTION",
+              "icon": "asset://icon_mint_coin.png",
+              "label": "Mint coin",
+              "iconBackground": "#FFF6CA",
+              "iconSize": 28,
+              "containerSize": 64,
+              "action": {
+                "type": "NAVIGATE",
+                "route": "/gold/mint"
+              }
+            },
+            {
+              "type": "QUICK_ACTION",
+              "icon": "asset://icon_gift_gold.png",
+              "label": "Gift gold",
+              "iconBackground": "#FFF6CA",
+              "iconSize": 28,
+              "containerSize": 64,
+              "action": {
+                "type": "NAVIGATE",
+                "route": "/gold/gift"
+              }
+            },
+            {
+              "type": "QUICK_ACTION",
+              "icon": "asset://icon_sell_gold.png",
+              "label": "Sell gold",
+              "iconBackground": "#FFF6CA",
+              "iconSize": 28,
+              "containerSize": 64,
+              "action": {
+                "type": "NAVIGATE",
+                "route": "/gold/sell"
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "sip_tracker",
+      "type": "SECTION",
+      "padding": "md",
+      "visibility": {
+        "field": "hasSips",
+        "operator": "==",
+        "value": "true"
+      },
+      "children": [
+        {
+          "type": "CONTAINER",
+          "background": "#FFFFFF",
+          "borderColor": "#F4E5CC",
+          "borderRadius": 16,
+          "padding": "md",
+          "gap": "md",
+          "children": [
+            {
+              "type": "TEXT",
+              "text": "Gold SIP tracker",
+              "style": {
+                "fontSize": 16,
+                "fontWeight": "semibold",
+                "color": "#252529"
+              }
+            },
+            {
+              "type": "CONTAINER",
+              "background": "#FFFBF2",
+              "borderRadius": 12,
+              "padding": "md",
+              "gap": "sm",
+              "children": [
+                {
+                  "type": "ROW",
+                  "gap": "sm",
+                  "crossAxisAlignment": "center",
+                  "children": [
+                    {
+                      "type": "IMAGE",
+                      "source": "asset://icon_sip_gold.png",
+                      "width": 32,
+                      "height": 32
+                    },
+                    {
+                      "type": "COLUMN",
+                      "gap": "none",
+                      "flex": 1,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "text": "Your Gold SIPs",
+                          "style": {
+                            "fontSize": 14,
+                            "fontWeight": "semibold",
+                            "color": "#252529"
+                          }
+                        },
+                        {
+                          "type": "TEXT",
+                          "text": "{{sipCompletedCount}} SIPs completed so far",
+                          "style": "body.small.secondary"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "DIVIDER",
+                  "color": "#F4E5CC"
+                },
+                {
+                  "type": "ROW",
+                  "mainAxisAlignment": "spaceBetween",
+                  "children": [
+                    {
+                      "type": "COLUMN",
+                      "gap": "none",
+                      "crossAxisAlignment": "center",
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "text": "Active SIP",
+                          "style": "body.small.secondary"
+                        },
+                        {
+                          "type": "TEXT",
+                          "text": "{{activeSipCount}}",
+                          "style": {
+                            "fontSize": 16,
+                            "fontWeight": "bold",
+                            "color": "#252529"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "COLUMN",
+                      "gap": "none",
+                      "crossAxisAlignment": "center",
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "text": "Invested",
+                          "style": "body.small.secondary"
+                        },
+                        {
+                          "type": "TEXT",
+                          "text": "{{totalSipInvested}}",
+                          "style": {
+                            "fontSize": 16,
+                            "fontWeight": "bold",
+                            "color": "#252529"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "COLUMN",
+                      "gap": "none",
+                      "crossAxisAlignment": "center",
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "text": "Gold so far",
+                          "style": "body.small.secondary"
+                        },
+                        {
+                          "type": "TEXT",
+                          "text": "{{sipGoldGrams}} g",
+                          "style": {
+                            "fontSize": 16,
+                            "fontWeight": "bold",
+                            "color": "#252529"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "BUTTON",
+              "label": "Manage SIPs",
+              "variant": "OUTLINED",
+              "fullWidth": true,
+              "action": {
+                "type": "NAVIGATE",
+                "route": "/gold/sips"
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "recent_activity",
+      "type": "SECTION",
+      "padding": "md",
+      "visibility": {
+        "field": "hasTransactions",
+        "operator": "==",
+        "value": "true"
+      },
+      "children": [
+        {
+          "type": "TEXT",
+          "text": "Recent activity",
+          "style": {
+            "fontSize": 16,
+            "fontWeight": "semibold",
+            "color": "#252529"
+          },
+          "padding": { "bottom": 12 }
+        },
+        {
+          "type": "COLUMN",
+          "gap": "none",
+          "children": [
+            {
+              "id": "tx_row_1",
+              "type": "TRANSACTION_TILE",
+              "visibility": {
+                "field": "tx1Title",
+                "operator": "!=",
+                "value": ""
+              },
+              "avatar": { "type": "letter", "value": "G", "background": "#FFF6CA" },
+              "title": "{{tx1Title}}",
+              "titleStyle": { "fontSize": 14, "fontWeight": "semibold", "color": "#252529" },
+              "subtitle": "{{tx1Bank}} • {{tx1Time}}",
+              "subtitleStyle": "body.small.secondary",
+              "amount": "{{tx1Amount}}",
+              "amountStyle": {
+                "fontSize": 14,
+                "fontWeight": "semibold",
+                "color": "{{tx1AmountColor}}"
+              },
+              "action": {
+                "type": "NAVIGATE",
+                "route": "/gold/transaction/{{tx1Id}}"
+              }
+            },
+            {
+              "type": "DIVIDER",
+              "color": "#F4E5CC",
+              "visibility": {
+                "field": "tx2Title",
+                "operator": "!=",
+                "value": ""
+              }
+            },
+            {
+              "id": "tx_row_2",
+              "type": "TRANSACTION_TILE",
+              "visibility": {
+                "field": "tx2Title",
+                "operator": "!=",
+                "value": ""
+              },
+              "avatar": { "type": "letter", "value": "G", "background": "#FFF6CA" },
+              "title": "{{tx2Title}}",
+              "titleStyle": { "fontSize": 14, "fontWeight": "semibold", "color": "#252529" },
+              "subtitle": "{{tx2Bank}} • {{tx2Time}}",
+              "subtitleStyle": "body.small.secondary",
+              "amount": "{{tx2Amount}}",
+              "amountStyle": {
+                "fontSize": 14,
+                "fontWeight": "semibold",
+                "color": "{{tx2AmountColor}}"
+              },
+              "action": {
+                "type": "NAVIGATE",
+                "route": "/gold/transaction/{{tx2Id}}"
+              }
+            },
+            {
+              "type": "DIVIDER",
+              "color": "#F4E5CC",
+              "visibility": {
+                "field": "tx3Title",
+                "operator": "!=",
+                "value": ""
+              }
+            },
+            {
+              "id": "tx_row_3",
+              "type": "TRANSACTION_TILE",
+              "visibility": {
+                "field": "tx3Title",
+                "operator": "!=",
+                "value": ""
+              },
+              "avatar": { "type": "letter", "value": "G", "background": "#FFF6CA" },
+              "title": "{{tx3Title}}",
+              "titleStyle": { "fontSize": 14, "fontWeight": "semibold", "color": "#252529" },
+              "subtitle": "{{tx3Bank}} • {{tx3Time}}",
+              "subtitleStyle": "body.small.secondary",
+              "amount": "{{tx3Amount}}",
+              "amountStyle": {
+                "fontSize": 14,
+                "fontWeight": "semibold",
+                "color": "{{tx3AmountColor}}"
+              },
+              "action": {
+                "type": "NAVIGATE",
+                "route": "/gold/transaction/{{tx3Id}}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "invest_in_gold",
+      "type": "SECTION",
+      "padding": "md",
+      "children": [
+        {
+          "type": "CONTAINER",
+          "background": "#FFFFFF",
+          "borderColor": "#F4E5CC",
+          "borderRadius": 16,
+          "padding": "md",
+          "gap": "sm",
+          "children": [
+            {
+              "type": "ROW",
+              "mainAxisAlignment": "spaceBetween",
+              "crossAxisAlignment": "center",
+              "children": [
+                {
+                  "type": "TEXT",
+                  "text": "Invest in Gold",
+                  "style": {
+                    "fontSize": 16,
+                    "fontWeight": "semibold",
+                    "color": "#252529"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ROW",
+              "gap": "xs",
+              "crossAxisAlignment": "center",
+              "children": [
+                {
+                  "type": "ICON",
+                  "name": "trending_up",
+                  "size": 16,
+                  "color": "#2E7D32"
+                },
+                {
+                  "type": "TEXT",
+                  "text": "{{chartGrowthPercent}}",
+                  "style": {
+                    "fontSize": 20,
+                    "fontWeight": "bold",
+                    "color": "#2E7D32"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "text": "Last 5 years gold performance",
+              "style": "body.small.secondary"
+            },
+            {
+              "id": "gold_price_chart",
+              "type": "LINE_CHART",
+              "height": 180,
+              "dataSource": {
+                "type": "NATIVE_CALL",
+                "method": "getGoldPriceHistory",
+                "params": { "period": "5y" }
+              },
+              "lineColor": "#FFAA20",
+              "fillGradient": ["#FFAA2033", "#FFAA2000"],
+              "xAxis": {
+                "labels": ["2021", "2022", "2023", "2024", "2025", "2026"],
+                "labelStyle": "body.small.secondary"
+              },
+              "yAxis": {
+                "prefix": "₹",
+                "labelStyle": "body.small.secondary"
+              },
+              "tooltip": {
+                "background": "surface.dark",
+                "textColor": "color.inverse",
+                "format": { "label": "{{date}}", "value": "₹{{price}}/g" }
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "collectible_cards",
+      "type": "SECTION",
+      "padding": "md",
+      "children": [
+        {
+          "type": "CONTAINER",
+          "background": "#FFFFFF",
+          "borderColor": "#F4E5CC",
+          "borderRadius": 16,
+          "padding": "md",
+          "gap": "md",
+          "children": [
+            {
+              "type": "TEXT",
+              "text": "Collect personalised gold cards",
+              "style": {
+                "fontSize": 16,
+                "fontWeight": "semibold",
+                "color": "#252529"
+              }
+            },
+            {
+              "type": "IMAGE",
+              "source": "asset://gold_cards_preview.png",
+              "width": "100%",
+              "height": 160,
+              "fit": "contain",
+              "borderRadius": 12
+            },
+            {
+              "type": "TEXT",
+              "text": "Unlock a personalised gold card every time you buy Curie gold.",
+              "style": "body.small.secondary",
+              "textAlign": "center"
+            },
+            {
+              "type": "BUTTON",
+              "label": "Buy Gold Now",
+              "variant": "OUTLINED",
+              "fullWidth": true,
+              "action": {
+                "type": "NAVIGATE",
+                "route": "/gold/purchase"
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "advantage_cards",
+      "type": "SECTION",
+      "padding": "md",
+      "children": [
+        {
+          "type": "TEXT",
+          "text": "The Gold advantage",
+          "style": "heading.small.primary",
+          "padding": { "bottom": 12 }
+        },
+        {
+          "type": "HORIZONTAL_SCROLL",
+          "gap": "md",
+          "children": [
+            {
+              "type": "CONTAINER",
+              "width": 193,
+              "height": 113,
+              "background": "#FFFFFF",
+              "borderColor": "#F4E5CC",
+              "borderRadius": 12,
+              "padding": "md",
+              "gap": "sm",
+              "children": [
+                {
+                  "type": "ICON",
+                  "name": "verified",
+                  "size": 28,
+                  "color": "#A55B07"
+                },
+                {
+                  "type": "TEXT",
+                  "text": "24K Pure Gold",
+                  "style": {
+                    "fontSize": 14,
+                    "fontWeight": "semibold",
+                    "color": "#252529"
+                  }
+                },
+                {
+                  "type": "TEXT",
+                  "text": "Stored securely, audited & insured",
+                  "style": "body.small.secondary"
+                }
+              ]
+            },
+            {
+              "type": "CONTAINER",
+              "width": 193,
+              "height": 113,
+              "background": "#FFFFFF",
+              "borderColor": "#F4E5CC",
+              "borderRadius": 12,
+              "padding": "md",
+              "gap": "sm",
+              "children": [
+                {
+                  "type": "ICON",
+                  "name": "person",
+                  "size": 28,
+                  "color": "#A55B07"
+                },
+                {
+                  "type": "TEXT",
+                  "text": "Gold in your name",
+                  "style": {
+                    "fontSize": 14,
+                    "fontWeight": "semibold",
+                    "color": "#252529"
+                  }
+                },
+                {
+                  "type": "TEXT",
+                  "text": "Every gram is legally yours",
+                  "style": "body.small.secondary"
+                }
+              ]
+            },
+            {
+              "type": "CONTAINER",
+              "width": 193,
+              "height": 113,
+              "background": "#FFFFFF",
+              "borderColor": "#F4E5CC",
+              "borderRadius": 12,
+              "padding": "md",
+              "gap": "sm",
+              "children": [
+                {
+                  "type": "ICON",
+                  "name": "swap_horiz",
+                  "size": 28,
+                  "color": "#A55B07"
+                },
+                {
+                  "type": "TEXT",
+                  "text": "Access anytime",
+                  "style": {
+                    "fontSize": 14,
+                    "fontWeight": "semibold",
+                    "color": "#252529"
+                  }
+                },
+                {
+                  "type": "TEXT",
+                  "text": "Sell instantly or convert to coins",
+                  "style": "body.small.secondary"
+                }
+              ]
+            },
+            {
+              "type": "CONTAINER",
+              "width": 193,
+              "height": 113,
+              "background": "#FFFFFF",
+              "borderColor": "#F4E5CC",
+              "borderRadius": 12,
+              "padding": "md",
+              "gap": "sm",
+              "children": [
+                {
+                  "type": "ICON",
+                  "name": "receipt_long",
+                  "size": 28,
+                  "color": "#A55B07"
+                },
+                {
+                  "type": "TEXT",
+                  "text": "No hidden charges",
+                  "style": {
+                    "fontSize": 14,
+                    "fontWeight": "semibold",
+                    "color": "#252529"
+                  }
+                },
+                {
+                  "type": "TEXT",
+                  "text": "Pay what you see",
+                  "style": "body.small.secondary"
+                }
+              ]
+            },
+            {
+              "type": "CONTAINER",
+              "width": 193,
+              "height": 113,
+              "background": "#FFFFFF",
+              "borderColor": "#F4E5CC",
+              "borderRadius": 12,
+              "padding": "md",
+              "gap": "sm",
+              "children": [
+                {
+                  "type": "ICON",
+                  "name": "trending_up",
+                  "size": 28,
+                  "color": "#A55B07"
+                },
+                {
+                  "type": "TEXT",
+                  "text": "Long term growth",
+                  "style": {
+                    "fontSize": 14,
+                    "fontWeight": "semibold",
+                    "color": "#252529"
+                  }
+                },
+                {
+                  "type": "TEXT",
+                  "text": "₹10,000 → ₹30,000+ in 5 years",
+                  "style": "body.small.secondary"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "faq_section",
+      "type": "SECTION",
+      "padding": "md",
+      "children": [
+        {
+          "type": "TEXT",
+          "text": "Frequently asked questions",
+          "style": "heading.small.primary",
+          "padding": { "bottom": 12 }
+        },
+        {
+          "type": "COLUMN",
+          "gap": "sm",
+          "children": [
+            {
+              "type": "EXPANDABLE",
+              "title": "What exactly am I buying?",
+              "titleStyle": { "fontSize": 14, "fontWeight": "semibold", "color": "#252529" },
+              "background": "#FFFFFF",
+              "borderColor": "#F4E5CC",
+              "borderRadius": 12,
+              "padding": "md",
+              "children": [
+                {
+                  "type": "TEXT",
+                  "text": "You are buying 24K, 99.5% pure digital gold. Each gram is backed by physical gold stored in insured vaults by SafeGold.",
+                  "style": "body.small.secondary"
+                }
+              ]
+            },
+            {
+              "type": "EXPANDABLE",
+              "title": "Is this gold actually in my name?",
+              "titleStyle": { "fontSize": 14, "fontWeight": "semibold", "color": "#252529" },
+              "background": "#FFFFFF",
+              "borderColor": "#F4E5CC",
+              "borderRadius": 12,
+              "padding": "md",
+              "children": [
+                {
+                  "type": "TEXT",
+                  "text": "Yes. Every gram of gold you buy is allocated in your name on SafeGold's platform. You are the legal owner.",
+                  "style": "body.small.secondary"
+                }
+              ]
+            },
+            {
+              "type": "EXPANDABLE",
+              "title": "Where is my gold stored?",
+              "titleStyle": { "fontSize": 14, "fontWeight": "semibold", "color": "#252529" },
+              "background": "#FFFFFF",
+              "borderColor": "#F4E5CC",
+              "borderRadius": 12,
+              "padding": "md",
+              "children": [
+                {
+                  "type": "TEXT",
+                  "text": "Your gold is stored in bank-grade, insured vaults managed by Brink's. These vaults are regularly audited for security and compliance.",
+                  "style": "body.small.secondary"
+                }
+              ]
+            },
+            {
+              "type": "EXPANDABLE",
+              "title": "How much can I invest?",
+              "titleStyle": { "fontSize": 14, "fontWeight": "semibold", "color": "#252529" },
+              "background": "#FFFFFF",
+              "borderColor": "#F4E5CC",
+              "borderRadius": 12,
+              "padding": "md",
+              "children": [
+                {
+                  "type": "TEXT",
+                  "text": "You can buy gold starting from just ₹10. There is no maximum limit for one-time purchases. For SIPs, the range is ₹100 to ₹15,000.",
+                  "style": "body.small.secondary"
+                }
+              ]
+            },
+            {
+              "type": "EXPANDABLE",
+              "title": "Is my gold insured?",
+              "titleStyle": { "fontSize": 14, "fontWeight": "semibold", "color": "#252529" },
+              "background": "#FFFFFF",
+              "borderColor": "#F4E5CC",
+              "borderRadius": 12,
+              "padding": "md",
+              "children": [
+                {
+                  "type": "TEXT",
+                  "text": "Yes. All gold in vault is fully insured against loss, theft or damage.",
+                  "style": "body.small.secondary"
+                }
+              ]
+            },
+            {
+              "type": "EXPANDABLE",
+              "title": "Are there any hidden fees?",
+              "titleStyle": { "fontSize": 14, "fontWeight": "semibold", "color": "#252529" },
+              "background": "#FFFFFF",
+              "borderColor": "#F4E5CC",
+              "borderRadius": 12,
+              "padding": "md",
+              "children": [
+                {
+                  "type": "TEXT",
+                  "text": "No. A 3% GST is applied on gold purchases as per government rules. There are no platform fees, no hidden charges, and no lock-in period.",
+                  "style": "body.small.secondary"
+                }
+              ]
+            },
+            {
+              "type": "EXPANDABLE",
+              "title": "Why is my gold value lower right after I buy?",
+              "titleStyle": { "fontSize": 14, "fontWeight": "semibold", "color": "#252529" },
+              "background": "#FFFFFF",
+              "borderColor": "#F4E5CC",
+              "borderRadius": 12,
+              "padding": "md",
+              "children": [
+                {
+                  "type": "TEXT",
+                  "text": "The buy price includes 3% GST. The sell price does not include GST, so the displayed value may appear slightly lower right after purchase. This evens out as gold price appreciates.",
+                  "style": "body.small.secondary"
+                }
+              ]
+            },
+            {
+              "type": "EXPANDABLE",
+              "title": "Why sell price different than buy price?",
+              "titleStyle": { "fontSize": 14, "fontWeight": "semibold", "color": "#252529" },
+              "background": "#FFFFFF",
+              "borderColor": "#F4E5CC",
+              "borderRadius": 12,
+              "padding": "md",
+              "children": [
+                {
+                  "type": "TEXT",
+                  "text": "The buy price includes 3% GST while the sell price does not. There is also a small spread between buy and sell rates, similar to how currency exchange works.",
+                  "style": "body.small.secondary"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "trust_badges",
+      "type": "SECTION",
+      "padding": { "horizontal": 16, "top": 16, "bottom": 8 },
+      "children": [
+        {
+          "type": "CONTAINER",
+          "background": "#FFFFFF",
+          "borderColor": "#F4E5CC",
+          "borderRadius": 16,
+          "padding": "md",
+          "gap": "md",
+          "children": [
+            {
+              "type": "IMAGE",
+              "source": "asset://curie_logo.png",
+              "width": 80,
+              "height": 24,
+              "fit": "contain"
+            },
+            {
+              "type": "TEXT",
+              "text": "Your gold, backed by the best",
+              "style": "body.small.secondary",
+              "textAlign": "center"
+            },
+            {
+              "type": "DIVIDER",
+              "color": "#F4E5CC"
+            },
+            {
+              "type": "ROW",
+              "mainAxisAlignment": "spaceEvenly",
+              "children": [
+                {
+                  "type": "COLUMN",
+                  "gap": "xs",
+                  "crossAxisAlignment": "center",
+                  "children": [
+                    {
+                      "type": "IMAGE",
+                      "source": "asset://safegold_logo.png",
+                      "width": 80,
+                      "height": 16,
+                      "fit": "contain"
+                    },
+                    {
+                      "type": "TEXT",
+                      "text": "Trusted gold\nrefinery",
+                      "style": {
+                        "fontSize": 10,
+                        "color": "#9E9EA3",
+                        "lineHeight": 1.3
+                      },
+                      "textAlign": "center"
+                    }
+                  ]
+                },
+                {
+                  "type": "CONTAINER",
+                  "width": 1,
+                  "height": 46,
+                  "background": "#F4E5CC"
+                },
+                {
+                  "type": "COLUMN",
+                  "gap": "xs",
+                  "crossAxisAlignment": "center",
+                  "children": [
+                    {
+                      "type": "IMAGE",
+                      "source": "asset://bis_logo.png",
+                      "width": 50,
+                      "height": 16,
+                      "fit": "contain"
+                    },
+                    {
+                      "type": "TEXT",
+                      "text": "BIS certified\npure gold",
+                      "style": {
+                        "fontSize": 10,
+                        "color": "#9E9EA3",
+                        "lineHeight": 1.3
+                      },
+                      "textAlign": "center"
+                    }
+                  ]
+                },
+                {
+                  "type": "CONTAINER",
+                  "width": 1,
+                  "height": 46,
+                  "background": "#F4E5CC"
+                },
+                {
+                  "type": "COLUMN",
+                  "gap": "xs",
+                  "crossAxisAlignment": "center",
+                  "children": [
+                    {
+                      "type": "IMAGE",
+                      "source": "asset://brinks_logo.png",
+                      "width": 75,
+                      "height": 16,
+                      "fit": "contain"
+                    },
+                    {
+                      "type": "TEXT",
+                      "text": "Secured by\nBrink's vaults",
+                      "style": {
+                        "fontSize": 10,
+                        "color": "#9E9EA3",
+                        "lineHeight": 1.3
+                      },
+                      "textAlign": "center"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "footer",
+      "type": "SECTION",
+      "padding": { "horizontal": 16, "top": 8, "bottom": 32 },
+      "children": [
+        {
+          "type": "TEXT",
+          "text": "Gold products are offered by SafeGold. Curie acts as a distribution partner. All gold is 99.5% pure 24K gold stored in insured vaults.",
+          "style": {
+            "fontSize": 11,
+            "color": "#9E9EA3",
+            "lineHeight": 1.4
+          },
+          "textAlign": "center"
+        }
+      ]
+    }
+  ]
+}

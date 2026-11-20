@@ -1,0 +1,24 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+
+<path d="M7 15.4409V22.4409C7 22.9932 7.44772 23.4409 8 23.4409H33C33.5523 23.4409 34 22.9932 34 22.4409V15.4409C34 14.8886 33.5523 14.4409 33 14.4409H8C7.44772 14.4409 7 14.8886 7 15.4409Z" fill="#C4C1F8" stroke="#403C8E" stroke-width="0.3"/>
+<circle cx="11.5" cy="18.9409" r="1.4" fill="#E1E0FB" stroke="#403C8E" stroke-width="0.2"/>
+<circle cx="11.3396" cy="18.7805" r="1.06274" fill="#F8F7FE"/>
+<circle cx="17.5" cy="18.9409" r="1.4" fill="#E1E0FB" stroke="#403C8E" stroke-width="0.2"/>
+<circle cx="17.3396" cy="18.7805" r="1.06274" fill="#F8F7FE"/>
+<circle cx="23.5" cy="18.9409" r="1.4" fill="#E1E0FB" stroke="#403C8E" stroke-width="0.2"/>
+<circle cx="23.3396" cy="18.7805" r="1.06274" fill="#F8F7FE"/>
+<circle cx="29.5" cy="18.9409" r="1.4" fill="#E1E0FB" stroke="#403C8E" stroke-width="0.2"/>
+<circle cx="29.3396" cy="18.7805" r="1.06274" fill="#F8F7FE"/>
+<path d="M26.875 21.5375V18.9125C26.875 17.4627 28.0503 16.2875 29.5 16.2875C30.9497 16.2875 32.125 17.4627 32.125 18.9125V21.5375" stroke="#8D630A"/>
+<rect x="24.35" y="21.2" width="10.3" height="8.9875" rx="1.9" fill="#FFE637" stroke="#8D630A" stroke-width="0.2"/>
+<rect x="24.7294" y="21.5375" width="9.02509" height="7.89695" rx="1.5" fill="#FEF081"/>
+<mask id="mask0_7882_17806" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="24" y="21" width="11" height="10">
+<rect x="24.35" y="21.2" width="10.3" height="8.9875" rx="1.9" fill="#FFE637" stroke="#8D630A" stroke-width="0.2"/>
+</mask>
+<g mask="url(#mask0_7882_17806)">
+<path d="M33 21H31L24 28V30L33 21Z" fill="white"/>
+</g>
+<path d="M29.4279 28.1362L29.3048 28.1137C28.81 28.0221 28.4357 27.588 28.4357 27.0668C28.4357 26.4788 28.9121 26.0024 29.5001 26.0024C30.0881 26.0024 30.5646 26.4788 30.5646 27.0668C30.5645 27.5882 30.1894 28.0223 29.6945 28.1137L29.5724 28.1362V29.059C29.5724 29.0988 29.5398 29.1312 29.5001 29.1313C29.4603 29.1313 29.4279 29.0988 29.4279 29.059V28.1362Z" fill="#E3A01B" stroke="#8D630A" stroke-width="0.3"/>
+<rect x="24.35" y="21.2" width="10.3" height="8.9875" rx="1.9" stroke="#8D630A" stroke-width="0.2"/>
+</svg>
