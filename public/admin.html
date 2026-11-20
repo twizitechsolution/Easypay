@@ -9,7 +9,200 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+    // ==============================================================
+    // ANNOUNCEMENT & SMS GATEWAY ADMIN CONTROLLERS
+    // ==============================================================
+    async function loadAnnouncementAndSmsSettings() {
+      try {
+        const [annRes, smsRes] = await Promise.all([
+          fetch('/api/announcement'),
+          fetch('/api/admin/sms/settings')
+        ]);
+
+        if (annRes.ok) {
+          const annData = await annRes.json();
+          const a = annData.announcement;
+          if (a) {
+            document.getElementById('adminAnnounceEnabledSelect').value = a.enabled ? 'true' : 'false';
+            document.getElementById('adminAnnounceTitleInput').value = a.title || 'Grand Trip Program Announcement';
+            document.getElementById('adminAnnounceImageUrlInput').value = a.imageUrl || '/images/home_announcement.jpg';
+            document.getElementById('adminAnnounceLinkInput').value = a.link || '';
+            document.getElementById('adminAnnouncementImgPreview').src = a.imageUrl || '/images/home_announcement.jpg';
+            
+            const badge = document.getElementById('adminAnnouncementStatusBadge');
+            if (badge) {
+              badge.className = a.enabled ? 'badge-status success' : 'badge-status warning';
+              badge.innerHTML = a.enabled ? '<i class="fa-solid fa-circle-check"></i> ACTIVE' : '<i class="fa-solid fa-circle-pause"></i> DISABLED';
+            }
+          }
+        }
+
+        if (smsRes.ok) {
+          const smsData = await smsRes.json();
+          const s = smsData.smsConfig;
+          if (s) {
+            document.getElementById('adminSmsEnabledSelect').value = s.enabled ? 'true' : 'false';
+            document.getElementById('adminSmsUserInput').value = s.username || 'Twizitech';
+            document.getElementById('adminSmsKeyInput').value = s.apikey || 'e1f62636-1fc6-4c6c-8693-5995873a9180';
+            document.getElementById('adminSmsSenderInput').value = s.sendername || 'XYZ';
+            document.getElementById('adminSmsUrlInput').value = s.baseUrl || 'http://sms.hspsms.com/sendSMS';
+            document.getElementById('adminSmsTemplateInput').value = s.template || 'Your EasyPay verification OTP is {OTP}. Valid for 10 minutes.';
+            
+            const badge = document.getElementById('adminSmsStatusBadge');
+            if (badge) {
+              badge.className = s.enabled ? 'badge-status success' : 'badge-status warning';
+              badge.innerHTML = s.enabled ? '<i class="fa-solid fa-tower-broadcast"></i> ONLINE' : '<i class="fa-solid fa-power-off"></i> MOCK MODE';
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error loading announcement and SMS config:', err);
+      }
+    }
+
+    function updateAdminAnnouncePreview(url) {
+      const img = document.getElementById('adminAnnouncementImgPreview');
+      if (img && url) img.src = url;
+    }
+
+    function handleAdminAnnounceFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64Url = e.target.result;
+        document.getElementById('adminAnnounceImageUrlInput').value = base64Url;
+        updateAdminAnnouncePreview(base64Url);
+        showToast('Image loaded! Click "Save Announcement Settings" to publish.');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function saveAnnouncementSettings(event) {
+      event.preventDefault();
+      const enabled = document.getElementById('adminAnnounceEnabledSelect').value === 'true';
+      const title = document.getElementById('adminAnnounceTitleInput').value.trim();
+      const imageUrl = document.getElementById('adminAnnounceImageUrlInput').value.trim();
+      const link = document.getElementById('adminAnnounceLinkInput').value.trim();
+
+      try {
+        const res = await fetch('/api/admin/announcement/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ enabled, title, imageUrl, link })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('📢 Home Announcement Pop-up updated successfully!');
+          loadAnnouncementAndSmsSettings();
+        } else {
+          showToast(data.error || 'Failed to update announcement');
+        }
+      } catch (err) {
+        showToast('Network error saving announcement');
+      }
+    }
+
+    function resetAnnouncementToDefault() {
+      document.getElementById('adminAnnounceImageUrlInput').value = '/images/home_announcement.jpg';
+      document.getElementById('adminAnnounceTitleInput').value = 'Grand Trip Program Announcement';
+      updateAdminAnnouncePreview('/images/home_announcement.jpg');
+      showToast('Reset to default Grand Trip announcement flyer');
+    }
+
+    async function saveSmsSettings(event) {
+      event.preventDefault();
+      const enabled = document.getElementById('adminSmsEnabledSelect').value === 'true';
+      const username = document.getElementById('adminSmsUserInput').value.trim();
+      const apikey = document.getElementById('adminSmsKeyInput').value.trim();
+      const sendername = document.getElementById('adminSmsSenderInput').value.trim();
+      const baseUrl = document.getElementById('adminSmsUrlInput').value.trim();
+      const template = document.getElementById('adminSmsTemplateInput').value.trim();
+
+      try {
+        const res = await fetch('/api/admin/sms/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ enabled, username, apikey, sendername, baseUrl, template, smstype: 'TRANS' })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('📱 SMS Gateway configuration saved!');
+          loadAnnouncementAndSmsSettings();
+        } else {
+          showToast(data.error || 'Failed to save SMS config');
+        }
+      } catch (err) {
+        showToast('Network error saving SMS settings');
+      }
+    }
+
+    async function executeAdminSmsTest() {
+      const mobileInput = document.getElementById('adminSmsTestMobile');
+      const mobile = (mobileInput?.value || '').replace(/[^0-9]/g, '').slice(-10);
+      const consoleEl = document.getElementById('adminSmsTestConsole');
+
+      if (!mobile || mobile.length !== 10) {
+        showToast('Please enter a valid 10-digit mobile number for test SMS');
+        if (mobileInput) mobileInput.focus();
+        return;
+      }
+
+      if (consoleEl) {
+        consoleEl.style.display = 'block';
+        consoleEl.innerText = 'Connecting to HSPSMS Gateway for +91 ' + mobile + '...';
+      }
+
+      try {
+        const res = await fetch('/api/admin/sms/test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mobile })
+        });
+        const data = await res.json();
+        if (consoleEl) {
+          consoleEl.innerText = '[HSPSMS GATEWAY TEST RESULT]\n' +
+            'Timestamp: ' + new Date().toLocaleString() + '\n' +
+            'Target Mobile: +91 ' + mobile + '\n' +
+            'Generated Test OTP: ' + data.testOtp + '\n' +
+            'Gateway Response: ' + JSON.stringify(data.result?.gatewayResponse || data.result) + '\n' +
+            'HTTP Status: ' + (data.result?.httpStatus || 200) + ' OK';
+        }
+        showToast('Test SMS executed! Gateway response logged.');
+      } catch (err) {
+        if (consoleEl) {
+          consoleEl.innerText = '[ERROR]\n' + err.message;
+        }
+        showToast('Failed to execute test SMS');
+      }
+    }
+
+    function previewAnnouncementModal() {
+      const curImg = document.getElementById('adminAnnounceImageUrlInput')?.value || '/images/home_announcement.jpg';
+      let prevModal = document.getElementById('adminPreviewModalBackdrop');
+      if (!prevModal) {
+        prevModal = document.createElement('div');
+        prevModal.id = 'adminPreviewModalBackdrop';
+        prevModal.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 999999; display: flex; align-items: center; justify-content: center; padding: 20px;';
+        prevModal.onclick = function(e) { if (e.target === this) this.style.display = 'none'; };
+        prevModal.innerHTML = `
+          <div style="position: relative; max-width: 360px; width: 100%; border-radius: 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.6);">
+            <button onclick="document.getElementById('adminPreviewModalBackdrop').style.display='none'" style="position: absolute; top: -14px; right: -12px; width: 38px; height: 38px; border-radius: 50%; background: #000; border: 2.5px solid #FFF; color: #FFF; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; font-weight: 900; z-index: 1000;">✕</button>
+            <div style="overflow: hidden; border-radius: 22px; border: 1.5px solid rgba(255,255,255,0.2); background: #0B1120;">
+              <img id="adminModalPreviewImgTag" src="${curImg}" style="width: 100%; display: block; object-fit: contain;">
+            </div>
+          </div>
+        `;
+        document.body.appendChild(prevModal);
+      } else {
+        document.getElementById('adminModalPreviewImgTag').src = curImg;
+        prevModal.style.display = 'flex';
+      }
+    }
+
+  </script>
 
   <style>
     :root {
@@ -1005,6 +1198,13 @@
           <button class="nav-btn" onclick="switchTab('settings')">
             <i class="fa-solid fa-sliders"></i>
             <span>System Settings</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" onclick="switchTab('announcement')">
+            <i class="fa-solid fa-bullhorn"></i>
+            <span>Announcement & SMS</span>
+            <span class="nav-badge-count" style="background: #FF5722; color: white;">NEW</span>
           </button>
         </li>
         <li>
@@ -2139,7 +2339,8 @@
         'users': 'Customer Accounts & Wallet Balances',
         'transactions': 'Financial Transactions Ledger',
         'settings': 'System Settings & App Customization',
-        'reports': 'Enterprise Reports & Database Backup'
+        'reports': 'Enterprise Reports & Database Backup',
+        'announcement': 'Home Announcement Pop-up & SMS Gateway Configuration'
       };
       document.getElementById('topbarTitle').innerText = titles[tabId] || 'Admin Console';
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2166,6 +2367,7 @@
 
     // Render All Components
     function renderEverything() {
+      loadAnnouncementAndSmsSettings();
       renderBadges();
       renderKPIs();
       renderCharts();

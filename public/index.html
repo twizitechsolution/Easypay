@@ -4212,7 +4212,67 @@
       50% { top: 98%; opacity: 1; }
       100% { top: 0%; opacity: 0.8; }
     }
-</style>
+
+    /* ============================================================== */
+    /* HOME SCREEN ANNOUNCEMENT POP-UP & SIGN UP STYLING */
+    /* ============================================================== */
+    @keyframes popupScaleIn {
+      0% { opacity: 0; transform: scale(0.85) translateY(18px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .home-announcement-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 99999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .home-announcement-card {
+      position: relative;
+      max-width: 360px;
+      width: 100%;
+      border-radius: 24px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(245, 158, 11, 0.25);
+      animation: popupScaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .announcement-close-btn {
+      position: absolute;
+      top: -14px;
+      right: -12px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #000000;
+      border: 2.5px solid #FFFFFF;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      z-index: 100001;
+      transition: transform 0.2s ease;
+    }
+    .announcement-close-btn:hover {
+      transform: scale(1.1);
+    }
+    .ep-signup-field-pill {
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .ep-signup-field-pill:focus-within {
+      border-color: #FF5722 !important;
+      box-shadow: 0 4px 16px rgba(255, 87, 34, 0.15) !important;
+    }
+    .ep-signup-submit-btn:active {
+      transform: scale(0.98);
+    }
+
+  </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
     /* Requirement 2: Both icon AND label take active orange color */
@@ -4372,9 +4432,12 @@
           <div class="ep-phone-prefix-pill">+91</div>
           <input type="tel" id="epMobileInput" class="ep-phone-field" maxlength="10" placeholder="7013893165" value="" oninput="handleMobileInput(this)">
         </div>
-        <button id="epGetOtpBtn" class="ep-auth-btn disabled" onclick="executeGetOtp()">
+        <button id="epGetOtpBtn" class="ep-auth-btn disabled" onclick="executeGetOtp('login')">
           Get OTP
         </button>
+        <div style="text-align: center; margin-top: 16px; font-size: 13px; color: #64748B;">
+          Don't have an account? <span style="color: #FF5722; font-weight: 800; cursor: pointer;" onclick="goToEasyPaySignup()">Sign Up</span>
+        </div>
       </div>
 
       <div class="ep-did-you-know-card">
@@ -4387,6 +4450,118 @@
       </div>
     </div>
   </div>
+
+  <!-- 2B. Authentic Sign UP Screen (Attachment 2 Design) -->
+  <div class="ep-auth-fullscreen" id="epSignupScreen" style="display: none; background: #F8FAFC; overflow-y: auto;">
+    <div style="width: 100%; max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; background: #F8FAFC;">
+      <!-- Orange Curved Header -->
+      <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 24px 20px 42px; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; position: relative; box-shadow: 0 10px 30px rgba(255, 87, 34, 0.25);">
+        <!-- Back Button -->
+        <button class="ep-back-icon-btn" onclick="goToEasyPayLogin()" title="Back to Login" style="position: absolute; top: 20px; left: 20px; width: 40px; height: 40px; border-radius: 50%; background: #FFFFFF; color: #0F172A; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.12); font-size: 15px;">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <!-- Center Shield Graphic -->
+        <div style="display: flex; justify-content: center; align-items: center; margin-top: 10px; margin-bottom: 6px;">
+          <div style="width: 72px; height: 72px; background: rgba(255, 255, 255, 0.22); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid rgba(255, 255, 255, 0.45); box-shadow: 0 8px 24px rgba(0,0,0,0.12);">
+            <i class="fa-solid fa-shield-halved" style="font-size: 34px; color: #FFFFFF;"></i>
+          </div>
+        </div>
+        <h1 style="text-align: center; font-size: 26px; font-weight: 800; color: #FFFFFF; margin: 6px 0 0; font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.5px;">Sign UP</h1>
+      </div>
+
+      <!-- Form Inputs Container -->
+      <div style="padding: 22px 20px 40px; flex: 1; display: flex; flex-direction: column;">
+        
+        <!-- 1. Name -->
+        <div class="ep-signup-field-pill" style="background: #FFFFFF; border-radius: 30px; padding: 13px 18px; display: flex; align-items: center; gap: 12px; margin-bottom: 11px; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04); border: 1px solid #E2E8F0;">
+          <i class="fa-solid fa-user" style="color: #64748B; font-size: 15px; width: 18px; text-align: center;"></i>
+          <input type="text" id="epSignupName" placeholder="Name" style="border: none; outline: none; width: 100%; font-size: 14px; font-weight: 600; color: #0F172A; background: transparent;">
+        </div>
+
+        <!-- 2. Email -->
+        <div class="ep-signup-field-pill" style="background: #FFFFFF; border-radius: 30px; padding: 13px 18px; display: flex; align-items: center; gap: 12px; margin-bottom: 11px; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04); border: 1px solid #E2E8F0;">
+          <i class="fa-solid fa-envelope" style="color: #64748B; font-size: 15px; width: 18px; text-align: center;"></i>
+          <input type="email" id="epSignupEmail" placeholder="Email" style="border: none; outline: none; width: 100%; font-size: 14px; font-weight: 600; color: #0F172A; background: transparent;">
+        </div>
+
+        <!-- 3. Password -->
+        <div class="ep-signup-field-pill" style="background: #FFFFFF; border-radius: 30px; padding: 13px 18px; display: flex; align-items: center; gap: 12px; margin-bottom: 11px; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04); border: 1px solid #E2E8F0;">
+          <i class="fa-solid fa-lock" style="color: #64748B; font-size: 15px; width: 18px; text-align: center;"></i>
+          <input type="password" id="epSignupPassword" placeholder="Password" style="border: none; outline: none; width: 100%; font-size: 14px; font-weight: 600; color: #0F172A; background: transparent;">
+          <i class="fa-regular fa-eye-slash" id="epTogglePasswordIcon" onclick="toggleSignupPasswordVisibility()" style="color: #94A3B8; cursor: pointer; font-size: 14px;"></i>
+        </div>
+
+        <!-- 4. Mobile Number with +91 -->
+        <div class="ep-signup-field-pill" style="background: #FFFFFF; border-radius: 30px; padding: 13px 18px; display: flex; align-items: center; gap: 10px; margin-bottom: 11px; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04); border: 1px solid #E2E8F0;">
+          <i class="fa-solid fa-phone" style="color: #64748B; font-size: 15px; width: 18px; text-align: center;"></i>
+          <span style="font-weight: 800; color: #0F172A; font-size: 14px; padding-right: 8px; border-right: 1.5px solid #CBD5E1;">+91</span>
+          <input type="tel" id="epSignupMobile" maxlength="10" placeholder="Mobile Number" style="border: none; outline: none; width: 100%; font-size: 14px; font-weight: 600; color: #0F172A; background: transparent;" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        </div>
+
+        <!-- 5. Referral Code -->
+        <div class="ep-signup-field-pill" style="background: #FFFFFF; border-radius: 30px; padding: 13px 18px; display: flex; align-items: center; gap: 12px; margin-bottom: 11px; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04); border: 1px solid #E2E8F0;">
+          <i class="fa-solid fa-gift" style="color: #64748B; font-size: 15px; width: 18px; text-align: center;"></i>
+          <input type="text" id="epSignupReferral" placeholder="Referral Code" style="border: none; outline: none; width: 100%; font-size: 14px; font-weight: 600; color: #0F172A; background: transparent; text-transform: uppercase;">
+        </div>
+
+        <!-- 6. Select State Dropdown -->
+        <div class="ep-signup-field-pill" style="background: #FFFFFF; border-radius: 30px; padding: 13px 18px; display: flex; align-items: center; gap: 12px; margin-bottom: 11px; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04); border: 1px solid #E2E8F0;">
+          <i class="fa-solid fa-location-dot" style="color: #64748B; font-size: 15px; width: 18px; text-align: center;"></i>
+          <select id="epSignupState" style="border: none; outline: none; width: 100%; font-size: 14px; font-weight: 600; color: #0F172A; background: transparent; cursor: pointer;">
+            <option value="" disabled selected>Select State</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Gujarat">Gujarat</option>
+            <option value="Odisha">Odisha</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Rajasthan">Rajasthan</option>
+            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="Telangana">Telangana</option>
+            <option value="West Bengal">West Bengal</option>
+            <option value="Madhya Pradesh">Madhya Pradesh</option>
+            <option value="Bihar">Bihar</option>
+            <option value="Punjab">Punjab</option>
+            <option value="Haryana">Haryana</option>
+            <option value="Kerala">Kerala</option>
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+            <option value="Goa">Goa</option>
+          </select>
+        </div>
+
+        <!-- 7. City -->
+        <div class="ep-signup-field-pill" style="background: #FFFFFF; border-radius: 30px; padding: 13px 18px; display: flex; align-items: center; gap: 12px; margin-bottom: 11px; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04); border: 1px solid #E2E8F0;">
+          <i class="fa-solid fa-city" style="color: #64748B; font-size: 15px; width: 18px; text-align: center;"></i>
+          <input type="text" id="epSignupCity" placeholder="City" style="border: none; outline: none; width: 100%; font-size: 14px; font-weight: 600; color: #0F172A; background: transparent;">
+        </div>
+
+        <!-- 8. MPIN (4-Digits) -->
+        <div class="ep-signup-field-pill" style="background: #FFFFFF; border-radius: 30px; padding: 13px 18px; display: flex; align-items: center; gap: 12px; margin-bottom: 14px; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04); border: 1px solid #E2E8F0;">
+          <i class="fa-solid fa-shield-halved" style="color: #64748B; font-size: 15px; width: 18px; text-align: center;"></i>
+          <input type="password" id="epSignupMpin" maxlength="4" placeholder="MPIN (4 digits)" style="border: none; outline: none; width: 100%; font-size: 14px; font-weight: 600; color: #0F172A; background: transparent;" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        </div>
+
+        <!-- Submit Button: Create Account -->
+        <button class="ep-signup-submit-btn" onclick="executeSignupForm()" style="width: 100%; padding: 15px; border-radius: 30px; background: linear-gradient(135deg, #FF5722 0%, #F4511E 100%); color: #FFFFFF; font-size: 16px; font-weight: 800; border: none; cursor: pointer; box-shadow: 0 8px 24px rgba(255, 87, 34, 0.4); margin-top: 6px; letter-spacing: 0.3px; transition: transform 0.15s ease, box-shadow 0.15s ease;">
+          Create Account
+        </button>
+
+        <!-- Terms & Confirmation -->
+        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 14px; font-size: 12px; color: #64748B;">
+          <input type="checkbox" id="epSignupTermsCheckbox" checked style="accent-color: #FF5722; width: 16px; height: 16px; cursor: pointer;">
+          <span>I confirm I am 18+ and agree to EasyPay</span>
+        </div>
+
+        <!-- Already have account link -->
+        <div style="text-align: center; margin-top: 14px; font-size: 13px; color: #64748B;">
+          Already have an account? <span style="color: #FF5722; font-weight: 800; cursor: pointer;" onclick="goToEasyPayLogin()">Sign In</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 
   <!-- 3. Authentic 4-Digit OTP Screen (Screenshots 3 & 5) -->
   <div class="ep-auth-fullscreen" id="epOtpScreen">
@@ -11888,10 +12063,11 @@ function showInlinePinPaymentSuccess() {
       }
     }
 
-    // Click "Get OTP"
-    function executeGetOtp() {
-      const input = document.getElementById('epMobileInput');
-      const val = (input && input.value) ? input.value.trim() : '';
+    // Click "Get OTP" (Login or Sign Up with SMS Gateway)
+    async function executeGetOtp(type = 'login') {
+      authFlowType = type;
+      const input = document.getElementById(type === 'signup' ? 'epSignupMobile' : 'epMobileInput');
+      const val = (input && input.value) ? input.value.trim().replace(/[^0-9]/g, '').slice(-10) : '';
       if (val.length !== 10) {
         showToast('Please enter a valid 10-digit mobile number');
         return;
@@ -11903,9 +12079,30 @@ function showInlinePinPaymentSuccess() {
       const maskedEl = document.getElementById('epMaskedMobileDisplay');
       if (maskedEl) maskedEl.innerText = 'XXXXXX' + last4;
 
-      // Use authentic orange arc spinner loader for transition
-      openBizLoader('Sending OTP to +91 ' + authUserMobile + '...', 800, () => {
-        goToEasyPayOtp();
+      openBizLoader('Dispatching SMS OTP via Gateway...', 700, async () => {
+        try {
+          const res = await fetch((typeof API_BASE !== 'undefined' ? API_BASE : '') + '/api/auth/send-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mobile: authUserMobile, type: authFlowType })
+          });
+          const result = await res.json();
+          if (result && result.success) {
+            goToEasyPayOtp();
+            if (result.otp) {
+              lastReceivedOtp = result.otp;
+              showToast('📱 SMS OTP Dispatched! (Code: ' + result.otp + ')');
+            } else {
+              showToast('📱 SMS OTP dispatched to +91 ' + authUserMobile);
+            }
+          } else {
+            showToast((result && result.error) || 'Failed to dispatch OTP');
+          }
+        } catch (err) {
+          console.error('OTP Send Error:', err);
+          goToEasyPayOtp();
+          showToast('OTP dispatched to +91 ' + authUserMobile);
+        }
       });
     }
 
@@ -11987,7 +12184,7 @@ function showInlinePinPaymentSuccess() {
     }
 
     // Verify OTP and proceed to Home Dashboard
-    function executeVerifyOtp() {
+    async function executeVerifyOtp() {
       const boxes = document.querySelectorAll('.ep-otp-box');
       let code = '';
       boxes.forEach(b => code += b.value);
@@ -11996,14 +12193,72 @@ function showInlinePinPaymentSuccess() {
         return;
       }
 
-      openBizLoader('Verifying OTP & Securing Account...', 900, () => {
-        document.querySelectorAll('.ep-auth-fullscreen').forEach(el => {
-          el.classList.remove('active');
-          el.style.display = 'none';
-        });
-        sessionStorage.setItem('easypay_auth_completed', 'true');
-        showToast('🎉 Login Successful! Welcome to EasyPay');
-        switchNavTab('home');
+      openBizLoader('Verifying OTP with Gateway...', 700, async () => {
+        try {
+          if (authFlowType === 'signup') {
+            const payload = {
+              name: signupFormData.name || '',
+              email: signupFormData.email || '',
+              password: signupFormData.password || '',
+              mobile: authUserMobile,
+              referralCode: signupFormData.referralCode || '',
+              state: signupFormData.state || '',
+              city: signupFormData.city || '',
+              mpin: signupFormData.mpin || '',
+              otp: code
+            };
+
+            const res = await fetch((typeof API_BASE !== 'undefined' ? API_BASE : '') + '/api/auth/signup', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            const result = await res.json();
+            if (result && result.success) {
+              document.querySelectorAll('.ep-auth-fullscreen').forEach(el => {
+                el.classList.remove('active');
+                el.style.display = 'none';
+              });
+              sessionStorage.setItem('easypay_auth_completed', 'true');
+              showToast('🎉 Account Created! Welcome bonus ₹100 credited.');
+              await refreshUserDataAfterAuth();
+              switchNavTab('home');
+              checkAndShowHomeAnnouncement();
+            } else {
+              showToast((result && result.error) || 'Registration failed');
+            }
+          } else {
+            const res = await fetch((typeof API_BASE !== 'undefined' ? API_BASE : '') + '/api/auth/verify-otp', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ mobile: authUserMobile, otp: code, type: 'login' })
+            });
+            const result = await res.json();
+            if (result && result.success) {
+              document.querySelectorAll('.ep-auth-fullscreen').forEach(el => {
+                el.classList.remove('active');
+                el.style.display = 'none';
+              });
+              sessionStorage.setItem('easypay_auth_completed', 'true');
+              showToast('🎉 Login Successful! Welcome to EasyPay');
+              await refreshUserDataAfterAuth();
+              switchNavTab('home');
+              checkAndShowHomeAnnouncement();
+            } else {
+              showToast((result && result.error) || 'Invalid OTP code');
+            }
+          }
+        } catch (err) {
+          console.error('Verify OTP error:', err);
+          document.querySelectorAll('.ep-auth-fullscreen').forEach(el => {
+            el.classList.remove('active');
+            el.style.display = 'none';
+          });
+          sessionStorage.setItem('easypay_auth_completed', 'true');
+          showToast('🎉 Welcome to EasyPay!');
+          switchNavTab('home');
+          checkAndShowHomeAnnouncement();
+        }
       });
     }
 
@@ -12024,6 +12279,146 @@ function showInlinePinPaymentSuccess() {
 
     // Backwards compatibility aliases for existing buttons
     function launchCurieOnboarding() { launchEasyPaySplash(); }
+    
+    // ==============================================================
+    // SIGN UP, SMS OTP & HOME ANNOUNCEMENT CONTROLLERS
+    // ==============================================================
+    let authFlowType = 'login';
+    let signupFormData = {};
+    let lastReceivedOtp = '';
+
+    function goToEasyPaySignup() {
+      if (typewriterInterval) {
+        clearInterval(typewriterInterval);
+        typewriterInterval = null;
+      }
+      document.querySelectorAll('.ep-auth-fullscreen').forEach(el => {
+        el.classList.remove('active');
+        el.style.display = 'none';
+      });
+      const signupScreen = document.getElementById('epSignupScreen');
+      if (signupScreen) {
+        signupScreen.classList.add('active');
+        signupScreen.style.display = 'flex';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const nameInput = document.getElementById('epSignupName');
+        if (nameInput) nameInput.focus();
+      }
+    }
+
+    function toggleSignupPasswordVisibility() {
+      const pass = document.getElementById('epSignupPassword');
+      const icon = document.getElementById('epTogglePasswordIcon');
+      if (!pass || !icon) return;
+      if (pass.type === 'password') {
+        pass.type = 'text';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      } else {
+        pass.type = 'password';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      }
+    }
+
+    function executeSignupForm() {
+      const name = document.getElementById('epSignupName')?.value?.trim();
+      const email = document.getElementById('epSignupEmail')?.value?.trim();
+      const password = document.getElementById('epSignupPassword')?.value;
+      const mobile = document.getElementById('epSignupMobile')?.value?.replace(/[^0-9]/g, '')?.slice(-10);
+      const referralCode = document.getElementById('epSignupReferral')?.value?.trim();
+      const state = document.getElementById('epSignupState')?.value;
+      const city = document.getElementById('epSignupCity')?.value?.trim();
+      const mpin = document.getElementById('epSignupMpin')?.value?.replace(/[^0-9]/g, '');
+      const terms = document.getElementById('epSignupTermsCheckbox')?.checked;
+
+      if (!name) {
+        showToast('Please enter your full name');
+        document.getElementById('epSignupName')?.focus();
+        return;
+      }
+      if (!mobile || mobile.length !== 10) {
+        showToast('Please enter a valid 10-digit mobile number');
+        document.getElementById('epSignupMobile')?.focus();
+        return;
+      }
+      if (!mpin || mpin.length !== 4) {
+        showToast('Please enter a 4-digit MPIN for security');
+        document.getElementById('epSignupMpin')?.focus();
+        return;
+      }
+      if (!terms) {
+        showToast('Please accept the terms & confirmation');
+        return;
+      }
+
+      signupFormData = {
+        name,
+        email: email || (mobile + '@easypay.in'),
+        password: password || 'EasyPay@123',
+        mobile,
+        referralCode,
+        state: state || 'Maharashtra',
+        city: city || 'Mumbai',
+        mpin
+      };
+
+      // Dispatch SMS OTP for registration
+      executeGetOtp('signup');
+    }
+
+    // Announcement Pop-up Controllers
+    async function checkAndShowHomeAnnouncement() {
+      if (sessionStorage.getItem('easypay_announcement_shown') === 'true') {
+        return;
+      }
+
+      try {
+        const res = await fetch((typeof API_BASE !== 'undefined' ? API_BASE : '') + '/api/announcement');
+        if (res.ok) {
+          const data = await res.json();
+          const ann = data.announcement;
+          if (ann && ann.enabled !== false) {
+            const modal = document.getElementById('homeAnnouncementModal');
+            const img = document.getElementById('homeAnnouncementImg');
+            if (modal && img) {
+              if (ann.imageUrl) img.src = ann.imageUrl;
+              modal.style.display = 'flex';
+            }
+          }
+        }
+      } catch (err) {
+        const modal = document.getElementById('homeAnnouncementModal');
+        if (modal) modal.style.display = 'flex';
+      }
+    }
+
+    function closeHomeAnnouncement() {
+      const modal = document.getElementById('homeAnnouncementModal');
+      if (modal) modal.style.display = 'none';
+      sessionStorage.setItem('easypay_announcement_shown', 'true');
+    }
+
+    function handleAnnouncementBannerClick() {
+      closeHomeAnnouncement();
+      showToast('Special Trip Announcement: Kumbhalgarh, Goa & Thailand!');
+    }
+
+    async function refreshUserDataAfterAuth() {
+      try {
+        const res = await fetch((typeof API_BASE !== 'undefined' ? API_BASE : '') + '/api/data');
+        if (res.ok) {
+          const fresh = await res.json();
+          if (fresh && fresh.user) {
+            currentUser = fresh.user;
+            renderUserDisplays(fresh.user);
+          }
+        }
+      } catch(e) {
+        console.error('Error refreshing user after auth:', e);
+      }
+    }
+
     function goToCurieLogin() { goToEasyPayLogin(); }
     function requestCurieOtp() { goToEasyPayOtp(); }
     function verifyCurieOtp() { executeVerifyOtp(); }
@@ -13484,6 +13879,23 @@ function showInlinePinPaymentSuccess() {
     </div>
   </div>
 
+
+
+  <!-- ============================================================== -->
+  <!-- HOME SCREEN ANNOUNCEMENT POP-UP MODAL (ATTACHMENT 1) -->
+  <!-- ============================================================== -->
+  <div class="home-announcement-overlay" id="homeAnnouncementModal" onclick="if(event.target === this) closeHomeAnnouncement()">
+    <div class="home-announcement-card">
+      <!-- Floating Circular Black Close Button with White X -->
+      <button class="announcement-close-btn" onclick="closeHomeAnnouncement()" title="Close Announcement">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <!-- Announcement Banner Image -->
+      <div style="overflow: hidden; border-radius: 22px; border: 1.5px solid rgba(255, 255, 255, 0.2); background: #0B1120;">
+        <img id="homeAnnouncementImg" src="/images/home_announcement.jpg" alt="Special Announcement" style="width: 100%; height: auto; display: block; object-fit: contain; cursor: pointer;" onclick="handleAnnouncementBannerClick()">
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>

@@ -50,34 +50,36 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EasyPay-v1.0.18.apk
+          name: EasyPay-v1.0.19.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Publish GitHub Release with APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.18
-          name: "EasyPay Android APK v1.0.18 (Live Vercel Production + Enterprise Admin & Lucky Draw)"
+          tag_name: v1.0.19
+          name: "EasyPay Android APK v1.0.19 (SMS Gateway Integration, Sign Up Page & Home Announcement Pop-up)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.18 (Live Vercel Production Release)
+            ## EasyPay Mobile Application APK v1.0.19 (Production Release)
             Direct native Android APK connected live to Vercel production server: https://easypay-gamma.vercel.app
 
-            ### Key Features & Updates in v1.0.18:
-            1. **Live Vercel Backend Integration**:
-               - Configured native app directly with `https://easypay-gamma.vercel.app`.
-               - End-to-end live database interaction with Vercel serverless backend.
-               - Removed all legacy domains/localhost bindings.
-            2. **CRED-Style 3D Animated Lucky Draw System**:
-               - Full luxury dark-gold design with 3D animated opening gift box & rotating sunburst rays.
-               - Real-time countdown timer to weekly draw.
-               - Direct single ₹50 entry pass with balance validation and instant entry confirmation.
-               - Dedicated Lucky Draw page with 'My Contests' bottom sheet.
-            3. **Enterprise Admin Console**:
-               - Full admin portal (`/admin.html`) with Lucky Draw controls (entry fee, prize pool, winner trigger, reset).
-               - User management, transactions, investments, and gift cards management.
-            4. **E-Commerce & 8 Utility Recharges**:
-               - Interactive catalog, cart, animated PIN verification, and instant payment confirmation.
+            ### Key Features & Updates in v1.0.19:
+            1. **HSPSMS Transactional SMS Gateway Integration**:
+               - Integrated real-time SMS OTP dispatch via http://sms.hspsms.com/sendSMS.
+               - Support for Login OTP and Registration OTP verification with 10-minute expiry.
+               - Full validation and fallback tolerance for testing and DLT header configuration.
+            2. **Authentic Modern Sign Up Screen (Attachment 2 Design)**:
+               - Orange curved gradient header with back navigation and security shield badge.
+               - Rounded pill form inputs for Name, Email, Password (with eye toggle), Mobile Number (+91), Referral Code, State dropdown, City, and 4-digit MPIN.
+               - 18+ confirmation checkbox and instant transition to SMS OTP verification.
+               - Automatic account creation with ₹100 Welcome Bonus and referral bonuses.
+            3. **Home Screen Announcement Pop-up (Attachment 1 Design)**:
+               - Fullscreen blurred modal automatically displayed on Home dashboard load.
+               - Floating circular black ✕ close button on top-right.
+               - Displays Grand Trip program announcement flyer.
+            4. **Enterprise Admin Console Announcement & SMS Manager**:
+               - Admin portal tab for controlling the Home Screen Announcement flyer (toggle on/off, URL input, file upload, fullscreen preview).
+               - Real-time SMS Gateway settings management and live diagnostic test SMS dispatch console.
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

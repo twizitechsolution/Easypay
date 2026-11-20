@@ -8,3 +8,5 @@ add_server_*.js
 push_clean.js
 stage_*.js
 .env*
+*.apk
+ui_evidence/

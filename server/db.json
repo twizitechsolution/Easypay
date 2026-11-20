@@ -9,20 +9,14 @@
   "user": {
     "id": "EPY98808",
     "firstName": "Nirod",
-    "middleName": "",
     "lastName": "behera",
     "name": "Nirod behera",
     "mobile": "9876548808",
     "maskedMobile": "xxxxxx8808",
     "email": "nirodbehera220@gmail.com",
-    "emailVerified": false,
-    "pincode": "751001",
     "payId": "9876548808@easypay",
     "walletBalance": 30284.13,
-    "cashbackEarned": 2198.39,
-    "dailyInterestWallet": 0,
-    "dailyPayoutRate": 53.94,
-    "securityPin": "4321",
+    "securityPin": "1234",
     "bankName": "BANK OF INDIA",
     "bankAccountMasked": "xxxx 0975"
   },
@@ -982,6 +976,28 @@
     }
   ],
   "transactions": [
+    {
+      "id": "TXN_1795163861473",
+      "type": "CREDIT",
+      "category": "WELCOME_BONUS",
+      "title": "EasyPay Welcome Joining Bonus",
+      "subtitle": "Welcome bonus credited to wallet",
+      "amount": 100,
+      "status": "SUCCESS",
+      "date": "2026-11-20T08:37:41.473Z",
+      "reference": "JOIN_EPY36297"
+    },
+    {
+      "id": "TXN_1795161135772",
+      "type": "CREDIT",
+      "category": "WELCOME_BONUS",
+      "title": "EasyPay Welcome Joining Bonus",
+      "subtitle": "Welcome bonus credited to wallet",
+      "amount": 100,
+      "status": "SUCCESS",
+      "date": "2026-11-20T07:52:15.772Z",
+      "reference": "JOIN_EPY81145"
+    },
     {
       "id": "TXN_DRW_49764266",
       "title": "Weekly Lucky Draw Entry (Ticket #TKT-SUN-69026)",
@@ -2107,6 +2123,58 @@
       "securityPin": "1234",
       "bankName": "AXIS BANK",
       "bankAccountMasked": "xxxx 9988"
+    },
+    {
+      "id": "EPY81145",
+      "firstName": "Rohan",
+      "middleName": "",
+      "lastName": "Sharma",
+      "name": "Rohan Sharma",
+      "mobile": "9988776655",
+      "maskedMobile": "xxxxxx6655",
+      "email": "rohan@gmail.com",
+      "emailVerified": true,
+      "state": "Delhi",
+      "city": "New Delhi",
+      "mpin": "2580",
+      "securityPin": "2580",
+      "password": "EasyPay@123",
+      "referralCode": "EPCUN68",
+      "walletBalance": 100,
+      "cashbackEarned": 25,
+      "dailyInterestWallet": 0,
+      "dailyPayoutRate": 0.25,
+      "rewardPoints": 100,
+      "payId": "9988776655@easypay",
+      "bankName": "STATE BANK OF INDIA",
+      "bankAccountMasked": "xxxx 8285",
+      "createdAt": "2026-11-20T07:52:15.772Z"
+    },
+    {
+      "id": "EPY36297",
+      "firstName": "Aarav",
+      "middleName": "",
+      "lastName": "Patel",
+      "name": "Aarav Patel",
+      "mobile": "9123456789",
+      "maskedMobile": "xxxxxx6789",
+      "email": "aarav@gmail.com",
+      "emailVerified": true,
+      "state": "Gujarat",
+      "city": "Ahmedabad",
+      "mpin": "4321",
+      "securityPin": "4321",
+      "password": "EasyPay@123",
+      "referralCode": "EP9QDXW",
+      "walletBalance": 100,
+      "cashbackEarned": 25,
+      "dailyInterestWallet": 0,
+      "dailyPayoutRate": 0.25,
+      "rewardPoints": 100,
+      "payId": "9123456789@easypay",
+      "bankName": "STATE BANK OF INDIA",
+      "bankAccountMasked": "xxxx 5409",
+      "createdAt": "2026-11-20T08:37:41.473Z"
     }
   ],
   "adminAuth": {
@@ -2380,5 +2448,22 @@
     "entryAmount": 50,
     "prizeAmount": 25000,
     "boxState": "OPENED"
+  },
+  "smsConfig": {
+    "enabled": true,
+    "baseUrl": "http://sms.hspsms.com/sendSMS",
+    "username": "Twizitech",
+    "apikey": "e1f62636-1fc6-4c6c-8693-5995873a9180",
+    "sendername": "XYZ",
+    "smstype": "TRANS",
+    "template": "Your EasyPay verification OTP is {OTP}. Valid for 10 minutes. Do not share with anyone."
+  },
+  "announcementPopup": {
+    "enabled": true,
+    "imageUrl": "/images/home_announcement.jpg",
+    "title": "Mega Year-End Bonanza",
+    "subtitle": "Kumbhalgarh, Goa & Thailand Trips",
+    "link": "",
+    "updatedAt": "2026-11-20T10:21:21.549Z"
   }
 }
