@@ -12665,6 +12665,29 @@ function showInlinePinPaymentSuccess() {
       showToast('Special Trip Announcement: Kumbhalgarh, Goa & Thailand!');
     }
 
+    function renderUserDisplays(u) {
+      if (!u) return;
+      try {
+        if (typeof appData !== 'undefined' && appData) {
+          appData.user = Object.assign(appData.user || {}, u);
+        }
+        const name = u.name || ((u.firstName || '') + ' ' + (u.lastName || '')).trim() || 'User';
+        const mobile = u.mobile || '7013893165';
+        const masked = 'XXXXXX' + mobile.slice(-4);
+        const upiEl = document.getElementById('homeUserUpiDisplay');
+        if (upiEl) upiEl.innerText = masked + '@easypay';
+
+        const profName = document.getElementById('profileUserName');
+        if (profName) profName.innerText = name;
+        const profPhone = document.getElementById('profileUserPhone');
+        if (profPhone) profPhone.innerText = '+91 ' + mobile;
+
+        if (typeof renderWallet === 'function') renderWallet();
+      } catch(e) {
+        console.warn('renderUserDisplays notice:', e);
+      }
+    }
+
     async function refreshUserDataAfterAuth() {
       try {
         const res = await fetch((typeof API_BASE !== 'undefined' ? API_BASE : '') + '/api/data');
