@@ -46,9 +46,9 @@
             document.getElementById('adminSmsEnabledSelect').value = s.enabled ? 'true' : 'false';
             document.getElementById('adminSmsUserInput').value = s.username || 'Twizitech';
             document.getElementById('adminSmsKeyInput').value = s.apikey || 'e1f62636-1fc6-4c6c-8693-5995873a9180';
-            document.getElementById('adminSmsSenderInput').value = s.sendername || 'XYZ';
+            document.getElementById('adminSmsSenderInput').value = s.sendername || 'AFTTRD';
             document.getElementById('adminSmsUrlInput').value = s.baseUrl || 'http://sms.hspsms.com/sendSMS';
-            document.getElementById('adminSmsTemplateInput').value = s.template || 'Your EasyPay verification OTP is {OTP}. Valid for 10 minutes.';
+            document.getElementById('adminSmsTemplateInput').value = s.template || 'Your Aftertrade OTP is {#var#}. Valid 5 min. Do not share. -AfterTrade';
             
             const badge = document.getElementById('adminSmsStatusBadge');
             if (badge) {
@@ -1962,7 +1962,7 @@
                 <div class="form-row-2">
                   <div class="form-group">
                     <label>Approved DLT Sender Name (6-Char Header)</label>
-                    <input type="text" id="adminSmsSenderInput" value="XYZ" placeholder="e.g. TWIZIT">
+                    <input type="text" id="adminSmsSenderInput" value="AFTTRD" placeholder="e.g. AFTTRD">
                     <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Must match exactly the header approved in your HSPSMS dashboard.</div>
                   </div>
                   <div class="form-group">
@@ -1973,8 +1973,8 @@
 
                 <div class="form-group">
                   <label>DLT Approved Message Template</label>
-                  <input type="text" id="adminSmsTemplateInput" value="Your EasyPay verification OTP is {OTP}. Valid for 10 minutes.">
-                  <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Use <code>{OTP}</code> placeholder for dynamic 4-digit code.</div>
+                  <input type="text" id="adminSmsTemplateInput" value="Your Aftertrade OTP is {#var#}. Valid 5 min. Do not share. -AfterTrade">
+                  <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Use <code>{#var#}</code> or <code>{OTP}</code> placeholder for dynamic 4-digit code.</div>
                 </div>
 
                 <div style="margin-top: 20px;">

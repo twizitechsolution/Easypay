@@ -2454,9 +2454,9 @@
     "baseUrl": "http://sms.hspsms.com/sendSMS",
     "username": "Twizitech",
     "apikey": "e1f62636-1fc6-4c6c-8693-5995873a9180",
-    "sendername": "XYZ",
+    "sendername": "AFTTRD",
     "smstype": "TRANS",
-    "template": "Your EasyPay verification OTP is {OTP}. Valid for 10 minutes. Do not share with anyone."
+    "template": "Your Aftertrade OTP is {#var#}. Valid 5 min. Do not share. -AfterTrade"
   },
   "announcementPopup": {
     "enabled": true,

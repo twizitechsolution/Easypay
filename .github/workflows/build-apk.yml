@@ -50,31 +50,28 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EasyPay-v1.0.20.apk
+          name: EasyPay-v1.0.21.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Publish GitHub Release with APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.20
-          name: "EasyPay Android APK v1.0.20 (Clean Flyer Pop-up, Dynamic OTP Auto-Fill & Admin DLT Manager)"
+          tag_name: v1.0.21
+          name: "EasyPay Android APK v1.0.21 (Live DLT-Approved SMS Integration - AFTTRD)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.20 (Production Release)
+            ## EasyPay Mobile Application APK v1.0.21 (Production Release)
             Direct native Android APK connected live to Vercel production server: https://easypay-gamma.vercel.app
 
-            ### Key Features & Updates in v1.0.20:
-            1. **Clean Announcement Pop-up (No Phone Bezels)**:
-               - The announcement modal now uses the clean, cropped promotional flyer for Kumbhalgarh, Goa & Thailand trips (`/images/home_announcement.jpg`).
-               - Sleek floating circular close button (✕) positioned cleanly at the top-right corner.
-               - Smooth tap-to-dismiss via close button and backdrop click.
-            2. **OTP Delivery Resilience & Instant 1-Tap Auto-Fill**:
-               - Added prominent Verification Code banner right on the OTP screen with a 1-tap Auto-Fill button.
-               - Automatically auto-fills the 4 OTP boxes after 350ms so user testing is never blocked even if telecom SMS is delayed or rejected due to DLT sender approval (`Sender Name Invalid` for placeholder `XYZ`).
-               - Live status note explaining TRAI DLT Header requirements.
-            3. **Enterprise Admin Announcement & SMS Manager**:
-               - Fixed script loading and tab pane rendering for the Announcement & SMS tab in `/admin`.
-               - Direct DLT Header configuration and Live SMS Tester with real-time response logger.
+            ### Key Features & Updates in v1.0.21:
+            1. **Live DLT-Approved SMS Gateway Integration (Sender: AFTTRD)**:
+               - Updated HSPSMS configuration with approved DLT Entity Header: `AFTTRD`.
+               - Approved Template: `Your Aftertrade OTP is {#var#}. Valid 5 min. Do not share. -AfterTrade`.
+               - Verified real-time SMS delivery to physical handset (Gateway Status: `Message SuccessFully Submitted`).
+            2. **Clean Trip Announcement Pop-up (No Phone Bezels)**:
+               - High-resolution cropped flyer for Kumbhalgarh, Goa & Thailand trips with floating ✕ close button.
+            3. **Resilient OTP Verification & 1-Tap Auto-Fill**:
+               - Auto-populates 4 digit OTP and activates the Verify button immediately.
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

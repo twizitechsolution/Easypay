@@ -78,9 +78,9 @@ function sendSmsOtp(mobile, otp, customMessage) {
       baseUrl: 'http://sms.hspsms.com/sendSMS',
       username: 'Twizitech',
       apikey: 'e1f62636-1fc6-4c6c-8693-5995873a9180',
-      sendername: 'XYZ',
+      sendername: 'AFTTRD',
       smstype: 'TRANS',
-      template: 'Your EasyPay verification OTP is {OTP}. Valid for 10 minutes.'
+      template: 'Your Aftertrade OTP is {#var#}. Valid 5 min. Do not share. -AfterTrade'
     };
 
     const cleanMobile = (mobile || '').replace(/[^0-9]/g, '').slice(-10);
@@ -90,13 +90,13 @@ function sendSmsOtp(mobile, otp, customMessage) {
       return resolve({ success: true, simulated: true, otp });
     }
 
-    const template = customMessage || cfg.template || 'Your EasyPay verification OTP is {OTP}. Valid for 10 minutes.';
-    const msg = template.replace('{OTP}', otp);
+    const template = customMessage || cfg.template || 'Your Aftertrade OTP is {#var#}. Valid 5 min. Do not share. -AfterTrade';
+    const msg = template.replace('{#var#}', otp).replace('{OTP}', otp);
 
     const queryParams = new URLSearchParams({
       username: cfg.username || 'Twizitech',
       message: msg,
-      sendername: cfg.sendername || 'XYZ',
+      sendername: cfg.sendername || 'AFTTRD',
       smstype: cfg.smstype || 'TRANS',
       numbers: cleanMobile,
       apikey: cfg.apikey || 'e1f62636-1fc6-4c6c-8693-5995873a9180'
@@ -195,14 +195,16 @@ function requestHandler(req, res) {
         };
 
         const smsResult = await sendSmsOtp(cleanMobile, otp);
+        const isSuccess = (smsResult.gatewayResponse || '').includes('Message SuccessFully Submitted');
         const isSenderInvalid = (smsResult.gatewayResponse || '').includes('Sender Name Invalid');
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({
           success: true,
-          message: isSenderInvalid
-            ? `Verification code is ${otp}. (Note: HSPSMS gateway reported 'Sender Name Invalid' for header 'XYZ'. Update your approved DLT Header in Admin Settings).`
-            : `OTP sent successfully to +91 ${cleanMobile}`,
+          delivered: isSuccess,
+          message: isSuccess
+            ? `OTP SMS successfully dispatched to +91 ${cleanMobile} via DLT Header AFTTRD`
+            : (isSenderInvalid ? `OTP code is ${otp}. HSPSMS reports Sender Name needs DLT check.` : `OTP generated for +91 ${cleanMobile}`),
           otp: otp,
           isRegistered: !!existingUser,
           isSenderInvalid: isSenderInvalid,
