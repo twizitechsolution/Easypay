@@ -9,7 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>
     // ==============================================================
     // ANNOUNCEMENT & SMS GATEWAY ADMIN CONTROLLERS
     // ==============================================================
@@ -1836,7 +1837,173 @@
         </div>
 
         <!-- ==========================================
-             TAB 9: REPORTS & BACKUP
+             TAB: ANNOUNCEMENT & SMS MANAGER
+             ========================================== -->
+        <div id="tabAnnouncement" class="tab-view-content">
+          <!-- Card 1: Home Announcement Pop-up -->
+          <div class="panel-card" style="margin-bottom: 24px;">
+            <div class="card-head" style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <div class="card-title" style="margin: 0;">Home Screen Announcement Pop-up Manager</div>
+                  <span id="adminAnnouncementStatusBadge" class="badge-status success"><i class="fa-solid fa-circle-check"></i> ACTIVE</span>
+                </div>
+                <div class="card-subtitle">Manage promotional flyers and trip announcements displayed as centered pop-ups when users launch the app</div>
+              </div>
+              <button type="button" class="btn-topbar secondary" onclick="previewAnnouncementModal()">
+                <i class="fa-solid fa-eye"></i> Preview Pop-up
+              </button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 340px; gap: 28px; margin-top: 20px;">
+              <!-- Left: Form -->
+              <form id="adminAnnouncementForm" onsubmit="saveAnnouncementSettings(event)">
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label>Pop-up Status</label>
+                    <select id="adminAnnounceEnabledSelect">
+                      <option value="true">Enabled (Show to Users on Home Launch)</option>
+                      <option value="false">Disabled (Do Not Show)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Announcement Campaign Title</label>
+                    <input type="text" id="adminAnnounceTitleInput" value="Grand Trip Program Announcement (Kumbhalgarh, Goa, Thailand)">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Flyer Graphic Image URL or Path</label>
+                  <input type="text" id="adminAnnounceImageUrlInput" value="/images/home_announcement.jpg" oninput="updateAdminAnnouncePreview(this.value)">
+                  <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Direct path: <code>/images/home_announcement.jpg</code> or external image HTTPS URL.</div>
+                </div>
+
+                <div class="form-group">
+                  <label>Or Upload New Graphic Image from Computer</label>
+                  <input type="file" id="adminAnnounceFileInput" accept="image/*" onchange="handleAdminAnnounceFileUpload(event)" style="padding: 8px 12px; background: var(--bg-hover); border: 1px dashed var(--border-color); border-radius: 8px; width: 100%;">
+                </div>
+
+                <div class="form-group">
+                  <label>Target Action Link (Optional)</label>
+                  <input type="text" id="adminAnnounceLinkInput" placeholder="e.g. /offers or /trip-details">
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top: 20px;">
+                  <button type="submit" class="btn-topbar primary">
+                    <i class="fa-solid fa-floppy-disk"></i> Save Announcement Settings
+                  </button>
+                  <button type="button" class="btn-topbar secondary" onclick="resetAnnouncementToDefault()">
+                    <i class="fa-solid fa-rotate-left"></i> Reset to Default Flyer
+                  </button>
+                </div>
+              </form>
+
+              <!-- Right: Live Card Preview -->
+              <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 18px; text-align: center; display: flex; flex-direction: column; align-items: center;">
+                <div style="font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;">Live Graphic Preview</div>
+                <div style="position: relative; max-width: 260px; width: 100%; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.15);">
+                  <div style="position: absolute; top: 8px; right: 8px; width: 26px; height: 26px; border-radius: 50%; background: rgba(0,0,0,0.7); border: 1.5px solid #FFF; color: #FFF; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; z-index: 5;">✕</div>
+                  <img id="adminAnnouncementImgPreview" src="/images/home_announcement.jpg" alt="Preview" style="width: 100%; height: auto; display: block; object-fit: contain;">
+                </div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 10px;">Displays centered modal on app home with top-right close button.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: HSPSMS Gateway Configuration -->
+          <div class="panel-card">
+            <div class="card-head" style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <div class="card-title" style="margin: 0;">HSPSMS Transactional SMS Gateway Configuration</div>
+                  <span id="adminSmsStatusBadge" class="badge-status success"><i class="fa-solid fa-tower-broadcast"></i> ONLINE</span>
+                </div>
+                <div class="card-subtitle">Manage official SMS OTP delivery for User Login & User Sign-Up via <code>sms.hspsms.com</code></div>
+              </div>
+            </div>
+
+            <!-- DLT Compliance Alert -->
+            <div style="margin: 20px 0; padding: 14px 18px; background: rgba(255, 87, 34, 0.08); border-left: 4px solid #FF5722; border-radius: 8px; display: flex; gap: 14px; align-items: flex-start;">
+              <i class="fa-solid fa-triangle-exclamation" style="color: #FF5722; font-size: 20px; margin-top: 2px;"></i>
+              <div style="font-size: 13px; color: var(--text-main); line-height: 1.5;">
+                <strong style="color: #FF5722;">TRAI DLT Entity Header Requirement:</strong><br>
+                Under Indian telecom regulations, every SMS sender requires an approved 6-character Entity Header (Sender ID). The initial placeholder <code>XYZ</code> is rejected by HSPSMS with <code>Sender Name Invalid</code>. Please enter your approved 6-letter Sender ID (e.g. <code>TWIZIT</code>, <code>TWZTEC</code>) approved on your HSPSMS.com portal.
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 340px; gap: 28px;">
+              <!-- Left: SMS Config Form -->
+              <form id="adminSmsForm" onsubmit="saveSmsSettings(event)">
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label>SMS Dispatch Status</label>
+                    <select id="adminSmsEnabledSelect">
+                      <option value="true">Enabled (Live Gateway Dispatch)</option>
+                      <option value="false">Disabled (Mock Simulation Mode)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Gateway Base URL</label>
+                    <input type="text" id="adminSmsUrlInput" value="http://sms.hspsms.com/sendSMS">
+                  </div>
+                </div>
+
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label>HSPSMS Account Username</label>
+                    <input type="text" id="adminSmsUserInput" value="Twizitech">
+                  </div>
+                  <div class="form-group">
+                    <label>HSPSMS API Key</label>
+                    <input type="text" id="adminSmsKeyInput" value="e1f62636-1fc6-4c6c-8693-5995873a9180">
+                  </div>
+                </div>
+
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label>Approved DLT Sender Name (6-Char Header)</label>
+                    <input type="text" id="adminSmsSenderInput" value="XYZ" placeholder="e.g. TWIZIT">
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Must match exactly the header approved in your HSPSMS dashboard.</div>
+                  </div>
+                  <div class="form-group">
+                    <label>SMS Route Type</label>
+                    <input type="text" id="adminSmsTypeInput" value="TRANS" readonly style="background: var(--bg-hover); opacity: 0.85;">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>DLT Approved Message Template</label>
+                  <input type="text" id="adminSmsTemplateInput" value="Your EasyPay verification OTP is {OTP}. Valid for 10 minutes.">
+                  <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Use <code>{OTP}</code> placeholder for dynamic 4-digit code.</div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                  <button type="submit" class="btn-topbar primary">
+                    <i class="fa-solid fa-floppy-disk"></i> Save SMS Configuration
+                  </button>
+                </div>
+              </form>
+
+              <!-- Right: Live SMS Tester -->
+              <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+                <div style="font-size: 13px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+                  <i class="fa-solid fa-paper-plane" style="color: #FF5722;"></i>
+                  <span>Live SMS Gateway Tester</span>
+                </div>
+                <div style="font-size: 12px; color: var(--text-muted);">Send an instant test OTP to verify gateway connectivity and your sender name:</div>
+                <div class="form-group" style="margin: 0;">
+                  <label style="font-size: 11px;">Target 10-Digit Mobile Number</label>
+                  <input type="tel" id="adminSmsTestMobile" placeholder="e.g. 7013893165" maxlength="10">
+                </div>
+                <button type="button" class="btn-topbar primary" style="justify-content: center; width: 100%;" onclick="executeAdminSmsTest()">
+                  <i class="fa-solid fa-bolt"></i> Send Live Test SMS
+                </button>
+                <div id="adminSmsTestConsole" style="display: none; background: #0B1120; color: #10B981; font-family: monospace; font-size: 11px; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); max-height: 180px; overflow-y: auto; white-space: pre-wrap;">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
              ========================================== -->
         <div id="tabReports" class="tab-view-content">
           <div class="panel-card">

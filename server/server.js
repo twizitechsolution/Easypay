@@ -195,13 +195,17 @@ function requestHandler(req, res) {
         };
 
         const smsResult = await sendSmsOtp(cleanMobile, otp);
+        const isSenderInvalid = (smsResult.gatewayResponse || '').includes('Sender Name Invalid');
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({
           success: true,
-          message: `OTP sent successfully to +91 ${cleanMobile}`,
+          message: isSenderInvalid
+            ? `Verification code is ${otp}. (Note: HSPSMS gateway reported 'Sender Name Invalid' for header 'XYZ'. Update your approved DLT Header in Admin Settings).`
+            : `OTP sent successfully to +91 ${cleanMobile}`,
           otp: otp,
           isRegistered: !!existingUser,
+          isSenderInvalid: isSenderInvalid,
           gatewayStatus: smsResult.gatewayResponse || 'OK'
         }));
       } catch (err) {
