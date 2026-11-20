@@ -4581,20 +4581,9 @@
       </div>
 
       <div class="ep-auth-card">
-        <div style="font-size: 13px; color: #4A4A4A; font-weight: 500;">
+        <div style="font-size: 13px; color: #4A4A4A; font-weight: 500; margin-bottom: 20px;">
           Enter OTP sent to <strong id="epMaskedMobileDisplay">XXXXXX3165</strong> 
           <span style="color: #FF5722; font-weight: 700; cursor: pointer; margin-left: 4px;" onclick="goToEasyPayLogin()">Change</span>
-        </div>
-
-        <!-- High-Visibility Dynamic OTP Display & 1-Tap Auto-Fill Banner -->
-        <div id="epOtpHintBanner" style="margin: 14px 0 16px; padding: 12px 14px; background: #FFF7ED; border: 1.5px dashed #FB923C; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
-          <div>
-            <div style="font-size: 10px; color: #C2410C; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Verification Code</div>
-            <div style="font-size: 20px; font-weight: 900; color: #EA580C; letter-spacing: 4px;" id="epOtpDisplayCode">1234</div>
-          </div>
-          <button type="button" onclick="autoFillOtpCode()" style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); color: #FFFFFF; border: none; border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(255,87,34,0.35); display: flex; align-items: center; gap: 6px;">
-            <i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Fill
-          </button>
         </div>
 
         <div class="ep-otp-grid">
@@ -4613,11 +4602,6 @@
         </div>
         <div class="ep-otp-meta-row" id="epOtpResendLinks" style="display:none;">
           Resend OTP in <span style="color:#FF5722; font-weight:700; cursor:pointer;" onclick="resendOtp()">Resend SMS</span> | <span style="color:#FF5722; font-weight:700; cursor:pointer;" onclick="resendOtp()">Call Me</span>
-        </div>
-
-        <!-- DLT Notice for Telecom SMS Gateway -->
-        <div id="epOtpDltNote" style="margin-top: 12px; font-size: 11px; color: #065F46; line-height: 1.4; background: #ECFDF5; border: 1px solid #A7F3D0; padding: 8px 12px; border-radius: 8px; text-align: left;">
-          <i class="fa-solid fa-circle-check" style="color: #10B981;"></i> <strong>DLT Active:</strong> Real-time SMS dispatched to your handset via registered header <strong>AFTTRD</strong>. Code is also displayed above for 1-tap verification.
         </div>
       </div>
 
@@ -12097,7 +12081,7 @@ function showInlinePinPaymentSuccess() {
       const maskedEl = document.getElementById('epMaskedMobileDisplay');
       if (maskedEl) maskedEl.innerText = 'XXXXXX' + last4;
 
-      openBizLoader('Dispatching SMS OTP via Gateway...', 600, async () => {
+      openBizLoader('Sending SMS OTP via Carrier...', 600, async () => {
         try {
           const res = await fetch((typeof API_BASE !== 'undefined' ? API_BASE : '') + '/api/auth/send-otp', {
             method: 'POST',
@@ -12106,24 +12090,21 @@ function showInlinePinPaymentSuccess() {
           });
           const result = await res.json();
           if (result && result.success) {
-            if (result.otp) {
-              lastReceivedOtp = result.otp;
-            }
-            goToEasyPayOtp(result.isSenderInvalid);
-            showToast('📱 Verification Code: ' + (result.otp || '1234'));
+            goToEasyPayOtp();
+            showToast('📱 SMS OTP sent to +91 ' + authUserMobile);
           } else {
             showToast((result && result.error) || 'Failed to dispatch OTP');
           }
         } catch (err) {
           console.error('OTP Send Error:', err);
-          goToEasyPayOtp(true);
-          showToast('Verification Code: ' + (lastReceivedOtp || '1234'));
+          goToEasyPayOtp();
+          showToast('OTP sent to +91 ' + authUserMobile);
         }
       });
     }
 
     // 3. OTP Screen
-    function goToEasyPayOtp(isSenderInvalid) {
+    function goToEasyPayOtp() {
       document.querySelectorAll('.ep-auth-fullscreen').forEach(el => {
         el.classList.remove('active');
         el.style.display = 'none';
@@ -12133,38 +12114,14 @@ function showInlinePinPaymentSuccess() {
         otpScreen.classList.add('active');
         otpScreen.style.display = 'flex';
 
-        // Update displayed code
-        const code = lastReceivedOtp || '1234';
-        const codeDisplay = document.getElementById('epOtpDisplayCode');
-        if (codeDisplay) codeDisplay.innerText = code;
-
-        const dltNote = document.getElementById('epOtpDltNote');
-        if (dltNote) {
-          dltNote.style.display = 'block';
-        }
-
-        // Clear old digits
+        // Clear all digits so user enters manually from handset SMS
         const boxes = document.querySelectorAll('.ep-otp-box');
         boxes.forEach(b => b.value = '');
         checkOtpFilled();
-
-        // Smooth Auto-fill
-        setTimeout(() => {
-          autoFillOtpCode();
-        }, 350);
+        if (boxes[0]) boxes[0].focus();
 
         startOtpCountdown();
       }
-    }
-
-    function autoFillOtpCode() {
-      const code = (lastReceivedOtp || '1234').toString();
-      const boxes = document.querySelectorAll('.ep-otp-box');
-      for (let i = 0; i < boxes.length; i++) {
-        if (boxes[i]) boxes[i].value = code[i] || '';
-      }
-      checkOtpFilled();
-      showToast('OTP Auto-filled: ' + code);
     }
 
     function handleOtpInput(input, index) {
@@ -12266,7 +12223,10 @@ function showInlinePinPaymentSuccess() {
               switchNavTab('home');
               checkAndShowHomeAnnouncement();
             } else {
-              showToast((result && result.error) || 'Registration failed');
+              showToast((result && result.error) || 'Invalid OTP. Please enter the correct code.');
+              boxes.forEach(b => b.value = '');
+              checkOtpFilled();
+              if (boxes[0]) boxes[0].focus();
             }
           } else {
             const res = await fetch((typeof API_BASE !== 'undefined' ? API_BASE : '') + '/api/auth/verify-otp', {
@@ -12286,19 +12246,18 @@ function showInlinePinPaymentSuccess() {
               switchNavTab('home');
               checkAndShowHomeAnnouncement();
             } else {
-              showToast((result && result.error) || 'Invalid OTP code');
+              showToast((result && result.error) || 'Invalid OTP. Please enter the correct code.');
+              boxes.forEach(b => b.value = '');
+              checkOtpFilled();
+              if (boxes[0]) boxes[0].focus();
             }
           }
         } catch (err) {
           console.error('Verify OTP error:', err);
-          document.querySelectorAll('.ep-auth-fullscreen').forEach(el => {
-            el.classList.remove('active');
-            el.style.display = 'none';
-          });
-          sessionStorage.setItem('easypay_auth_completed', 'true');
-          showToast('🎉 Welcome to EasyPay!');
-          switchNavTab('home');
-          checkAndShowHomeAnnouncement();
+          showToast('Failed to verify OTP. Please try again.');
+          boxes.forEach(b => b.value = '');
+          checkOtpFilled();
+          if (boxes[0]) boxes[0].focus();
         }
       });
     }

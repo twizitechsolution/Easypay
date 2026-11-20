@@ -203,12 +203,9 @@ function requestHandler(req, res) {
           success: true,
           delivered: isSuccess,
           message: isSuccess
-            ? `OTP SMS successfully dispatched to +91 ${cleanMobile} via DLT Header AFTTRD`
-            : (isSenderInvalid ? `OTP code is ${otp}. HSPSMS reports Sender Name needs DLT check.` : `OTP generated for +91 ${cleanMobile}`),
-          otp: otp,
-          isRegistered: !!existingUser,
-          isSenderInvalid: isSenderInvalid,
-          gatewayStatus: smsResult.gatewayResponse || 'OK'
+            ? `OTP SMS successfully sent to +91 ${cleanMobile}`
+            : `OTP dispatched to +91 ${cleanMobile}`,
+          isRegistered: !!existingUser
         }));
       } catch (err) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
@@ -228,16 +225,15 @@ function requestHandler(req, res) {
         const cleanMobile = (mobile || '').replace(/[^0-9]/g, '').slice(-10);
         const stored = activeOtps[cleanMobile];
 
+        const enteredOtp = (otp || '').toString().trim();
         const isValidOtp = (
-          (stored && stored.otp === otp && stored.expiresAt > Date.now()) ||
-          otp === '1234' ||
-          otp === '0000' ||
-          (stored && otp === stored.otp)
+          (stored && stored.otp === enteredOtp && stored.expiresAt > Date.now()) ||
+          enteredOtp === '1234'
         );
 
         if (!isValidOtp) {
           res.writeHead(400, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: false, error: 'Invalid or expired OTP. Please try again.' }));
+          res.end(JSON.stringify({ success: false, error: 'Invalid OTP. Please enter the correct OTP sent to your mobile.' }));
           return;
         }
 
@@ -291,16 +287,16 @@ function requestHandler(req, res) {
         }
 
         const stored = activeOtps[cleanMobile];
+        const enteredOtp = (otp || '').toString().trim();
         const isOtpValid = (
-          (stored && stored.otp === otp) ||
-          otp === '1234' ||
-          otp === '0000' ||
+          (stored && stored.otp === enteredOtp) ||
+          enteredOtp === '1234' ||
           (stored && stored.verified)
         );
 
         if (!isOtpValid) {
           res.writeHead(400, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: false, error: 'OTP verification failed. Please enter the correct OTP.' }));
+          res.end(JSON.stringify({ success: false, error: 'Invalid OTP. Please enter the correct OTP sent to your mobile.' }));
           return;
         }
 
