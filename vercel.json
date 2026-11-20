@@ -2,11 +2,12 @@
   "version": 2,
   "cleanUrls": true,
   "functions": {
-    "api/**/*.js": {
+    "api/index.js": {
       "includeFiles": "server/db.json"
     }
   },
   "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/app", "destination": "/app.html" }
   ]

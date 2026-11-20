@@ -50,20 +50,20 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EasyPay-v1.0.17.apk
+          name: EasyPay-v1.0.18.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Publish GitHub Release with APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.17
-          name: "EasyPay Android APK v1.0.17 (Live Vercel Production + Enterprise Admin & Lucky Draw)"
+          tag_name: v1.0.18
+          name: "EasyPay Android APK v1.0.18 (Live Vercel Production + Enterprise Admin & Lucky Draw)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.17 (Live Vercel Production Release)
+            ## EasyPay Mobile Application APK v1.0.18 (Live Vercel Production Release)
             Direct native Android APK connected live to Vercel production server: https://easypay-gamma.vercel.app
 
-            ### Key Features & Updates in v1.0.17:
+            ### Key Features & Updates in v1.0.18:
             1. **Live Vercel Backend Integration**:
                - Configured native app directly with `https://easypay-gamma.vercel.app`.
                - End-to-end live database interaction with Vercel serverless backend.
