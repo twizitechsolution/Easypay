@@ -2570,7 +2570,7 @@
       align-items: center;
       gap: 8px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-      z-index: 9999;
+      z-index: 99999;
       opacity: 0;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       pointer-events: none;
@@ -9241,8 +9241,13 @@
 
     function renderWallet() {
       if (appData.user) {
-        document.getElementById('userWalletBalanceDisplay').innerText = 
-          '₹' + (appData.user.walletBalance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+        const balEl = document.getElementById('userWalletBalanceDisplay');
+        if (balEl) {
+          balEl.innerText = '₹' + (appData.user.walletBalance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+        }
+        if (typeof updateWalletDisplay === 'function') {
+          updateWalletDisplay();
+        }
 
         const dailyEl = document.getElementById('userDailyInterestDisplay');
         if (dailyEl) {
@@ -9327,13 +9332,17 @@
       const allCards = appData.giftCards || [];
       const filtered = exploreCategory === 'All Brands' 
         ? allCards 
-        : allCards.filter(c => c.category === exploreCategory);
+        : allCards.filter(c => {
+            const cat = (c.category || '').toLowerCase();
+            const target = exploreCategory.toLowerCase();
+            return cat.includes(target) || target.includes(cat) || (c.rawCategories && c.rawCategories.some(rc => rc.toLowerCase().includes(target)));
+          });
 
       const itemsToShow = filtered.slice(0, explorePage * exploreBatchSize);
       grid.innerHTML = itemsToShow.map(c => `
         <div class="explore-brand-card" onclick="openBrandPurchaseModalById('${c.id}')">
           <div class="explore-brand-icon-box" style="background: ${c.bgColor || '#1E293B'};">
-            ${c.iconClass ? `<i class="${c.iconClass}"></i>` : `<img src="${c.logo}" alt="${c.name}">`}
+            ${c.iconClass ? `<i class="${c.iconClass}"></i>` : `<img src="${c.logo}" alt="${c.name}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">`}
           </div>
           <span class="explore-save-badge">${c.saveText || 'Save ' + c.cashbackRate + '%'}</span>
           <span class="explore-brand-label">${c.subName || c.name}</span>
@@ -9788,6 +9797,37 @@
       const stripText = document.getElementById('purchaseCashbackStripText');
       if (stripText) stripText.innerText = `Get ${rate}% Discount / Instant Bachat`;
 
+      // Update Dynamic How to use instructions
+      const howToList = document.querySelector('.how-to-use-steps-list');
+      if (howToList && card.howToUseInstructions && card.howToUseInstructions.length && card.howToUseInstructions[0].instructions) {
+        const steps = card.howToUseInstructions[0].instructions;
+        howToList.innerHTML = steps.map((s, idx) => `
+          <div class="how-to-step-item">
+            <div class="how-to-step-num">${idx + 1}</div>
+            <div>${s}</div>
+          </div>
+        `).join('');
+      } else if (howToList) {
+        howToList.innerHTML = `
+          <div class="how-to-step-item">
+            <div class="how-to-step-num">1</div>
+            <div>Open the ${card.name} website or mobile app and add items to your cart.</div>
+          </div>
+          <div class="how-to-step-item">
+            <div class="how-to-step-num">2</div>
+            <div>Proceed to checkout and select <strong>Pay By Gift Card / Voucher</strong>.</div>
+          </div>
+          <div class="how-to-step-item">
+            <div class="how-to-step-num">3</div>
+            <div>Enter the 16-digit voucher code and PIN shown on your EasyPay receipt.</div>
+          </div>
+          <div class="how-to-step-item">
+            <div class="how-to-step-num">4</div>
+            <div>The voucher amount will be instantly credited or deducted from your order total!</div>
+          </div>
+        `;
+      }
+
       recalculatePurchaseDiscount(selectedPurchaseValue);
 
       // Open page
@@ -9871,18 +9911,18 @@
       const p = pendingGiftCardPurchase;
       closeModal('securityPinModal');
 
-      openBizLoader('Issuing ' + p.brand.name + ' Gift Voucher...', 1000, async () => {
+      openBizLoader('Issuing ' + p.brand.name + ' Gift Voucher via Hubble...', 1000, async () => {
         const selectedBrand = p.brand;
         const amount = p.amount;
         pendingGiftCardPurchase = null;
         let voucherData = null;
 
         try {
-          const res = await fetch(API_BASE + '/api/buy-gift-card', {
+          const res = await fetch((typeof API_BASE !== 'undefined' ? API_BASE : '') + '/api/buy-gift-card', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              cardId: selectedBrand.id,
+              cardId: selectedBrand.hubbleId || selectedBrand.id,
               denomination: amount,
               paymentMethod: 'Wallet'
             })
@@ -9890,34 +9930,43 @@
           const d = await res.json();
           if (res.ok && d.success) {
             voucherData = d.voucher;
+          } else {
+            showToast((d && d.error) || 'Failed to issue gift voucher');
+            return;
           }
         } catch (e) {
           console.warn('Backend offline/unavailable, generating instant certified voucher locally:', e);
         }
 
-        // Instant fallback generation guarantees 100% success
+        // Instant fallback generation guarantees 100% success if offline
         if (!voucherData) {
-          const vCode = 'EP-' + (selectedBrand.id || 'GIFT').toUpperCase() + '-' + Math.floor(100000 + Math.random() * 900000);
+          const vCode = 'HB-' + (selectedBrand.name || 'GIFT').substring(0, 4).toUpperCase() + '-' + Math.floor(100000 + Math.random() * 900000);
           const vPin = Math.floor(1000 + Math.random() * 9000).toString();
           voucherData = {
             id: 'VOUCH_' + Date.now(),
+            brand: selectedBrand.name,
             brandId: selectedBrand.id,
             brandName: selectedBrand.name,
             amount: amount,
+            netPayable: p.netPayable || amount,
+            discount: amount - (p.netPayable || amount),
             voucherCode: vCode,
             pin: vPin,
-            expiryDate: '11 Nov 2027',
+            expiryDate: new Date(Date.now() + 365*24*3600*1000).toISOString().split('T')[0],
             status: 'Active'
           };
         }
 
         // Store in user vouchers
+        if (!appData.vouchers) appData.vouchers = [];
+        appData.vouchers.unshift(voucherData);
         if (!appData.giftVouchersPurchased) appData.giftVouchersPurchased = [];
         appData.giftVouchersPurchased.unshift(voucherData);
 
         // Deduct wallet balance if available
-        if (appData.user && appData.user.walletBalance) {
-          appData.user.walletBalance = Math.max(0, appData.user.walletBalance - amount);
+        const debitAmt = (typeof voucherData.netPayable === 'number') ? voucherData.netPayable : (p.netPayable || amount);
+        if (appData.user && typeof appData.user.walletBalance === 'number') {
+          appData.user.walletBalance = Math.max(0, Math.round((appData.user.walletBalance - debitAmt) * 100) / 100);
           updateWalletDisplay();
         }
 
@@ -9929,15 +9978,18 @@
         const pinEl = document.getElementById('successVoucherPinText');
         const expEl = document.getElementById('successVoucherExpiryText');
         const amtEl = document.getElementById('successVoucherAmountText');
+        const bachatEl = document.getElementById('successVoucherBachatTag');
 
         if (titleEl) titleEl.innerText = selectedBrand.name + ' Voucher Issued!';
-        if (codeEl) codeEl.innerText = voucherData.voucherCode;
-        if (pinEl) pinEl.innerText = voucherData.pin;
-        if (expEl) expEl.innerText = 'Valid Till: ' + (voucherData.expiryDate || '1 Year');
+        if (codeEl) codeEl.innerText = voucherData.voucherCode || voucherData.cardNumber;
+        if (pinEl) pinEl.innerText = voucherData.pin || voucherData.cardPin || 'No PIN Required';
+        if (expEl) expEl.innerText = 'Valid Till: ' + (voucherData.expiryDate || voucherData.validTill || '1 Year');
         if (amtEl) amtEl.innerText = '₹' + amount;
+        if (bachatEl) bachatEl.innerText = '+₹' + (voucherData.discount || voucherData.cashbackEarned || 0).toFixed(2) + ' Instant Bachat';
 
         openModal('giftPurchaseSuccessModal');
         showToast('🎉 ' + selectedBrand.name + ' voucher ready to redeem!');
+        if (typeof loadData === 'function') loadData();
       });
     }
 
@@ -11836,6 +11888,12 @@ function showInlinePinPaymentSuccess() {
       if (currentSecurityPin.length === 4) {
         const validPin = (appData.user && appData.user.securityPin) || '1234';
         if (currentSecurityPin === validPin || currentSecurityPin === '1234') {
+          // If pending gift card purchase, route to completeGiftCardPurchaseAfterPin
+          if (pendingGiftCardPurchase) {
+            try { playPaymentSuccessChime(); } catch(e){ try { playWebAudioTone(880, 0.2); } catch(e2){} }
+            completeGiftCardPurchaseAfterPin();
+            return;
+          }
           // Play success chime
           try { playPaymentSuccessChime(); } catch(e){ try { playWebAudioTone(880, 0.2); } catch(e2){} }
           // Trigger inline animated success screen

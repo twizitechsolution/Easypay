@@ -1,0 +1,326 @@
+const https = require('https');
+const crypto = require('crypto');
+
+/**
+ * Hubble Money API Integration Service
+ * Staging Client ID: mobi-pay-dev-api-mpbap8gu
+ * Staging Client Secret: tyxdqL3XYa8SiRjFocqkpNPudD4xkJxaTPglSHtIK6YZ7tf9mQpo4hAlDmkSDmIi
+ * Docs: https://docs.myhubble.money
+ */
+
+const HUBBLE_CONFIG = {
+  clientId: process.env.HUBBLE_CLIENT_ID || 'mobi-pay-dev-api-mpbap8gu',
+  clientSecret: process.env.HUBBLE_CLIENT_SECRET || 'tyxdqL3XYa8SiRjFocqkpNPudD4xkJxaTPglSHtIK6YZ7tf9mQpo4hAlDmkSDmIi',
+  baseUrl: process.env.HUBBLE_BASE_URL || 'https://api.dev.myhubble.money',
+  timeoutMs: 15000
+};
+
+// In-memory token cache
+let cachedToken = null;
+let tokenExpiresAt = 0;
+
+// In-memory brand cache
+let cachedBrands = [];
+let lastBrandsFetchTime = 0;
+const BRANDS_CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+
+/**
+ * Generic HTTPS request helper
+ */
+function apiRequest(path, method = 'GET', data = null, customHeaders = {}) {
+  return new Promise((resolve, reject) => {
+    const url = new URL(path, HUBBLE_CONFIG.baseUrl);
+    const headers = {
+      'Accept': 'application/json',
+      'X-REQUEST-ID': crypto.randomUUID(),
+      ...customHeaders
+    };
+
+    let payload = null;
+    if (data) {
+      payload = typeof data === 'string' ? data : JSON.stringify(data);
+      headers['Content-Type'] = 'application/json';
+      headers['Content-Length'] = Buffer.byteLength(payload);
+    }
+
+    const req = https.request({
+      hostname: url.hostname,
+      port: url.port || 443,
+      path: url.pathname + url.search,
+      method: method,
+      headers: headers,
+      timeout: HUBBLE_CONFIG.timeoutMs
+    }, (res) => {
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => {
+        try {
+          const json = body ? JSON.parse(body) : null;
+          resolve({ status: res.statusCode, headers: res.headers, data: json, raw: body });
+        } catch (e) {
+          resolve({ status: res.statusCode, headers: res.headers, data: null, raw: body, error: e.message });
+        }
+      });
+    });
+
+    req.on('timeout', () => {
+      req.destroy(new Error(`Hubble API timeout after ${HUBBLE_CONFIG.timeoutMs}ms`));
+    });
+
+    req.on('error', (err) => {
+      reject(err);
+    });
+
+    if (payload) {
+      req.write(payload);
+    }
+    req.end();
+  });
+}
+
+/**
+ * Exchange client credentials for a Bearer token
+ */
+async function getAuthToken(forceRefresh = false) {
+  const now = Date.now();
+  if (!forceRefresh && cachedToken && tokenExpiresAt > now + 60000) {
+    return cachedToken;
+  }
+
+  const res = await apiRequest('/v1/partners/auth/login', 'POST', {
+    clientId: HUBBLE_CONFIG.clientId,
+    clientSecret: HUBBLE_CONFIG.clientSecret
+  });
+
+  if (res.status === 200 && res.data && res.data.token) {
+    cachedToken = res.data.token;
+    const expiresInSecs = res.data.expiresInSecs || 86400;
+    tokenExpiresAt = now + (expiresInSecs * 1000);
+    return cachedToken;
+  }
+
+  throw new Error(`Hubble Auth Failed (HTTP ${res.status}): ${res.raw || 'No token returned'}`);
+}
+
+/**
+ * Fetch partner wallet balance from Hubble
+ */
+async function getWalletBalance() {
+  const token = await getAuthToken();
+  const res = await apiRequest('/v1/partners/wallet/balance', 'GET', null, {
+    'Authorization': `Bearer ${token}`
+  });
+  if (res.status === 200 && res.data) {
+    return res.data;
+  }
+  throw new Error(`Failed to fetch Hubble wallet balance: ${res.raw}`);
+}
+
+/**
+ * Map raw Hubble category string to clean user-friendly category name
+ */
+function normalizeCategory(cats = []) {
+  if (!cats || cats.length === 0) return 'Shopping';
+  const c = cats[0].toUpperCase();
+  if (c.includes('FOOD') || c.includes('RESTAURANT')) return 'Food & Dining';
+  if (c.includes('FASHION') || c.includes('FOOTWARE') || c.includes('HAND_BAGS')) return 'Fashion';
+  if (c.includes('ELECTRONIC') || c.includes('APPLIANCE')) return 'Electronics';
+  if (c.includes('GROCERY') || c.includes('SUPERMARKET')) return 'Grocery';
+  if (c.includes('GAMING')) return 'Gaming';
+  if (c.includes('PHARMACY') || c.includes('HEALTH') || c.includes('FITNESS')) return 'Health & Pharmacy';
+  if (c.includes('OTT') || c.includes('ENTERTAINMENT') || c.includes('MUSIC')) return 'OTT & Entertainment';
+  if (c.includes('TRAVEL') || c.includes('HOTEL')) return 'Travel & Stays';
+  if (c.includes('JEWELLERY') || c.includes('LUXURY')) return 'Jewellery & Luxury';
+  if (c.includes('HOT_DEALS') || c.includes('TOP_BRANDS')) return 'Hot Deals';
+  return 'Shopping';
+}
+
+/**
+ * Standardize a Hubble brand object for EasyPay application
+ */
+function mapHubbleBrand(b) {
+  const categories = b.category || [];
+  const primaryCat = normalizeCategory(categories);
+  
+  // Clean allowed denominations
+  let denominations = [];
+  if (b.amountRestrictions && Array.isArray(b.amountRestrictions.denominations) && b.amountRestrictions.denominations.length > 0) {
+    denominations = b.amountRestrictions.denominations.sort((x, y) => x - y);
+  } else {
+    // Flexible default denominations
+    denominations = [100, 250, 500, 1000, 2000, 5000];
+  }
+
+  // Subvention / instant discount percentage
+  const discountRate = (typeof b.discountPercentage === 'number' && b.discountPercentage > 0)
+    ? b.discountPercentage
+    : 4; // Default 4% instant bachat
+
+  const isTopBrand = [
+    'Flipkart', 'Amazon shopping', 'Zomato', 'Swiggy', 'Reliance Digital',
+    'IKEA', 'Zepto', 'Apollo', 'Myntra', 'Lifestyle', 'Senco Gold', 'Firstcry'
+  ].some(t => (b.title || '').toLowerCase().includes(t.toLowerCase()));
+
+  const isNewArrival = categories.includes('NEW_BRANDS') || categories.includes('EMERGING_BRANDS');
+
+  return {
+    id: b.id,
+    hubbleId: b.id,
+    name: b.title || 'Brand Voucher',
+    subName: b.title || 'Gift Voucher',
+    title: b.title,
+    brandDescription: b.brandDescription || `Instant e-gift card voucher redeemable across all ${b.title} platforms.`,
+    category: primaryCat,
+    rawCategories: categories,
+    tags: b.tags || [],
+    denominationType: b.denominationType || 'FIXED',
+    denominations: denominations,
+    minOrderAmount: (b.amountRestrictions && (b.amountRestrictions.minOrderAmount || b.amountRestrictions.minVoucherAmount)) || denominations[0] || 50,
+    maxOrderAmount: (b.amountRestrictions && (b.amountRestrictions.maxOrderAmount || b.amountRestrictions.maxVoucherAmount)) || denominations[denominations.length - 1] || 10000,
+    cardType: b.cardType || 'CARD_AND_PIN_NO_SECURED',
+    redemptionType: b.redemptionType || 'ONLINE',
+    logo: b.logoUrl || b.thumbnailUrl || b.iconImageUrl || 'https://cdn-icons-png.flaticon.com/512/879/879757.png',
+    thumbnailUrl: b.thumbnailUrl || b.logoUrl,
+    logoUrl: b.logoUrl,
+    cashbackRate: discountRate,
+    discountRate: discountRate,
+    saveRate: discountRate,
+    saveText: `Save ${discountRate}%`,
+    isTop: isTopBrand,
+    isNew: isNewArrival,
+    termsAndConditions: b.termsAndConditions || ['Instant delivery', 'Valid for 1 year from issue date'],
+    tncDetailed: b.tncDetailed || null,
+    howToUseInstructions: b.howToUseInstructions || [],
+    storeLocatorUrl: b.storeLocatorUrl || null,
+    status: b.status
+  };
+}
+
+/**
+ * Fetch all active brands from Hubble (with in-memory cache)
+ */
+async function getActiveBrands(forceRefresh = false) {
+  const now = Date.now();
+  if (!forceRefresh && cachedBrands.length > 0 && (now - lastBrandsFetchTime < BRANDS_CACHE_TTL)) {
+    return cachedBrands;
+  }
+
+  const token = await getAuthToken();
+  const res = await apiRequest('/v1/partners/products', 'GET', null, {
+    'Authorization': `Bearer ${token}`
+  });
+
+  if (res.status === 200 && res.data && Array.isArray(res.data.data)) {
+    // Strictly filter on ACTIVE status as instructed in Hubble documentation
+    const activeRaw = res.data.data.filter(b => b.status === 'ACTIVE');
+    const mapped = activeRaw.map(mapHubbleBrand);
+    
+    // Sort: Top brands first, then alphabetically
+    mapped.sort((a, b) => {
+      if (a.isTop && !b.isTop) return -1;
+      if (!a.isTop && b.isTop) return 1;
+      return a.name.localeCompare(b.name);
+    });
+
+    cachedBrands = mapped;
+    lastBrandsFetchTime = now;
+    return cachedBrands;
+  }
+
+  throw new Error(`Failed to fetch Hubble brands (HTTP ${res.status}): ${res.raw}`);
+}
+
+/**
+ * Fetch a single brand by ID
+ */
+async function getBrandById(productId) {
+  const brands = await getActiveBrands();
+  const existing = brands.find(b => b.id === productId || b.hubbleId === productId);
+  if (existing) return existing;
+
+  const token = await getAuthToken();
+  const res = await apiRequest(`/v1/partners/products/${productId}`, 'GET', null, {
+    'Authorization': `Bearer ${token}`
+  });
+
+  if (res.status === 200 && res.data) {
+    return mapHubbleBrand(res.data);
+  }
+  return null;
+}
+
+/**
+ * Place a Gift Card order with Hubble Money API
+ */
+async function placeOrder({ productId, denomination, quantity = 1, customerDetails, referenceId }) {
+  const token = await getAuthToken();
+  const refId = referenceId || `ORD_${Date.now()}_${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+  const totalAmount = parseFloat(denomination) * parseInt(quantity, 10);
+
+  // Clean customer details
+  const cleanPhone = (customerDetails && customerDetails.phoneNumber) 
+    ? String(customerDetails.phoneNumber).replace(/[^0-9]/g, '').slice(-10) 
+    : '9876543210';
+
+  const orderPayload = {
+    productId: productId,
+    referenceId: refId,
+    amount: totalAmount,
+    denominationDetails: [
+      {
+        denomination: parseFloat(denomination),
+        quantity: parseInt(quantity, 10)
+      }
+    ],
+    customerDetails: {
+      name: (customerDetails && customerDetails.name) ? customerDetails.name.replace(/[^a-zA-Z\s]/g, '').trim() : 'EasyPay User',
+      phoneNumber: cleanPhone,
+      email: (customerDetails && customerDetails.email) ? customerDetails.email.trim() : 'support@easypay.com'
+    }
+  };
+
+  const res = await apiRequest('/v1/partners/orders', 'POST', orderPayload, {
+    'Authorization': `Bearer ${token}`
+  });
+
+  if ((res.status === 200 || res.status === 201) && res.data) {
+    return {
+      success: res.data.status === 'SUCCESS',
+      orderStatus: res.data.status,
+      orderId: res.data.id,
+      referenceId: res.data.referenceId,
+      vouchers: res.data.vouchers || [],
+      failureReason: res.data.failureReason || null,
+      raw: res.data
+    };
+  }
+
+  // Non-200 error
+  const errMsg = (res.data && (res.data.message || res.data.error || res.data.code)) || res.raw || `HTTP ${res.status}`;
+  throw new Error(`Hubble Order Failed: ${errMsg}`);
+}
+
+/**
+ * Verify Webhook Signature (X-Verify header)
+ */
+function verifyWebhookSignature(rawPayload, signatureHeader) {
+  if (!signatureHeader) return false;
+  try {
+    const hmac = crypto.createHmac('sha256', HUBBLE_CONFIG.clientSecret);
+    hmac.update(rawPayload);
+    const expected = hmac.digest('base64');
+    return expected === signatureHeader;
+  } catch (e) {
+    return false;
+  }
+}
+
+module.exports = {
+  HUBBLE_CONFIG,
+  getAuthToken,
+  getWalletBalance,
+  getActiveBrands,
+  getBrandById,
+  placeOrder,
+  verifyWebhookSignature
+};

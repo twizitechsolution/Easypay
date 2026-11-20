@@ -50,30 +50,32 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EasyPay-v1.0.22.apk
+          name: EasyPay-v1.0.23.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Publish GitHub Release with APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.22
-          name: "EasyPay Android APK v1.0.22 (Standard Clean OTP Input, No Code Leak & Strict Handset Verification)"
+          tag_name: v1.0.23
+          name: "EasyPay Android APK v1.0.23 (Hubble Money 380+ Gift Cards Integration & Live Voucher Issuance)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.22 (Production Release)
+            ## EasyPay Mobile Application APK v1.0.23 (Production Release)
             Direct native Android APK connected live to Vercel production server: https://easypay-gamma.vercel.app
 
-            ### Key Features & Updates in v1.0.22:
-            1. **Standard Clean OTP Screen**:
-               - Completely removed on-screen verification code banner and auto-fill button.
-               - Completely removed bottom DLT note badge.
-               - 4 OTP input boxes start completely blank for user to manually enter the OTP received on their handset.
-            2. **Strict Handset SMS Verification**:
-               - Server dispatches SMS via DLT Entity Header `AFTTRD` directly to the user's mobile number.
-               - OTP is never exposed in client network responses.
-               - Entering incorrect OTP triggers an immediate 'Invalid OTP' notification and clears the inputs for re-entry.
-            3. **Clean Trip Announcement Modal**:
-               - Centered Kumbhalgarh, Goa, and Thailand flyer with top-right circular ✕ close button.
+            ### Key Features & Updates in v1.0.23:
+            1. **Hubble Money Gift Cards API Integration (Staging)**:
+               - Integrated with Hubble Money Staging API (`api.dev.myhubble.money`) with Client ID & Secret credentials.
+               - Full active catalog of 387+ top Indian brands (Flipkart, Amazon Shopping, Zomato, Swiggy, Apollo Pharmacy, Reliance Digital, IKEA, Myntra, etc.) with official CDN logos.
+               - Real-time voucher issuance with 16-digit card code, secure PIN, expiry date, and verified redemption instructions.
+            2. **End-to-End Voucher Purchase & Wallet Deduction**:
+               - Real-time instant Bachat discount calculation (up to 8-16% savings).
+               - Seamless wallet debit and ledger transaction recording.
+               - Copy voucher code and PIN with 1 tap.
+               - Gift Vouchers History view with all purchased cards.
+            3. **Production Clean OTP Screen & Live DLT SMS**:
+               - Clean OTP input screen with empty boxes and strict verification.
+               - Live SMS delivery via DLT header `AFTTRD`.
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

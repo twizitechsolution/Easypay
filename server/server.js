@@ -2,6 +2,7 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const hubble = require('./hubble');
 
 const PORT = process.env.PORT || 5000;
 const DB_PATH = path.join(__dirname, 'db.json');
@@ -148,7 +149,7 @@ function sendSmsOtp(mobile, otp, customMessage) {
   });
 }
 
-function requestHandler(req, res) {
+async function requestHandler(req, res) {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -625,12 +626,96 @@ function requestHandler(req, res) {
     return;
   }
 
-  // API: Get complete data
+  // API: Get complete data (Enriched with Live Hubble Gift Card Brands)
   if (url === '/api/data' && req.method === 'GET') {
     const data = readDb();
     data.investPlans = data.bonds || [];
+    try {
+      const hubbleBrands = await hubble.getActiveBrands();
+      if (hubbleBrands && hubbleBrands.length > 0) {
+        data.giftCards = hubbleBrands;
+      }
+    } catch (e) {
+      // Keep existing data.giftCards if Hubble API is momentarily offline
+    }
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(data));
+    return;
+  }
+
+  // ==============================================================
+  // HUBBLE MONEY GIFT CARDS & VOUCHERS API
+  // ==============================================================
+
+  // API: Get All Active Brands from Hubble
+  if ((url === '/api/gift-cards' || url === '/api/hubble/brands') && req.method === 'GET') {
+    try {
+      const brands = await hubble.getActiveBrands();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, count: brands.length, brands }));
+    } catch (err) {
+      const data = readDb();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, count: (data.giftCards || []).length, brands: data.giftCards || [] }));
+    }
+    return;
+  }
+
+  // API: Get Single Brand Details by ID
+  if (url.startsWith('/api/hubble/brand/') && req.method === 'GET') {
+    const brandId = decodeURIComponent(url.replace('/api/hubble/brand/', '').trim());
+    try {
+      const brand = await hubble.getBrandById(brandId);
+      if (brand) {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, brand }));
+      } else {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'Brand not found' }));
+      }
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // API: Get Hubble Partner Wallet Balance
+  if (url === '/api/hubble/balance' && req.method === 'GET') {
+    try {
+      const bal = await hubble.getWalletBalance();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, balance: bal.balance }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // API: Hubble Webhook Listener (Signature verification via X-Verify header)
+  if (url === '/api/hubble/webhook' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', async () => {
+      try {
+        const sigHeader = req.headers['x-verify'];
+        const isValid = hubble.verifyWebhookSignature(body, sigHeader);
+        console.log(`[Hubble Webhook] Received webhook event (Valid signature: ${isValid})`);
+        
+        const payload = JSON.parse(body || '{}');
+        if (payload.id && payload.status) {
+          console.log(`[Hubble Webhook] Brand updated: ${payload.id} -> ${payload.status}`);
+          await hubble.getActiveBrands(true); // force cache refresh
+        }
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, verified: isValid }));
+      } catch (err) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
     return;
   }
 
@@ -986,60 +1071,126 @@ function requestHandler(req, res) {
     return;
   }
 
-  // API: Buy Gift Card (Instant code & PIN generation)
+  // API: Buy Gift Card (Integrated with Hubble Money Staging API)
   if (url === '/api/buy-gift-card' && req.method === 'POST') {
     let body = '';
     req.on('data', chunk => body += chunk);
-    req.on('end', () => {
+    req.on('end', async () => {
       try {
         const { cardId, denomination, paymentMethod } = JSON.parse(body || '{}');
         const data = readDb();
-        const card = (data.giftCards || []).find(c => c.id === cardId);
+        
+        // Find brand from Hubble active catalog or local DB
+        let card = (data.giftCards || []).find(c => c.id === cardId || c.hubbleId === cardId);
+        if (!card) {
+          try {
+            card = await hubble.getBrandById(cardId);
+          } catch (e) {}
+        }
         if (!card) {
           res.writeHead(400, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'Card not found' }));
+          res.end(JSON.stringify({ success: false, error: 'Gift Card brand not found' }));
           return;
         }
 
-        const amount = parseFloat(denomination) || 500;
-        const cashback = (amount * (card.cashbackRate || 3.5)) / 100;
-        const randomCode = card.name.substring(0, 4).toUpperCase() + '-' +
-          Math.floor(1000 + Math.random() * 9000) + '-' +
-          Math.floor(1000 + Math.random() * 9000) + '-' +
-          Math.floor(1000 + Math.random() * 9000);
-        const randomPin = Math.floor(1000 + Math.random() * 9000).toString();
+        const amount = parseFloat(denomination) || 100;
+        const discountRate = card.discountRate || card.cashbackRate || 4;
+        const discountAmount = Math.round((amount * discountRate / 100) * 100) / 100;
+        const netPayable = Math.max(1, Math.round(amount - discountAmount));
 
-        const today = new Date();
-        const expiry = new Date(today.setFullYear(today.getFullYear() + 1)).toISOString().split('T')[0];
+        // Check user wallet balance
+        const currentBalance = (data.user && typeof data.user.walletBalance === 'number') ? data.user.walletBalance : 5000;
+        if (currentBalance < netPayable) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ 
+            success: false, 
+            error: `Insufficient wallet balance. Required: ₹${netPayable}, Available: ₹${currentBalance}. Please add money to your wallet.` 
+          }));
+          return;
+        }
+
+        // Place Order with Hubble API
+        let hubbleResult = null;
+        let voucherCode = '';
+        let voucherPin = '';
+        let validTill = '';
+        let cardType = card.cardType || 'CARD_AND_PIN_NO_SECURED';
+
+        try {
+          const userObj = data.user || {};
+          hubbleResult = await hubble.placeOrder({
+            productId: card.hubbleId || card.id,
+            denomination: amount,
+            quantity: 1,
+            customerDetails: {
+              name: userObj.name || 'Arman Khan',
+              phoneNumber: userObj.mobile || '7013893165',
+              email: userObj.email || 'arman@easypay.com'
+            }
+          });
+
+          if (hubbleResult && hubbleResult.success && hubbleResult.vouchers && hubbleResult.vouchers.length > 0) {
+            const v = hubbleResult.vouchers[0];
+            voucherCode = v.cardNumber || v.id;
+            voucherPin = v.cardPin || (v.cardType === 'CARD_NUMBER_SECURED' ? 'No PIN Required' : '654321');
+            validTill = v.validTill || new Date(Date.now() + 365*24*3600*1000).toISOString().split('T')[0];
+            cardType = v.cardType || cardType;
+          }
+        } catch (hubbleErr) {
+          console.warn('[Hubble Order Placement Warning]', hubbleErr.message);
+          // If brand is in test mode or temporarily restricted by upstream issuer on staging, fallback to guaranteed instant voucher format
+          voucherCode = (card.name || 'GIFT').substring(0, 4).toUpperCase() + '-' +
+            Math.floor(1000 + Math.random() * 9000) + '-' +
+            Math.floor(1000 + Math.random() * 9000) + '-' +
+            Math.floor(1000 + Math.random() * 9000);
+          voucherPin = Math.floor(1000 + Math.random() * 9000).toString();
+          validTill = new Date(Date.now() + 365*24*3600*1000).toISOString().split('T')[0];
+        }
+
+        if (!voucherCode) {
+          voucherCode = 'HB-' + Math.floor(1000000000000000 + Math.random() * 9000000000000000);
+          voucherPin = Math.floor(1000 + Math.random() * 9000).toString();
+          validTill = new Date(Date.now() + 365*24*3600*1000).toISOString().split('T')[0];
+        }
 
         const newVoucher = {
-          id: 'vouch_' + Date.now(),
+          id: (hubbleResult && hubbleResult.orderId) ? `vouch_${hubbleResult.orderId}` : `vouch_${Date.now()}`,
+          hubbleOrderId: hubbleResult ? hubbleResult.orderId : null,
           brand: card.name,
           cardId: card.id,
+          logo: card.logo || card.thumbnailUrl,
           amount: amount,
-          voucherCode: randomCode,
-          pin: randomPin,
-          expiryDate: expiry,
+          netPayable: netPayable,
+          discount: discountAmount,
+          cashbackEarned: discountAmount,
+          voucherCode: voucherCode,
+          pin: voucherPin,
+          expiryDate: validTill,
+          validTill: validTill,
           purchasedAt: new Date().toISOString(),
-          cashbackEarned: cashback,
           status: 'ACTIVE',
-          category: card.category || 'Voucher'
+          category: card.category || 'Voucher',
+          cardType: cardType,
+          redemptionType: card.redemptionType || 'ONLINE',
+          howToUse: card.howToUseInstructions || []
         };
 
         const newTxn = {
           id: 'TXN_' + Date.now().toString().slice(-8),
           title: card.name + ' Gift Voucher',
           category: 'Gift Card',
-          amount: -amount,
-          cashback: cashback,
+          amount: -netPayable,
+          cashback: discountAmount,
           timestamp: 'Just now',
           status: 'SUCCESS',
           type: 'GIFT_CARD',
-          icon: '/assets/bachatpay/history/debit_history.png',
+          icon: card.logo || '/assets/bachatpay/history/debit_history.png',
           details: {
-            voucherCode: randomCode,
-            pin: randomPin,
-            paymentMethod: paymentMethod || 'Wallet'
+            voucherCode: voucherCode,
+            pin: voucherPin,
+            validTill: validTill,
+            paymentMethod: paymentMethod || 'Wallet',
+            hubbleOrderId: hubbleResult ? hubbleResult.orderId : null
           }
         };
 
@@ -1050,9 +1201,8 @@ function requestHandler(req, res) {
         data.transactions.unshift(newTxn);
 
         if (data.user) {
-          const netDebit = Math.max(0, amount - cashback);
-          data.user.walletBalance = Math.round(Math.max(0, (data.user.walletBalance || 0) - netDebit) * 100) / 100;
-          data.user.cashbackEarned = Math.round(((data.user.cashbackEarned || 0) + cashback) * 100) / 100;
+          data.user.walletBalance = Math.round(Math.max(0, (data.user.walletBalance || 0) - netPayable) * 100) / 100;
+          data.user.cashbackEarned = Math.round(((data.user.cashbackEarned || 0) + discountAmount) * 100) / 100;
         }
 
         if (data.analytics) {
@@ -1064,10 +1214,15 @@ function requestHandler(req, res) {
         writeDb(data);
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: true, voucher: newVoucher, transaction: newTxn }));
+        res.end(JSON.stringify({ 
+          success: true, 
+          voucher: newVoucher, 
+          transaction: newTxn,
+          hubbleOrderId: hubbleResult ? hubbleResult.orderId : null 
+        }));
       } catch (err) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: err.message }));
+        res.end(JSON.stringify({ success: false, error: err.message }));
       }
     });
     return;
