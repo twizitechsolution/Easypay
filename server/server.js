@@ -7,11 +7,23 @@ const DB_PATH = path.join(__dirname, 'db.json');
 const TMP_DB_PATH = path.join('/tmp', 'db.json');
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
 
+let defaultDbData = null;
+try {
+  defaultDbData = require('./db.json');
+} catch (e) {
+  defaultDbData = {};
+}
+
 function getDbFilePath() {
   if (process.env.VERCEL) {
     if (!fs.existsSync(TMP_DB_PATH)) {
       try {
-        const seed = fs.readFileSync(DB_PATH, 'utf8');
+        let seed = '';
+        if (fs.existsSync(DB_PATH)) {
+          seed = fs.readFileSync(DB_PATH, 'utf8');
+        } else if (defaultDbData) {
+          seed = JSON.stringify(defaultDbData, null, 2);
+        }
         fs.writeFileSync(TMP_DB_PATH, seed, 'utf8');
       } catch (e) {
         console.error('Failed to seed /tmp/db.json:', e);
@@ -25,15 +37,23 @@ function getDbFilePath() {
 function readDb() {
   try {
     const target = getDbFilePath();
-    const raw = fs.readFileSync(target, 'utf8');
-    return JSON.parse(raw);
-  } catch (e) {
-    try {
+    if (fs.existsSync(target)) {
+      const raw = fs.readFileSync(target, 'utf8');
+      return JSON.parse(raw);
+    }
+    if (fs.existsSync(DB_PATH)) {
       const raw = fs.readFileSync(DB_PATH, 'utf8');
       return JSON.parse(raw);
-    } catch (err) {
-      return {};
     }
+    return JSON.parse(JSON.stringify(defaultDbData || {}));
+  } catch (e) {
+    try {
+      if (fs.existsSync(DB_PATH)) {
+        const raw = fs.readFileSync(DB_PATH, 'utf8');
+        return JSON.parse(raw);
+      }
+    } catch (err) {}
+    return JSON.parse(JSON.stringify(defaultDbData || {}));
   }
 }
 

@@ -4,3 +4,7 @@ node_modules/
 scripts_*.js
 apply_fixes_*.js
 add_server_*.js
+*.tmp
+push_clean.js
+stage_*.js
+.env*

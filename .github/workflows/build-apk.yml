@@ -31,11 +31,11 @@ jobs:
         run: |
           npm install
 
-      - name: Add Capacitor Android Platform & Copy Assets
+      - name: Add Capacitor Android Platform & Sync Assets
         run: |
           rm -rf android
           npx cap add android
-          npx cap copy android
+          npx cap sync android
 
       - name: Add Android Camera & Media Permissions to Manifest
         run: |
@@ -50,33 +50,34 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EasyPay-debug.apk
+          name: EasyPay-v1.0.17.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Publish GitHub Release with APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.16
-          name: "EasyPay Android APK v1.0.16 (Global Scope E-Commerce Controller & Interactive Product Details)"
+          tag_name: v1.0.17
+          name: "EasyPay Android APK v1.0.17 (Live Vercel Production + Enterprise Admin & Lucky Draw)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.16 (Production Release)
-            Zero-defect verified production build resolving Point 4 scope encapsulation and finalizing full interactive e-commerce shopping experience:
+            ## EasyPay Mobile Application APK v1.0.17 (Live Vercel Production Release)
+            Direct native Android APK connected live to Vercel production server: https://easypay-gamma.vercel.app
 
-            ### Fixes & Enhancements in v1.0.16:
-            1. **Global Scope E-Commerce Architecture (Point 4 Resolved)**:
-               - Fixed `openProfileEditModal` unclosed brace that previously enclosed `openProductDetails`, `addToCart`, and `openCartModal` inside local closure scope.
-               - Explicitly bound and validated `window.openProductDetails`, `window.addToCart`, `window.openCartModal`, `window.updateCartItemQty`, and `window.checkoutCart`.
-               - Catalog cards feature single **Add to Cart** action; tapping anywhere on any card opens the complete, full-screen **Product Details Page**.
-               - Product Details Page features high-resolution image gallery, specifications, replacement/warranty badges, authentic customer reviews, and persistent bottom action bar with **Add to Cart** and **Buy Now**.
-               - Unified `handleShopSearch` to render identical single 'Add to Cart' cards with full product detail routing.
-            2. **Interactive Shopping Cart & Payment Sheet Integration**:
-               - Cart modal supports quantity adjustments (+/-), live total calculation, and free delivery perks.
-               - Cart checkout and Product "Buy Now" smoothly route directly into single EasyPay Wallet payment source sheet (`openPayFromSourceSheet`).
-            3. **Animated Payment Success Screen & Operational PIN Flow**:
-               - Verified 4-digit PIN entry transitions to animated green checkmark screen with sound chime, UTR, recipient, and transaction timestamp.
-            4. **Recharges & Utilities Fully Functional**:
-               - All 8 utilities (Mobile, Postpaid, Electricity, FASTag, DTH, Credit Card, Broadband, Gas) 100% operational with operator selectors and live validation.
+            ### Key Features & Updates in v1.0.17:
+            1. **Live Vercel Backend Integration**:
+               - Configured native app directly with `https://easypay-gamma.vercel.app`.
+               - End-to-end live database interaction with Vercel serverless backend.
+               - Removed all legacy domains/localhost bindings.
+            2. **CRED-Style 3D Animated Lucky Draw System**:
+               - Full luxury dark-gold design with 3D animated opening gift box & rotating sunburst rays.
+               - Real-time countdown timer to weekly draw.
+               - Direct single ₹50 entry pass with balance validation and instant entry confirmation.
+               - Dedicated Lucky Draw page with 'My Contests' bottom sheet.
+            3. **Enterprise Admin Console**:
+               - Full admin portal (`/admin.html`) with Lucky Draw controls (entry fee, prize pool, winner trigger, reset).
+               - User management, transactions, investments, and gift cards management.
+            4. **E-Commerce & 8 Utility Recharges**:
+               - Interactive catalog, cart, animated PIN verification, and instant payment confirmation.
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
