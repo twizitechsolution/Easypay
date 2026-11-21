@@ -50,32 +50,33 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EasyPay-v1.0.25.apk
+          name: EasyPay-v1.0.26.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Publish GitHub Release with APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.25
-          name: "EasyPay Android APK v1.0.25 (Universal Real-Time Wallet Balance Deduction, Audit Ledger & Admin Panel Database Sync)"
+          tag_name: v1.0.26
+          name: "EasyPay Android APK v1.0.26 (Admin Panel Clean-Up: Autofill & Stray Elements Removed, User Details Column & Header Streamlined)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.25 (Production Release)
+            ## EasyPay Mobile Application APK v1.0.26 (Production Release)
             Direct native Android APK connected live to Vercel production server: https://easypay-gamma.vercel.app
 
-            ### Key Features & Updates in v1.0.25:
-            1. **Universal Real-Time Wallet Balance Deduction**:
-               - Every transaction across all services (Money Transfer / P2P, Mobile / DTH Recharge, Gift Card Purchase, Shopping / Mall Order Checkout) automatically deducts the exact amount from the user's wallet in real-time.
-               - Wallet balance is synchronized in `server/db.json` across both `data.user` and the matching user record in `data.users`.
-            2. **Permanent Database Transaction Records**:
-               - Every transaction generates a certified audit record in `data.transactions` in the database with a unique UTR (`EPY...`), category, timestamp, formatted date, and status.
-            3. **Real-Time Passbook & History Reflection**:
-               - Transactions immediately appear in the user's Passbook / Transaction History view with correct debit/credit indicators, category badges, and UTR details.
-            4. **Admin Panel Real-Time Sync**:
-               - The Enterprise Admin Panel (`/admin`) reflects live wallet balances, updated platform GMV, new vouchers, and real-time transaction ledger with automatic background synchronization.
-            5. **100% Dynamic Payment Success Modal & Session Persistence**:
-               - Displays exact dynamic payment amounts, purpose/brand, unique UTR, and instant voucher card with PIN and copy capability.
-               - Preserves login sessions permanently across app restarts.
+            ### Key Features & Updates in v1.0.26:
+            1. **Admin Login Page Refinements**:
+               - Removed the 'Quick Demo Access' auto-fill credentials chip completely.
+               - Renamed title to 'EasyPay Admin Login' for clean, production-grade presentation.
+            2. **Bottom-of-Page Visual Clean-Up**:
+               - Eliminated the stray `========================================== -->` comment artifact completely.
+            3. **Active User Investments Ledger - User Details Column**:
+               - Replaced the 'Certificate ID / Folio' column with 'User Details'.
+               - Displays User Mobile Number at the top and unique User ID (`EPY...`) directly below it.
+               - Guaranteed unique User ID generation upon account registration.
+            4. **Streamlined Header Navigation**:
+               - Cleaned up top header bar across all admin views by removing 'User Super App', 'Add Plan', and 'Sync Database' buttons.
+            5. **Universal Real-Time Wallet Balance Deduction & Real-Time Sync**:
+               - Wallet balance deductions, double-entry audit records, and Passbook history fully synced in real-time across database and admin dashboard.
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

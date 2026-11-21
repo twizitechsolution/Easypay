@@ -339,7 +339,10 @@ async function requestHandler(req, res) {
         }
 
         const nameParts = name.trim().split(' ');
-        const newId = 'EPY' + Math.floor(10000 + Math.random() * 90000);
+        let newId;
+        do {
+          newId = 'EPY' + Math.floor(10000 + Math.random() * 90000);
+        } while ((data.users || []).some(u => u.id === newId));
         const newUser = {
           id: newId,
           firstName: nameParts[0] || 'User',
@@ -1719,7 +1722,10 @@ async function requestHandler(req, res) {
           status: 'ACTIVE',
           dicgcInsured: true,
           certNumber: certNum,
-          folioNumber: folioNum
+          folioNumber: folioNum,
+          userId: (data.user && data.user.id) || 'EPY31650',
+          userMobile: (data.user && data.user.mobile) ? ('+91 ' + data.user.mobile.replace(/\D/g, '').slice(-10)) : '+91 7013893165',
+          userName: (data.user && data.user.name) || 'arman khan'
         };
 
         data.investments = data.investments || [];
@@ -2014,6 +2020,11 @@ async function requestHandler(req, res) {
         const matDate = new Date();
         matDate.setMonth(matDate.getMonth() + tenureMonths);
 
+        const reqMobile = (payload.userMobile || (data.user && data.user.mobile) || '7013893165').toString().replace(/\D/g, '').slice(-10);
+        const matchedUser = (data.users || []).find(u => (u.mobile || '').replace(/\D/g, '').slice(-10) === reqMobile) || data.user;
+        const targetUserId = (matchedUser && matchedUser.id) ? matchedUser.id : ('EPY' + reqMobile.slice(-5));
+        const formattedMobile = '+91 ' + reqMobile;
+
         const newInv = {
           id: 'INV_MANUAL_' + Date.now().toString().slice(-6),
           institution: payload.institution || 'Suryoday SF Bank Plan',
@@ -2035,7 +2046,9 @@ async function requestHandler(req, res) {
           dicgcInsured: true,
           certNumber: 'DICGC-EP-' + Math.floor(100000 + Math.random() * 900000),
           folioNumber: 'EP-FD-' + Math.floor(1000 + Math.random() * 9000),
-          userMobile: payload.userMobile || (data.user && data.user.mobile) || '9876548808'
+          userMobile: formattedMobile,
+          userId: targetUserId,
+          userName: (matchedUser && matchedUser.name) || 'EasyPay User'
         };
 
         data.investments = data.investments || [];

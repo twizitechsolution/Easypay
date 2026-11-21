@@ -1,10 +1,10 @@
 {
   "analytics": {
-    "totalGmv": 1373535,
+    "totalGmv": 1374035,
     "totalUsers": 24890,
     "giftCardsSold": 4836,
     "rechargesDone": 9324,
-    "platformCommissionEarned": 64423.76000000001
+    "platformCommissionEarned": 64433.76000000001
   },
   "user": {
     "id": "EPY31650",
@@ -15,7 +15,7 @@
     "maskedMobile": "xxxxxx3165",
     "email": "armankhan@gmail.com",
     "payId": "7013893165@easypay",
-    "walletBalance": 25000,
+    "walletBalance": 24500,
     "securityPin": "1234",
     "mpin": "1234",
     "bankName": "STATE BANK OF INDIA",
@@ -1097,6 +1097,56 @@
     }
   ],
   "transactions": [
+    {
+      "id": "TXN_33956304",
+      "title": "Received from arman khan",
+      "category": "Money Transfer",
+      "amount": 500,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "21 Nov 2026, 09:35 am",
+      "status": "SUCCESS",
+      "type": "UPI_CREDIT",
+      "icon": "/assets/bachatpay/history/credit_history.png",
+      "utr": "EPY754128541",
+      "details": {
+        "fromUser": "arman khan",
+        "fromMobile": "7013893165",
+        "utr": "EPY754128541"
+      }
+    },
+    {
+      "id": "TXN_33956303",
+      "title": "Paid to Rahul Sharma",
+      "category": "Money Transfer",
+      "amount": -500,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "21 Nov 2026, 09:35 am",
+      "status": "SUCCESS",
+      "type": "UPI_DEBIT",
+      "icon": "/assets/bachatpay/history/debit_history.png",
+      "utr": "EPY754128541",
+      "details": {
+        "brand": "",
+        "brandName": "",
+        "brandId": "",
+        "faceValue": 500,
+        "discount": 0,
+        "voucherCode": "",
+        "voucherPin": "",
+        "validTill": "",
+        "items": null,
+        "operator": null,
+        "rechargeNumber": null,
+        "recipientName": "Rahul Sharma",
+        "recipientQuery": "7013893165@easypay",
+        "utr": "EPY754128541",
+        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
+        "paymentMethod": "Wallet",
+        "note": "Transferred via EasyPay"
+      }
+    },
     {
       "id": "TXN_33067825",
       "title": "Paid for EasyPay Mall Store",
@@ -2220,7 +2270,10 @@
       "status": "ACTIVE",
       "dicgcInsured": true,
       "certNumber": "DICGC-EP-687013",
-      "folioNumber": "EP-FD-8517"
+      "folioNumber": "EP-FD-8517",
+      "userMobile": "+91 7013893165",
+      "userId": "EPY31650",
+      "userName": "arman khan"
     },
     {
       "id": "INV_BOND_529158",
@@ -2241,7 +2294,10 @@
       "status": "ACTIVE",
       "dicgcInsured": true,
       "certNumber": "DICGC-EP-465189",
-      "folioNumber": "EP-FD-3025"
+      "folioNumber": "EP-FD-3025",
+      "userMobile": "+91 7013893165",
+      "userId": "EPY31650",
+      "userName": "arman khan"
     },
     {
       "id": "INV_BOND_328620",
@@ -2262,7 +2318,10 @@
       "monthlyRate": 8.75,
       "interestRateText": "8.75% per month",
       "dailyPayout": 145.83,
-      "monthlyInterest": 4375
+      "monthlyInterest": 4375,
+      "userMobile": "+91 9876548808",
+      "userId": "EPY98808",
+      "userName": "Nirod behera"
     },
     {
       "id": "INV_BOND_775826",
@@ -2283,7 +2342,10 @@
       "monthlyRate": 8.6,
       "interestRateText": "8.6% per month",
       "dailyPayout": 71.67,
-      "monthlyInterest": 2150
+      "monthlyInterest": 2150,
+      "userMobile": "+91 9876543210",
+      "userId": "EPY43210",
+      "userName": "Rahul Sharma"
     },
     {
       "id": "INV_BOND_998124",
@@ -2303,7 +2365,10 @@
       "monthlyRate": 8.6,
       "interestRateText": "8.6% per month",
       "dailyPayout": 143.33,
-      "monthlyInterest": 4300
+      "monthlyInterest": 4300,
+      "userMobile": "+91 9812345678",
+      "userId": "EPY12345",
+      "userName": "Priya Patel"
     }
   ],
   "investmentWorth": {
@@ -2539,14 +2604,9 @@
         "token": "adm_1795108536833_kc30l847",
         "createdAt": 1795108536834,
         "expiresAt": 1795713336834
-      },
-      {
-        "token": "adm_1795108833207_xozwt17w",
-        "createdAt": 1795108833207,
-        "expiresAt": 1795713633207
       }
     ],
-    "lastLogin": "2026-11-19T17:20:33.207Z"
+    "lastLogin": "2026-11-21T05:06:15.574Z"
   },
   "systemSettings": {
     "appName": "EasyPay",

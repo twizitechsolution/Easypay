@@ -1051,17 +1051,8 @@
         <div class="login-logo-badge">
           <i class="fa-solid fa-shield-halved"></i>
         </div>
-        <div class="login-title">EasyPay Enterprise</div>
+        <div class="login-title">EasyPay Admin Login</div>
         <div class="login-sub">Secure Orchestration & Control Console</div>
-      </div>
-
-      <!-- Quick 1-Click Demo Login Trigger -->
-      <div class="demo-creds-chip" onclick="fillDemoCreds()" title="Click to auto-fill credentials">
-        <div class="demo-creds-header">
-          <span><i class="fa-solid fa-key"></i> Quick Demo Access</span>
-          <span style="font-size: 10px; background: #DBEAFE; padding: 2px 6px; border-radius: 4px;">Tap to Auto-Fill</span>
-        </div>
-        <div class="demo-creds-text">ID: <strong>admin@easypay.com</strong> • Pass: <strong>EasyPay@Admin2026</strong></div>
       </div>
 
       <div class="login-error-msg" id="loginErrorMsg"></div>
@@ -1243,22 +1234,7 @@
           </div>
         </div>
 
-        <div class="topbar-actions">
-          <button class="btn-topbar" onclick="refreshAdminData()" title="Reload fresh data from database">
-            <i class="fa-solid fa-arrows-rotate" id="refreshIcon"></i>
-            <span>Sync DB</span>
-          </button>
-
-          <a href="/" target="_blank" class="btn-topbar" title="Open Consumer Super-App in new tab">
-            <i class="fa-solid fa-mobile-screen"></i>
-            <span>User Super-App</span>
-          </a>
-
-          <button class="btn-topbar primary" onclick="openAddPlanModal()">
-            <i class="fa-solid fa-plus"></i>
-            <span>Add Plan</span>
-          </button>
-        </div>
+        <div class="topbar-actions"></div>
       </header>
 
       <!-- Content Views -->
@@ -1426,7 +1402,7 @@
               <table class="enterprise-table">
                 <thead>
                   <tr>
-                    <th>Certificate ID / Folio</th>
+                    <th>User Details</th>
                     <th>Institution & Plan</th>
                     <th>Principal</th>
                     <th>Monthly Yield</th>
@@ -2004,6 +1980,9 @@
             </div>
           </div>
         </div>
+
+        <!-- ==========================================
+             TAB 9: ENTERPRISE REPORTING & AUDIT EXPORTS
              ========================================== -->
         <div id="tabReports" class="tab-view-content">
           <div class="panel-card">
@@ -2699,11 +2678,17 @@
     function renderInvestmentsTable() {
       const tbody = document.getElementById('investmentsTableBody');
       if (!tbody) return;
-      tbody.innerHTML = (adminData.investments || []).map(inv => `
+      tbody.innerHTML = (adminData.investments || []).map(inv => {
+        const rawMobile = (inv.userMobile || inv.mobile || (inv.userId ? ((adminData.users || []).find(u => u.id === inv.userId) || {}).mobile : '') || '7013893165').toString();
+        const cleanDigits = rawMobile.replace(/\D/g, '').slice(-10);
+        const displayMobile = cleanDigits.length === 10 ? `+91 ${cleanDigits}` : (rawMobile || '+91 7013893165');
+        const userId = inv.userId || (cleanDigits ? ((adminData.users || []).find(u => (u.mobile || '').replace(/\D/g, '').slice(-10) === cleanDigits) || {}).id : '') || 'EPY31650';
+
+        return `
         <tr>
           <td>
-            <div><strong>${inv.certNumber || inv.id}</strong></div>
-            <div style="font-size: 11px; color: #64748B;">Folio: ${inv.folioNumber || 'EP-FD'}</div>
+            <div style="font-weight: 800; font-size: 13px; color: #0F172A; letter-spacing: -0.2px;">${displayMobile}</div>
+            <div style="font-size: 11px; font-weight: 700; color: #64748B; margin-top: 2px;">ID: ${userId}</div>
           </td>
           <td><strong>${inv.institution || 'Suryoday SF Bank'}</strong></td>
           <td style="font-weight: 800;">₹${(inv.principal || 1000).toLocaleString('en-IN')}</td>
@@ -2723,7 +2708,8 @@
             </div>
           </td>
         </tr>
-      `).join('');
+      `;
+      }).join('');
     }
 
     // Render Brands Table
@@ -3443,9 +3429,13 @@
 
     function exportBondsCSV() {
       const invs = adminData.investments || [];
-      let csv = 'Certificate ID,Folio,Institution,Principal,Monthly Rate %,Monthly Interest,Daily Payout,Maturity Amount,Booking Date,Maturity Date,Status\n';
+      let csv = 'User Mobile,User ID,Institution,Principal,Monthly Rate %,Monthly Interest,Daily Payout,Maturity Amount,Booking Date,Maturity Date,Status\n';
       invs.forEach(i => {
-        csv += `"${i.certNumber || i.id}","${i.folioNumber || ''}","${i.institution || ''}",${i.principal || 0},${i.monthlyRate || 0},${i.monthlyInterest || 0},${i.dailyPayout || 0},${i.maturityAmount || 0},"${i.bookingDate || ''}","${i.maturityDate || ''}","${i.status || ''}"\n`;
+        const rawMobile = (i.userMobile || i.mobile || (i.userId ? ((adminData.users || []).find(u => u.id === i.userId) || {}).mobile : '') || '7013893165').toString();
+        const cleanDigits = rawMobile.replace(/\D/g, '').slice(-10);
+        const displayMobile = cleanDigits.length === 10 ? `+91 ${cleanDigits}` : rawMobile;
+        const userId = i.userId || (cleanDigits ? ((adminData.users || []).find(u => (u.mobile || '').replace(/\D/g, '').slice(-10) === cleanDigits) || {}).id : '') || 'EPY31650';
+        csv += `"${displayMobile}","${userId}","${i.institution || ''}",${i.principal || 0},${i.monthlyRate || 0},${i.monthlyInterest || 0},${i.dailyPayout || 0},${i.maturityAmount || 0},"${i.bookingDate || ''}","${i.maturityDate || ''}","${i.status || ''}"\n`;
       });
       downloadBlob(csv, 'easypay_bonds_portfolio_' + Date.now() + '.csv', 'text/csv');
     }
