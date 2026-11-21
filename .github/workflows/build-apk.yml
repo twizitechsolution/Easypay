@@ -50,34 +50,39 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EasyPay-v1.0.27.apk
+          name: EasyPay-v1.0.28.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Publish GitHub Release with APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.27
-          name: "EasyPay Android APK v1.0.27 (Live Database Sync for Overview KPIs & Isolated Admin Login Viewport Fix)"
+          tag_name: v1.0.28
+          name: "EasyPay Android APK v1.0.28 (Gift Cards Visual Refresh, Dynamic Profile ID, PIN Reset Flow & Full Mall Checkout System)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.27 (Production Release)
+            ## EasyPay Mobile Application APK v1.0.28 (Production Release)
             Direct native Android APK connected live to Vercel production server: https://easypay-gamma.vercel.app
 
-            ### Key Features & Updates in v1.0.27:
-            1. **Admin Login Page Isolation Fix**:
-               - Resolved CSS display cascade bug on `#adminAppSection` and added inline hiding to guarantee the admin dashboard never bleeds through or appears below the login screen.
-            2. **Authentic Real-Time Database Metrics & Zero Fake Data**:
-               - Cleared all outdated and fake seeded figures (`₹13,71,745` GMV, `₹64,388` margin, `24,890` users, `14,155` orders).
-               - Synced 100% with the live database:
-                 - **Total Platform GMV**: ₹2,55,173.24 (exact sum of all actual transactions & investments).
-                 - **Platform Margin Profit**: ₹6,379.33 (real 2.5% platform earnings).
-                 - **Active Users**: 8 (real registered accounts in `data.users`).
-                 - **Vouchers & Recharges**: 23 (18 vouchers + 5 recharges completed in database).
-            3. **Live Scaled Charts**:
-               - Platform GMV growth line chart scaled dynamically to actual platform volume.
-               - Category share donut chart calculating exact real transaction distributions.
-            4. **Clean Production Admin UI**:
-               - Pure 'EasyPay Admin Login' view, no autofill demo chips, no stray comments, and streamlined top navigation.
+            ### Key Features & Updates in v1.0.28:
+            1. **Gift Cards Logo Presentation Visual Refresh**:
+               - Removed the black/dark borders and background boxes around brand logos.
+               - Logos are cleanly rounded on white tiles with subtle border and shadow, preserving official brand aesthetics.
+            2. **Account / Profile Section Redesign**:
+               - Structured strictly: **Name -> Mobile Number -> User ID** (e.g. `arman khan` -> `+91 7013893165` -> `User ID: EPY31650`).
+               - Removed eye and copy icons next to User ID.
+               - Removed warning icon from the Profile button.
+               - 'Payment Settings' updated with right-aligned chevron and subtitle 'Add and manage bank accounts' (removed saved cards and KYC).
+            3. **Dedicated Set / Reset Security PIN Page**:
+               - Fully functional dedicated slide-in view (`#viewResetPin`) to verify registered mobile via 4-digit OTP and set/update 4-digit security PIN.
+               - Synced with backend `POST /api/user/set-pin`.
+            4. **Dedicated My Orders & Shipment Tracking Timeline**:
+               - Replaced UPI Requests with **My Orders** (`#viewMyOrders`) supporting Mall Orders and Gift Vouchers tabs.
+               - Amazon/Flipkart-style 5-stage shipment tracking timeline modal with courier details and AWB tracking numbers.
+            5. **EasyPay Mall Real-Time Cart & Checkout System**:
+               - Real-time cart count badge `#shopCartCountBadge` in header.
+               - Coupon Code section placed above Delivery Charges supporting `EASYPAY50`, `WELCOME100`, and `BACHAT20`.
+               - Dedicated Checkout modal with Delivery Address form, Order Summary, and Payment Options (EasyPay Wallet, UPI, COD).
+               - Real-time wallet deduction via `/api/wallet/transact` and database sync via `POST /api/orders/create`.
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

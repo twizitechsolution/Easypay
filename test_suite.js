@@ -49,6 +49,30 @@ const tests = [
   {
     name: 'Req 8: Exact 5 bottom navigation tabs isolated routing',
     pass: appHtml.includes('tabHome') && appHtml.includes('tabGift') && appHtml.includes('tabBonds') && appHtml.includes('tabShopping') && appHtml.includes('tabProfile') && appHtml.includes('isGift')
+  },
+  {
+    name: 'Req 9: Gift Card logos clean white rounded tiles with no dark borders',
+    pass: appHtml.includes('.brand-4col-icon') && !appHtml.includes('<div class="brand-4col-icon" style="background: ${c.bgColor') && !appHtml.includes('<div class="explore-brand-icon-box" style="background: ${c.bgColor')
+  },
+  {
+    name: 'Req 10: Profile Header strictly Name -> Mobile -> User ID (No eye/copy icon, no warning on Profile button)',
+    pass: appHtml.includes('id="profileAccountName"') && appHtml.includes('id="profileAccountPhone"') && appHtml.includes('id="profileAccountUserId"') && !appHtml.includes('id="profileAccountUpi"') && !appHtml.includes('Profile ⚠️')
+  },
+  {
+    name: 'Req 11: Dedicated Set/Reset Security PIN view and controller',
+    pass: appHtml.includes('id="viewResetPin"') && appHtml.includes('openResetPinView') && appHtml.includes('submitResetPinFlow') && appHtml.includes('id="newSecurityPinField"')
+  },
+  {
+    name: 'Req 12: My Orders view (replaces UPI Requests) & Order Tracking shipment timeline',
+    pass: appHtml.includes('id="viewMyOrders"') && appHtml.includes('openMyOrdersView') && appHtml.includes('openTrackingModal') && !appHtml.includes('UPI Payment Requests')
+  },
+  {
+    name: 'Req 13: Shopping Cart real-time badge, Coupon Code section & Proceed to Checkout',
+    pass: appHtml.includes('id="shopCartCountBadge"') && appHtml.includes('id="cartCouponInput"') && appHtml.includes('applyCartCoupon') && appHtml.includes('proceedToEcommerceCheckout')
+  },
+  {
+    name: 'Req 14: E-Commerce Checkout Modal with Address, Summary & Wallet deduction',
+    pass: appHtml.includes('id="ecommerceCheckoutModal"') && appHtml.includes('id="checkoutAddressStreet"') && appHtml.includes('submitFinalMallOrder') && appHtml.includes('id="orderSuccessModal"')
   }
 ];
 

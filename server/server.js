@@ -2916,6 +2916,63 @@ async function requestHandler(req, res) {
     return;
   }
 
+  // API: Create E-Commerce Mall Order
+  if (url === '/api/orders/create' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      try {
+        const orderData = JSON.parse(body || '{}');
+        const data = readDb();
+        if (!data.orders) data.orders = [];
+
+        const newOrder = {
+          id: orderData.id || ('ORD-' + Math.floor(100000 + Math.random() * 900000)),
+          items: orderData.items || [],
+          subtotal: orderData.subtotal || 0,
+          discount: orderData.discount || 0,
+          total: orderData.total || 0,
+          paymentMethod: orderData.paymentMethod || 'EasyPay Wallet',
+          deliveryAddress: orderData.deliveryAddress || {},
+          status: 'Order Confirmed',
+          createdAt: orderData.createdAt || new Date().toISOString(),
+          trackingNumber: 'BD-' + Math.floor(10000000 + Math.random() * 90000000),
+          courier: 'Blue Dart Express',
+          estimatedDelivery: '3-4 business days',
+          stages: [
+            { title: 'Order Confirmed', description: 'Your order has been placed and verified', date: 'Today', completed: true },
+            { title: 'Packed at Warehouse', description: 'Item is being inspected & packed', date: 'Expected Tomorrow', completed: false },
+            { title: 'Dispatched with Blue Dart', description: 'Courier will pick up package', date: 'Expected in 2 days', completed: false },
+            { title: 'Out for Delivery', description: 'Delivery agent will call upon arrival', date: 'Expected in 3 days', completed: false },
+            { title: 'Delivered', description: 'Delivered to your address', date: 'Expected in 4 days', completed: false }
+          ]
+        };
+
+        data.orders.unshift(newOrder);
+        writeDb(data);
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, order: newOrder }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return;
+  }
+
+  // API: Get Orders List
+  if (url === '/api/orders/list' && req.method === 'GET') {
+    const data = readDb();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      success: true,
+      orders: data.orders || [],
+      vouchers: data.vouchers || []
+    }));
+    return;
+  }
+
   // Static File Serving & SPA Fallback
   let filePath = path.join(PUBLIC_DIR, url === '/' ? 'app.html' : url);
   if (url === '/admin') {

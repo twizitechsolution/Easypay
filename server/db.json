@@ -2884,5 +2884,69 @@
     "subtitle": "Kumbhalgarh, Goa & Thailand Trips",
     "link": "",
     "updatedAt": "2026-11-20T10:21:21.549Z"
-  }
+  },
+  "orders": [
+    {
+      "id": "ORD-892415",
+      "items": [
+        {
+          "id": "prod_1",
+          "title": "boAt Airdopes 141 ANC with 42H Playtime",
+          "brand": "boAt",
+          "price": 999,
+          "qty": 1,
+          "img": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60"
+        }
+      ],
+      "subtotal": 999,
+      "discount": 50,
+      "total": 949,
+      "paymentMethod": "EasyPay Wallet",
+      "deliveryAddress": {
+        "name": "arman khan",
+        "mobile": "7013893165",
+        "address": "Flat 402, Green Valley Apartments, Andheri West",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "pincode": "400053"
+      },
+      "status": "Order Confirmed",
+      "createdAt": "2026-11-20T08:23:51.805Z",
+      "trackingNumber": "BD-84729104",
+      "courier": "Blue Dart Express",
+      "estimatedDelivery": "Tomorrow, by 8:00 PM",
+      "stages": [
+        {
+          "title": "Order Confirmed",
+          "description": "Your order has been placed and verified",
+          "date": "Yesterday, 04:30 PM",
+          "completed": true
+        },
+        {
+          "title": "Packed at Warehouse",
+          "description": "Package safely packed & labeled",
+          "date": "Today, 10:15 AM",
+          "completed": true
+        },
+        {
+          "title": "Dispatched with Blue Dart",
+          "description": "In transit to Mumbai Hub",
+          "date": "Today, 02:45 PM",
+          "completed": true
+        },
+        {
+          "title": "Out for Delivery",
+          "description": "Delivery partner assigned",
+          "date": "Tomorrow morning",
+          "completed": false
+        },
+        {
+          "title": "Delivered",
+          "description": "Delivered to your address",
+          "date": "Tomorrow, by 8:00 PM",
+          "completed": false
+        }
+      ]
+    }
+  ]
 }

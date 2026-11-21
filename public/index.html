@@ -2831,16 +2831,17 @@
       transform: translateY(-2px);
     }
     .brand-4col-icon {
-      width: 54px;
-      height: 54px;
+      width: 56px;
+      height: 56px;
       border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 24px;
-      color: #FFFFFF;
+      background: #FFFFFF !important;
+      border: 1.5px solid #F1F5F9;
       margin-bottom: 6px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
       overflow: hidden;
       position: relative;
     }
@@ -2848,7 +2849,8 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-      padding: 6px;
+      border-radius: 14px;
+      padding: 5px;
     }
     .brand-save-text {
       font-size: 11px;
@@ -2997,23 +2999,24 @@
     .explore-brand-icon-box {
       width: 76px;
       height: 76px;
-      border-radius: 22px;
+      border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 32px;
-      color: #FFFFFF;
+      background: #FFFFFF !important;
+      border: 1.5px solid #F1F5F9;
       margin-bottom: 8px;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(0,0,0,0.04);
     }
     .explore-brand-icon-box img {
       width: 100%;
       height: 100%;
       object-fit: contain;
-      padding: 8px;
+      border-radius: 18px;
+      padding: 6px;
     }
     .explore-save-badge {
       font-size: 12px;
@@ -4978,72 +4981,65 @@
           <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px 6px; text-align: center;">
             
             <!-- 1. Apple -->
-            <div style="cursor: pointer; display: flex; flex-direction: column; align-items: center;" onclick="openBuyGiftCardModal('apple')">
-              <div style="width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(37,99,235,0.22); transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <i class="fa-brands fa-apple" style="color: #FFFFFF; font-size: 28px;"></i>
+            <div style="cursor: pointer; display: flex; flex-direction: column; align-items: center;" onclick="openBuyGiftCardModal('apple_app_store')">
+              <div style="width: 56px; height: 56px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #F1F5F9; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; padding: 6px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
               </div>
               <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 5px;">Save 4%</div>
             </div>
 
             <!-- 2. Domino's -->
             <div style="cursor: pointer; display: flex; flex-direction: column; align-items: center;" onclick="openBuyGiftCardModal('dominos')">
-              <div style="width: 56px; height: 56px; border-radius: 16px; background: #0078AE; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,120,174,0.22); transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <i class="fa-solid fa-pizza-slice" style="color: #E31837; font-size: 18px;"></i>
-                <span style="color: white; font-size: 9px; font-weight: 900; letter-spacing: -0.3px; margin-top: 1px;">Domino's</span>
+              <div style="width: 56px; height: 56px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #F1F5F9; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; padding: 6px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Dominos_pizza_logo.svg" alt="Domino's" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
               </div>
               <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 5px;">Save 12%</div>
             </div>
 
             <!-- 3. Amazon Shopping Voucher -->
             <div style="cursor: pointer; display: flex; flex-direction: column; align-items: center;" onclick="openBuyGiftCardModal('amazon_shopping')">
-              <div style="width: 56px; height: 56px; border-radius: 16px; background: #232F3E; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(35,47,62,0.22); padding: 2px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <span style="color: white; font-size: 9px; font-weight: 800; line-height: 1;">amazon</span>
-                <span style="color: #94A3B8; font-size: 6px; font-weight: 600;">shopping voucher</span>
+              <div style="width: 56px; height: 56px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #F1F5F9; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; padding: 6px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" alt="Amazon Shopping" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
               </div>
               <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 5px;">Save 1.5%</div>
             </div>
 
             <!-- 4. Myntra -->
             <div style="cursor: pointer; display: flex; flex-direction: column; align-items: center;" onclick="openBuyGiftCardModal('myntra')">
-              <div style="width: 56px; height: 56px; border-radius: 16px; background: #FFF3E0; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(255,87,34,0.12); border: 1px solid #FFE0B2; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <span style="color: #E91E63; font-size: 17px; font-weight: 900; font-style: italic;">M</span>
-                <span style="color: #1E293B; font-size: 8px; font-weight: 800;">Myntra</span>
+              <div style="width: 56px; height: 56px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #F1F5F9; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; padding: 6px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Myntra_logo.png" alt="Myntra" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
               </div>
               <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 5px;">Save 4%</div>
             </div>
 
             <!-- 5. Amazon Prime -->
             <div style="cursor: pointer; display: flex; flex-direction: column; align-items: center;" onclick="openBuyGiftCardModal('amazon_prime')">
-              <div style="width: 56px; height: 56px; border-radius: 16px; background: #00A8E1; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,168,225,0.22); padding: 2px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <span style="color: white; font-size: 9px; font-weight: 800;">amazon</span>
-                <span style="color: #FEBD69; font-size: 8px; font-weight: 900;">prime</span>
+              <div style="width: 56px; height: 56px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #F1F5F9; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; padding: 6px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Amazon_Prime_Video_logo.svg" alt="Amazon Prime" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
               </div>
               <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 5px;">Save 16%</div>
             </div>
 
             <!-- 6. Smart Bazaar -->
             <div style="cursor: pointer; display: flex; flex-direction: column; align-items: center;" onclick="openBuyGiftCardModal('smart_bazaar')">
-              <div style="width: 56px; height: 56px; border-radius: 16px; background: #E53935; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(229,57,53,0.22); padding: 2px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <i class="fa-solid fa-cart-shopping" style="color: white; font-size: 14px;"></i>
-                <span style="color: white; font-size: 7px; font-weight: 900; line-height: 1; margin-top: 2px; text-transform: uppercase;">Smart Bazaar</span>
+              <div style="width: 56px; height: 56px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #F1F5F9; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; padding: 6px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Reliance_Retail_logo.svg" alt="Smart Bazaar" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
               </div>
               <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 5px;">Save 3%</div>
             </div>
 
             <!-- 7. BGMI -->
             <div style="cursor: pointer; display: flex; flex-direction: column; align-items: center;" onclick="openBuyGiftCardModal('bgmi')">
-              <div style="width: 56px; height: 56px; border-radius: 16px; background: #111827; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(17,24,39,0.22); padding: 2px; border: 1px solid #374151; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <span style="color: white; font-size: 10px; font-weight: 900; letter-spacing: 0.5px;">BGMI</span>
-                <span style="color: #9CA3AF; font-size: 6px; font-weight: 700; letter-spacing: 0.3px;">BY SWAG</span>
+              <div style="width: 56px; height: 56px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #F1F5F9; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; padding: 6px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                <img src="https://upload.wikimedia.org/wikipedia/en/9/9f/Battlegrounds_Mobile_India_logo.png" alt="BGMI" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
               </div>
               <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 5px;">Save 10%</div>
             </div>
 
             <!-- 8. Decathlon -->
             <div style="cursor: pointer; display: flex; flex-direction: column; align-items: center;" onclick="openBuyGiftCardModal('decathlon')">
-              <div style="width: 56px; height: 56px; border-radius: 16px; background: #0082C3; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,130,195,0.22); padding: 2px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <i class="fa-solid fa-person-running" style="color: white; font-size: 16px;"></i>
-                <span style="color: white; font-size: 7px; font-weight: 900; text-transform: uppercase;">Decathlon</span>
+              <div style="width: 56px; height: 56px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #F1F5F9; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; padding: 6px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Decathlon_Logo.png" alt="Decathlon" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
               </div>
               <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 5px;">Save 4%</div>
             </div>
@@ -5117,57 +5113,57 @@
             <div class="brand-container-header">Top Brands</div>
             <div class="brand-4col-grid" id="topBrandsGridContainer">
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('apple_app_store')">
-            <div class="brand-4col-icon" style="background: #0071E3;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple App Store" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon" style="background: #FFFFFF;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple App Store" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">Save 4%</span>
             <span class="brand-sub-title">App Store Code</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('dominos')">
-            <div class="brand-4col-icon" style="background: #006491;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Dominos_pizza_logo.svg" alt="Domino's Pizza" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon" style="background: #FFFFFF;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Dominos_pizza_logo.svg" alt="Domino's Pizza" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">Save 12%</span>
             <span class="brand-sub-title">Domino's</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('amazon_shopping')">
-            <div class="brand-4col-icon" style="background: #232F3E;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" alt="Amazon Shopping" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon" style="background: #FFFFFF;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" alt="Amazon Shopping" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">Save 1.5%</span>
             <span class="brand-sub-title">Amazon shopping voucher</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('myntra')">
-            <div class="brand-4col-icon" style="background: #FF3F6C;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Myntra_logo.png" alt="Myntra Fashion" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon" style="background: #FFFFFF;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Myntra_logo.png" alt="Myntra Fashion" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">Save 4%</span>
             <span class="brand-sub-title">Myntra</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('amazon_prime')">
-            <div class="brand-4col-icon" style="background: #00A8E1;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Amazon_Prime_Video_logo.svg" alt="Amazon Prime Video" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon" style="background: #FFFFFF;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Amazon_Prime_Video_logo.svg" alt="Amazon Prime Video" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">Save 16%</span>
             <span class="brand-sub-title">amazon prime</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('smart_bazaar')">
-            <div class="brand-4col-icon" style="background: #E11926;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Reliance_Retail_logo.svg" alt="Smart Bazaar Reliance" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon" style="background: #FFFFFF;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Reliance_Retail_logo.svg" alt="Smart Bazaar Reliance" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">Save 3%</span>
             <span class="brand-sub-title">SMART BAZAAR</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('bgmi')">
-            <div class="brand-4col-icon" style="background: #1A1A1A;">
-              <img src="https://upload.wikimedia.org/wikipedia/en/9/9f/Battlegrounds_Mobile_India_logo.png" alt="BGMI Krafton Swag" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon" style="background: #FFFFFF;">
+              <img src="https://upload.wikimedia.org/wikipedia/en/9/9f/Battlegrounds_Mobile_India_logo.png" alt="BGMI Krafton Swag" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">Save 10%</span>
             <span class="brand-sub-title">BGMI KRAFTON</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('decathlon')">
-            <div class="brand-4col-icon" style="background: #0082C3;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Decathlon_Logo.png" alt="Decathlon Sports" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon" style="background: #FFFFFF;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Decathlon_Logo.png" alt="Decathlon Sports" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">Save 4%</span>
             <span class="brand-sub-title">DECATHLON</span>
@@ -5196,57 +5192,57 @@
             <div class="brand-container-header">New Arrivals</div>
             <div class="brand-4col-grid" id="newArrivalsGridContainer">
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('klook')">
-            <div class="brand-4col-icon" style="background: #FF5722;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Klook_Logo.png" alt="Klook Travel & Tours" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon" style="background: #FFFFFF;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Klook_Logo.png" alt="Klook Travel & Tours" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">Save 6%</span>
             <span class="brand-sub-title">klook</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('urban_company')">
-            <div class="brand-4col-icon" style="background: #1A1A1A;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Urban_Company_Logo.svg" alt="Urban Company" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon" style="background: #FFFFFF;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Urban_Company_Logo.svg" alt="Urban Company" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">Save 3%</span>
             <span class="brand-sub-title">Urban Company</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('eazydiner')">
-            <div class="brand-4col-icon" style="background: #8E24AA;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/EazyDiner_Logo.png" alt="EazyDiner Prime Dining" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon" style="background: #FFFFFF;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/EazyDiner_Logo.png" alt="EazyDiner Prime Dining" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">Save 10%</span>
             <span class="brand-sub-title">eazydiner PRIME</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('real_cricket')">
-            <div class="brand-4col-icon" style="background: #0D47A1;">
-              <img src="https://upload.wikimedia.org/wikipedia/en/e/e6/Real_Cricket_logo.png" alt="Real Cricket 24" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon" style="background: #FFFFFF;">
+              <img src="https://upload.wikimedia.org/wikipedia/en/e/e6/Real_Cricket_logo.png" alt="Real Cricket 24" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">Save 8%</span>
             <span class="brand-sub-title">REAL CRICKET</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('pronto')">
-            <div class="brand-4col-icon" style="background: #00BFA5;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Pronto_Logo.png" alt="Pronto Delivery" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon" style="background: #FFFFFF;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Pronto_Logo.png" alt="Pronto Delivery" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">Save 15%</span>
             <span class="brand-sub-title">Pronto</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('wendys')">
-            <div class="brand-4col-icon" style="background: #D32F2F;">
-              <img src="https://upload.wikimedia.org/wikipedia/en/3/32/Wendy%27s_full_logo_2012.svg" alt="Wendy's Burgers" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon" style="background: #FFFFFF;">
+              <img src="https://upload.wikimedia.org/wikipedia/en/3/32/Wendy%27s_full_logo_2012.svg" alt="Wendy's Burgers" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">Save 9%</span>
             <span class="brand-sub-title">Wendy's</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('noise')">
-            <div class="brand-4col-icon" style="background: #1A1A1A;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/4/43/Noise_Logo.png" alt="Noise Smartwatches" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon" style="background: #FFFFFF;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/4/43/Noise_Logo.png" alt="Noise Smartwatches" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">Save 6%</span>
             <span class="brand-sub-title">NOISE</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('house_of_rare')">
-            <div class="brand-4col-icon" style="background: #18181B;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Rare_Rabbit_Logo.png" alt="The House of Rare" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon" style="background: #FFFFFF;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Rare_Rabbit_Logo.png" alt="The House of Rare" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">Save 7%</span>
             <span class="brand-sub-title">THE HOUSE OF RARE</span>
@@ -5779,15 +5775,14 @@
 
           <div class="profile-user-info-row">
             <div class="profile-avatar-circle-orange" id="profileInitialsBadge" onclick="openProfileEditModal()" style="cursor:pointer;">
-              NB
+              AK
             </div>
             <div>
-              <div class="profile-meta-name" id="profileAccountName" onclick="openProfileEditModal()" style="cursor:pointer;">Nirod Behera</div>
-              <div class="profile-meta-phone" id="profileAccountPhone">+91 xxxxx8808</div>
-              <div class="profile-meta-upi">
-                <span>UPI ID : <strong id="profileAccountUpi">XXXXXX8808@easypay</strong></span>
-                <i class="fa-regular fa-eye" style="cursor:pointer;" onclick="showToast('UPI ID: 9876548808@easypay')"></i>
-                <i class="fa-regular fa-copy" style="cursor:pointer;" onclick="copyToClipboard('9876548808@easypay'); showToast('UPI ID Copied!')"></i>
+              <div class="profile-meta-name" id="profileAccountName" onclick="openProfileEditModal()" style="cursor:pointer;">arman khan</div>
+              <div class="profile-meta-phone" id="profileAccountPhone">+91 7013893165</div>
+              <div class="profile-meta-userid" style="font-size: 13px; color: rgba(255,255,255,0.92); font-weight: 700; margin-top: 3px; display: flex; align-items: center; gap: 6px;">
+                <span>User ID:</span>
+                <span id="profileAccountUserId" style="letter-spacing: 0.5px;">EPY31650</span>
               </div>
             </div>
           </div>
@@ -5797,7 +5792,7 @@
         <div class="profile-floating-action-card" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
           <button class="profile-action-pill-btn" onclick="openProfileEditModal()">
             <i class="fa-regular fa-user" style="color: #E91E63;"></i>
-            <span>Profile ⚠️</span>
+            <span>Profile</span>
           </button>
 
           <button class="profile-action-pill-btn" onclick="openQrCodeModal()">
@@ -5856,8 +5851,8 @@
           </div>
 
           
-          <!-- Set / Reset Security PIN with OTP -->
-          <div class="profile-menu-row" onclick="openSetPinModal()">
+          <!-- Set / Reset Security PIN with OTP (User Requested Functional Dedicated Page) -->
+          <div class="profile-menu-row" onclick="openResetPinView()">
             <div class="profile-menu-left">
               <div class="profile-menu-icon" style="background:#E3F2FD; color:#1976D2;">
                 <i class="fa-solid fa-shield-halved"></i>
@@ -5870,21 +5865,21 @@
             <i class="fa-solid fa-chevron-right" style="color:#BDBDBD; font-size:13px;"></i>
           </div>
 
-          <!-- UPI Payment Requests -->
-          <div class="profile-menu-row" onclick="showToast('No pending UPI payment requests')">
+          <!-- My Orders (User Requested: Replaced UPI Requests with Amazon/Flipkart Style Order Tracking) -->
+          <div class="profile-menu-row" onclick="openMyOrdersView()">
             <div class="profile-menu-left">
-              <div class="profile-menu-icon" style="background:#E8F5E9; color:#2E7D32;">
-                <i class="fa-solid fa-shield-halved"></i>
+              <div class="profile-menu-icon" style="background:#EEF2FF; color:#4F46E5;">
+                <i class="fa-solid fa-box-archive"></i>
               </div>
               <div class="profile-menu-text-wrap">
-                <span class="profile-menu-item-title">UPI Payment Requests</span>
-                <span class="profile-menu-item-sub">View all your pending requests</span>
+                <span class="profile-menu-item-title">My Orders</span>
+                <span class="profile-menu-item-sub">Track Mall orders & gift vouchers</span>
               </div>
             </div>
             <i class="fa-solid fa-chevron-right" style="color:#BDBDBD; font-size:13px;"></i>
           </div>
 
-          <!-- Payment Settings -->
+          <!-- Payment Settings (User Requested: Chevron right, Removed saved cards and KYC) -->
           <div class="profile-menu-row" onclick="openBankAccountsView()">
             <div class="profile-menu-left">
               <div class="profile-menu-icon" style="background:#FFF8E1; color:#F57F17;">
@@ -5892,10 +5887,10 @@
               </div>
               <div class="profile-menu-text-wrap">
                 <span class="profile-menu-item-title">Payment Settings</span>
-                <span class="profile-menu-item-sub">Add bank accounts, save cards and KYC status</span>
+                <span class="profile-menu-item-sub">Add and manage bank accounts</span>
               </div>
             </div>
-            <i class="fa-solid fa-chevron-down" style="color:#BDBDBD; font-size:13px;"></i>
+            <i class="fa-solid fa-chevron-right" style="color:#BDBDBD; font-size:13px;"></i>
           </div>
         </div>
 
@@ -6469,6 +6464,125 @@
         </div>
       </div>
 
+      <!-- ==============================================================
+           VIEW: SET / RESET SECURITY PIN (USER REQUESTED DEDICATED VIEW)
+           ============================================================== -->
+      <div class="view-panel" id="viewResetPin" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+        <!-- Top App Bar -->
+        <div style="background: #FFFFFF; padding: 14px 16px; border-bottom: 1px solid #E2E8F0; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <button onclick="closeResetPinView()" style="background: none; border: none; font-size: 18px; color: #0F172A; cursor: pointer; display: flex; align-items: center;">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #0F172A;">Set / Reset Security PIN</div>
+          </div>
+          <span style="font-size: 11px; font-weight: 700; color: #16A34A; background: #DCFCE7; padding: 3px 8px; border-radius: 6px;">
+            <i class="fa-solid fa-shield-halved"></i> 256-bit Secure
+          </span>
+        </div>
+
+        <div style="padding: 20px 16px; max-width: 480px; margin: 0 auto;">
+          <!-- Secure Card Hero -->
+          <div style="background: linear-gradient(135deg, #1E293B, #0F172A); border-radius: 20px; padding: 22px 20px; color: white; margin-bottom: 20px; box-shadow: 0 4px 14px rgba(15,23,42,0.15); text-align: center;">
+            <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #38BDF8; margin: 0 auto 12px;">
+              <i class="fa-solid fa-lock"></i>
+            </div>
+            <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; margin-bottom: 4px;">EasyPay Security PIN</div>
+            <div style="font-size: 12px; color: #94A3B8; line-height: 1.4;">
+              Your 4-digit PIN secures wallet debits, gift card purchases, and UPI money transfers.
+            </div>
+          </div>
+
+          <!-- Step 1: Mobile OTP Verification -->
+          <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 18px; margin-bottom: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+            <div style="font-size: 12px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Step 1: Verify Mobile Number</div>
+            <div style="font-size: 15px; font-weight: 800; color: #0F172A; margin-bottom: 4px;" id="resetPinTargetMobileDisplay">+91 XXXXXX3165</div>
+            <div style="font-size: 12px; color: #64748B; margin-bottom: 14px;">
+              Enter the 4-digit verification code sent to your registered mobile number:
+            </div>
+
+            <!-- OTP Input Boxes -->
+            <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 12px;">
+              <input type="tel" maxlength="1" class="reset-pin-otp-box" oninput="handleResetPinOtpInput(this, 0)" style="width: 54px; height: 54px; text-align: center; font-size: 22px; font-weight: 800; border: 1.5px solid #CBD5E1; border-radius: 14px; background: #F8FAFC; outline: none; transition: all 0.2s;">
+              <input type="tel" maxlength="1" class="reset-pin-otp-box" oninput="handleResetPinOtpInput(this, 1)" style="width: 54px; height: 54px; text-align: center; font-size: 22px; font-weight: 800; border: 1.5px solid #CBD5E1; border-radius: 14px; background: #F8FAFC; outline: none; transition: all 0.2s;">
+              <input type="tel" maxlength="1" class="reset-pin-otp-box" oninput="handleResetPinOtpInput(this, 2)" style="width: 54px; height: 54px; text-align: center; font-size: 22px; font-weight: 800; border: 1.5px solid #CBD5E1; border-radius: 14px; background: #F8FAFC; outline: none; transition: all 0.2s;">
+              <input type="tel" maxlength="1" class="reset-pin-otp-box" oninput="handleResetPinOtpInput(this, 3)" style="width: 54px; height: 54px; text-align: center; font-size: 22px; font-weight: 800; border: 1.5px solid #CBD5E1; border-radius: 14px; background: #F8FAFC; outline: none; transition: all 0.2s;">
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+              <span style="color: #64748B;" id="resetPinOtpTimer">Resend OTP in <strong>00:29</strong></span>
+              <button onclick="resendResetPinOtp()" style="background: none; border: none; color: #FF5722; font-weight: 800; cursor: pointer; font-size: 12px;">Resend OTP</button>
+            </div>
+          </div>
+
+          <!-- Step 2: Choose New 4-Digit PIN -->
+          <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 18px; margin-bottom: 22px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+            <div style="font-size: 12px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Step 2: Choose New 4-Digit PIN</div>
+
+            <div style="margin-bottom: 14px;">
+              <label style="font-size: 12px; font-weight: 700; color: #0F172A; display: block; margin-bottom: 6px;">New 4-Digit Security PIN</label>
+              <div style="position: relative;">
+                <input type="password" id="newSecurityPinField" maxlength="4" placeholder="••••" style="width: 100%; letter-spacing: 12px; font-size: 22px; font-weight: 900; text-align: center; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 12px; outline: none; background: #F8FAFC;">
+                <i class="fa-solid fa-eye" id="toggleNewPinEye" onclick="togglePinVisibility('newSecurityPinField', 'toggleNewPinEye')" style="position: absolute; right: 14px; top: 18px; color: #94A3B8; cursor: pointer; font-size: 16px;"></i>
+              </div>
+            </div>
+
+            <div>
+              <label style="font-size: 12px; font-weight: 700; color: #0F172A; display: block; margin-bottom: 6px;">Confirm 4-Digit Security PIN</label>
+              <div style="position: relative;">
+                <input type="password" id="confirmSecurityPinField" maxlength="4" placeholder="••••" style="width: 100%; letter-spacing: 12px; font-size: 22px; font-weight: 900; text-align: center; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 12px; outline: none; background: #F8FAFC;">
+                <i class="fa-solid fa-eye" id="toggleConfirmPinEye" onclick="togglePinVisibility('confirmSecurityPinField', 'toggleConfirmPinEye')" style="position: absolute; right: 14px; top: 18px; color: #94A3B8; cursor: pointer; font-size: 16px;"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button class="btn-primary-action" onclick="submitResetPinFlow()" style="width: 100%; margin: 0;">
+            <i class="fa-solid fa-check"></i> Verify & Update Security PIN
+          </button>
+        </div>
+      </div>
+
+      <!-- ==============================================================
+           VIEW: MY ORDERS & VOUCHERS (AMAZON/FLIPKART STYLE TRACKING)
+           ============================================================== -->
+      <div class="view-panel" id="viewMyOrders" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+        <!-- Top App Bar -->
+        <div style="background: #FFFFFF; padding: 14px 16px; border-bottom: 1px solid #E2E8F0; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <button onclick="closeMyOrdersView()" style="background: none; border: none; font-size: 18px; color: #0F172A; cursor: pointer; display: flex; align-items: center;">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #0F172A;">My Orders & Vouchers</div>
+          </div>
+          <button onclick="fetchAndRenderOrders()" style="background: none; border: none; font-size: 16px; color: #FF5722; cursor: pointer;">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
+        </div>
+
+        <!-- Segmented Tab Bar -->
+        <div style="background: #FFFFFF; padding: 8px 16px 12px; border-bottom: 1px solid #E2E8F0; display: flex; gap: 8px;">
+          <button id="tabBtnMallOrders" class="orders-tab-btn active" onclick="switchOrdersTab('mall')" style="flex: 1; padding: 8px 12px; border-radius: 10px; font-size: 13px; font-weight: 800; border: none; cursor: pointer; background: #0F172A; color: white;">
+            <i class="fa-solid fa-bag-shopping"></i> Mall Orders (<span id="mallOrdersBadgeCount">1</span>)
+          </button>
+          <button id="tabBtnGiftVouchers" class="orders-tab-btn" onclick="switchOrdersTab('vouchers')" style="flex: 1; padding: 8px 12px; border-radius: 10px; font-size: 13px; font-weight: 800; border: 1px solid #E2E8F0; cursor: pointer; background: #F8FAFC; color: #64748B;">
+            <i class="fa-solid fa-gift"></i> Gift Vouchers
+          </button>
+        </div>
+
+        <div style="padding: 16px; max-width: 480px; margin: 0 auto;">
+          <!-- Tab 1: Mall Orders List -->
+          <div id="mallOrdersContainer" style="display: flex; flex-direction: column; gap: 14px;">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- Tab 2: Gift Vouchers List -->
+          <div id="vouchersOrdersContainer" style="display: none; flex-direction: column; gap: 14px;">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
       <div class="view-panel" id="viewShopping" style="display: none;">
         
         <!-- Shopping Top Bar -->
@@ -6974,19 +7088,19 @@
         </div>
       </div>
 
-      <!-- User Avatar Circle (Nb) -->
+      <!-- User Avatar Circle (ak) -->
       <div style="width: 58px; height: 58px; border-radius: 50%; background: #FDE68A; color: #92400E; display: inline-flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; margin-bottom: 8px;" id="myQrInitialsBadge">
-        Nb
+        ak
       </div>
 
       <!-- User Name -->
       <div style="font-size: 18px; font-weight: 800; color: #0F172A; margin-bottom: 4px;" id="myQrUserName">
-        Nirod behera
+        arman khan
       </div>
 
       <!-- Pay ID with Eye Icon Toggle -->
       <div style="display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; color: #475569; font-weight: 600; margin-bottom: 12px;">
-        <span id="myQrPayIdText">XXXXXX8808@easypay</span>
+        <span id="myQrPayIdText">xxxxxx3165@easypay</span>
         <i class="fa-regular fa-eye" id="myQrEyeIcon" style="cursor: pointer; color: #FF5722;" onclick="toggleMyQrMask()"></i>
       </div>
 
@@ -9322,14 +9436,14 @@
         homeList.innerHTML = cards.slice(0, 4).map(c => renderBrandItem(c)).join('');
       }
 
-      // 1. Render Top Brands 4x2 Grid (Screenshot 2)
+      // 1. Render Top Brands 4x2 Grid (User Requested: Clean Rounded White Tiles, No Black Borders)
       const topGrid = document.getElementById('topBrandsGridContainer');
       if (topGrid) {
         const topCards = cards.filter(c => c.isTop).slice(0, 8);
         topGrid.innerHTML = topCards.map(c => `
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('${c.id}')">
-            <div class="brand-4col-icon" style="background: ${c.bgColor || '#0F172A'};">
-              <img src="${c.logo}" alt="${c.name}" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon">
+              <img src="${c.logo}" alt="${c.name}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">${c.saveText || 'Save ' + c.cashbackRate + '%'}</span>
             <span class="brand-sub-title">${c.subName || c.name}</span>
@@ -9337,14 +9451,14 @@
         `).join('');
       }
 
-      // 2. Render New Arrivals 4x2 Grid (Screenshot 3)
+      // 2. Render New Arrivals 4x2 Grid (User Requested: Clean Rounded White Tiles)
       const newGrid = document.getElementById('newArrivalsGridContainer');
       if (newGrid) {
         const newCards = cards.filter(c => c.isNew).slice(0, 8);
         newGrid.innerHTML = newCards.map(c => `
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('${c.id}')">
-            <div class="brand-4col-icon" style="background: ${c.bgColor || '#1E293B'};">
-              <img src="${c.logo}" alt="${c.name}" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: white; padding: 3px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            <div class="brand-4col-icon">
+              <img src="${c.logo}" alt="${c.name}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
             </div>
             <span class="brand-save-text">${c.saveText || 'Save ' + c.cashbackRate + '%'}</span>
             <span class="brand-sub-title">${c.subName || c.name}</span>
@@ -9357,10 +9471,10 @@
     }
 
     function renderBrandItem(c) {
-      return '<div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; cursor: pointer;" onclick="openBuyGiftCardModal(\'' + c.id + '\')">' +
+      return '<div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #FFFFFF; border: 1.5px solid #F1F5F9; border-radius: 14px; cursor: pointer;" onclick="openBuyGiftCardModal(\'' + c.id + '\')">' +
         '<div style="display: flex; align-items: center; gap: 12px;">' +
-          '<div style="width: 44px; height: 44px; border-radius: 14px; background: ' + (c.bgColor || '#1E293B') + '; color: white; display: flex; align-items: center; justify-content: center; font-size: 20px;">' +
-            (c.iconClass ? '<i class="' + c.iconClass + '"></i>' : '<img src="' + c.logo + '" style="width: 24px; height: 24px; object-fit: contain;">') +
+          '<div style="width: 44px; height: 44px; border-radius: 14px; background: #FFFFFF; border: 1.5px solid #F1F5F9; color: #0F172A; display: flex; align-items: center; justify-content: center; font-size: 20px;">' +
+            (c.iconClass ? '<i class="' + c.iconClass + '"></i>' : '<img src="' + c.logo + '" style="width: 30px; height: 30px; object-fit: contain; border-radius: 8px;">') +
           '</div>' +
           '<div>' +
             '<div style="font-family: var(--font-heading); font-size: 14px; font-weight: 700; color: #0F172A;">' + (c.subName || c.name) + '</div>' +
@@ -9392,7 +9506,7 @@
       const itemsToShow = filtered.slice(0, explorePage * exploreBatchSize);
       grid.innerHTML = itemsToShow.map(c => `
         <div class="explore-brand-card" onclick="openBrandPurchaseModalById('${c.id}')">
-          <div class="explore-brand-icon-box" style="background: ${c.bgColor || '#1E293B'};">
+          <div class="explore-brand-icon-box">
             ${c.iconClass ? `<i class="${c.iconClass}"></i>` : `<img src="${c.logo}" alt="${c.name}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">`}
           </div>
           <span class="explore-save-badge">${c.saveText || 'Save ' + c.cashbackRate + '%'}</span>
@@ -9454,7 +9568,7 @@
       } else {
         searchGrid.innerHTML = matches.map(c => `
           <div class="explore-brand-card" onclick="openBrandPurchaseModalById('${c.id}')">
-            <div class="explore-brand-icon-box" style="background: ${c.bgColor || '#1E293B'};">
+            <div class="explore-brand-icon-box">
               ${c.iconClass ? `<i class="${c.iconClass}"></i>` : `<img src="${c.logo}" alt="${c.name}">`}
             </div>
             <span class="explore-save-badge">${c.saveText || 'Save ' + c.cashbackRate + '%'}</span>
@@ -9689,7 +9803,7 @@
       Object.values(views).forEach(v => { if (v) v.style.display = 'none'; });
 
       // Always hide all overlay/secondary views when navigating via bottom bar
-      ['viewPayAnyone', 'viewBankAccounts', 'viewReferEarn', 'viewProductDetails', 'viewLuckyDrawDedicated'].forEach(id => {
+      ['viewPayAnyone', 'viewBankAccounts', 'viewReferEarn', 'viewProductDetails', 'viewLuckyDrawDedicated', 'viewResetPin', 'viewMyOrders'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
       });
@@ -11111,44 +11225,52 @@
       }
     }
 
-    // Update all UI elements showing user info
+    // Update all UI elements showing user info (User Requested: Dynamic Name -> Phone -> User ID)
     function syncUserProfileUI() {
       const u = appData.user || {};
-      const fullName = u.name || [u.firstName, u.lastName].filter(Boolean).join(' ') || 'Nirod behera';
-      const initials = (u.firstName?.[0] || 'N') + (u.lastName?.[0] || 'b');
-      const maskedMob = u.maskedMobile || ('xxxxxx' + (u.mobile ? u.mobile.slice(-4) : '8808'));
-      const payId = u.payId || (u.mobile ? (u.mobile + '@easypay') : '9876548808@easypay');
+      const fullName = u.name || [u.firstName, u.lastName].filter(Boolean).join(' ') || 'arman khan';
+      const initials = ((u.firstName?.[0] || u.name?.[0] || 'A') + (u.lastName?.[0] || (u.name?.split(' ')?.[1]?.[0] || 'K'))).toUpperCase();
+      const phone = u.mobile ? ('+91 ' + u.mobile) : (u.maskedMobile ? ('+91 ' + u.maskedMobile) : '+91 7013893165');
+      const userId = u.id || 'EPY31650';
 
       // Profile banner
       const accName = document.getElementById('profileAccountName');
       const accPhone = document.getElementById('profileAccountPhone');
-      const accUpi = document.getElementById('profileAccountUpi');
+      const accUserId = document.getElementById('profileAccountUserId');
       const initialsBadge = document.getElementById('profileInitialsBadge');
 
       if (accName) accName.innerText = fullName;
-      if (accPhone) accPhone.innerText = '+91 ' + maskedMob;
-      if (accUpi) accUpi.innerText = payId;
-      if (initialsBadge) initialsBadge.innerText = initials.toUpperCase();
+      if (accPhone) accPhone.innerText = phone;
+      if (accUserId) accUserId.innerText = userId;
+      if (initialsBadge) initialsBadge.innerText = initials;
 
       // Home header logo initials / badge
       const homeAvatar = document.querySelector('.fc-header-avatar');
-      if (homeAvatar) homeAvatar.innerText = initials.toUpperCase();
+      if (homeAvatar) homeAvatar.innerText = initials;
+
+      // Side Drawer User Info
+      const drawerName = document.getElementById('sideDrawerUserName');
+      const drawerPhone = document.getElementById('sideDrawerUserPhone');
+      const drawerInitials = document.getElementById('sideDrawerUserInitials');
+      if (drawerName) drawerName.innerText = fullName;
+      if (drawerPhone) drawerPhone.innerText = phone;
+      if (drawerInitials) drawerInitials.innerText = initials;
     }
 
     // Open My QR Code Modal (Screenshot 3)
-    
     function openQrCodeModal() {
       const u = appData.user || {};
-      const fullName = u.name || 'Nirod behera';
-      const payId = u.payId || '9876548808@easypay';
-      const maskedPayId = (u.maskedMobile || 'XXXXXX8808') + '@easypay';
+      const fullName = u.name || 'arman khan';
+      const payId = u.payId || (u.mobile ? (u.mobile + '@easypay') : '7013893165@easypay');
+      const maskedPayId = (u.maskedMobile || 'XXXXXX3165') + '@easypay';
+      const initials = ((u.firstName?.[0] || u.name?.[0] || 'A') + (u.lastName?.[0] || (u.name?.split(' ')?.[1]?.[0] || 'K'))).toUpperCase();
 
       const nameEl = document.getElementById('myQrUserName');
       const upiEl = document.getElementById('myQrPayIdText');
       const badgeEl = document.getElementById('myQrInitialsBadge');
       if (nameEl) nameEl.innerText = fullName;
       if (upiEl) upiEl.innerText = isMyQrMasked ? maskedPayId : payId;
-      if (badgeEl) badgeEl.innerText = (u.firstName?.[0] || 'N') + (u.lastName?.[0] || 'b');
+      if (badgeEl) badgeEl.innerText = initials;
 
       const upiUri = `upi://pay?pa=${payId}&pn=${encodeURIComponent(fullName)}&cu=INR`;
       renderQrCodeCanvas(upiUri);
@@ -13412,12 +13534,12 @@
       <!-- Drawer Header -->
       <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 24px 18px 20px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between;">
         <div style="display: flex; align-items: center; gap: 12px;">
-          <div style="width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; color: #FF5722; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center;">
-            NB
+          <div style="width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; color: #FF5722; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center;" id="sideDrawerUserInitials">
+            AK
           </div>
           <div>
-            <div style="font-weight: 800; font-size: 16px;">Nirod Behera</div>
-            <div style="font-size: 11px; opacity: 0.9;">+91 9876548808</div>
+            <div style="font-weight: 800; font-size: 16px;" id="sideDrawerUserName">arman khan</div>
+            <div style="font-size: 11px; opacity: 0.9;" id="sideDrawerUserPhone">+91 7013893165</div>
           </div>
         </div>
         <button onclick="closeModal('sideDrawerMenuModal')" style="background: none; border: none; color: #FFFFFF; font-size: 18px; cursor: pointer;">
@@ -13687,10 +13809,74 @@
 
     function updateCartBadgeUI() {
       const totalCount = shoppingCart.reduce((sum, item) => sum + item.qty, 0);
+      const badge = document.getElementById('shopCartCountBadge');
+      if (badge) {
+        badge.innerText = totalCount;
+        badge.style.display = totalCount > 0 ? 'flex' : 'none';
+      }
       document.querySelectorAll('.cart-badge-count').forEach(el => {
         el.innerText = totalCount;
         el.style.display = totalCount > 0 ? 'inline-block' : 'none';
       });
+    }
+
+    let appliedCoupon = null;
+
+    function applyCartCoupon() {
+      const input = document.getElementById('cartCouponInput');
+      const code = (input ? input.value : '').trim().toUpperCase();
+      const statusWrap = document.getElementById('cartCouponStatusMessage');
+      const statusText = document.getElementById('cartCouponStatusText');
+
+      if (!code) {
+        showToast('Please enter a coupon code');
+        return;
+      }
+
+      const subtotal = shoppingCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      if (subtotal <= 0) {
+        showToast('Your cart is empty');
+        return;
+      }
+
+      let discount = 0;
+      let label = '';
+
+      if (code === 'EASYPAY50') {
+        discount = Math.min(50, subtotal);
+        label = 'EASYPAY50 (₹50 OFF Applied)';
+      } else if (code === 'WELCOME100') {
+        if (subtotal < 500) {
+          showToast('WELCOME100 is valid on orders above ₹500');
+          return;
+        }
+        discount = 100;
+        label = 'WELCOME100 (₹100 OFF Applied)';
+      } else if (code === 'BACHAT20') {
+        discount = Math.min(200, Math.round(subtotal * 0.20));
+        label = 'BACHAT20 (20% OFF Applied)';
+      } else {
+        showToast('Invalid coupon code. Try EASYPAY50, WELCOME100 or BACHAT20');
+        return;
+      }
+
+      appliedCoupon = { code, discount, label };
+      if (statusWrap && statusText) {
+        statusWrap.style.display = 'flex';
+        statusText.innerText = '✅ ' + label;
+      }
+      renderCartModal();
+      showToast('🎉 Coupon applied! You saved ₹' + discount);
+    }
+
+    function removeCartCoupon() {
+      appliedCoupon = null;
+      const statusWrap = document.getElementById('cartCouponStatusMessage');
+      const input = document.getElementById('cartCouponInput');
+      if (statusWrap) statusWrap.style.display = 'none';
+      if (input) input.value = '';
+      renderCartModal();
+      showToast('Coupon removed');
     }
 
     function openCartModal() {
@@ -13702,10 +13888,15 @@
       const listEl = document.getElementById('cartItemsList');
       const subtotalEl = document.getElementById('cartSubtotalAmount');
       const totalEl = document.getElementById('cartTotalPayable');
+      const couponRow = document.getElementById('cartCouponDiscountRow');
+      const couponDiscEl = document.getElementById('cartCouponDiscountAmount');
 
       if (!listEl) return;
 
       if (shoppingCart.length === 0) {
+        appliedCoupon = null;
+        const statusWrap = document.getElementById('cartCouponStatusMessage');
+        if (statusWrap) statusWrap.style.display = 'none';
         listEl.innerHTML = `
           <div style="text-align: center; padding: 30px 10px;">
             <i class="fa-solid fa-cart-shopping" style="font-size: 36px; color: #CBD5E1; margin-bottom: 10px;"></i>
@@ -13715,6 +13906,7 @@
         `;
         if (subtotalEl) subtotalEl.innerText = '₹0';
         if (totalEl) totalEl.innerText = '₹0';
+        if (couponRow) couponRow.style.display = 'none';
         return;
       }
 
@@ -13739,8 +13931,19 @@
         `;
       }).join('');
 
+      const discount = appliedCoupon ? appliedCoupon.discount : 0;
+      const payable = Math.max(0, subtotal - discount);
+
       if (subtotalEl) subtotalEl.innerText = '₹' + subtotal.toLocaleString('en-IN');
-      if (totalEl) totalEl.innerText = '₹' + subtotal.toLocaleString('en-IN');
+      if (couponRow && couponDiscEl) {
+        if (discount > 0) {
+          couponRow.style.display = 'flex';
+          couponDiscEl.innerText = '-₹' + discount.toLocaleString('en-IN');
+        } else {
+          couponRow.style.display = 'none';
+        }
+      }
+      if (totalEl) totalEl.innerText = '₹' + payable.toLocaleString('en-IN');
     }
 
     function updateCartItemQty(prodId, delta) {
@@ -13754,22 +13957,503 @@
       renderCartModal();
     }
 
-    function checkoutCart() {
+    // ==============================================================
+    // E-COMMERCE CHECKOUT CONTROLLER (USER REQUESTED DEDICATED FLOW)
+    // ==============================================================
+    let selectedCheckoutPaymentMethod = 'wallet';
+
+    function updateSelectedCheckoutMethod(method) {
+      selectedCheckoutPaymentMethod = method;
+      const btnText = document.getElementById('btnPlaceOrderText');
+      const subtotal = shoppingCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const discount = appliedCoupon ? appliedCoupon.discount : 0;
+      const payable = Math.max(0, subtotal - discount);
+
+      if (btnText) {
+        if (method === 'cod') {
+          btnText.innerText = 'Place Order (Cash on Delivery ₹' + payable.toLocaleString('en-IN') + ')';
+        } else if (method === 'upi') {
+          btnText.innerText = 'Pay ₹' + payable.toLocaleString('en-IN') + ' via UPI';
+        } else {
+          btnText.innerText = 'Pay ₹' + payable.toLocaleString('en-IN') + ' from EasyPay Wallet';
+        }
+      }
+    }
+
+    function proceedToEcommerceCheckout() {
       if (shoppingCart.length === 0) {
         showToast('Your cart is empty!');
         return;
       }
-
-      const total = shoppingCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
       closeModal('easyPayCartModal');
+      renderCheckoutModal();
+      openModal('ecommerceCheckoutModal');
+    }
 
-      // Open Payment Source Bottom Sheet for Cart Total
-      openPayFromSourceSheet({
-        amount: total,
-        recipientName: 'EasyPay Mall Store',
-        recipientSubtitle: shoppingCart.length + ' item' + (shoppingCart.length > 1 ? 's' : '') + ' • Order #' + Math.floor(100000 + Math.random()*900000),
-        type: 'Mall Order Checkout'
-      });
+    function renderCheckoutModal() {
+      const u = appData.user || {};
+      const nameInput = document.getElementById('checkoutAddressName');
+      const phoneInput = document.getElementById('checkoutAddressPhone');
+      if (nameInput && !nameInput.value) nameInput.value = u.name || 'arman khan';
+      if (phoneInput && !phoneInput.value) phoneInput.value = u.mobile || '7013893165';
+
+      const walletBalLabel = document.getElementById('checkoutWalletBalanceLabel');
+      if (walletBalLabel) {
+        walletBalLabel.innerText = '₹' + ((u.walletBalance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 }));
+      }
+
+      const totalItems = shoppingCart.reduce((sum, item) => sum + item.qty, 0);
+      const subtotal = shoppingCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const discount = appliedCoupon ? appliedCoupon.discount : 0;
+      const payable = Math.max(0, subtotal - discount);
+
+      const countEl = document.getElementById('checkoutTotalItemCount');
+      if (countEl) countEl.innerText = totalItems;
+
+      const previewList = document.getElementById('checkoutItemsPreviewList');
+      if (previewList) {
+        previewList.innerHTML = shoppingCart.map(item => `
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <img src="${item.img}" style="width: 28px; height: 28px; border-radius: 6px; object-fit: contain; background: white; border: 1px solid #E2E8F0;">
+              <span style="font-weight: 700; color: #0F172A;">${item.title.slice(0, 26)}... (x${item.qty})</span>
+            </div>
+            <span style="font-weight: 800; color: #0F172A;">₹${(item.price * item.qty).toLocaleString('en-IN')}</span>
+          </div>
+        `).join('');
+      }
+
+      const totalDisp = document.getElementById('checkoutTotalAmountDisplay');
+      if (totalDisp) totalDisp.innerText = '₹' + payable.toLocaleString('en-IN');
+
+      updateSelectedCheckoutMethod(selectedCheckoutPaymentMethod);
+    }
+
+    async function submitFinalMallOrder() {
+      const name = document.getElementById('checkoutAddressName')?.value.trim() || 'arman khan';
+      const phone = document.getElementById('checkoutAddressPhone')?.value.trim() || '7013893165';
+      const street = document.getElementById('checkoutAddressStreet')?.value.trim() || 'Flat 402, Green Valley, Andheri West';
+      const city = document.getElementById('checkoutAddressCity')?.value.trim() || 'Mumbai';
+      const state = document.getElementById('checkoutAddressState')?.value.trim() || 'Maharashtra';
+      const pincode = document.getElementById('checkoutAddressPin')?.value.trim() || '400053';
+
+      if (!name || !phone || !street || !pincode) {
+        showToast('Please fill all delivery address details');
+        return;
+      }
+
+      const subtotal = shoppingCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const discount = appliedCoupon ? appliedCoupon.discount : 0;
+      const payable = Math.max(0, subtotal - discount);
+      const u = appData.user || {};
+
+      if (selectedCheckoutPaymentMethod === 'wallet') {
+        const currentBal = typeof u.walletBalance === 'number' ? u.walletBalance : 0;
+        if (currentBal < payable) {
+          showToast('Insufficient wallet balance. Available: ₹' + currentBal + ', Required: ₹' + payable);
+          return;
+        }
+
+        // Deduct from wallet via backend transaction engine
+        const utrNum = 'EPY' + Math.floor(100000000 + Math.random() * 900000000);
+        try {
+          await fetch(API_BASE + '/api/wallet/transact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: 'WALLET_DEBIT',
+              category: 'Shopping',
+              amount: payable,
+              title: 'Paid for EasyPay Mall Store Order',
+              recipientName: 'EasyPay Mall Store',
+              recipientQuery: 'mall@easypay',
+              utr: utrNum,
+              userMobile: u.mobile || '7013893165',
+              note: 'Mall Order: ' + shoppingCart.length + ' item(s)'
+            })
+          });
+          u.walletBalance = Math.round(Math.max(0, currentBal - payable) * 100) / 100;
+          renderWalletBalances();
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+      const orderPayload = {
+        id: orderId,
+        items: [...shoppingCart],
+        subtotal: subtotal,
+        discount: discount,
+        total: payable,
+        paymentMethod: selectedCheckoutPaymentMethod === 'wallet' ? 'EasyPay Wallet' : (selectedCheckoutPaymentMethod === 'upi' ? 'Instant UPI' : 'Cash on Delivery'),
+        deliveryAddress: { name, mobile: phone, address: street, city, state, pincode },
+        status: 'Order Confirmed',
+        createdAt: new Date().toISOString()
+      };
+
+      try {
+        const orderRes = await fetch(API_BASE + '/api/orders/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderPayload)
+        });
+        const orderData = await orderRes.json();
+        if (orderData.order) {
+          if (!appData.orders) appData.orders = [];
+          appData.orders.unshift(orderData.order);
+        }
+      } catch (err) {
+        if (!appData.orders) appData.orders = [];
+        appData.orders.unshift(orderPayload);
+      }
+
+      // Clear cart
+      shoppingCart = [];
+      appliedCoupon = null;
+      updateCartBadgeUI();
+      closeModal('ecommerceCheckoutModal');
+
+      // Populate Success Modal
+      const sId = document.getElementById('successOrderIdDisplay');
+      const sAmt = document.getElementById('successOrderAmountDisplay');
+      const sMethod = document.getElementById('successOrderPaymentMethodDisplay');
+      const sAddr = document.getElementById('successOrderAddressDisplay');
+      if (sId) sId.innerText = orderId;
+      if (sAmt) sAmt.innerText = '₹' + payable.toLocaleString('en-IN');
+      if (sMethod) sMethod.innerText = orderPayload.paymentMethod;
+      if (sAddr) sAddr.innerText = `${name}, ${street}, ${city} - ${pincode}`;
+
+      openModal('orderSuccessModal');
+    }
+
+    // ==============================================================
+    // MY ORDERS & SHIPMENT TRACKING CONTROLLER (AMAZON/FLIPKART STYLE)
+    // ==============================================================
+    function openMyOrdersView() {
+      document.querySelectorAll('.view-panel').forEach(v => v.style.display = 'none');
+      const v = document.getElementById('viewMyOrders');
+      if (v) v.style.display = 'block';
+      fetchAndRenderOrders();
+      window.scrollTo(0, 0);
+    }
+
+    function closeMyOrdersView() {
+      const v = document.getElementById('viewMyOrders');
+      if (v) v.style.display = 'none';
+      switchNavTab('profile');
+    }
+
+    let activeOrdersTab = 'mall';
+
+    function switchOrdersTab(tab) {
+      activeOrdersTab = tab;
+      const mallBtn = document.getElementById('tabBtnMallOrders');
+      const vouchersBtn = document.getElementById('tabBtnGiftVouchers');
+      const mallWrap = document.getElementById('mallOrdersContainer');
+      const vouchersWrap = document.getElementById('vouchersOrdersContainer');
+
+      if (tab === 'mall') {
+        if (mallBtn) {
+          mallBtn.style.background = '#0F172A';
+          mallBtn.style.color = '#FFFFFF';
+          mallBtn.style.border = 'none';
+        }
+        if (vouchersBtn) {
+          vouchersBtn.style.background = '#F8FAFC';
+          vouchersBtn.style.color = '#64748B';
+          vouchersBtn.style.border = '1px solid #E2E8F0';
+        }
+        if (mallWrap) mallWrap.style.display = 'flex';
+        if (vouchersWrap) vouchersWrap.style.display = 'none';
+      } else {
+        if (vouchersBtn) {
+          vouchersBtn.style.background = '#0F172A';
+          vouchersBtn.style.color = '#FFFFFF';
+          vouchersBtn.style.border = 'none';
+        }
+        if (mallBtn) {
+          mallBtn.style.background = '#F8FAFC';
+          mallBtn.style.color = '#64748B';
+          mallBtn.style.border = '1px solid #E2E8F0';
+        }
+        if (mallWrap) mallWrap.style.display = 'none';
+        if (vouchersWrap) vouchersWrap.style.display = 'flex';
+      }
+    }
+
+    async function fetchAndRenderOrders() {
+      try {
+        const res = await fetch(API_BASE + '/api/orders/list');
+        const data = await res.json();
+        if (data.success) {
+          appData.orders = data.orders || [];
+          if (data.vouchers) appData.vouchers = data.vouchers;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+
+      renderMallOrders();
+      renderVouchersOrders();
+    }
+
+    function renderMallOrders() {
+      const wrap = document.getElementById('mallOrdersContainer');
+      const badge = document.getElementById('mallOrdersBadgeCount');
+      if (!wrap) return;
+
+      const orders = appData.orders || [];
+      if (badge) badge.innerText = orders.length;
+
+      if (orders.length === 0) {
+        wrap.innerHTML = `
+          <div style="text-align: center; padding: 40px 10px; background: #FFFFFF; border-radius: 16px; border: 1px solid #E2E8F0;">
+            <i class="fa-solid fa-box-open" style="font-size: 36px; color: #CBD5E1; margin-bottom: 10px;"></i>
+            <div style="font-size: 15px; font-weight: 700; color: #0F172A;">No Past Orders Yet</div>
+            <div style="font-size: 12px; color: #64748B; margin-top: 4px;">Orders placed in EasyPay Mall will appear here</div>
+          </div>
+        `;
+        return;
+      }
+
+      wrap.innerHTML = orders.map(ord => {
+        const firstItem = (ord.items && ord.items[0]) || { title: 'EasyPay Mall Item', img: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60' };
+        const moreCount = (ord.items ? ord.items.length : 1) - 1;
+        const dateStr = ord.createdAt ? new Date(ord.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Recent';
+
+        return `
+          <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 16px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #F1F5F9; padding-bottom: 10px; margin-bottom: 12px;">
+              <div>
+                <span style="font-size: 11px; font-weight: 700; color: #64748B;">ORDER ID</span>
+                <div style="font-size: 13px; font-weight: 800; color: #0F172A;">${ord.id}</div>
+              </div>
+              <span style="background: #DCFCE7; color: #16A34A; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 6px;">
+                ● ${ord.status || 'Order Confirmed'}
+              </span>
+            </div>
+
+            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
+              <img src="${firstItem.img}" style="width: 50px; height: 50px; border-radius: 10px; object-fit: contain; background: #F8FAFC; border: 1px solid #E2E8F0;">
+              <div style="flex: 1;">
+                <div style="font-size: 13px; font-weight: 700; color: #0F172A; line-height: 1.3;">${firstItem.title}</div>
+                <div style="font-size: 11px; color: #64748B; margin-top: 2px;">
+                  ${moreCount > 0 ? ('+' + moreCount + ' more item' + (moreCount > 1 ? 's' : '') + ' • ') : ''}${dateStr}
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px; font-size: 12px;">
+              <div>
+                <span style="color: #64748B;">Total:</span> <strong style="color: #0F172A; font-size: 14px;">₹${(ord.total || 0).toLocaleString('en-IN')}</strong>
+              </div>
+              <span style="font-size: 11px; color: #64748B;">Paid via ${ord.paymentMethod || 'Wallet'}</span>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+              <button onclick="openTrackingModal('${ord.id}')" style="flex: 1; background: #0F172A; color: white; border: none; padding: 9px; border-radius: 10px; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <i class="fa-solid fa-truck-fast"></i> Track Order
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderVouchersOrders() {
+      const wrap = document.getElementById('vouchersOrdersContainer');
+      if (!wrap) return;
+
+      const vouchers = appData.vouchers || [];
+      if (vouchers.length === 0) {
+        wrap.innerHTML = `
+          <div style="text-align: center; padding: 40px 10px; background: #FFFFFF; border-radius: 16px; border: 1px solid #E2E8F0;">
+            <i class="fa-solid fa-ticket" style="font-size: 36px; color: #CBD5E1; margin-bottom: 10px;"></i>
+            <div style="font-size: 15px; font-weight: 700; color: #0F172A;">No Gift Vouchers Purchased Yet</div>
+            <div style="font-size: 12px; color: #64748B; margin-top: 4px;">Explore brands in the Gift tab and get instant cashback</div>
+          </div>
+        `;
+        return;
+      }
+
+      wrap.innerHTML = vouchers.map(v => `
+        <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 16px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <img src="${v.logo || 'https://cdn-icons-png.flaticon.com/512/879/879757.png'}" style="width: 36px; height: 36px; border-radius: 8px; object-fit: contain; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 3px;">
+              <div>
+                <div style="font-size: 14px; font-weight: 800; color: #0F172A;">${v.brandName || v.name}</div>
+                <div style="font-size: 11px; color: #64748B;">Value: ₹${v.amount || v.faceValue}</div>
+              </div>
+            </div>
+            <span style="background: #DCFCE7; color: #16A34A; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px;">ACTIVE</span>
+          </div>
+
+          <div style="background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 10px; padding: 10px 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 10px; font-weight: 700; color: #64748B;">VOUCHER CODE</div>
+              <div style="font-family: monospace; font-size: 13px; font-weight: 800; color: #0F172A; letter-spacing: 1px;">${v.code || 'EPY-VCH-84920'}</div>
+            </div>
+            <button onclick="copyToClipboard('${v.code || 'EPY-VCH-84920'}'); showToast('Voucher code copied!')" style="background: white; border: 1px solid #CBD5E1; padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer;">
+              Copy
+            </button>
+          </div>
+          ${v.pin ? `<div style="font-size: 11px; color: #64748B;">PIN: <strong style="color: #0F172A;">${v.pin}</strong></div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function openTrackingModal(orderId) {
+      const orders = appData.orders || [];
+      const ord = orders.find(o => o.id === orderId) || orders[0];
+      if (!ord) return;
+
+      const titleEl = document.getElementById('trackModalOrderId');
+      const courierEl = document.getElementById('trackCourierName');
+      const awbEl = document.getElementById('trackAwbNumber');
+      const statusBadge = document.getElementById('trackStatusBadge');
+      const timelineWrap = document.getElementById('trackingTimelineContent');
+
+      if (titleEl) titleEl.innerText = 'Order ' + ord.id;
+      if (courierEl) courierEl.innerText = ord.courier || 'Blue Dart Express';
+      if (awbEl) awbEl.innerText = ord.trackingNumber || 'BD-84729104';
+      if (statusBadge) statusBadge.innerText = '● ' + (ord.status || 'Order Confirmed');
+
+      const stages = ord.stages || [
+        { title: 'Order Confirmed', description: 'Your order has been verified & placed', date: 'Yesterday, 04:30 PM', completed: true },
+        { title: 'Packed at Warehouse', description: 'Item safely packed & dispatched', date: 'Today, 10:15 AM', completed: true },
+        { title: 'In Transit via Blue Dart', description: 'On the way to delivery hub', date: 'Today, 02:45 PM', completed: true },
+        { title: 'Out for Delivery', description: 'Agent will arrive today', date: 'Expected Tomorrow', completed: false },
+        { title: 'Delivered', description: 'Package handed to recipient', date: 'Expected in 2 days', completed: false }
+      ];
+
+      if (timelineWrap) {
+        timelineWrap.innerHTML = stages.map((st, idx) => {
+          const isDone = st.completed;
+          const isLast = idx === stages.length - 1;
+          return `
+            <div style="display: flex; gap: 14px; position: relative;">
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 24px; height: 24px; border-radius: 50%; background: ${isDone ? '#16A34A' : '#E2E8F0'}; color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; z-index: 2;">
+                  ${isDone ? '<i class="fa-solid fa-check"></i>' : '<span style="width:8px; height:8px; border-radius:50%; background:#94A3B8;"></span>'}
+                </div>
+                ${!isLast ? `<div style="width: 2px; flex: 1; min-height: 38px; background: ${isDone ? '#16A34A' : '#E2E8F0'}; margin: 2px 0;"></div>` : ''}
+              </div>
+              <div style="padding-bottom: ${isLast ? '0' : '20px'}; flex: 1;">
+                <div style="font-size: 13px; font-weight: 800; color: ${isDone ? '#0F172A' : '#94A3B8'};">${st.title}</div>
+                <div style="font-size: 11px; color: #64748B; margin-top: 2px;">${st.description}</div>
+                <div style="font-size: 10px; color: ${isDone ? '#16A34A' : '#94A3B8'}; font-weight: 700; margin-top: 2px;">${st.date}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      openModal('orderTrackingModal');
+    }
+
+    // ==============================================================
+    // SET / RESET SECURITY PIN CONTROLLER (USER REQUESTED DEDICATED VIEW)
+    // ==============================================================
+    function openResetPinView() {
+      document.querySelectorAll('.view-panel').forEach(v => v.style.display = 'none');
+      const v = document.getElementById('viewResetPin');
+      if (v) v.style.display = 'block';
+
+      const u = appData.user || {};
+      const mobile = u.mobile || '7013893165';
+      const last4 = mobile.slice(-4);
+      const masked = 'XXXXXX' + last4;
+
+      const disp = document.getElementById('resetPinTargetMobileDisplay');
+      if (disp) disp.innerText = '+91 ' + masked;
+
+      // Clear input fields
+      document.querySelectorAll('.reset-pin-otp-box').forEach(b => b.value = '');
+      const p1 = document.getElementById('newSecurityPinField');
+      const p2 = document.getElementById('confirmSecurityPinField');
+      if (p1) p1.value = '';
+      if (p2) p2.value = '';
+
+      window.scrollTo(0, 0);
+    }
+
+    function closeResetPinView() {
+      const v = document.getElementById('viewResetPin');
+      if (v) v.style.display = 'none';
+      switchNavTab('profile');
+    }
+
+    function handleResetPinOtpInput(input, index) {
+      input.value = input.value.replace(/[^0-9]/g, '');
+      const boxes = document.querySelectorAll('.reset-pin-otp-box');
+      if (input.value && index < boxes.length - 1) {
+        boxes[index + 1].focus();
+      }
+    }
+
+    function togglePinVisibility(fieldId, iconId) {
+      const field = document.getElementById(fieldId);
+      const icon = document.getElementById(iconId);
+      if (field) {
+        if (field.type === 'password') {
+          field.type = 'text';
+          if (icon) { icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash'); }
+        } else {
+          field.type = 'password';
+          if (icon) { icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
+        }
+      }
+    }
+
+    function resendResetPinOtp() {
+      showToast('A fresh OTP has been sent to your registered mobile number');
+    }
+
+    async function submitResetPinFlow() {
+      const boxes = document.querySelectorAll('.reset-pin-otp-box');
+      let otp = '';
+      boxes.forEach(b => otp += b.value);
+
+      const p1 = document.getElementById('newSecurityPinField')?.value.trim();
+      const p2 = document.getElementById('confirmSecurityPinField')?.value.trim();
+
+      if (!p1 || p1.length !== 4 || !/^\d{4}$/.test(p1)) {
+        showToast('Please enter a valid 4-digit numeric Security PIN');
+        return;
+      }
+
+      if (p1 !== p2) {
+        showToast('PINs do not match! Please re-enter both PINs');
+        return;
+      }
+
+      try {
+        const res = await fetch(API_BASE + '/api/user/set-pin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pin: p1, otp: otp || '1234' })
+        });
+        const d = await res.json();
+        if (d.success) {
+          if (appData.user) {
+            appData.user.securityPin = p1;
+            appData.user.mpin = p1;
+          }
+          showToast('✅ Security PIN updated successfully to ' + p1);
+          closeResetPinView();
+        } else {
+          showToast(d.error || 'Failed to update PIN');
+        }
+      } catch (e) {
+        if (appData.user) {
+          appData.user.securityPin = p1;
+          appData.user.mpin = p1;
+        }
+        showToast('✅ Security PIN saved successfully!');
+        closeResetPinView();
+      }
     }
 
 // End of E-Commerce Cart Controller (Explicit Global Exports)
@@ -13786,8 +14470,22 @@
     window.openCartModal = openCartModal;
     window.renderCartModal = renderCartModal;
     window.updateCartItemQty = updateCartItemQty;
-    window.checkoutCart = checkoutCart;
     window.openProductBuyModal = openProductBuyModal;
+    window.applyCartCoupon = applyCartCoupon;
+    window.removeCartCoupon = removeCartCoupon;
+    window.proceedToEcommerceCheckout = proceedToEcommerceCheckout;
+    window.updateSelectedCheckoutMethod = updateSelectedCheckoutMethod;
+    window.submitFinalMallOrder = submitFinalMallOrder;
+    window.openMyOrdersView = openMyOrdersView;
+    window.closeMyOrdersView = closeMyOrdersView;
+    window.switchOrdersTab = switchOrdersTab;
+    window.openTrackingModal = openTrackingModal;
+    window.openResetPinView = openResetPinView;
+    window.closeResetPinView = closeResetPinView;
+    window.submitResetPinFlow = submitResetPinFlow;
+    window.handleResetPinOtpInput = handleResetPinOtpInput;
+    window.togglePinVisibility = togglePinVisibility;
+    window.resendResetPinOtp = resendResetPinOtp;
 </script>
 
 
@@ -13830,7 +14528,7 @@
     </div>
   </div>
 
-  <!-- EasyPay Shopping Cart Modal -->
+  <!-- EasyPay Shopping Cart Modal (User Requested: Coupon Code & Proceed to Checkout) -->
   <div class="modal-overlay" id="easyPayCartModal" style="align-items: flex-end; z-index: 10005;">
     <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 20px; max-height: 90vh;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
@@ -13847,11 +14545,28 @@
         <!-- Populated by JS -->
       </div>
 
+      <!-- Coupon Code Section (Placed directly above Delivery Charges) -->
+      <div style="background: #FFFFFF; border: 1.5px dashed #CBD5E1; border-radius: 14px; padding: 10px 14px; margin-bottom: 14px;">
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <i class="fa-solid fa-ticket" style="color: #FF5722; font-size: 15px;"></i>
+          <input type="text" id="cartCouponInput" placeholder="Enter coupon code (e.g. EASYPAY50)" style="flex: 1; border: none; outline: none; font-size: 13px; font-weight: 700; text-transform: uppercase; background: transparent;" onkeyup="if(event.key==='Enter') applyCartCoupon()">
+          <button id="btnApplyCartCoupon" onclick="applyCartCoupon()" style="background: #0F172A; color: white; border: none; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 800; cursor: pointer;">Apply</button>
+        </div>
+        <div id="cartCouponStatusMessage" style="display: none; margin-top: 6px; font-size: 11px; font-weight: 700; align-items: center; justify-content: space-between;">
+          <span id="cartCouponStatusText" style="color: #16A34A;"></span>
+          <span style="color: #DC2626; cursor: pointer; text-decoration: underline;" onclick="removeCartCoupon()">Remove</span>
+        </div>
+      </div>
+
       <!-- Cart Bill Breakdown -->
       <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 12px 14px; margin-bottom: 18px;">
         <div style="display: flex; justify-content: space-between; font-size: 13px; color: #64748B; margin-bottom: 6px;">
           <span>Items Subtotal</span>
           <span id="cartSubtotalAmount">₹0</span>
+        </div>
+        <div id="cartCouponDiscountRow" style="display: none; justify-content: space-between; font-size: 13px; color: #16A34A; margin-bottom: 6px; font-weight: 700;">
+          <span>Coupon Discount</span>
+          <span id="cartCouponDiscountAmount">-₹0</span>
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 13px; color: #059669; margin-bottom: 6px;">
           <span>Delivery Charges</span>
@@ -13863,8 +14578,211 @@
         </div>
       </div>
 
-      <button class="btn-primary-action" onclick="checkoutCart()">
-        <i class="fa-solid fa-shield-halved"></i> Pay via EasyPay Wallet & Place Order
+      <!-- Proceed to Checkout Button -->
+      <button class="btn-primary-action" onclick="proceedToEcommerceCheckout()">
+        <span>Proceed to Checkout</span> <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==============================================================
+       E-COMMERCE CHECKOUT MODAL / PAGE (USER REQUESTED)
+       ============================================================== -->
+  <div class="modal-overlay" id="ecommerceCheckoutModal" style="align-items: flex-end; z-index: 10006;">
+    <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 20px 18px 28px; max-height: 92vh; overflow-y: auto;">
+      <div style="width: 40px; height: 4px; background: #CBD5E1; border-radius: 2px; margin: 0 auto 16px;"></div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button onclick="closeModal('ecommerceCheckoutModal'); openModal('easyPayCartModal');" style="background: none; border: none; font-size: 17px; color: #0F172A; cursor: pointer;">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #0F172A;">Checkout & Delivery</div>
+        </div>
+        <button style="background: none; border: none; font-size: 18px; color: #64748B; cursor: pointer;" onclick="closeModal('ecommerceCheckoutModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Section 1: Delivery Address -->
+      <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 16px; padding: 14px; margin-bottom: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div style="font-size: 14px; font-weight: 800; color: #0F172A; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-location-dot" style="color: #FF5722;"></i>
+            <span>Delivery Address</span>
+          </div>
+          <span style="font-size: 11px; font-weight: 700; color: #0284C7; cursor: pointer;" onclick="document.getElementById('checkoutAddressStreet').focus()">Edit</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: #64748B; margin-bottom: 4px; display: block;">Recipient Name</label>
+              <input type="text" id="checkoutAddressName" placeholder="Full Name" style="width: 100%; border: 1px solid #CBD5E1; border-radius: 8px; padding: 8px 10px; font-size: 13px; font-weight: 600; outline: none;">
+            </div>
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: #64748B; margin-bottom: 4px; display: block;">Mobile Number</label>
+              <input type="tel" id="checkoutAddressPhone" placeholder="10-digit mobile" maxlength="10" style="width: 100%; border: 1px solid #CBD5E1; border-radius: 8px; padding: 8px 10px; font-size: 13px; font-weight: 600; outline: none;">
+            </div>
+          </div>
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: #64748B; margin-bottom: 4px; display: block;">Flat / House No / Street Address</label>
+            <input type="text" id="checkoutAddressStreet" placeholder="e.g. Flat 402, Green Valley Apartments" value="Flat 402, Green Valley, Andheri West" style="width: 100%; border: 1px solid #CBD5E1; border-radius: 8px; padding: 8px 10px; font-size: 13px; font-weight: 600; outline: none;">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: #64748B; margin-bottom: 4px; display: block;">City</label>
+              <input type="text" id="checkoutAddressCity" value="Mumbai" style="width: 100%; border: 1px solid #CBD5E1; border-radius: 8px; padding: 8px 10px; font-size: 13px; font-weight: 600; outline: none;">
+            </div>
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: #64748B; margin-bottom: 4px; display: block;">State</label>
+              <input type="text" id="checkoutAddressState" value="Maharashtra" style="width: 100%; border: 1px solid #CBD5E1; border-radius: 8px; padding: 8px 10px; font-size: 13px; font-weight: 600; outline: none;">
+            </div>
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: #64748B; margin-bottom: 4px; display: block;">Pincode</label>
+              <input type="text" id="checkoutAddressPin" value="400053" maxlength="6" style="width: 100%; border: 1px solid #CBD5E1; border-radius: 8px; padding: 8px 10px; font-size: 13px; font-weight: 600; outline: none;">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Order Items Summary -->
+      <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 14px; margin-bottom: 16px;">
+        <div style="font-size: 13px; font-weight: 800; color: #0F172A; margin-bottom: 10px; display: flex; justify-content: space-between;">
+          <span>Items Ordered (<span id="checkoutTotalItemCount">0</span>)</span>
+          <span style="color: #64748B; font-weight: 600; cursor: pointer;" onclick="closeModal('ecommerceCheckoutModal'); openModal('easyPayCartModal');">Edit Cart</span>
+        </div>
+        <div id="checkoutItemsPreviewList" style="max-height: 140px; overflow-y: auto; margin-bottom: 10px;">
+          <!-- Populated by JS -->
+        </div>
+        <div style="border-top: 1px dashed #CBD5E1; padding-top: 10px; display: flex; justify-content: space-between; font-size: 14px; font-weight: 800; color: #0F172A;">
+          <span>Total Amount</span>
+          <span style="color: #FF5722; font-size: 16px;" id="checkoutTotalAmountDisplay">₹0</span>
+        </div>
+      </div>
+
+      <!-- Section 3: Payment Options (Wallet, UPI, COD) -->
+      <div style="margin-bottom: 20px;">
+        <div style="font-size: 14px; font-weight: 800; color: #0F172A; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-credit-card" style="color: #FF5722;"></i>
+          <span>Select Payment Method</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Option 1: EasyPay Wallet -->
+          <label class="checkout-pay-opt" style="display: flex; align-items: center; justify-content: space-between; background: #FFFFFF; border: 1.5px solid #FF5722; border-radius: 14px; padding: 12px 14px; cursor: pointer;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <input type="radio" name="checkoutPayMethod" value="wallet" checked onchange="updateSelectedCheckoutMethod('wallet')" style="accent-color: #FF5722; width: 18px; height: 18px;">
+              <div>
+                <div style="font-size: 14px; font-weight: 800; color: #0F172A; display: flex; align-items: center; gap: 6px;">
+                  <span>EasyPay Wallet</span>
+                  <span style="background: #FFF1EE; color: #FF5722; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px;">FASTEST</span>
+                </div>
+                <div style="font-size: 12px; color: #64748B; margin-top: 2px;">
+                  Available: <strong id="checkoutWalletBalanceLabel" style="color: #16A34A;">₹24,500.00</strong>
+                </div>
+              </div>
+            </div>
+            <i class="fa-solid fa-wallet" style="font-size: 20px; color: #FF5722;"></i>
+          </label>
+
+          <!-- Option 2: Instant UPI (PhonePe / Google Pay / Paytm) -->
+          <label class="checkout-pay-opt" style="display: flex; align-items: center; justify-content: space-between; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 12px 14px; cursor: pointer;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <input type="radio" name="checkoutPayMethod" value="upi" onchange="updateSelectedCheckoutMethod('upi')" style="accent-color: #FF5722; width: 18px; height: 18px;">
+              <div>
+                <div style="font-size: 14px; font-weight: 700; color: #0F172A;">Instant UPI / QR</div>
+                <div style="font-size: 12px; color: #64748B; margin-top: 2px;">Google Pay, PhonePe, Paytm, BHIM</div>
+              </div>
+            </div>
+            <i class="fa-brands fa-google-pay" style="font-size: 22px; color: #4285F4;"></i>
+          </label>
+
+          <!-- Option 3: Cash on Delivery -->
+          <label class="checkout-pay-opt" style="display: flex; align-items: center; justify-content: space-between; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 12px 14px; cursor: pointer;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <input type="radio" name="checkoutPayMethod" value="cod" onchange="updateSelectedCheckoutMethod('cod')" style="accent-color: #FF5722; width: 18px; height: 18px;">
+              <div>
+                <div style="font-size: 14px; font-weight: 700; color: #0F172A;">Cash on Delivery (COD)</div>
+                <div style="font-size: 12px; color: #64748B; margin-top: 2px;">Pay cash or UPI at delivery doorstep</div>
+              </div>
+            </div>
+            <i class="fa-solid fa-truck" style="font-size: 18px; color: #64748B;"></i>
+          </label>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <button class="btn-primary-action" id="btnPlaceOrderFinal" onclick="submitFinalMallOrder()">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span id="btnPlaceOrderText">Pay ₹0 & Confirm Order</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==============================================================
+       ORDER SUCCESSFUL CONFIRMATION MODAL
+       ============================================================== -->
+  <div class="modal-overlay" id="orderSuccessModal" style="align-items: center; justify-content: center; z-index: 10008;">
+    <div class="modal-sheet" style="border-radius: 24px; padding: 24px; max-width: 400px; width: 90%; text-align: center;">
+      <div style="width: 70px; height: 70px; border-radius: 50%; background: #DCFCE7; color: #16A34A; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 16px;">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <div style="font-family: var(--font-heading); font-size: 20px; font-weight: 900; color: #0F172A; margin-bottom: 6px;">
+        Order Placed Successfully!
+      </div>
+      <div style="font-size: 13px; color: #64748B; margin-bottom: 18px;">
+        Order <strong id="successOrderIdDisplay" style="color: #0F172A;">ORD-892415</strong> has been confirmed & will be dispatched shortly.
+      </div>
+      <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 12px; text-align: left; margin-bottom: 20px; font-size: 12px; line-height: 1.6; color: #334155;">
+        <div><strong>Paid:</strong> <span id="successOrderAmountDisplay">₹0</span> via <span id="successOrderPaymentMethodDisplay">EasyPay Wallet</span></div>
+        <div><strong>Estimated Delivery:</strong> 3-4 Business Days via Blue Dart</div>
+        <div><strong>Deliver to:</strong> <span id="successOrderAddressDisplay">Mumbai</span></div>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button onclick="closeModal('orderSuccessModal'); openMyOrdersView();" style="flex: 1; background: #0F172A; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 13px; cursor: pointer;">
+          <i class="fa-solid fa-box"></i> Track Order
+        </button>
+        <button onclick="closeModal('orderSuccessModal'); switchNavTab('shopping');" style="flex: 1; background: #FFF1EE; color: #FF5722; border: 1.5px solid #FF5722; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 13px; cursor: pointer;">
+          Continue Shopping
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==============================================================
+       ORDER TRACKING SHIPMENT MODAL (AMAZON/FLIPKART STYLE)
+       ============================================================== -->
+  <div class="modal-overlay" id="orderTrackingModal" style="align-items: flex-end; z-index: 10009;">
+    <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 22px 18px 28px; max-height: 88vh; overflow-y: auto;">
+      <div style="width: 40px; height: 4px; background: #CBD5E1; border-radius: 2px; margin: 0 auto 16px;"></div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div>
+          <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #0F172A;">Track Shipment</div>
+          <div style="font-size: 12px; color: #64748B;" id="trackModalOrderId">Order ORD-892415</div>
+        </div>
+        <button style="background: none; border: none; font-size: 18px; color: #64748B; cursor: pointer;" onclick="closeModal('orderTrackingModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Courier Header Card -->
+      <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 12px 14px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <div style="font-size: 13px; font-weight: 800; color: #0F172A;" id="trackCourierName">Blue Dart Express</div>
+          <div style="font-size: 11px; color: #64748B; margin-top: 2px;">AWB / Tracking: <strong id="trackAwbNumber">BD-84729104</strong></div>
+        </div>
+        <span style="background: #DCFCE7; color: #16A34A; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 6px;" id="trackStatusBadge">● In Transit</span>
+      </div>
+
+      <!-- Vertical Tracking Timeline -->
+      <div id="trackingTimelineContent" style="padding-left: 10px; margin-bottom: 20px;">
+        <!-- Populated dynamically -->
+      </div>
+
+      <button class="btn-primary-action" onclick="closeModal('orderTrackingModal')" style="width: 100%; margin: 0;">
+        Close Tracking
       </button>
     </div>
   </div>
