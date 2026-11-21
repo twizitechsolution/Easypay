@@ -1015,6 +1015,17 @@ async function requestHandler(req, res) {
         data.transactions.unshift(debitTxn);
         data.transactions.unshift(creditTxn);
         
+        if (data.users && Array.isArray(data.users)) {
+          data.users.forEach(u => {
+            if (data.user && u.mobile === data.user.mobile) {
+              u.walletBalance = data.user.walletBalance;
+            }
+          });
+        }
+        if (data.analytics) {
+          data.analytics.totalGmv = (data.analytics.totalGmv || 0) + sendAmt;
+        }
+        
         writeDb(data);
         
         res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -1224,6 +1235,14 @@ async function requestHandler(req, res) {
           data.user.cashbackEarned = Math.round(((data.user.cashbackEarned || 0) + discountAmount) * 100) / 100;
         }
 
+        if (data.users && Array.isArray(data.users)) {
+          data.users.forEach(u => {
+            if (data.user && u.mobile === data.user.mobile) {
+              u.walletBalance = data.user.walletBalance;
+            }
+          });
+        }
+
         if (data.analytics) {
           data.analytics.giftCardsSold = (data.analytics.giftCardsSold || 0) + 1;
           data.analytics.totalGmv = (data.analytics.totalGmv || 0) + amount;
@@ -1288,10 +1307,16 @@ async function requestHandler(req, res) {
         data.transactions.unshift(newTxn);
 
         if (data.user) {
-          if (paymentMethod === 'Wallet' && data.user.walletBalance >= rechargeAmt) {
-            data.user.walletBalance -= (rechargeAmt - cashback);
-          }
-          data.user.cashbackEarned = (data.user.cashbackEarned || 0) + cashback;
+          data.user.walletBalance = Math.round(Math.max(0, (data.user.walletBalance || 0) - rechargeAmt) * 100) / 100;
+          data.user.cashbackEarned = Math.round(((data.user.cashbackEarned || 0) + cashback) * 100) / 100;
+        }
+
+        if (data.users && Array.isArray(data.users)) {
+          data.users.forEach(u => {
+            if (data.user && u.mobile === data.user.mobile) {
+              u.walletBalance = data.user.walletBalance;
+            }
+          });
         }
 
         if (data.analytics) {
@@ -1316,6 +1341,218 @@ async function requestHandler(req, res) {
     return;
   }
 
+  // API: Universal Real-Time Transaction Engine (Money Transfer, Recharge, Gift Card, Shopping)
+  if (url === '/api/wallet/transact' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      try {
+        const {
+          type,
+          category,
+          amount,
+          title,
+          recipientName,
+          recipientQuery,
+          utr,
+          note,
+          userMobile,
+          details
+        } = JSON.parse(body || '{}');
+
+        const sendAmt = Math.round((parseFloat(amount) || 0) * 100) / 100;
+        if (sendAmt <= 0) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, error: 'Invalid transaction amount' }));
+          return;
+        }
+
+        const data = readDb();
+        if (!data.user) data.user = {};
+        if (!data.users) data.users = [];
+
+        // 1. Resolve logged-in / active user
+        const mob = (userMobile || data.user.mobile || '').trim();
+        let activeUser = data.users.find(u => u.mobile === mob) || data.user;
+
+        // 2. Validate wallet balance
+        const currentBal = (typeof activeUser.walletBalance === 'number')
+          ? activeUser.walletBalance
+          : (typeof data.user.walletBalance === 'number' ? data.user.walletBalance : 5000);
+
+        if (currentBal < sendAmt) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: false,
+            error: `Insufficient wallet balance. Required: ₹${sendAmt.toFixed(2)}, Available: ₹${currentBal.toFixed(2)}. Please add money to your wallet.`
+          }));
+          return;
+        }
+
+        // 3. Deduct wallet balance
+        const newBal = Math.round(Math.max(0, currentBal - sendAmt) * 100) / 100;
+        data.user.walletBalance = newBal;
+        if (activeUser) activeUser.walletBalance = newBal;
+
+        // Sync all matching users in data.users
+        data.users.forEach(u => {
+          if (u.mobile === mob || (data.user.mobile && u.mobile === data.user.mobile)) {
+            u.walletBalance = newBal;
+          }
+        });
+
+        // 4. Unique UTR & Timestamps
+        const finalUtr = utr || ('EPY' + Math.floor(100000000 + Math.random() * 900000000));
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+        const timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+        // 5. Build dynamic title & category
+        let finalCat = category || 'Money Transfer';
+        let finalType = type || 'DEBIT';
+        let txnIcon = '/assets/bachatpay/history/debit_history.png';
+
+        if (type === 'GIFT_CARD' || category === 'Gift Card' || type === 'Gift Card Purchase') {
+          finalCat = 'Gift Card';
+          finalType = 'GIFT_CARD';
+          txnIcon = details?.logo || '/assets/bachatpay/history/gift_history.png';
+        } else if (type === 'RECHARGE' || category === 'Recharge' || category === 'Mobile Recharge' || type === 'Mobile Recharge') {
+          finalCat = 'Recharge';
+          finalType = 'RECHARGE';
+          txnIcon = '/assets/bachatpay/history/mobile_recharg_history.png';
+        } else if (type === 'SHOPPING' || category === 'Shopping' || type === 'Mall Order Checkout' || type === 'Product Purchase') {
+          finalCat = 'Shopping';
+          finalType = 'SHOPPING';
+          txnIcon = '/assets/bachatpay/history/shopping_history.png';
+        } else {
+          finalCat = 'Money Transfer';
+          finalType = 'UPI_DEBIT';
+          txnIcon = '/assets/bachatpay/history/debit_history.png';
+        }
+
+        const debitTxn = {
+          id: 'TXN_' + Date.now().toString().slice(-8),
+          title: title || ('Payment to ' + (recipientName || 'EasyPay Partner')),
+          category: finalCat,
+          amount: -sendAmt,
+          cashback: details?.cashback || 0,
+          timestamp: 'Just now',
+          date: dateStr + ', ' + timeStr,
+          status: 'SUCCESS',
+          type: finalType,
+          icon: txnIcon,
+          utr: finalUtr,
+          details: {
+            ...(details || {}),
+            recipientName: recipientName || title,
+            recipientQuery: recipientQuery || '',
+            utr: finalUtr,
+            debitedFrom: 'EasyPay Main Wallet (' + (mob ? mob.slice(-4) : '3165') + '@easypay)',
+            paymentMethod: 'Wallet',
+            note: note || 'Transferred via EasyPay'
+          }
+        };
+
+        data.transactions = data.transactions || [];
+        data.transactions.unshift(debitTxn);
+
+        // 6. Handle category-specific side effects:
+        // A. Gift Card -> Vouchers list & voucher issuance
+        let voucherResult = null;
+        if (finalType === 'GIFT_CARD') {
+          const vCode = details?.voucherCode || ('HB-' + (recipientName || 'GIFT').substring(0, 4).toUpperCase().replace(/[^A-Z]/g, 'X') + '-' + Math.floor(10000000 + Math.random() * 90000000));
+          const vPin = details?.voucherPin || Math.floor(100000 + Math.random() * 900000).toString();
+          const validTill = details?.validTill || new Date(Date.now() + 365*24*3600*1000).toISOString().split('T')[0];
+
+          voucherResult = {
+            id: 'VOUCH_' + Date.now(),
+            brand: details?.brandName || recipientName || 'Brand Voucher',
+            brandId: details?.brandId || '',
+            amount: details?.faceValue || sendAmt,
+            netPayable: sendAmt,
+            discount: details?.discount || 0,
+            cashbackEarned: details?.discount || 0,
+            voucherCode: vCode,
+            pin: vPin,
+            expiryDate: validTill,
+            validTill: validTill,
+            purchasedAt: new Date().toISOString(),
+            status: 'ACTIVE',
+            category: 'Voucher'
+          };
+          data.vouchers = data.vouchers || [];
+          data.vouchers.unshift(voucherResult);
+
+          if (data.analytics) {
+            data.analytics.giftCardsSold = (data.analytics.giftCardsSold || 0) + 1;
+          }
+        }
+
+        // B. Recharge -> analytics
+        if (finalType === 'RECHARGE') {
+          if (data.analytics) {
+            data.analytics.rechargesDone = (data.analytics.rechargesDone || 0) + 1;
+          }
+        }
+
+        // C. Update total GMV & commission
+        if (data.analytics) {
+          data.analytics.totalGmv = (data.analytics.totalGmv || 0) + sendAmt;
+          data.analytics.platformCommissionEarned = (data.analytics.platformCommissionEarned || 0) + (sendAmt * 0.02);
+        }
+
+        // D. If P2P transfer with a registered recipient, credit their wallet
+        if (recipientQuery && finalType === 'UPI_DEBIT') {
+          const q = recipientQuery.trim().toLowerCase();
+          const p2pRecipient = data.users.find(u =>
+            (u.payId && u.payId.toLowerCase() === q) ||
+            (u.mobile && (u.mobile === q || q.includes(u.mobile))) ||
+            (u.id && u.id.toLowerCase() === q)
+          );
+          if (p2pRecipient) {
+            p2pRecipient.walletBalance = Math.round(((p2pRecipient.walletBalance || 0) + sendAmt) * 100) / 100;
+            const creditTxn = {
+              id: 'TXN_' + (Date.now() + 1).toString().slice(-8),
+              title: 'Received from ' + (activeUser.name || 'EasyPay User'),
+              category: 'Money Transfer',
+              amount: sendAmt,
+              cashback: 0,
+              timestamp: 'Just now',
+              date: dateStr + ', ' + timeStr,
+              status: 'SUCCESS',
+              type: 'UPI_CREDIT',
+              icon: '/assets/bachatpay/history/credit_history.png',
+              utr: finalUtr,
+              details: {
+                fromUser: activeUser.name,
+                fromMobile: activeUser.mobile,
+                utr: finalUtr
+              }
+            };
+            data.transactions.unshift(creditTxn);
+          }
+        }
+
+        // 7. Persist to server/db.json
+        writeDb(data);
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          success: true,
+          newBalance: newBal,
+          transaction: debitTxn,
+          voucher: voucherResult,
+          analytics: data.analytics
+        }));
+      } catch (err) {
+        console.error('Wallet transact error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return;
+  }
+
   // API: Wallet Add Money
   if (url === '/api/wallet/add' && req.method === 'POST') {
     let body = '';
@@ -1327,7 +1564,15 @@ async function requestHandler(req, res) {
         const addAmt = parseFloat(amount) || 1000;
 
         if (data.user) {
-          data.user.walletBalance = (data.user.walletBalance || 0) + addAmt;
+          data.user.walletBalance = Math.round(((data.user.walletBalance || 0) + addAmt) * 100) / 100;
+        }
+
+        if (data.users && Array.isArray(data.users)) {
+          data.users.forEach(u => {
+            if (data.user && u.mobile === data.user.mobile) {
+              u.walletBalance = data.user.walletBalance;
+            }
+          });
         }
 
         const newTxn = {

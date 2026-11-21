@@ -1,25 +1,26 @@
 {
   "analytics": {
-    "totalGmv": 1371845,
+    "totalGmv": 1373535,
     "totalUsers": 24890,
-    "giftCardsSold": 4834,
-    "rechargesDone": 9323,
-    "platformCommissionEarned": 64389.96000000001
+    "giftCardsSold": 4836,
+    "rechargesDone": 9324,
+    "platformCommissionEarned": 64423.76000000001
   },
   "user": {
-    "id": "EPY98808",
-    "firstName": "Nirod",
-    "lastName": "behera",
-    "name": "Nirod behera",
-    "mobile": "9876548808",
-    "maskedMobile": "xxxxxx8808",
-    "email": "nirodbehera220@gmail.com",
-    "payId": "9876548808@easypay",
-    "walletBalance": 30192.13,
+    "id": "EPY31650",
+    "firstName": "arman",
+    "lastName": "khan",
+    "name": "arman khan",
+    "mobile": "7013893165",
+    "maskedMobile": "xxxxxx3165",
+    "email": "armankhan@gmail.com",
+    "payId": "7013893165@easypay",
+    "walletBalance": 25000,
     "securityPin": "1234",
-    "bankName": "BANK OF INDIA",
-    "bankAccountMasked": "xxxx 0975",
-    "cashbackEarned": 8
+    "mpin": "1234",
+    "bankName": "STATE BANK OF INDIA",
+    "bankAccountMasked": "xxxx 3165",
+    "cashbackEarned": 543.84
   },
   "giftCards": [
     {
@@ -794,6 +795,63 @@
   ],
   "vouchers": [
     {
+      "id": "VOUCH_1795233067822",
+      "brand": "Amazon Shopping",
+      "brandId": "",
+      "amount": 100,
+      "netPayable": 96,
+      "discount": 4,
+      "cashbackEarned": 4,
+      "voucherCode": "HB-AMZN-88371946",
+      "pin": "654321",
+      "expiryDate": "2027-11-21",
+      "validTill": "2027-11-21",
+      "purchasedAt": "2026-11-21T03:51:07.822Z",
+      "status": "ACTIVE",
+      "category": "Voucher"
+    },
+    {
+      "id": "vouch_01M7X2GA8WHJS1VVH18QEHFB2Z",
+      "hubbleOrderId": "01M7X2GA8WHJS1VVH18QEHFB2Z",
+      "brand": "Amazon shopping",
+      "cardId": "01GMAVS2CHXR0XP1BZSTA9A44K",
+      "logo": "https://cdn.myhubble.money/voucher-products/amazon/square-logo/active.webp",
+      "amount": 96,
+      "netPayable": 92,
+      "discount": 3.84,
+      "cashbackEarned": 3.84,
+      "voucherCode": "9000001847293159",
+      "pin": "971166",
+      "expiryDate": "2027-11-20",
+      "validTill": "2027-11-20",
+      "purchasedAt": "2026-11-20T18:11:37.215Z",
+      "status": "ACTIVE",
+      "category": "Shopping",
+      "cardType": "PIN_NO_SECURED",
+      "redemptionType": "ONLINE",
+      "howToUse": [
+        {
+          "retailMode": "ONLINE",
+          "retailModeName": "App",
+          "instructions": [
+            "Go to Amazon Pay and add voucher code under ‘Gift cards and vouchers’ section",
+            "Next time when you are shopping on Amazon, you will see voucher balance which can be availed"
+          ]
+        },
+        {
+          "retailMode": "ONLINE",
+          "retailModeName": "Website",
+          "instructions": [
+            "Visit www.amazon.in/vouchers",
+            "Enter the voucher code in 'Add new' section.",
+            "Click on 'Add button' to add voucher.",
+            "To track your voucher, visit www.amazon.in/vouchers",
+            "Your Voucher Balance can be selected as a payment option during the checkout process on Amazon.in."
+          ]
+        }
+      ]
+    },
+    {
       "id": "vouch_01M7WQWVB8KEWDHV09CE8545Q1",
       "hubbleOrderId": "01M7WQWVB8KEWDHV09CE8545Q1",
       "brand": "Apollo",
@@ -1039,6 +1097,182 @@
     }
   ],
   "transactions": [
+    {
+      "id": "TXN_33067825",
+      "title": "Paid for EasyPay Mall Store",
+      "category": "Shopping",
+      "amount": -899,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "21 Nov 2026, 09:21 am",
+      "status": "SUCCESS",
+      "type": "SHOPPING",
+      "icon": "/assets/bachatpay/history/shopping_history.png",
+      "utr": "EPY_TEST_104",
+      "details": {
+        "items": [
+          {
+            "id": "prod_1",
+            "title": "boAt Airdopes 141 ANC",
+            "price": 899,
+            "qty": 1
+          }
+        ],
+        "recipientName": "EasyPay Mall Store",
+        "recipientQuery": "Order #928410",
+        "utr": "EPY_TEST_104",
+        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
+        "paymentMethod": "Wallet",
+        "note": "Transferred via EasyPay"
+      }
+    },
+    {
+      "id": "TXN_33067822",
+      "title": "Paid for Amazon shopping Gift Voucher",
+      "category": "Gift Card",
+      "amount": -96,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "21 Nov 2026, 09:21 am",
+      "status": "SUCCESS",
+      "type": "GIFT_CARD",
+      "icon": "/assets/bachatpay/history/gift_history.png",
+      "utr": "EPY_TEST_103",
+      "details": {
+        "brand": "Amazon Shopping",
+        "brandName": "Amazon Shopping",
+        "faceValue": 100,
+        "discount": 4,
+        "voucherCode": "HB-AMZN-88371946",
+        "voucherPin": "654321",
+        "recipientName": "Amazon shopping Gift Voucher",
+        "recipientQuery": "Instant Issuance",
+        "utr": "EPY_TEST_103",
+        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
+        "paymentMethod": "Wallet",
+        "note": "Transferred via EasyPay"
+      }
+    },
+    {
+      "id": "TXN_33067819",
+      "title": "Reliance Jio Recharge (9876543210)",
+      "category": "Recharge",
+      "amount": -299,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "21 Nov 2026, 09:21 am",
+      "status": "SUCCESS",
+      "type": "RECHARGE",
+      "icon": "/assets/bachatpay/history/mobile_recharg_history.png",
+      "utr": "EPY_TEST_102",
+      "details": {
+        "operator": "Reliance Jio",
+        "rechargeNumber": "9876543210",
+        "plan": "2GB/Day",
+        "recipientName": "Reliance Jio",
+        "recipientQuery": "9876543210",
+        "utr": "EPY_TEST_102",
+        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
+        "paymentMethod": "Wallet",
+        "note": "Transferred via EasyPay"
+      }
+    },
+    {
+      "id": "TXN_33067816",
+      "title": "Received from arman khan",
+      "category": "Money Transfer",
+      "amount": 150,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "21 Nov 2026, 09:21 am",
+      "status": "SUCCESS",
+      "type": "UPI_CREDIT",
+      "icon": "/assets/bachatpay/history/credit_history.png",
+      "utr": "EPY_TEST_101",
+      "details": {
+        "fromUser": "arman khan",
+        "fromMobile": "7013893165",
+        "utr": "EPY_TEST_101"
+      }
+    },
+    {
+      "id": "TXN_33067815",
+      "title": "Paid to Rahul Sharma",
+      "category": "Money Transfer",
+      "amount": -150,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "21 Nov 2026, 09:21 am",
+      "status": "SUCCESS",
+      "type": "UPI_DEBIT",
+      "icon": "/assets/bachatpay/history/debit_history.png",
+      "utr": "EPY_TEST_101",
+      "details": {
+        "note": "Transferred via EasyPay",
+        "recipientName": "Rahul Sharma",
+        "recipientQuery": "9876548808@easypay",
+        "utr": "EPY_TEST_101",
+        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
+        "paymentMethod": "Wallet"
+      }
+    },
+    {
+      "id": "TXN_33017848",
+      "title": "Received from arman khan",
+      "category": "Money Transfer",
+      "amount": 150,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "21 Nov 2026, 09:20 am",
+      "status": "SUCCESS",
+      "type": "UPI_CREDIT",
+      "icon": "/assets/bachatpay/history/credit_history.png",
+      "utr": "EPY_TEST_101",
+      "details": {
+        "fromUser": "arman khan",
+        "fromMobile": "7013893165",
+        "utr": "EPY_TEST_101"
+      }
+    },
+    {
+      "id": "TXN_33017847",
+      "title": "Paid to Rahul Sharma",
+      "category": "Money Transfer",
+      "amount": -150,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "21 Nov 2026, 09:20 am",
+      "status": "SUCCESS",
+      "type": "UPI_DEBIT",
+      "icon": "/assets/bachatpay/history/debit_history.png",
+      "utr": "EPY_TEST_101",
+      "details": {
+        "note": "Transferred via EasyPay",
+        "recipientName": "Rahul Sharma",
+        "recipientQuery": "9876548808@easypay",
+        "utr": "EPY_TEST_101",
+        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
+        "paymentMethod": "Wallet"
+      }
+    },
+    {
+      "id": "TXN_98297215",
+      "title": "Amazon shopping Gift Voucher",
+      "category": "Gift Card",
+      "amount": -92,
+      "cashback": 3.84,
+      "timestamp": "Just now",
+      "status": "SUCCESS",
+      "type": "GIFT_CARD",
+      "icon": "https://cdn.myhubble.money/voucher-products/amazon/square-logo/active.webp",
+      "details": {
+        "voucherCode": "9000001847293159",
+        "pin": "971166",
+        "validTill": "2027-11-20",
+        "paymentMethod": "Wallet",
+        "hubbleOrderId": "01M7X2GA8WHJS1VVH18QEHFB2Z"
+      }
+    },
     {
       "id": "TXN_87175031",
       "title": "Apollo Gift Voucher",
@@ -2162,7 +2396,7 @@
       "maskedMobile": "xxxxxx8808",
       "email": "nirodbehera220@gmail.com",
       "payId": "9876548808@easypay",
-      "walletBalance": 30284.13,
+      "walletBalance": 30584.13,
       "securityPin": "1234",
       "bankName": "BANK OF INDIA",
       "bankAccountMasked": "xxxx 0975"

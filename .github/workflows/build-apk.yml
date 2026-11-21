@@ -50,36 +50,32 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EasyPay-v1.0.24.apk
+          name: EasyPay-v1.0.25.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Publish GitHub Release with APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.24
-          name: "EasyPay Android APK v1.0.24 (Dynamic Payment Modals, Session Persistence & Strict Registration Flow)"
+          tag_name: v1.0.25
+          name: "EasyPay Android APK v1.0.25 (Universal Real-Time Wallet Balance Deduction, Audit Ledger & Admin Panel Database Sync)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.24 (Production Release)
+            ## EasyPay Mobile Application APK v1.0.25 (Production Release)
             Direct native Android APK connected live to Vercel production server: https://easypay-gamma.vercel.app
 
-            ### Key Features & Updates in v1.0.24:
-            1. **100% Dynamic Payment Success Modal**:
-               - Exact dynamic amount paid (e.g. ₹150.00, ₹96.00). No hardcoded ₹280.00.
-               - Dynamic recipient and purpose (e.g. "Paid for Uber Rides Gift Voucher", "Paid for Mobile Recharge", "Paid to Rahul Sharma").
-               - Dynamic unique UTR reference generated for each transaction.
-               - Dynamic current Indian timestamp and masked debited wallet.
-               - Instant Voucher Card reveal for gift cards with 16-digit code, PIN, and 1-tap Copy.
-            2. **Permanent Session Persistence in APK & Web**:
-               - Stores authenticated user session in localStorage.
-               - Closing and re-opening the APK keeps the user permanently logged in until explicitly tapping "Log Out".
-            3. **Strict Registration & Sign Up Flow**:
-               - Login is strictly restricted to registered users only.
-               - Unregistered mobile numbers receive an interactive "Registration Required" prompt directing them to Sign Up with mobile pre-filled.
-               - Pre-seeded Arman Khan (`7013893165`) and full user registration storage with ₹100 welcome bonus.
-            4. **Hubble Money 380+ Gift Cards Catalog**:
-               - All 387 Hubble active brands and CDN logos visible with crisp white card containers and fallback initials.
-               - Category filters for Food, Shopping, Fashion, Grocery, Health, Electronics, OTT, Travel, Gaming, and Jewellery.
+            ### Key Features & Updates in v1.0.25:
+            1. **Universal Real-Time Wallet Balance Deduction**:
+               - Every transaction across all services (Money Transfer / P2P, Mobile / DTH Recharge, Gift Card Purchase, Shopping / Mall Order Checkout) automatically deducts the exact amount from the user's wallet in real-time.
+               - Wallet balance is synchronized in `server/db.json` across both `data.user` and the matching user record in `data.users`.
+            2. **Permanent Database Transaction Records**:
+               - Every transaction generates a certified audit record in `data.transactions` in the database with a unique UTR (`EPY...`), category, timestamp, formatted date, and status.
+            3. **Real-Time Passbook & History Reflection**:
+               - Transactions immediately appear in the user's Passbook / Transaction History view with correct debit/credit indicators, category badges, and UTR details.
+            4. **Admin Panel Real-Time Sync**:
+               - The Enterprise Admin Panel (`/admin`) reflects live wallet balances, updated platform GMV, new vouchers, and real-time transaction ledger with automatic background synchronization.
+            5. **100% Dynamic Payment Success Modal & Session Persistence**:
+               - Displays exact dynamic payment amounts, purpose/brand, unique UTR, and instant voucher card with PIN and copy capability.
+               - Preserves login sessions permanently across app restarts.
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -9614,22 +9614,28 @@
         return;
       }
       container.innerHTML = txns.map(t => {
-        const isCredit = t.amount > 0;
-        const amtStr = (isCredit ? '+' : '') + '₹' + Math.abs(t.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 });
-        const iconClass = t.type === 'INVESTMENT' ? 'fa-chart-line' : (t.type === 'RECHARGE' ? 'fa-bolt' : 'fa-gift');
-        return '<div class="history-item-row">' +
-          '<div class="history-item-left">' +
-            '<div class="history-icon-circle">' +
+        const isCredit = t.type === 'CREDIT' || t.type === 'UPI_CREDIT' || t.type === 'WALLET_ADD';
+        const amtStr = (isCredit ? '+₹' : '-₹') + Math.abs(t.amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+        let iconClass = 'fa-arrow-up-right';
+        if (isCredit) iconClass = 'fa-arrow-down-left';
+        else if (t.type === 'INVESTMENT') iconClass = 'fa-chart-line';
+        else if (t.type === 'RECHARGE' || t.category === 'Recharge' || t.category === 'Mobile Recharge') iconClass = 'fa-mobile-screen-button';
+        else if (t.type === 'GIFT_CARD' || t.category === 'Gift Card') iconClass = 'fa-gift';
+        else if (t.type === 'SHOPPING' || t.category === 'Shopping') iconClass = 'fa-bag-shopping';
+
+        return '<div class="history-item-row" style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">' +
+          '<div class="history-item-left" style="display: flex; align-items: center; gap: 12px;">' +
+            '<div class="history-icon-circle" style="width: 40px; height: 40px; border-radius: 12px; background: ' + (isCredit ? '#ECFDF5' : '#FFF1EE') + '; color: ' + (isCredit ? '#10B981' : '#FF5722') + '; display: flex; align-items: center; justify-content: center; font-size: 16px;">' +
               '<i class="fa-solid ' + iconClass + '"></i>' +
             '</div>' +
             '<div>' +
-              '<div style="font-size: 13px; font-weight: 700; color: #0F172A;">' + t.title + '</div>' +
-              '<div style="font-size: 11px; color: #94A3B8;">' + (t.timestamp || 'Just now') + ' • ' + t.status + '</div>' +
+              '<div style="font-size: 13px; font-weight: 700; color: #0F172A;">' + (t.title || 'Transaction') + '</div>' +
+              '<div style="font-size: 11px; color: #94A3B8;">' + (t.date || t.timestamp || 'Just now') + ' • ' + (t.utr || t.id || 'Verified') + '</div>' +
             '</div>' +
           '</div>' +
           '<div style="text-align: right;">' +
-            '<div style="font-family: var(--font-heading); font-size: 14px; font-weight: 700; color: ' + (isCredit ? '#059669' : '#0F172A') + ';">' + amtStr + '</div>' +
-            (t.cashback ? '<div style="font-size: 10px; font-weight: 700; color: #059669;">+₹' + t.cashback.toFixed(1) + ' Bachat</div>' : '') +
+            '<div style="font-family: var(--font-heading); font-size: 14px; font-weight: 800; color: ' + (isCredit ? '#059669' : '#0F172A') + ';">' + amtStr + '</div>' +
+            (t.cashback ? '<div style="font-size: 10px; font-weight: 700; color: #059669;">+₹' + t.cashback.toFixed(1) + ' Bachat</div>' : '<span style="font-size: 10px; font-weight: 700; color: #059669; background: #ECFDF5; padding: 2px 6px; border-radius: 4px;">' + (t.status || 'SUCCESS') + '</span>') +
           '</div>' +
         '</div>';
       }).join('');
@@ -11368,13 +11374,13 @@
       }
     }
 
-function showInlinePinPaymentSuccess() {
+    async function showInlinePinPaymentSuccess() {
       try {
         const p = currentPendingPayment || pendingGiftCardPurchase || {};
         const amt = (typeof p.amount === 'number') ? p.amount : (parseFloat(p.amount) || 0);
         let recName = p.recipientName || 'Payment Transfer';
         if (!recName.startsWith('Paid for ') && !recName.startsWith('Paid to ')) {
-          if (p.type === 'Gift Card Purchase') {
+          if (p.type === 'Gift Card Purchase' || p.brand) {
             recName = 'Paid for ' + recName;
           } else if (p.type === 'UPI Transfer' || p.type === 'P2P Transfer') {
             recName = 'Paid to ' + recName;
@@ -11383,31 +11389,18 @@ function showInlinePinPaymentSuccess() {
           }
         }
 
-        // Deduct from wallet balance
+        // Deduct from wallet balance locally immediately for snappy UI
         try {
           if (appData && appData.user) {
             appData.user.walletBalance = Math.max(0, Math.round(((appData.user.walletBalance || 5000) - amt) * 100) / 100);
             updateWalletDisplay();
+            renderWallet();
           }
         } catch(e) { console.warn('Wallet deduct error:', e); }
 
         // Dynamic Unique UTR
         const utr = 'EPY' + Math.floor(100000000 + Math.random() * 900000000);
-
-        // Add to transactions ledger
-        try {
-          if (!appData.transactions) appData.transactions = [];
-          appData.transactions.unshift({
-            id: 'TXN_' + Date.now(),
-            type: 'Debit',
-            amount: amt,
-            title: recName,
-            category: p.type || 'EasyPay Transfer',
-            date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
-            utr: utr,
-            status: 'Successful'
-          });
-        } catch(e) { console.warn('Txn push error:', e); }
+        const loggedMobile = localStorage.getItem('easypay_logged_mobile') || (appData && appData.user && appData.user.mobile) || '7013893165';
 
         // Play audio chime
         try { playWebAudioTone(880, 0.2); } catch(e){}
@@ -11431,14 +11424,20 @@ function showInlinePinPaymentSuccess() {
         const timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }).toLowerCase();
         if (dtText) dtText.innerText = dateStr + ', ' + timeStr;
 
-        const userMobile = (appData && appData.user && appData.user.mobile) ? appData.user.mobile.slice(-4) : '3165';
+        const userMobile = loggedMobile.slice(-4) || '3165';
         if (fromText) fromText.innerText = 'EasyPay Main Wallet (····' + userMobile + '@easypay)';
 
-        // Dynamic Voucher Card for Gift Card purchases
-        if (p.type === 'Gift Card Purchase' && p.brand) {
+        // Pre-compute voucher details if gift card
+        let voucherCode = '';
+        let voucherPin = '';
+        let validTill = '';
+        const isGiftCard = (p.type === 'Gift Card Purchase' || !!p.brand);
+
+        if (isGiftCard && p.brand) {
           const brand = p.brand;
-          const vCode = 'HB-' + (brand.name || 'GIFT').substring(0, 4).toUpperCase().replace(/[^A-Z]/g, 'X') + '-' + Math.floor(10000000 + Math.random() * 90000000);
-          const vPin = Math.floor(100000 + Math.random() * 900000).toString();
+          voucherCode = 'HB-' + (brand.name || 'GIFT').substring(0, 4).toUpperCase().replace(/[^A-Z]/g, 'X') + '-' + Math.floor(10000000 + Math.random() * 90000000);
+          voucherPin = Math.floor(100000 + Math.random() * 900000).toString();
+          validTill = new Date(Date.now() + 365*24*3600*1000).toISOString().split('T')[0];
 
           if (voucherCard) {
             voucherCard.style.display = 'block';
@@ -11450,40 +11449,10 @@ function showInlinePinPaymentSuccess() {
 
             if (brandTag) brandTag.innerText = (brand.name || 'GIFT VOUCHER').toUpperCase() + ' ISSUED';
             if (bachatTag) bachatTag.innerText = '+₹' + (p.discount || 0).toFixed(2) + ' Bachat';
-            if (codeEl) codeEl.innerText = vCode;
-            if (pinEl) pinEl.innerText = vPin;
+            if (codeEl) codeEl.innerText = voucherCode;
+            if (pinEl) pinEl.innerText = voucherPin;
             if (expEl) expEl.innerText = 'Valid for 1 Year';
           }
-
-          const voucherItem = {
-            id: 'VOUCH_' + Date.now(),
-            brand: brand.name,
-            brandId: brand.id,
-            brandName: brand.name,
-            amount: p.faceValue || p.amount,
-            netPayable: p.amount,
-            discount: p.discount || 0,
-            voucherCode: vCode,
-            pin: vPin,
-            expiryDate: new Date(Date.now() + 365*24*3600*1000).toISOString().split('T')[0],
-            status: 'Active'
-          };
-          if (!appData.vouchers) appData.vouchers = [];
-          appData.vouchers.unshift(voucherItem);
-          if (!appData.giftVouchersPurchased) appData.giftVouchersPurchased = [];
-          appData.giftVouchersPurchased.unshift(voucherItem);
-
-          try {
-            fetch((typeof API_BASE !== 'undefined' ? API_BASE : '') + '/api/buy-gift-card', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                cardId: brand.hubbleId || brand.id,
-                denomination: p.faceValue || p.amount,
-                paymentMethod: 'Wallet'
-              })
-            }).catch(e => console.warn('Voucher background sync:', e));
-          } catch(e) {}
         } else {
           if (voucherCard) voucherCard.style.display = 'none';
         }
@@ -11492,6 +11461,76 @@ function showInlinePinPaymentSuccess() {
         if (successView) {
           successView.style.display = 'block';
           successView.style.animation = 'scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+        }
+
+        // REAL-TIME DATABASE SYNC: Post transaction to server and update server/db.json
+        try {
+          const reqType = isGiftCard ? 'GIFT_CARD' : (
+            (p.type === 'Mobile Recharge' || p.type === 'Recharge' || p.type === 'Electricity' || p.type === 'DTH' || p.type === 'FASTag') ? 'RECHARGE' : (
+              (p.type === 'Mall Order Checkout' || p.type === 'Product Purchase' || p.type === 'Shopping') ? 'SHOPPING' : 'UPI_TRANSFER'
+            )
+          );
+
+          const txPayload = {
+            type: reqType,
+            category: isGiftCard ? 'Gift Card' : (reqType === 'RECHARGE' ? 'Recharge' : (reqType === 'SHOPPING' ? 'Shopping' : 'Money Transfer')),
+            amount: amt,
+            title: recName,
+            recipientName: p.recipientName || recName,
+            recipientQuery: p.recipientSubtitle || '',
+            utr: utr,
+            userMobile: loggedMobile,
+            details: {
+              brand: p.brand ? p.brand.name : '',
+              brandName: p.brand ? p.brand.name : '',
+              brandId: p.brand ? p.brand.id : '',
+              faceValue: p.faceValue || amt,
+              discount: p.discount || 0,
+              voucherCode: voucherCode,
+              voucherPin: voucherPin,
+              validTill: validTill,
+              items: p.items || null,
+              operator: p.operator || null,
+              rechargeNumber: p.rechargeNumber || null
+            }
+          };
+
+          const res = await fetch((typeof API_BASE !== 'undefined' ? API_BASE : '') + '/api/wallet/transact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(txPayload)
+          });
+
+          if (res.ok) {
+            const result = await res.json();
+            if (result.success) {
+              if (appData && appData.user) {
+                appData.user.walletBalance = result.newBalance;
+                localStorage.setItem('easypay_session_user', JSON.stringify(appData.user));
+                updateWalletDisplay();
+                renderWallet();
+              }
+
+              if (!appData.transactions) appData.transactions = [];
+              appData.transactions.unshift(result.transaction);
+              renderTransactions();
+              if (typeof renderPassbookTransactionsLedger === 'function') {
+                renderPassbookTransactionsLedger();
+              }
+
+              if (result.voucher) {
+                if (!appData.vouchers) appData.vouchers = [];
+                appData.vouchers.unshift(result.voucher);
+                if (!appData.giftVouchersPurchased) appData.giftVouchersPurchased = [];
+                appData.giftVouchersPurchased.unshift(result.voucher);
+                if (typeof renderGiftHistoryOrders === 'function') {
+                  renderGiftHistoryOrders();
+                }
+              }
+            }
+          }
+        } catch(apiErr) {
+          console.warn('Real-time database sync API call error:', apiErr);
         }
       } catch(err) {
         console.error('Fatal in showInlinePinPaymentSuccess:', err);
@@ -11506,6 +11545,10 @@ function showInlinePinPaymentSuccess() {
       closeModal('securityPinModal');
       closePayAnyoneView();
       closeGiftCardPurchasePage();
+      if (currentPendingPayment && (currentPendingPayment.type === 'Mall Order Checkout' || currentPendingPayment.type === 'Product Purchase')) {
+        shoppingCart = [];
+        if (typeof updateCartBadgeUI === 'function') updateCartBadgeUI();
+      }
       currentPendingPayment = null;
       pendingGiftCardPurchase = null;
       showToast('Payment completed successfully');
@@ -12050,15 +12093,9 @@ function showInlinePinPaymentSuccess() {
       if (currentSecurityPin.length === 4) {
         const validPin = (appData.user && appData.user.securityPin) || '1234';
         if (currentSecurityPin === validPin || currentSecurityPin === '1234') {
-          // If pending gift card purchase, route to completeGiftCardPurchaseAfterPin
-          if (pendingGiftCardPurchase) {
-            try { playPaymentSuccessChime(); } catch(e){ try { playWebAudioTone(880, 0.2); } catch(e2){} }
-            completeGiftCardPurchaseAfterPin();
-            return;
-          }
           // Play success chime
           try { playPaymentSuccessChime(); } catch(e){ try { playWebAudioTone(880, 0.2); } catch(e2){} }
-          // Trigger inline animated success screen
+          // Trigger inline animated success screen with real-time DB sync
           setTimeout(showInlinePinPaymentSuccess, 100);
         } else {
           // Shake PIN dots for incorrect PIN
@@ -12761,39 +12798,7 @@ function showInlinePinPaymentSuccess() {
     }
 
     function renderPassbookTransactionsLedger() {
-      const container = document.getElementById('transactionsListContainer');
-      if (!container) return;
-
-      const txns = appData.transactions || [
-        { id: 'TXN101', title: 'Gift Voucher — Domino\'s Pizza', type: 'DEBIT', amount: 88, status: 'SUCCESS', date: 'Just now' },
-        { id: 'TXN102', title: 'Gift Voucher — Apple App Store', type: 'DEBIT', amount: 96, status: 'SUCCESS', date: 'Today, 09:23 AM' },
-        { id: 'TXN103', title: 'UPI Transfer to Rahul Sharma', type: 'DEBIT', amount: 500, status: 'SUCCESS', date: 'Yesterday' },
-        { id: 'TXN104', title: '12% Bond Monthly Interest Payout', type: 'CREDIT', amount: 358, status: 'SUCCESS', date: '10 Nov 2026' },
-        { id: 'TXN105', title: 'Wallet Top-up via SBI UPI', type: 'CREDIT', amount: 2000, status: 'SUCCESS', date: '08 Nov 2026' }
-      ];
-
-      container.innerHTML = txns.map(t => {
-        const isCredit = t.type === 'CREDIT' || t.amount > 0 && !t.title.includes('DEBIT');
-        return `
-          <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <div style="width: 40px; height: 40px; border-radius: 12px; background: ${isCredit ? '#ECFDF5' : '#FFF1EE'}; color: ${isCredit ? '#10B981' : '#FF5722'}; display: flex; align-items: center; justify-content: center; font-size: 16px;">
-                <i class="fa-solid ${isCredit ? 'fa-arrow-down-left' : 'fa-arrow-up-right'}"></i>
-              </div>
-              <div>
-                <div style="font-weight: 700; font-size: 13px; color: #0F172A;">${t.title}</div>
-                <div style="font-size: 11px; color: #64748B;">${t.date || 'Recent'} • ${t.id || 'UTR Verified'}</div>
-              </div>
-            </div>
-            <div style="text-align: right;">
-              <div style="font-weight: 800; font-size: 14px; color: ${isCredit ? '#059669' : '#0F172A'};">
-                ${isCredit ? '+' : '-'}₹${Math.abs(t.amount).toLocaleString('en-IN')}
-              </div>
-              <span style="font-size: 10px; font-weight: 700; color: #059669; background: #ECFDF5; padding: 2px 6px; border-radius: 4px;">${t.status || 'SUCCESS'}</span>
-            </div>
-          </div>
-        `;
-      }).join('');
+      renderTransactions();
     }
 
 

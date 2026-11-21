@@ -2464,6 +2464,10 @@
       }
 
       refreshAdminData();
+      // Real-time synchronization polling every 6 seconds
+      if (!window._adminRealtimeSyncTimer) {
+        window._adminRealtimeSyncTimer = setInterval(refreshAdminData, 6000);
+      }
     }
 
     // Admin Logout
@@ -2641,7 +2645,7 @@
           <td><strong>${t.title}</strong></td>
           <td><span class="badge badge-gray">${t.category || 'Payment'}</span></td>
           <td style="font-weight: 800; color: ${t.type?.includes('CREDIT') || t.type === 'WALLET_ADD' ? '#059669' : '#0F172A'};">
-            ${t.type?.includes('CREDIT') || t.type === 'WALLET_ADD' ? '+' : '-'}₹${t.amount?.toLocaleString('en-IN')}
+            ${t.type?.includes('CREDIT') || t.type === 'WALLET_ADD' ? '+' : '-'}₹${Math.abs(t.amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
           </td>
           <td><span class="badge badge-green"><i class="fa-solid fa-check"></i> ${t.status || 'SUCCESS'}</span></td>
           <td style="color: #64748B; font-size: 12px;">${t.timestamp || 'Recent'}</td>
@@ -2834,7 +2838,7 @@
           <td><strong>${t.title}</strong></td>
           <td><span class="badge badge-gray">${t.category || 'Payment'}</span></td>
           <td style="font-weight: 800; color: ${t.type?.includes('CREDIT') || t.type === 'WALLET_ADD' ? '#059669' : '#0F172A'};">
-            ${t.type?.includes('CREDIT') || t.type === 'WALLET_ADD' ? '+' : '-'}₹${t.amount?.toLocaleString('en-IN')}
+            ${t.type?.includes('CREDIT') || t.type === 'WALLET_ADD' ? '+' : '-'}₹${Math.abs(t.amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
           </td>
           <td><span class="badge badge-blue">${t.type || 'TXN'}</span></td>
           <td><span class="badge badge-green">${t.status || 'SUCCESS'}</span></td>
