@@ -50,33 +50,34 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EasyPay-v1.0.26.apk
+          name: EasyPay-v1.0.27.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Publish GitHub Release with APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.26
-          name: "EasyPay Android APK v1.0.26 (Admin Panel Clean-Up: Autofill & Stray Elements Removed, User Details Column & Header Streamlined)"
+          tag_name: v1.0.27
+          name: "EasyPay Android APK v1.0.27 (Live Database Sync for Overview KPIs & Isolated Admin Login Viewport Fix)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.26 (Production Release)
+            ## EasyPay Mobile Application APK v1.0.27 (Production Release)
             Direct native Android APK connected live to Vercel production server: https://easypay-gamma.vercel.app
 
-            ### Key Features & Updates in v1.0.26:
-            1. **Admin Login Page Refinements**:
-               - Removed the 'Quick Demo Access' auto-fill credentials chip completely.
-               - Renamed title to 'EasyPay Admin Login' for clean, production-grade presentation.
-            2. **Bottom-of-Page Visual Clean-Up**:
-               - Eliminated the stray `========================================== -->` comment artifact completely.
-            3. **Active User Investments Ledger - User Details Column**:
-               - Replaced the 'Certificate ID / Folio' column with 'User Details'.
-               - Displays User Mobile Number at the top and unique User ID (`EPY...`) directly below it.
-               - Guaranteed unique User ID generation upon account registration.
-            4. **Streamlined Header Navigation**:
-               - Cleaned up top header bar across all admin views by removing 'User Super App', 'Add Plan', and 'Sync Database' buttons.
-            5. **Universal Real-Time Wallet Balance Deduction & Real-Time Sync**:
-               - Wallet balance deductions, double-entry audit records, and Passbook history fully synced in real-time across database and admin dashboard.
+            ### Key Features & Updates in v1.0.27:
+            1. **Admin Login Page Isolation Fix**:
+               - Resolved CSS display cascade bug on `#adminAppSection` and added inline hiding to guarantee the admin dashboard never bleeds through or appears below the login screen.
+            2. **Authentic Real-Time Database Metrics & Zero Fake Data**:
+               - Cleared all outdated and fake seeded figures (`₹13,71,745` GMV, `₹64,388` margin, `24,890` users, `14,155` orders).
+               - Synced 100% with the live database:
+                 - **Total Platform GMV**: ₹2,55,173.24 (exact sum of all actual transactions & investments).
+                 - **Platform Margin Profit**: ₹6,379.33 (real 2.5% platform earnings).
+                 - **Active Users**: 8 (real registered accounts in `data.users`).
+                 - **Vouchers & Recharges**: 23 (18 vouchers + 5 recharges completed in database).
+            3. **Live Scaled Charts**:
+               - Platform GMV growth line chart scaled dynamically to actual platform volume.
+               - Category share donut chart calculating exact real transaction distributions.
+            4. **Clean Production Admin UI**:
+               - Pure 'EasyPay Admin Login' view, no autofill demo chips, no stray comments, and streamlined top navigation.
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

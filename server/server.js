@@ -68,6 +68,37 @@ function writeDb(data) {
   }
 }
 
+function calculateLiveAnalytics(data) {
+  const users = data.users || [];
+  const transactions = data.transactions || [];
+  const investments = data.investments || [];
+  const vouchers = data.vouchers || [];
+
+  const totalUsers = users.length;
+  const rechargesDone = transactions.filter(t => t.category === 'Recharge' || t.type === 'RECHARGE').length;
+  const giftCardsSold = vouchers.length || transactions.filter(t => t.category === 'Gift Card' || t.type === 'GIFT_CARD').length;
+  const shoppingDone = transactions.filter(t => t.category === 'Shopping' || t.type === 'SHOPPING').length;
+  const p2pDone = transactions.filter(t => t.category === 'Money Transfer' || (t.type && t.type.includes('UPI'))).length;
+
+  const txnsGmv = transactions.reduce((sum, t) => sum + Math.abs(Number(t.amount) || 0), 0);
+  const invsGmv = investments.reduce((sum, i) => sum + (Number(i.principal) || 0), 0);
+  const totalGmv = Math.round((txnsGmv + invsGmv) * 100) / 100;
+  const platformCommissionEarned = Math.round(totalGmv * 0.025 * 100) / 100;
+
+  return {
+    totalUsers,
+    totalTransactions: transactions.length,
+    totalGmv,
+    platformCommissionEarned,
+    giftCardsSold,
+    rechargesDone,
+    shoppingDone,
+    p2pDone,
+    investmentsCount: investments.length,
+    vouchersCount: vouchers.length
+  };
+}
+
 // In-memory OTP Cache (mobile -> { otp, type, expiresAt, createdAt, verified })
 const activeOtps = {};
 
@@ -651,6 +682,7 @@ async function requestHandler(req, res) {
   // API: Get complete data (Enriched with Live Hubble Gift Card Brands)
   if (url === '/api/data' && req.method === 'GET') {
     const data = readDb();
+    data.analytics = calculateLiveAnalytics(data);
     data.investPlans = data.bonds || [];
     try {
       const hubbleBrands = await hubble.getActiveBrands();

@@ -1,10 +1,15 @@
 {
   "analytics": {
-    "totalGmv": 1374035,
-    "totalUsers": 24890,
-    "giftCardsSold": 4836,
-    "rechargesDone": 9324,
-    "platformCommissionEarned": 64433.76000000001
+    "totalUsers": 8,
+    "totalTransactions": 58,
+    "totalGmv": 255173.24,
+    "platformCommissionEarned": 6379.33,
+    "giftCardsSold": 18,
+    "rechargesDone": 5,
+    "shoppingDone": 1,
+    "p2pDone": 10,
+    "investmentsCount": 5,
+    "vouchersCount": 18
   },
   "user": {
     "id": "EPY31650",
@@ -2604,9 +2609,14 @@
         "token": "adm_1795108536833_kc30l847",
         "createdAt": 1795108536834,
         "expiresAt": 1795713336834
+      },
+      {
+        "token": "adm_1795239846950_7uo9i6kl",
+        "createdAt": 1795239846950,
+        "expiresAt": 1795844646950
       }
     ],
-    "lastLogin": "2026-11-21T05:06:15.574Z"
+    "lastLogin": "2026-11-21T05:44:06.950Z"
   },
   "systemSettings": {
     "appName": "EasyPay",
