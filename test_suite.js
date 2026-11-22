@@ -71,8 +71,64 @@ const tests = [
     pass: appHtml.includes('id="shopCartCountBadge"') && appHtml.includes('id="cartCouponInput"') && appHtml.includes('applyCartCoupon') && appHtml.includes('proceedToEcommerceCheckout')
   },
   {
-    name: 'Req 14: E-Commerce Checkout Modal with Address, Summary & Wallet deduction',
-    pass: appHtml.includes('id="ecommerceCheckoutModal"') && appHtml.includes('id="checkoutAddressStreet"') && appHtml.includes('submitFinalMallOrder') && appHtml.includes('id="orderSuccessModal"')
+    name: 'Req 14: Dedicated Full-Page E-Commerce Checkout (No Popup Modal)',
+    pass: appHtml.includes('id="viewEcommerceCheckout"') && appHtml.includes('openEcommerceCheckoutView') && appHtml.includes('id="checkoutAddressStreet"') && appHtml.includes('submitFinalMallOrder') && appHtml.includes('id="orderSuccessModal"')
+  },
+  {
+    name: 'Req 15: Amazon/Flipkart Style Product Details, Specs & Verified Reviews',
+    pass: appHtml.includes('id="viewProductDetails"') && appHtml.includes('openProductDetails') && appHtml.includes('id="productDetailSpecsList"') && appHtml.includes('id="productDetailDescBox"') && appHtml.includes('buyNowFromDetail')
+  },
+  {
+    name: 'Req 16: Admin Panel Mall Products Management (Add, Edit, Price & Stock)',
+    pass: fs.readFileSync('public/admin.html', 'utf8').includes('id="tabProducts"') && fs.readFileSync('public/admin.html', 'utf8').includes('id="modalProduct"') && fs.readFileSync('public/admin.html', 'utf8').includes('renderProductsTable') && fs.readFileSync('public/admin.html', 'utf8').includes('openAddProductModal')
+  },
+  {
+    name: 'Req 17: Admin Panel Customer Orders Fulfillment & Status Management',
+    pass: fs.readFileSync('public/admin.html', 'utf8').includes('id="tabOrders"') && fs.readFileSync('public/admin.html', 'utf8').includes('id="modalOrderDetails"') && fs.readFileSync('public/admin.html', 'utf8').includes('renderOrdersTable') && fs.readFileSync('public/admin.html', 'utf8').includes('submitOrderStatusModal')
+  },
+  {
+    name: 'Req 18: Admin Panel Discount Coupons Engine & Dynamic Cart Application',
+    pass: fs.readFileSync('public/admin.html', 'utf8').includes('id="tabCoupons"') && fs.readFileSync('public/admin.html', 'utf8').includes('id="modalCoupon"') && fs.readFileSync('public/admin.html', 'utf8').includes('renderCouponsTable') && appHtml.includes('/api/coupons/list')
+  },
+  {
+    name: 'Req 19: Dedicated Checkout Mobile Responsiveness (max-width 480px, centered)',
+    pass: appHtml.includes('id="viewEcommerceCheckout"') && appHtml.includes('max-width: 480px') && appHtml.includes('id="checkoutTopBar"') && appHtml.includes('id="checkoutBottomBar"')
+  },
+  {
+    name: 'Req 20: My Orders Bulk Items Expansion (+more items clickable toggle)',
+    pass: appHtml.includes('toggleOrderBulkItems') && appHtml.includes('bulkItemsWrap_') && appHtml.includes('bulkItemsChevron_')
+  },
+  {
+    name: 'Req 21: E-Pay Wallet Branding across payment success, debited from, and checkout',
+    pass: appHtml.includes('id="pinSuccessDebitedFromText">E-Pay Wallet</strong>') && appHtml.includes('<span>E-Pay Wallet</span>') && !appHtml.includes('EasyPay Main Wallet')
+  },
+  {
+    name: 'Req 22: Masked Wallet Balance with "View" and 4-Digit Security PIN Verification',
+    pass: appHtml.includes('id="balanceModalWalletDisplay">₹ • • • • • •</div>') && appHtml.includes('requestPinToCheckBalance') && appHtml.includes('id="checkBalancePinModal"') && appHtml.includes('submitCheckBalancePin')
+  },
+  {
+    name: 'Req 23: Enter Amount Prompt First Modal & Transfer Handlers',
+    pass: appHtml.includes('id="enterAmountToPayModal"') && appHtml.includes('id="enterPayAmountInput"') && appHtml.includes('openEnterAmountModal') && appHtml.includes('proceedFromAmountToPaySource')
+  },
+  {
+    name: 'Req 24: Transactions Ledger FontAwesome Icons (fa-arrow-down received, fa-arrow-up sent)',
+    pass: appHtml.includes("let iconClass = isCredit ? 'fa-arrow-down' : 'fa-arrow-up';")
+  },
+  {
+    name: 'Req 25: Passbook Top Header with Back button and Bottom Navigation Bar Hiding/Restoring',
+    pass: appHtml.includes('id="viewPassbook"') && appHtml.includes('closePassbookView') && appHtml.includes('Passbook & Portfolio') && appHtml.includes("navEl.style.display = 'none';")
+  },
+  {
+    name: 'Req 26: Update Payment Details (Bank, UPI, USDT) View, Modal & Backend API',
+    pass: appHtml.includes('Update Payment Details') && appHtml.includes('id="paymentDetailsTypeSelect"') && appHtml.includes('paymentFieldsBank') && appHtml.includes('paymentFieldsUpi') && appHtml.includes('paymentFieldsUsdt') && fs.readFileSync('server/server.js', 'utf8').includes('/api/user/payment-details')
+  },
+  {
+    name: 'Req 27: Profile Menu Group 2 Inactive Wallet Card Removed',
+    pass: !appHtml.includes('wallet-section-card-old') && appHtml.includes('User Requested: Wallet section removed')
+  },
+  {
+    name: 'Req 28: Removed "Pay Bills" Tag & Local SVG Assets for Brand Logos',
+    pass: !appHtml.includes('>Pay Bills</span>') && appHtml.includes('/assets/brands/amazon.svg') && appHtml.includes('/assets/brands/apple.svg') && appHtml.includes('/assets/brands/dominos.svg')
   }
 ];
 

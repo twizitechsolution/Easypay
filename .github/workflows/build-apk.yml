@@ -50,39 +50,50 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EasyPay-v1.0.28.apk
+          name: EasyPay-v1.0.30.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Publish GitHub Release with APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.28
-          name: "EasyPay Android APK v1.0.28 (Gift Cards Visual Refresh, Dynamic Profile ID, PIN Reset Flow & Full Mall Checkout System)"
+          tag_name: v1.0.30
+          name: "EasyPay Android APK v1.0.30 (Mobile Responsive Checkout, Bulk Orders, E-Pay Wallet, Amount Prompt First, PIN Protected Balance, Bank/UPI/USDT Details)"
           body: |
-            ## EasyPay Mobile Application APK v1.0.28 (Production Release)
+            ## EasyPay Mobile Application APK v1.0.30 (Production Release)
             Direct native Android APK connected live to Vercel production server: https://easypay-gamma.vercel.app
 
-            ### Key Features & Updates in v1.0.28:
-            1. **Gift Cards Logo Presentation Visual Refresh**:
-               - Removed the black/dark borders and background boxes around brand logos.
-               - Logos are cleanly rounded on white tiles with subtle border and shadow, preserving official brand aesthetics.
-            2. **Account / Profile Section Redesign**:
-               - Structured strictly: **Name -> Mobile Number -> User ID** (e.g. `arman khan` -> `+91 7013893165` -> `User ID: EPY31650`).
-               - Removed eye and copy icons next to User ID.
-               - Removed warning icon from the Profile button.
-               - 'Payment Settings' updated with right-aligned chevron and subtitle 'Add and manage bank accounts' (removed saved cards and KYC).
-            3. **Dedicated Set / Reset Security PIN Page**:
-               - Fully functional dedicated slide-in view (`#viewResetPin`) to verify registered mobile via 4-digit OTP and set/update 4-digit security PIN.
-               - Synced with backend `POST /api/user/set-pin`.
-            4. **Dedicated My Orders & Shipment Tracking Timeline**:
-               - Replaced UPI Requests with **My Orders** (`#viewMyOrders`) supporting Mall Orders and Gift Vouchers tabs.
-               - Amazon/Flipkart-style 5-stage shipment tracking timeline modal with courier details and AWB tracking numbers.
-            5. **EasyPay Mall Real-Time Cart & Checkout System**:
-               - Real-time cart count badge `#shopCartCountBadge` in header.
-               - Coupon Code section placed above Delivery Charges supporting `EASYPAY50`, `WELCOME100`, and `BACHAT20`.
-               - Dedicated Checkout modal with Delivery Address form, Order Summary, and Payment Options (EasyPay Wallet, UPI, COD).
-               - Real-time wallet deduction via `/api/wallet/transact` and database sync via `POST /api/orders/create`.
+            ### Key Enhancements & Fixes in v1.0.30:
+            1. **Dedicated Checkout Mobile Responsiveness**:
+               - Fully centered and constrained (`max-width: 480px; width: 100%`) with fluid responsive layout.
+               - Top sticky bar and bottom "Pay & Place Order" sticky bar aligned and mobile optimized with zero edge clipping.
+            2. **My Orders Bulk Order Display & Expansion**:
+               - Orders containing multiple products display a "+X more item(s)" interactive toggle button.
+               - Clicking reveals all products within that order (thumbnails, titles, quantities, unit prices).
+            3. **Unified "E-Pay Wallet" Branding**:
+               - All wallet debit labels, payment success modals, and checkout headers now strictly display "E-Pay Wallet".
+            4. **Account & Wallet Balance PIN Protection**:
+               - Wallet balance is masked by default (`₹ • • • • • •`).
+               - Users tap "View" to open a dedicated 4-digit Security PIN verification modal, unmasking the balance only after authentication.
+               - Removed unused State Bank of India entry from balance modal.
+            5. **Enter Amount Prompt First Flow**:
+               - Clicking "Pay" next to any contact, Twizitech, Rahul Sharma, or "To Bank/Self" now prompts the user to enter the amount first.
+               - Clean input field with prominent currency symbol (`₹`), quick amount chips (+₹100, +₹200, +₹500, +₹1,000), optional note, and balance indicator.
+               - Routes to Payment Source sheet with exact entered amount.
+            6. **Transactions Ledger FontAwesome Icons**:
+               - Replaced missing icons with standard FontAwesome icons: green downward arrow (`fa-arrow-down`) for credited payments and red upward arrow (`fa-arrow-up`) for debited payments.
+            7. **Passbook Dedicated Sub-Page Navigation**:
+               - Added top sticky header with `<` back button returning to Profile.
+               - Bottom navigation bar is hidden while on Passbook and sub-pages to eliminate user confusion, restoring automatically on exit.
+            8. **Update Payment Details (Bank Account, UPI ID, USDT Crypto)**:
+               - Redesigned "Update Payment Details" view with "+ Add" action.
+               - Multi-channel modal with dropdown selector for Bank Account, UPI ID, and USDT Crypto (TRC-20, BEP-20, ERC-20).
+               - Real-time persistence via backend `/api/user/payment-details`.
+            9. **Profile Page Streamlining**:
+               - Removed inactive Wallet section from Profile menu group 2.
+            10. **Visual Assets & Gift Cards Refresh**:
+               - Removed "Pay Bills" badge from Recharges section.
+               - Sourced local vector SVG brand assets in `public/assets/brands/` (Apple, Domino's, Amazon, Myntra, Amazon Prime, Smart Bazaar, BGMI, Decathlon) avoiding external HTTP 429 rate limits.
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

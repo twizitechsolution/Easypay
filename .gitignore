@@ -10,3 +10,5 @@ stage_*.js
 .env*
 *.apk
 ui_evidence/
+.git_token
+*.secret

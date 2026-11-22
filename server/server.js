@@ -855,6 +855,97 @@ async function requestHandler(req, res) {
     return;
   }
 
+  // User Payment Details (Bank Account, UPI, USDT)
+  if (url === '/api/user/payment-details' && req.method === 'GET') {
+    const data = readDb();
+    const details = (data.user && data.user.paymentDetails) || [
+      {
+        id: 'pay_detail_1',
+        type: 'bank',
+        bankName: 'State Bank of India',
+        accountMasked: '3098XXXXXXXX8491',
+        accountRaw: '30981928491',
+        ifsc: 'SBIN0001234',
+        holderName: 'NIROD BEHERA',
+        isPrimary: true
+      },
+      {
+        id: 'pay_detail_2',
+        type: 'upi',
+        upiId: '7013893165@easypay',
+        holderName: 'NIROD BEHERA',
+        isPrimary: false
+      },
+      {
+        id: 'pay_detail_3',
+        type: 'usdt',
+        usdtNetwork: 'TRC-20 (Tron)',
+        usdtAddress: 'TXj4b...89zKq2',
+        usdtAddressRaw: 'TXj4b9A7vPq1WzK88L0sR89zKq2',
+        isPrimary: false
+      }
+    ];
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ success: true, paymentDetails: details }));
+    return;
+  }
+
+  if (url === '/api/user/payment-details/save' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      try {
+        const item = JSON.parse(body || '{}');
+        const data = readDb();
+        if (!data.user) data.user = {};
+        if (!data.user.paymentDetails) {
+          data.user.paymentDetails = [
+            {
+              id: 'pay_detail_1',
+              type: 'bank',
+              bankName: 'State Bank of India',
+              accountMasked: '3098XXXXXXXX8491',
+              accountRaw: '30981928491',
+              ifsc: 'SBIN0001234',
+              holderName: 'NIROD BEHERA',
+              isPrimary: true
+            }
+          ];
+        }
+        item.id = item.id || ('pay_' + Date.now());
+        data.user.paymentDetails.unshift(item);
+        writeDb(data);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, paymentDetails: data.user.paymentDetails }));
+      } catch (e) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message }));
+      }
+    });
+    return;
+  }
+
+  if (url === '/api/user/payment-details/delete' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      try {
+        const { id } = JSON.parse(body || '{}');
+        const data = readDb();
+        if (data.user && data.user.paymentDetails) {
+          data.user.paymentDetails = data.user.paymentDetails.filter(p => p.id !== id);
+          writeDb(data);
+        }
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, paymentDetails: data.user?.paymentDetails || [] }));
+      } catch (e) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message }));
+      }
+    });
+    return;
+  }
+
   // API: Set / Update 4-Digit Security PIN
   if (url === '/api/user/pin' && req.method === 'POST') {
     let body = '';
@@ -2928,12 +3019,24 @@ async function requestHandler(req, res) {
 
         const newOrder = {
           id: orderData.id || ('ORD-' + Math.floor(100000 + Math.random() * 900000)),
+          userId: orderData.userId || 'EPY31650',
+          userName: orderData.userName || orderData.deliveryAddress?.name || 'arman khan',
+          userMobile: orderData.userMobile || orderData.deliveryAddress?.mobile || '7013893165',
           items: orderData.items || [],
           subtotal: orderData.subtotal || 0,
           discount: orderData.discount || 0,
-          total: orderData.total || 0,
+          total: orderData.total || orderData.totalAmount || 0,
+          totalAmount: orderData.totalAmount || orderData.total || 0,
           paymentMethod: orderData.paymentMethod || 'EasyPay Wallet',
           deliveryAddress: orderData.deliveryAddress || {},
+          shippingAddress: orderData.shippingAddress || {
+            fullName: orderData.deliveryAddress?.name || 'arman khan',
+            phone: orderData.deliveryAddress?.mobile || '7013893165',
+            addressLine: orderData.deliveryAddress?.address || '',
+            city: orderData.deliveryAddress?.city || '',
+            state: orderData.deliveryAddress?.state || '',
+            pincode: orderData.deliveryAddress?.pincode || ''
+          },
           status: 'Order Confirmed',
           createdAt: orderData.createdAt || new Date().toISOString(),
           trackingNumber: 'BD-' + Math.floor(10000000 + Math.random() * 90000000),
@@ -2970,6 +3073,236 @@ async function requestHandler(req, res) {
       orders: data.orders || [],
       vouchers: data.vouchers || []
     }));
+    return;
+  }
+
+  // API: Admin Update Order Status (E-Commerce Order Management)
+  if (url === '/api/admin/orders/update-status' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      try {
+        const { orderId, status } = JSON.parse(body || '{}');
+        const data = readDb();
+        if (!data.orders) data.orders = [];
+
+        const order = data.orders.find(o => o.id === orderId);
+        if (!order) {
+          res.writeHead(404, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, error: 'Order not found' }));
+          return;
+        }
+
+        order.status = status;
+
+        const stageNames = [
+          'Order Confirmed',
+          'Packed at Warehouse',
+          'Dispatched with Blue Dart',
+          'Out for Delivery',
+          'Delivered'
+        ];
+
+        const targetIndex = stageNames.indexOf(status);
+        if (targetIndex !== -1 && order.stages) {
+          order.stages.forEach((st, idx) => {
+            st.completed = idx <= targetIndex;
+            if (st.completed && !st.date.includes('Today') && !st.date.includes('Yesterday')) {
+              st.date = 'Updated Today, ' + new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+            }
+          });
+        }
+
+        writeDb(data);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, order }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return;
+  }
+
+  // API: Products Catalog Management (Client & Admin)
+  if (url === '/api/products/list' && req.method === 'GET') {
+    const data = readDb();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      success: true,
+      products: data.products || []
+    }));
+    return;
+  }
+
+  // API: Admin Add New Product
+  if (url === '/api/admin/products/add' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      try {
+        const prod = JSON.parse(body || '{}');
+        const data = readDb();
+        if (!data.products) data.products = [];
+
+        const newProd = {
+          id: prod.id || ('prod_' + Date.now()),
+          title: prod.title || 'New Product',
+          brand: prod.brand || 'EasyPay',
+          category: prod.category || 'Electronics',
+          price: parseFloat(prod.price) || 999,
+          origPrice: parseFloat(prod.origPrice) || (parseFloat(prod.price) * 2) || 1999,
+          discount: prod.discount || (Math.round((1 - (parseFloat(prod.price) / (parseFloat(prod.origPrice) || parseFloat(prod.price)*2))) * 100) + '% OFF'),
+          badge: prod.badge || 'New Arrival',
+          rating: prod.rating || 4.8,
+          reviewsCount: prod.reviewsCount || 1,
+          stockStatus: prod.stockStatus || 'In Stock',
+          img: prod.img || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60',
+          description: prod.description || 'High quality product from EasyPay Mall.',
+          specs: prod.specs || {
+            'Brand': prod.brand || 'EasyPay',
+            'Model Name': prod.title || 'Product Model',
+            'Warranty': '1 Year Brand Warranty',
+            'In The Box': 'Product, Accessories, User Guide'
+          }
+        };
+
+        data.products.unshift(newProd);
+        writeDb(data);
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, product: newProd }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return;
+  }
+
+  // API: Admin Update Product
+  if (url === '/api/admin/products/update' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      try {
+        const prod = JSON.parse(body || '{}');
+        const data = readDb();
+        if (!data.products) data.products = [];
+
+        const idx = data.products.findIndex(p => p.id === prod.id);
+        if (idx === -1) {
+          res.writeHead(404, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, error: 'Product not found' }));
+          return;
+        }
+
+        data.products[idx] = { ...data.products[idx], ...prod };
+        writeDb(data);
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, product: data.products[idx] }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return;
+  }
+
+  // API: Admin Delete Product
+  if (url === '/api/admin/products/delete' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      try {
+        const { id } = JSON.parse(body || '{}');
+        const data = readDb();
+        if (!data.products) data.products = [];
+
+        data.products = data.products.filter(p => p.id !== id);
+        writeDb(data);
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, id }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return;
+  }
+
+  // API: Get Coupons List
+  if (url === '/api/coupons/list' && req.method === 'GET') {
+    const data = readDb();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      success: true,
+      coupons: data.coupons || []
+    }));
+    return;
+  }
+
+  // API: Admin Create Coupon Code
+  if (url === '/api/admin/coupons/create' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      try {
+        const c = JSON.parse(body || '{}');
+        const data = readDb();
+        if (!data.coupons) data.coupons = [];
+
+        const newCoupon = {
+          code: (c.code || '').trim().toUpperCase(),
+          discountType: c.discountType || 'flat',
+          discountValue: parseFloat(c.discountValue) || 50,
+          minOrder: parseFloat(c.minOrder) || 0,
+          maxDiscount: parseFloat(c.maxDiscount) || 200,
+          description: c.description || ((c.discountType === 'percent' ? c.discountValue + '% OFF' : '₹' + c.discountValue + ' OFF') + (c.minOrder > 0 ? ' on orders above ₹' + c.minOrder : '')),
+          status: c.status || 'ACTIVE',
+          createdAt: new Date().toISOString()
+        };
+
+        const existingIdx = data.coupons.findIndex(item => item.code === newCoupon.code);
+        if (existingIdx !== -1) {
+          data.coupons[existingIdx] = newCoupon;
+        } else {
+          data.coupons.unshift(newCoupon);
+        }
+
+        writeDb(data);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, coupon: newCoupon }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return;
+  }
+
+  // API: Admin Delete Coupon Code
+  if (url === '/api/admin/coupons/delete' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      try {
+        const { code } = JSON.parse(body || '{}');
+        const data = readDb();
+        if (!data.coupons) data.coupons = [];
+
+        data.coupons = data.coupons.filter(item => item.code !== (code || '').toUpperCase());
+        writeDb(data);
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, code }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
     return;
   }
 

@@ -2,10 +2,10 @@
   "analytics": {
     "totalUsers": 8,
     "totalTransactions": 58,
-    "totalGmv": 255173.24,
-    "platformCommissionEarned": 6379.33,
-    "giftCardsSold": 18,
-    "rechargesDone": 5,
+    "totalGmv": 267776.24,
+    "platformCommissionEarned": 6631.389999999999,
+    "giftCardsSold": 19,
+    "rechargesDone": 6,
     "shoppingDone": 1,
     "p2pDone": 10,
     "investmentsCount": 5,
@@ -13,19 +13,46 @@
   },
   "user": {
     "id": "EPY31650",
-    "firstName": "arman",
-    "lastName": "khan",
-    "name": "arman khan",
+    "firstName": "Nirod",
+    "lastName": "Behera",
+    "name": "Nirod Behera",
     "mobile": "7013893165",
     "maskedMobile": "xxxxxx3165",
-    "email": "armankhan@gmail.com",
+    "email": "nirodbehera@gmail.com",
     "payId": "7013893165@easypay",
-    "walletBalance": 24500,
+    "walletBalance": 14397,
     "securityPin": "1234",
     "mpin": "1234",
     "bankName": "STATE BANK OF INDIA",
     "bankAccountMasked": "xxxx 3165",
-    "cashbackEarned": 543.84
+    "cashbackEarned": 540,
+    "paymentDetails": [
+      {
+        "id": "pay_detail_1",
+        "type": "bank",
+        "bankName": "State Bank of India",
+        "accountMasked": "3098XXXXXXXX8491",
+        "accountRaw": "30981928491",
+        "ifsc": "SBIN0001234",
+        "holderName": "NIROD BEHERA",
+        "isPrimary": true
+      },
+      {
+        "id": "pay_detail_2",
+        "type": "upi",
+        "upiId": "7013893165@easypay",
+        "holderName": "NIROD BEHERA",
+        "isPrimary": false
+      },
+      {
+        "id": "pay_detail_3",
+        "type": "usdt",
+        "usdtNetwork": "TRC-20 (Tron)",
+        "usdtAddress": "TXj4b...89zKq2",
+        "usdtAddressRaw": "TXj4b9A7vPq1WzK88L0sR89zKq2",
+        "isPrimary": false
+      }
+    ]
   },
   "giftCards": [
     {
@@ -800,6 +827,22 @@
   ],
   "vouchers": [
     {
+      "id": "VOUCH_1795371916832",
+      "brand": "Amazon shopping",
+      "brandId": "01GMAVS2CHXR0XP1BZSTA9A44K",
+      "amount": 100,
+      "netPayable": 96,
+      "discount": 4,
+      "cashbackEarned": 4,
+      "voucherCode": "HB-AMAZ-67892492",
+      "pin": "800513",
+      "expiryDate": "2027-11-22",
+      "validTill": "2027-11-22",
+      "purchasedAt": "2026-11-22T18:25:16.832Z",
+      "status": "ACTIVE",
+      "category": "Voucher"
+    },
+    {
       "id": "VOUCH_1795233067822",
       "brand": "Amazon Shopping",
       "brandId": "",
@@ -1102,6 +1145,265 @@
     }
   ],
   "transactions": [
+    {
+      "id": "TXN_76227388",
+      "title": "Paid for EasyPay Mall Store Order",
+      "category": "Shopping",
+      "amount": -3697,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "23 Nov 2026, 01:07 am",
+      "status": "SUCCESS",
+      "type": "SHOPPING",
+      "icon": "/assets/bachatpay/history/shopping_history.png",
+      "utr": "EPY512090115",
+      "details": {
+        "recipientName": "EasyPay Mall Store",
+        "recipientQuery": "mall@easypay",
+        "utr": "EPY512090115",
+        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
+        "paymentMethod": "Wallet",
+        "note": "Mall Order: 3 item(s)"
+      }
+    },
+    {
+      "id": "TXN_76108491",
+      "title": "Received from arman khan",
+      "category": "Money Transfer",
+      "amount": 500,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "23 Nov 2026, 01:05 am",
+      "status": "SUCCESS",
+      "type": "UPI_CREDIT",
+      "icon": "/assets/bachatpay/history/credit_history.png",
+      "utr": "EPY333065102",
+      "details": {
+        "fromUser": "arman khan",
+        "fromMobile": "7013893165",
+        "utr": "EPY333065102"
+      }
+    },
+    {
+      "id": "TXN_76108490",
+      "title": "Paid to Rahul Sharma",
+      "category": "Money Transfer",
+      "amount": -500,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "23 Nov 2026, 01:05 am",
+      "status": "SUCCESS",
+      "type": "UPI_DEBIT",
+      "icon": "/assets/bachatpay/history/debit_history.png",
+      "utr": "EPY333065102",
+      "details": {
+        "brand": "",
+        "brandName": "",
+        "brandId": "",
+        "faceValue": 500,
+        "discount": 0,
+        "voucherCode": "",
+        "voucherPin": "",
+        "validTill": "",
+        "items": null,
+        "operator": null,
+        "rechargeNumber": null,
+        "recipientName": "Rahul Sharma",
+        "recipientQuery": "7013893165@easypay",
+        "utr": "EPY333065102",
+        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
+        "paymentMethod": "Wallet",
+        "note": "Transferred via EasyPay"
+      }
+    },
+    {
+      "id": "TXN_76086535",
+      "title": "Added via PhonePe",
+      "category": "Wallet",
+      "amount": 1000,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "status": "SUCCESS",
+      "type": "WALLET_ADD",
+      "icon": "/assets/bachatpay/history/credit_history.png"
+    },
+    {
+      "id": "TXN_72031293",
+      "title": "Paid for Jio Recharge",
+      "category": "Recharge",
+      "amount": -666,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "22 Nov 2026, 11:57 pm",
+      "status": "SUCCESS",
+      "type": "RECHARGE",
+      "icon": "/assets/bachatpay/history/mobile_recharg_history.png",
+      "utr": "EPY912750606",
+      "details": {
+        "brand": "",
+        "brandName": "",
+        "brandId": "",
+        "faceValue": 666,
+        "discount": 0,
+        "voucherCode": "",
+        "voucherPin": "",
+        "validTill": "",
+        "items": null,
+        "operator": null,
+        "rechargeNumber": null,
+        "recipientName": "Jio Recharge",
+        "recipientQuery": "9876543210 • Mobile Recharge",
+        "utr": "EPY912750606",
+        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
+        "paymentMethod": "Wallet",
+        "note": "Transferred via EasyPay"
+      }
+    },
+    {
+      "id": "TXN_71986075",
+      "title": "Received from arman khan",
+      "category": "Money Transfer",
+      "amount": 500,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "22 Nov 2026, 11:56 pm",
+      "status": "SUCCESS",
+      "type": "UPI_CREDIT",
+      "icon": "/assets/bachatpay/history/credit_history.png",
+      "utr": "EPY360295484",
+      "details": {
+        "fromUser": "arman khan",
+        "fromMobile": "7013893165",
+        "utr": "EPY360295484"
+      }
+    },
+    {
+      "id": "TXN_71986074",
+      "title": "Paid to Rahul Sharma",
+      "category": "Money Transfer",
+      "amount": -500,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "22 Nov 2026, 11:56 pm",
+      "status": "SUCCESS",
+      "type": "UPI_DEBIT",
+      "icon": "/assets/bachatpay/history/debit_history.png",
+      "utr": "EPY360295484",
+      "details": {
+        "brand": "",
+        "brandName": "",
+        "brandId": "",
+        "faceValue": 500,
+        "discount": 0,
+        "voucherCode": "",
+        "voucherPin": "",
+        "validTill": "",
+        "items": null,
+        "operator": null,
+        "rechargeNumber": null,
+        "recipientName": "Rahul Sharma",
+        "recipientQuery": "7013893165@easypay",
+        "utr": "EPY360295484",
+        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
+        "paymentMethod": "Wallet",
+        "note": "Transferred via EasyPay"
+      }
+    },
+    {
+      "id": "TXN_71916832",
+      "title": "Paid for Amazon shopping Gift Voucher",
+      "category": "Gift Card",
+      "amount": -96,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "22 Nov 2026, 11:55 pm",
+      "status": "SUCCESS",
+      "type": "GIFT_CARD",
+      "icon": "/assets/bachatpay/history/gift_history.png",
+      "utr": "EPY343282724",
+      "details": {
+        "brand": "Amazon shopping",
+        "brandName": "Amazon shopping",
+        "brandId": "01GMAVS2CHXR0XP1BZSTA9A44K",
+        "faceValue": 100,
+        "discount": 4,
+        "voucherCode": "HB-AMAZ-67892492",
+        "voucherPin": "800513",
+        "validTill": "2027-11-22",
+        "items": null,
+        "operator": null,
+        "rechargeNumber": null,
+        "recipientName": "Amazon shopping Gift Voucher",
+        "recipientQuery": "Instant Voucher Issuance",
+        "utr": "EPY343282724",
+        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
+        "paymentMethod": "Wallet",
+        "note": "Transferred via EasyPay"
+      }
+    },
+    {
+      "id": "TXN_71817098",
+      "title": "Paid for EasyPay Mall Store Order",
+      "category": "Shopping",
+      "amount": -2198,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "22 Nov 2026, 11:53 pm",
+      "status": "SUCCESS",
+      "type": "SHOPPING",
+      "icon": "/assets/bachatpay/history/shopping_history.png",
+      "utr": "EPY416368081",
+      "details": {
+        "recipientName": "EasyPay Mall Store",
+        "recipientQuery": "mall@easypay",
+        "utr": "EPY416368081",
+        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
+        "paymentMethod": "Wallet",
+        "note": "Mall Order: 2 item(s)"
+      }
+    },
+    {
+      "id": "TXN_69567450",
+      "title": "Paid for EasyPay Mall Store Order",
+      "category": "Shopping",
+      "amount": -2998,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "22 Nov 2026, 11:16 pm",
+      "status": "SUCCESS",
+      "type": "SHOPPING",
+      "icon": "/assets/bachatpay/history/shopping_history.png",
+      "utr": "EPY166175383",
+      "details": {
+        "recipientName": "EasyPay Mall Store",
+        "recipientQuery": "mall@easypay",
+        "utr": "EPY166175383",
+        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
+        "paymentMethod": "Wallet",
+        "note": "Mall Order: 2 item(s)"
+      }
+    },
+    {
+      "id": "TXN_55934862",
+      "title": "Paid for EasyPay Mall Store Order",
+      "category": "Shopping",
+      "amount": -1948,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "date": "21 Nov 2026, 03:42 pm",
+      "status": "SUCCESS",
+      "type": "SHOPPING",
+      "icon": "/assets/bachatpay/history/shopping_history.png",
+      "utr": "EPY168129614",
+      "details": {
+        "recipientName": "EasyPay Mall Store",
+        "recipientQuery": "mall@easypay",
+        "utr": "EPY168129614",
+        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
+        "paymentMethod": "Wallet",
+        "note": "Mall Order: 1 item(s)"
+      }
+    },
     {
       "id": "TXN_33956304",
       "title": "Received from arman khan",
@@ -2588,7 +2890,7 @@
       "maskedMobile": "xxxxxx3165",
       "email": "armankhan@gmail.com",
       "payId": "7013893165@easypay",
-      "walletBalance": 25000,
+      "walletBalance": 14397,
       "securityPin": "1234",
       "mpin": "1234",
       "bankName": "STATE BANK OF INDIA",
@@ -2887,6 +3189,330 @@
   },
   "orders": [
     {
+      "id": "ORD-144901",
+      "userId": "EPY31650",
+      "userName": "arman khan",
+      "userMobile": "7013893165",
+      "items": [
+        {
+          "id": "prod_4",
+          "title": "Sparx Casual Breathable Lightweight Running Shoes",
+          "brand": "Sparx",
+          "price": 799,
+          "origPrice": 1598,
+          "qty": 1,
+          "img": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60"
+        },
+        {
+          "id": "prod_1",
+          "title": "boAt Airdopes 141 ANC TWS Earbuds 42H Playtime",
+          "brand": "boAt",
+          "price": 899,
+          "origPrice": 1798,
+          "qty": 1,
+          "img": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60"
+        },
+        {
+          "id": "prod_1795369282601",
+          "title": "Wireless Active Noise Canceling Headphone Pro",
+          "brand": "EasyPay",
+          "price": 1999,
+          "origPrice": 3998,
+          "qty": 1,
+          "img": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60"
+        }
+      ],
+      "subtotal": 3697,
+      "discount": 0,
+      "total": 3697,
+      "totalAmount": 3697,
+      "paymentMethod": "EasyPay Wallet",
+      "deliveryAddress": {
+        "name": "arman khan",
+        "mobile": "7013893165",
+        "address": "Flat 402, Green Valley, Andheri West",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "pincode": "400053"
+      },
+      "shippingAddress": {
+        "fullName": "arman khan",
+        "phone": "7013893165",
+        "addressLine": "Flat 402, Green Valley, Andheri West",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "pincode": "400053"
+      },
+      "status": "Order Confirmed",
+      "createdAt": "2026-11-22T19:37:07.392Z",
+      "trackingNumber": "BD-88199249",
+      "courier": "Blue Dart Express",
+      "estimatedDelivery": "3-4 business days",
+      "stages": [
+        {
+          "title": "Order Confirmed",
+          "description": "Your order has been placed and verified",
+          "date": "Today",
+          "completed": true
+        },
+        {
+          "title": "Packed at Warehouse",
+          "description": "Item is being inspected & packed",
+          "date": "Expected Tomorrow",
+          "completed": false
+        },
+        {
+          "title": "Dispatched with Blue Dart",
+          "description": "Courier will pick up package",
+          "date": "Expected in 2 days",
+          "completed": false
+        },
+        {
+          "title": "Out for Delivery",
+          "description": "Delivery agent will call upon arrival",
+          "date": "Expected in 3 days",
+          "completed": false
+        },
+        {
+          "title": "Delivered",
+          "description": "Delivered to your address",
+          "date": "Expected in 4 days",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": "ORD-416391",
+      "userId": "EPY31650",
+      "userName": "arman khan",
+      "userMobile": "7013893165",
+      "items": [
+        {
+          "id": "prod_1",
+          "title": "boAt Airdopes 141 ANC TWS Earbuds",
+          "brand": "boAt",
+          "price": 999,
+          "origPrice": 4490,
+          "qty": 1,
+          "img": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60"
+        },
+        {
+          "id": "prod_5",
+          "title": "JBL RGB Portable Wireless Bluetooth Party Speaker 20W",
+          "brand": "JBL",
+          "price": 1199,
+          "origPrice": 2398,
+          "qty": 1,
+          "img": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&auto=format&fit=crop&q=60"
+        }
+      ],
+      "subtotal": 2198,
+      "discount": 0,
+      "total": 2198,
+      "totalAmount": 2198,
+      "paymentMethod": "EasyPay Wallet",
+      "deliveryAddress": {
+        "name": "arman khan",
+        "mobile": "7013893165",
+        "address": "Flat 402, Green Valley, Andheri West",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "pincode": "400053"
+      },
+      "shippingAddress": {
+        "fullName": "arman khan",
+        "phone": "7013893165",
+        "addressLine": "Flat 402, Green Valley, Andheri West",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "pincode": "400053"
+      },
+      "status": "Order Confirmed",
+      "createdAt": "2026-11-22T18:23:37.103Z",
+      "trackingNumber": "BD-92466690",
+      "courier": "Blue Dart Express",
+      "estimatedDelivery": "3-4 business days",
+      "stages": [
+        {
+          "title": "Order Confirmed",
+          "description": "Your order has been placed and verified",
+          "date": "Today",
+          "completed": true
+        },
+        {
+          "title": "Packed at Warehouse",
+          "description": "Item is being inspected & packed",
+          "date": "Expected Tomorrow",
+          "completed": false
+        },
+        {
+          "title": "Dispatched with Blue Dart",
+          "description": "Courier will pick up package",
+          "date": "Expected in 2 days",
+          "completed": false
+        },
+        {
+          "title": "Out for Delivery",
+          "description": "Delivery agent will call upon arrival",
+          "date": "Expected in 3 days",
+          "completed": false
+        },
+        {
+          "title": "Delivered",
+          "description": "Delivered to your address",
+          "date": "Expected in 4 days",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": "ORD-783793",
+      "userId": "EPY31650",
+      "userName": "arman khan",
+      "userMobile": "7013893165",
+      "items": [
+        {
+          "id": "prod_1",
+          "title": "boAt Airdopes 141 ANC TWS Earbuds",
+          "brand": "boAt",
+          "price": 999,
+          "origPrice": 4490,
+          "qty": 1,
+          "img": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60"
+        },
+        {
+          "id": "prod_1795369282601",
+          "title": "Wireless Active Noise Canceling Headphone Pro",
+          "brand": "EasyPay",
+          "price": 1999,
+          "origPrice": 3998,
+          "qty": 1,
+          "img": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60"
+        }
+      ],
+      "subtotal": 2998,
+      "discount": 0,
+      "total": 2998,
+      "totalAmount": 2998,
+      "paymentMethod": "EasyPay Wallet",
+      "deliveryAddress": {
+        "name": "arman khan",
+        "mobile": "7013893165",
+        "address": "Flat 402, Green Valley, Andheri West",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "pincode": "400053"
+      },
+      "shippingAddress": {
+        "fullName": "arman khan",
+        "phone": "7013893165",
+        "addressLine": "Flat 402, Green Valley, Andheri West",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "pincode": "400053"
+      },
+      "status": "Order Confirmed",
+      "createdAt": "2026-11-22T17:46:07.453Z",
+      "trackingNumber": "BD-85307720",
+      "courier": "Blue Dart Express",
+      "estimatedDelivery": "3-4 business days",
+      "stages": [
+        {
+          "title": "Order Confirmed",
+          "description": "Your order has been placed and verified",
+          "date": "Today",
+          "completed": true
+        },
+        {
+          "title": "Packed at Warehouse",
+          "description": "Item is being inspected & packed",
+          "date": "Expected Tomorrow",
+          "completed": false
+        },
+        {
+          "title": "Dispatched with Blue Dart",
+          "description": "Courier will pick up package",
+          "date": "Expected in 2 days",
+          "completed": false
+        },
+        {
+          "title": "Out for Delivery",
+          "description": "Delivery agent will call upon arrival",
+          "date": "Expected in 3 days",
+          "completed": false
+        },
+        {
+          "title": "Delivered",
+          "description": "Delivered to your address",
+          "date": "Expected in 4 days",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": "ORD-414398",
+      "items": [
+        {
+          "id": "prod_1",
+          "title": "boAt Airdopes 141 ANC TWS Earbuds",
+          "brand": "boAt",
+          "price": 999,
+          "origPrice": 4490,
+          "qty": 2,
+          "img": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60"
+        }
+      ],
+      "subtotal": 1998,
+      "discount": 50,
+      "total": 1948,
+      "paymentMethod": "EasyPay Wallet",
+      "deliveryAddress": {
+        "name": "arman khan",
+        "mobile": "7013893165",
+        "address": "Flat 402, Green Valley, Andheri West",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "pincode": "400053"
+      },
+      "status": "Dispatched with Blue Dart",
+      "createdAt": "2026-11-21T10:12:14.869Z",
+      "trackingNumber": "BD-36938108",
+      "courier": "Blue Dart Express",
+      "estimatedDelivery": "3-4 business days",
+      "stages": [
+        {
+          "title": "Order Confirmed",
+          "description": "Your order has been placed and verified",
+          "date": "Today",
+          "completed": true
+        },
+        {
+          "title": "Packed at Warehouse",
+          "description": "Item is being inspected & packed",
+          "date": "Updated Today, 11:12 pm",
+          "completed": true
+        },
+        {
+          "title": "Dispatched with Blue Dart",
+          "description": "Courier will pick up package",
+          "date": "Updated Today, 11:12 pm",
+          "completed": true
+        },
+        {
+          "title": "Out for Delivery",
+          "description": "Delivery agent will call upon arrival",
+          "date": "Expected in 3 days",
+          "completed": false
+        },
+        {
+          "title": "Delivered",
+          "description": "Delivered to your address",
+          "date": "Expected in 4 days",
+          "completed": false
+        }
+      ]
+    },
+    {
       "id": "ORD-892415",
       "items": [
         {
@@ -2947,6 +3573,220 @@
           "completed": false
         }
       ]
+    }
+  ],
+  "products": [
+    {
+      "id": "prod_1795369282601",
+      "title": "Wireless Active Noise Canceling Headphone Pro",
+      "brand": "EasyPay",
+      "category": "Audio",
+      "price": 1999,
+      "origPrice": 3998,
+      "discount": "60% OFF",
+      "badge": "New Arrival",
+      "rating": 4.9,
+      "reviewsCount": 850,
+      "stockStatus": "In Stock",
+      "img": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60",
+      "description": "Studio grade ANC headphones with deep bass.",
+      "specs": {
+        "Brand": "EasyPay",
+        "Model Name": "Wireless Active Noise Canceling Headphone Pro",
+        "Warranty": "1 Year Brand Warranty",
+        "In The Box": "Product, Accessories, User Guide"
+      }
+    },
+    {
+      "id": "prod_1",
+      "title": "boAt Airdopes 141 ANC TWS Earbuds 42H Playtime",
+      "brand": "boAt",
+      "category": "Audio",
+      "price": 899,
+      "origPrice": 2499,
+      "discount": "64% OFF",
+      "badge": "Best Seller",
+      "rating": 4.8,
+      "reviewsCount": 1420,
+      "stockStatus": "In Stock",
+      "img": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60",
+      "description": "boAt Airdopes 141 ANC comes with 32 dB Active Noise Cancellation, 42 hours massive playback, ENx technology for crystal-clear calls, ASAP fast charge (10 mins = 150 mins playtime), and IPX5 water resistance.",
+      "specs": {
+        "Brand": "boAt",
+        "Model Name": "Airdopes 141 ANC",
+        "Color": "Gunmetal Black",
+        "Form Factor": "True Wireless In-Ear",
+        "Connectivity": "Bluetooth v5.3",
+        "Noise Cancellation": "32dB Active Noise Cancellation (ANC)",
+        "Battery Life": "Up to 42 Hours Total Playback",
+        "Charging Time": "1 Hour (ASAP Fast Charge)",
+        "Water Resistance": "IPX5 Sweat & Water Resistant",
+        "Warranty": "1 Year Brand Replacement Warranty",
+        "In The Box": "Earbuds, Charging Case, Type-C Cable, Extra Ear Tips, User Manual"
+      }
+    },
+    {
+      "id": "prod_2",
+      "title": "Fire-Boltt Ultra AMOLED HD Bluetooth Calling Smartwatch",
+      "brand": "Fire-Boltt",
+      "category": "Smartwatches",
+      "price": 1499,
+      "origPrice": 4999,
+      "discount": "70% OFF",
+      "badge": "Top Rated",
+      "rating": 4.9,
+      "reviewsCount": 2310,
+      "stockStatus": "In Stock",
+      "img": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60",
+      "description": "Fire-Boltt Ultra features a 1.96-inch Always-on AMOLED display with 410x502 resolution, Bluetooth calling with high-fidelity speaker & microphone, 120+ sports modes, 24/7 SpO2 & heart rate tracking, and 7-day battery life.",
+      "specs": {
+        "Brand": "Fire-Boltt",
+        "Model Name": "Ultra AMOLED",
+        "Color": "Starlight Silver",
+        "Display": "1.96\" AMOLED (410x502 px, 600 nits)",
+        "Battery Life": "Up to 7 Days (2 Days with Calling)",
+        "Sensors": "Optical Heart Rate, SpO2, Sleep Monitor",
+        "Water Resistance": "IP68 Dust & Water Proof",
+        "Warranty": "1 Year Manufacturer Warranty",
+        "In The Box": "Smartwatch, Magnetic Charging Cable, User Manual, Warranty Card"
+      }
+    },
+    {
+      "id": "prod_3",
+      "title": "Mi 20000mAh Ultra-Fast Two-Way 22.5W Power Bank",
+      "brand": "Mi",
+      "category": "Electronics",
+      "price": 999,
+      "origPrice": 1999,
+      "discount": "50% OFF",
+      "badge": "Hot Deal",
+      "rating": 4.7,
+      "reviewsCount": 890,
+      "stockStatus": "In Stock",
+      "img": "https://images.unsplash.com/photo-1609592424109-dd9892f1b177?w=500&auto=format&fit=crop&q=60",
+      "description": "High capacity 20000mAh lithium-polymer battery powerbank supporting 22.5W two-way fast charging. Triple output ports (2x USB-A + 1x Type-C) to charge 3 devices simultaneously with 12-layer advanced circuit chip protection.",
+      "specs": {
+        "Brand": "Mi",
+        "Capacity": "20000 mAh",
+        "Output Power": "22.5W Two-Way Fast Charge",
+        "Ports": "2x USB-A Output, 1x Type-C Input/Output, 1x Micro-USB Input",
+        "Battery Type": "Lithium-Polymer",
+        "Protection": "12-Layer Advanced Short Circuit & Overheat Protection",
+        "Warranty": "6 Months Brand Warranty",
+        "In The Box": "Power Bank, Type-C Charging Cable, User Guide"
+      }
+    },
+    {
+      "id": "prod_4",
+      "title": "Sparx Casual Breathable Lightweight Running Shoes",
+      "brand": "Sparx",
+      "category": "Fashion",
+      "price": 799,
+      "origPrice": 1999,
+      "discount": "60% OFF",
+      "badge": "Popular",
+      "rating": 4.6,
+      "reviewsCount": 650,
+      "stockStatus": "In Stock",
+      "img": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60",
+      "description": "Engineered mesh upper for superior breathability and comfort. Memory foam insole provides responsive cushioning for daily running, gym workouts, and casual streetwear with anti-skid rubber sole.",
+      "specs": {
+        "Brand": "Sparx",
+        "Outer Material": "Breathable Mesh",
+        "Sole Material": "EVA Anti-Skid Rubber",
+        "Closure": "Lace-Up",
+        "Weight": "280g per shoe",
+        "Warranty": "30 Days Quality Replacement",
+        "In The Box": "1 Pair of Running Shoes"
+      }
+    },
+    {
+      "id": "prod_5",
+      "title": "JBL RGB Portable Wireless Bluetooth Party Speaker 20W",
+      "brand": "JBL",
+      "category": "Audio",
+      "price": 1199,
+      "origPrice": 2999,
+      "discount": "60% OFF",
+      "badge": "Mega Deal",
+      "rating": 4.8,
+      "reviewsCount": 1120,
+      "stockStatus": "In Stock",
+      "img": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&auto=format&fit=crop&q=60",
+      "description": "Immersive deep bass signature sound with customizable 360-degree dynamic RGB light show. 12-hour continuous battery life, built-in noise-cancelling speakerphone, and IPX7 waterproof rating.",
+      "specs": {
+        "Brand": "JBL",
+        "Audio Output": "20W RMS Pro Sound",
+        "Battery Life": "Up to 12 Hours Playtime",
+        "Connectivity": "Bluetooth 5.1, AUX, TF Card, USB",
+        "Waterproof": "IPX7 Waterproof",
+        "Warranty": "1 Year Brand Warranty",
+        "In The Box": "Bluetooth Speaker, USB-C Cable, AUX Cable, Quick Start Guide"
+      }
+    },
+    {
+      "id": "prod_6",
+      "title": "Milton Insulated Double Wall Stainless Steel Flask 1000ml",
+      "brand": "Milton",
+      "category": "Home",
+      "price": 449,
+      "origPrice": 999,
+      "discount": "55% OFF",
+      "badge": "Essential",
+      "rating": 4.7,
+      "reviewsCount": 780,
+      "stockStatus": "In Stock",
+      "img": "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=500&auto=format&fit=crop&q=60",
+      "description": "Vacuum insulated double-walled 304 food-grade stainless steel bottle. Keeps beverages piping hot for 24 hours or ice cold for 24 hours. Leak-proof, sweat-proof, and BPA-free.",
+      "specs": {
+        "Brand": "Milton",
+        "Capacity": "1000 ml",
+        "Material": "Grade 304 Stainless Steel",
+        "Insulation": "Double Wall Vacuum Insulated (24H Hot / 24H Cold)",
+        "Leak Proof": "Yes, 100% Spill Proof Lid",
+        "Warranty": "1 Year Manufacturing Warranty",
+        "In The Box": "1 Insulated Steel Flask"
+      }
+    }
+  ],
+  "coupons": [
+    {
+      "code": "SUPER150",
+      "discountType": "flat",
+      "discountValue": 50,
+      "minOrder": 500,
+      "maxDiscount": 200,
+      "description": "Flat ₹150 OFF on EasyPay Mall",
+      "status": "ACTIVE",
+      "createdAt": "2026-11-22T17:43:16.309Z"
+    },
+    {
+      "code": "EASYPAY50",
+      "discountType": "flat",
+      "discountValue": 50,
+      "minOrder": 0,
+      "description": "Flat ₹50 Instant Discount on Any Order",
+      "status": "ACTIVE",
+      "createdAt": "2026-11-21T10:38:06.460Z"
+    },
+    {
+      "code": "WELCOME100",
+      "discountType": "flat",
+      "discountValue": 100,
+      "minOrder": 500,
+      "description": "Flat ₹100 Discount on Orders Above ₹500",
+      "status": "ACTIVE",
+      "createdAt": "2026-11-21T10:38:06.461Z"
+    },
+    {
+      "code": "BACHAT20",
+      "discountType": "percent",
+      "discountValue": 20,
+      "maxDiscount": 200,
+      "minOrder": 300,
+      "description": "20% Mega Cashback/Discount up to ₹200",
+      "status": "ACTIVE",
+      "createdAt": "2026-11-21T10:38:06.461Z"
     }
   ]
 }

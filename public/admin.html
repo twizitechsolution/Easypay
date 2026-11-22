@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EasyPay Enterprise — Control & Orchestration Center</title>
+  <title>EasyPay Admin Login — Control Console</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1169,6 +1169,29 @@
           </button>
         </li>
 
+        <div class="nav-group-label">EasyPay Mall E-Commerce</div>
+        <li>
+          <button class="nav-btn" onclick="switchTab('products')">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <span>Mall Products</span>
+            <span class="nav-badge-count" id="badgeMallProductsCount">6</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" onclick="switchTab('orders')">
+            <i class="fa-solid fa-truck-ramp-box"></i>
+            <span>Customer Orders</span>
+            <span class="nav-badge-count" id="badgeMallOrdersCount">2</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" onclick="switchTab('coupons')">
+            <i class="fa-solid fa-tags"></i>
+            <span>Discount Coupons</span>
+            <span class="nav-badge-count" id="badgeMallCouponsCount">3</span>
+          </button>
+        </li>
+
         <div class="nav-group-label">Users & Financials</div>
         <li>
           <button class="nav-btn" onclick="switchTab('users')">
@@ -2029,6 +2052,119 @@
           </div>
         </div>
 
+        <!-- ==========================================
+             TAB 10: MALL PRODUCTS MANAGEMENT (E-COMMERCE)
+             ========================================== -->
+        <div id="tabProducts" class="tab-view-content">
+          <div class="panel-card">
+            <div class="card-head">
+              <div>
+                <div class="card-title">EasyPay Mall Product Catalog Management</div>
+                <div class="card-subtitle">Manage products, modify pricing, descriptions, stock availability, and specifications in real-time</div>
+              </div>
+              <button class="btn-topbar primary" onclick="openAddProductModal()">
+                <i class="fa-solid fa-plus"></i> Add New Product
+              </button>
+            </div>
+
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Selling Price</th>
+                    <th>MRP / Orig</th>
+                    <th>Discount</th>
+                    <th>Rating</th>
+                    <th>Stock Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminProductsTableBody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 11: CUSTOMER ORDERS MANAGEMENT
+             ========================================== -->
+        <div id="tabOrders" class="tab-view-content">
+          <div class="panel-card">
+            <div class="card-head">
+              <div>
+                <div class="card-title">Customer Orders & Shipment Fulfillment</div>
+                <div class="card-subtitle">Manage all placed e-commerce orders, update courier dispatch stages, and control fulfillment status in real-time</div>
+              </div>
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <span class="badge badge-green" id="ordersTotalGmvBadge">Total Orders GMV: ₹0</span>
+                <button class="btn-topbar" onclick="refreshAdminData()">
+                  <i class="fa-solid fa-arrows-rotate"></i> Sync Orders
+                </button>
+              </div>
+            </div>
+
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Order ID & Date</th>
+                    <th>Customer Details</th>
+                    <th>Delivery Destination</th>
+                    <th>Products & Qty</th>
+                    <th>Total Paid</th>
+                    <th>Payment Method</th>
+                    <th>Fulfillment Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminOrdersTableBody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 12: DISCOUNT COUPONS MANAGEMENT
+             ========================================== -->
+        <div id="tabCoupons" class="tab-view-content">
+          <div class="panel-card">
+            <div class="card-head">
+              <div>
+                <div class="card-title">Promotional Coupons & Discount Engine</div>
+                <div class="card-subtitle">Generate discount coupon codes that users can apply at checkout for instant savings</div>
+              </div>
+              <button class="btn-topbar primary" onclick="openCreateCouponModal()">
+                <i class="fa-solid fa-plus"></i> Generate New Coupon
+              </button>
+            </div>
+
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Coupon Code</th>
+                    <th>Discount Type</th>
+                    <th>Discount Value</th>
+                    <th>Min Order Value</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminCouponsTableBody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -2336,6 +2472,172 @@
     </div>
   </div>
 
+  <!-- 8. Add / Edit Mall Product Modal -->
+  <div class="modal-backdrop" id="modalProduct">
+    <div class="modal-card" style="max-width: 650px;">
+      <div class="modal-head">
+        <div class="modal-title" id="modalProductTitle">Add Mall Product</div>
+        <button class="modal-close-btn" onclick="closeModal('modalProduct')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitProductForm(event)">
+        <input type="hidden" id="productEditId">
+        <div class="form-group">
+          <label>Product Title / Name</label>
+          <input type="text" id="productTitleInput" placeholder="e.g. 20000mAh Ultra-Fast Powerbank 65W PD" required>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Category</label>
+            <select id="productCategorySelect">
+              <option value="Electronics">Electronics</option>
+              <option value="Audio">Audio</option>
+              <option value="Lifestyle">Lifestyle</option>
+              <option value="Smart Home">Smart Home</option>
+              <option value="Accessories">Accessories</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Selling Price (₹)</label>
+            <input type="number" step="1" id="productPriceInput" placeholder="999" required>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Original MRP (₹)</label>
+            <input type="number" step="1" id="productOriginalPriceInput" placeholder="2499" required>
+          </div>
+          <div class="form-group">
+            <label>Discount Label</label>
+            <input type="text" id="productDiscountInput" placeholder="60% OFF">
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Customer Rating (out of 5.0)</label>
+            <input type="number" step="0.1" min="1" max="5" id="productRatingInput" value="4.8">
+          </div>
+          <div class="form-group">
+            <label>Total Reviews Count</label>
+            <input type="number" id="productReviewsCountInput" value="1250">
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Stock Availability</label>
+            <select id="productInStockSelect">
+              <option value="true">In Stock (Available for Purchase)</option>
+              <option value="false">Out of Stock</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Warranty / Guarantee</label>
+            <input type="text" id="productWarrantyInput" value="1 Year Brand Replacement Warranty">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Product Image URL</label>
+          <input type="url" id="productImageInput" placeholder="https://images.unsplash.com/..." required>
+        </div>
+        <div class="form-group">
+          <label>Short Description</label>
+          <textarea id="productDescriptionInput" rows="2" placeholder="High-speed dual port power bank with intelligent safety chip..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Key Features / Highlights (one per line)</label>
+          <textarea id="productFeaturesInput" rows="3" placeholder="65W Power Delivery Fast Charging&#10;Dual USB-C and USB-A output&#10;Aircraft safe high-density Li-Polymer battery"></textarea>
+        </div>
+        <div class="modal-foot">
+          <button type="button" class="btn-topbar" onclick="closeModal('modalProduct')">Cancel</button>
+          <button type="submit" class="btn-topbar primary">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 9. Create Coupon Modal -->
+  <div class="modal-backdrop" id="modalCoupon">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title" id="modalCouponTitle">Generate New Coupon</div>
+        <button class="modal-close-btn" onclick="closeModal('modalCoupon')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitCouponForm(event)">
+        <div class="form-group">
+          <label>Coupon Code (e.g. WELCOME200)</label>
+          <input type="text" id="couponCodeInput" placeholder="MEGA200" style="text-transform: uppercase; font-family: monospace; font-weight: 700; letter-spacing: 1px;" required>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Discount Type</label>
+            <select id="couponTypeSelect">
+              <option value="flat">Flat ₹ Off</option>
+              <option value="percentage">Percentage % Off</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Discount Value (₹ or %)</label>
+            <input type="number" step="1" id="couponValueInput" placeholder="200" required>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Minimum Order Value (₹)</label>
+            <input type="number" step="1" id="couponMinOrderInput" value="500" required>
+          </div>
+          <div class="form-group">
+            <label>Coupon Status</label>
+            <select id="couponActiveSelect">
+              <option value="true">Active & Ready</option>
+              <option value="false">Disabled / Expired</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Description / Promotional Tag</label>
+          <input type="text" id="couponDescInput" placeholder="Flat ₹200 OFF on orders above ₹500" required>
+        </div>
+        <div class="modal-foot">
+          <button type="button" class="btn-topbar" onclick="closeModal('modalCoupon')">Cancel</button>
+          <button type="submit" class="btn-topbar primary">Generate Coupon</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 10. Order Full Details & Fulfillment Modal -->
+  <div class="modal-backdrop" id="modalOrderDetails">
+    <div class="modal-card" style="max-width: 680px;">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title">Order Details & Fulfillment Management</div>
+          <div style="font-size: 11px; color: var(--text-muted);" id="modalOrderSubtitle">Order #TXN_...</div>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('modalOrderDetails')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="orderDetailsBody" style="max-height: 60vh; overflow-y: auto; padding: 4px;">
+        <!-- Populated dynamically -->
+      </div>
+      <div class="modal-foot" style="justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 16px;">
+        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+          <label style="font-size: 12px; font-weight: 700; color: var(--text-heading);">Update Status:</label>
+          <input type="hidden" id="modalCurrentOrderId">
+          <select id="orderStatusSelectModal" style="padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 12px; font-weight: 700;">
+            <option value="Order Confirmed">Order Confirmed</option>
+            <option value="Packed at Warehouse">Packed at Warehouse</option>
+            <option value="Dispatched with Blue Dart">Dispatched with Blue Dart</option>
+            <option value="Out for Delivery">Out for Delivery</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+          <button type="button" class="btn-topbar primary" onclick="submitOrderStatusModal()">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Update Status
+          </button>
+        </div>
+        <button type="button" class="btn-topbar" onclick="closeModal('modalOrderDetails')">Close</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div id="adminToast">
     <i class="fa-solid fa-circle-check" style="color: #10B981;"></i>
@@ -2485,6 +2787,9 @@
         'brands': 'Brand Gift Cards Catalog (Woohoo)',
         'vouchers': 'Issued Digital Vouchers Vault',
         'luckydraw': 'Weekly Rewards & Sunday Lucky Draw Engine',
+        'products': 'Mall Products Management (Add, Edit, Pricing & Stock)',
+        'orders': 'Customer Orders Management & Real-Time Tracking',
+        'coupons': 'Promotional Coupons & Instant Discount Engine',
         'users': 'Customer Accounts & Wallet Balances',
         'transactions': 'Financial Transactions Ledger',
         'settings': 'System Settings & App Customization',
@@ -2525,6 +2830,9 @@
       renderInvestmentsTable();
       renderBrandsTable();
       renderVouchersTable();
+      renderProductsTable();
+      renderOrdersTable();
+      renderCouponsTable();
       renderUsersTable();
       renderTransactionsTable();
       renderSettingsForm();
@@ -2538,6 +2846,9 @@
       document.getElementById('badgeBrandsCount').innerText = (adminData.giftCards || []).length;
       document.getElementById('badgeVouchersCount').innerText = (adminData.vouchers || []).length;
       if (document.getElementById('badgeLuckyDrawCount')) document.getElementById('badgeLuckyDrawCount').innerText = (adminData.luckyDraw?.tickets || []).length;
+      if (document.getElementById('badgeMallProductsCount')) document.getElementById('badgeMallProductsCount').innerText = (adminData.products || []).length;
+      if (document.getElementById('badgeMallOrdersCount')) document.getElementById('badgeMallOrdersCount').innerText = (adminData.orders || []).length;
+      if (document.getElementById('badgeMallCouponsCount')) document.getElementById('badgeMallCouponsCount').innerText = (adminData.coupons || []).length;
       document.getElementById('badgeUsersCount').innerText = (adminData.users || []).length;
     }
 
@@ -3485,6 +3796,408 @@
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+    }
+
+    // ==========================================
+    // E-COMMERCE MALL & ORDER MANAGEMENT
+    // ==========================================
+
+    // 1. Products Management
+    function renderProductsTable() {
+      const tbody = document.getElementById('adminProductsTableBody');
+      if (!tbody) return;
+      const products = adminData.products || [];
+      if (products.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 24px; color: var(--text-muted);">No products found in catalog. Click "Add New Product" to create one.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = products.map(p => `
+        <tr>
+          <td>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <img src="${p.image || '/assets/bachatpay/home/app_icon.png'}" style="width: 44px; height: 44px; border-radius: 10px; object-fit: contain; border: 1px solid var(--border-color); background: #FFF;" onerror="this.src='/assets/bachatpay/home/app_icon.png'">
+              <div>
+                <strong style="color: var(--text-heading); font-size: 13px;">${p.title}</strong>
+                <div style="font-size: 11px; color: var(--text-muted); font-family: monospace;">ID: ${p.id}</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="badge badge-purple">${p.category || 'General'}</span></td>
+          <td><span style="font-weight: 800; font-size: 14px; color: #059669;">₹${Number(p.price || 0).toLocaleString('en-IN')}</span></td>
+          <td><span style="text-decoration: line-through; color: var(--text-muted); font-size: 12px;">₹${Number(p.originalPrice || 0).toLocaleString('en-IN')}</span></td>
+          <td><span class="badge badge-green">${p.discount || 'Special Offer'}</span></td>
+          <td>
+            <div style="font-size: 12px; font-weight: 700; color: #F59E0B;">
+              <i class="fa-solid fa-star"></i> ${p.rating || 4.5} <span style="font-weight: 400; color: var(--text-muted);">(${Number(p.reviewsCount || 0).toLocaleString('en-IN')})</span>
+            </div>
+          </td>
+          <td>
+            <span class="badge ${p.inStock !== false ? 'badge-green' : 'badge-red'}">
+              ${p.inStock !== false ? '<i class="fa-solid fa-check"></i> In Stock' : '<i class="fa-solid fa-xmark"></i> Out of Stock'}
+            </span>
+          </td>
+          <td>
+            <div class="btn-group-actions">
+              <button class="action-btn" onclick="openEditProductModal('${p.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
+              <button class="action-btn" onclick="toggleProductStock('${p.id}')">${p.inStock !== false ? 'Mark Out of Stock' : 'Mark In Stock'}</button>
+              <button class="action-btn danger" onclick="deleteProduct('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openAddProductModal() {
+      document.getElementById('modalProductTitle').innerText = 'Add Mall Product';
+      document.getElementById('productEditId').value = '';
+      document.getElementById('productTitleInput').value = '';
+      document.getElementById('productCategorySelect').value = 'Electronics';
+      document.getElementById('productPriceInput').value = '';
+      document.getElementById('productOriginalPriceInput').value = '';
+      document.getElementById('productDiscountInput').value = '';
+      document.getElementById('productRatingInput').value = '4.8';
+      document.getElementById('productReviewsCountInput').value = '120';
+      document.getElementById('productInStockSelect').value = 'true';
+      document.getElementById('productWarrantyInput').value = '1 Year Brand Replacement Warranty';
+      document.getElementById('productImageInput').value = '';
+      document.getElementById('productDescriptionInput').value = '';
+      document.getElementById('productFeaturesInput').value = '';
+      openModal('modalProduct');
+    }
+
+    function openEditProductModal(id) {
+      const p = (adminData.products || []).find(prod => prod.id === id);
+      if (!p) return;
+      document.getElementById('modalProductTitle').innerText = 'Edit Product: ' + p.title;
+      document.getElementById('productEditId').value = p.id;
+      document.getElementById('productTitleInput').value = p.title || '';
+      document.getElementById('productCategorySelect').value = p.category || 'Electronics';
+      document.getElementById('productPriceInput').value = p.price || '';
+      document.getElementById('productOriginalPriceInput').value = p.originalPrice || '';
+      document.getElementById('productDiscountInput').value = p.discount || '';
+      document.getElementById('productRatingInput').value = p.rating || 4.5;
+      document.getElementById('productReviewsCountInput').value = p.reviewsCount || 0;
+      document.getElementById('productInStockSelect').value = p.inStock !== false ? 'true' : 'false';
+      document.getElementById('productWarrantyInput').value = p.warranty || '1 Year Brand Warranty';
+      document.getElementById('productImageInput').value = p.image || '';
+      document.getElementById('productDescriptionInput').value = p.description || '';
+      document.getElementById('productFeaturesInput').value = (p.features || []).join('\n');
+      openModal('modalProduct');
+    }
+
+    async function submitProductForm(e) {
+      e.preventDefault();
+      const id = document.getElementById('productEditId').value;
+      const title = document.getElementById('productTitleInput').value.trim();
+      const category = document.getElementById('productCategorySelect').value;
+      const price = parseFloat(document.getElementById('productPriceInput').value) || 0;
+      const originalPrice = parseFloat(document.getElementById('productOriginalPriceInput').value) || price;
+      const discount = document.getElementById('productDiscountInput').value.trim() || (originalPrice > price ? Math.round((1 - price/originalPrice)*100) + '% OFF' : '');
+      const rating = parseFloat(document.getElementById('productRatingInput').value) || 4.5;
+      const reviewsCount = parseInt(document.getElementById('productReviewsCountInput').value) || 0;
+      const inStock = document.getElementById('productInStockSelect').value === 'true';
+      const warranty = document.getElementById('productWarrantyInput').value.trim();
+      const image = document.getElementById('productImageInput').value.trim();
+      const description = document.getElementById('productDescriptionInput').value.trim();
+      const featuresRaw = document.getElementById('productFeaturesInput').value;
+      const features = featuresRaw.split('\n').map(s => s.trim()).filter(Boolean);
+
+      const endpoint = id ? '/api/admin/products/update' : '/api/admin/products/add';
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id, title, category, price, originalPrice, discount, rating, reviewsCount, inStock, warranty, image, description, features
+        })
+      });
+      const data = await res.json();
+      closeModal('modalProduct');
+      if (data.success) {
+        showToast(id ? 'Product updated successfully!' : 'Product added successfully!');
+        refreshAdminData();
+      } else {
+        alert(data.error || 'Failed to save product');
+      }
+    }
+
+    async function toggleProductStock(id) {
+      const p = (adminData.products || []).find(prod => prod.id === id);
+      if (!p) return;
+      const newStock = p.inStock === false;
+      await fetch('/api/admin/products/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, inStock: newStock })
+      });
+      showToast('Product stock updated');
+      refreshAdminData();
+    }
+
+    async function deleteProduct(id) {
+      if (confirm('Are you sure you want to delete this product?')) {
+        await fetch('/api/admin/products/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+        showToast('Product deleted successfully');
+        refreshAdminData();
+      }
+    }
+
+    // 2. Orders Management
+    function renderOrdersTable() {
+      const tbody = document.getElementById('adminOrdersTableBody');
+      if (!tbody) return;
+      const orders = adminData.orders || [];
+      const totalOrdersGmv = orders.reduce((sum, o) => sum + (Number(o.total || o.totalAmount || o.amount) || 0), 0);
+      const ordersGmvBadge = document.getElementById('ordersTotalGmvBadge');
+      if (ordersGmvBadge) {
+        ordersGmvBadge.innerText = 'Total Orders GMV: ₹' + totalOrdersGmv.toLocaleString('en-IN');
+      }
+
+      if (orders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 24px; color: var(--text-muted);">No customer orders placed yet. Orders placed by users will appear here in real-time.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = orders.map(o => {
+        const addr = o.shippingAddress || o.deliveryAddress || {};
+        const items = o.items || [];
+        const itemsSummary = items.map(it => `${it.title} (x${it.quantity || it.qty || 1})`).join(', ') || 'Item';
+        const statusColors = {
+          'Order Confirmed': 'badge-blue',
+          'Packed at Warehouse': 'badge-purple',
+          'Dispatched with Blue Dart': 'badge-orange',
+          'Out for Delivery': 'badge-yellow',
+          'Delivered': 'badge-green',
+          'Cancelled': 'badge-red'
+        };
+        const statusBadgeClass = statusColors[o.status] || 'badge-blue';
+        const custName = o.userName || addr.fullName || addr.name || 'Customer';
+        const custMobile = o.userMobile || addr.phone || addr.mobile || '+91 7013893165';
+        const totalPaid = Number(o.total || o.totalAmount || o.amount || 0);
+
+        return `
+          <tr>
+            <td>
+              <div style="font-family: monospace; font-weight: 800; color: #2563EB;">${o.id}</div>
+              <div style="font-size: 11px; color: var(--text-muted);">${o.createdAt ? new Date(o.createdAt).toLocaleString('en-IN') : 'Recent'}</div>
+            </td>
+            <td>
+              <strong style="color: var(--text-heading);">${custName}</strong>
+              <div style="font-size: 11px; color: var(--text-muted);">${custMobile}</div>
+              <div style="font-size: 10px; color: #64748B;">ID: ${o.userId || 'EPY31650'}</div>
+            </td>
+            <td>
+              <div style="font-size: 12px; font-weight: 600; color: var(--text-heading); max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                ${addr.addressLine || addr.address || 'Address'}, ${addr.city || 'City'}, ${addr.pincode || ''}
+              </div>
+            </td>
+            <td>
+              <div style="font-size: 12px; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${itemsSummary}">
+                <strong>${items.length} item(s):</strong> ${itemsSummary}
+              </div>
+            </td>
+            <td><strong style="color: #059669; font-size: 14px;">₹${totalPaid.toLocaleString('en-IN')}</strong></td>
+            <td><span class="badge badge-gray">${o.paymentMethod || 'Wallet'}</span></td>
+            <td><span class="badge ${statusBadgeClass}">${o.status || 'Order Confirmed'}</span></td>
+            <td>
+              <div class="btn-group-actions">
+                <button class="action-btn" onclick="viewOrderFullDetails('${o.id}')"><i class="fa-solid fa-eye"></i> View & Fulfill</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function viewOrderFullDetails(orderId) {
+      const o = (adminData.orders || []).find(ord => ord.id === orderId);
+      if (!o) return;
+      document.getElementById('modalCurrentOrderId').value = o.id;
+      document.getElementById('modalOrderSubtitle').innerText = 'Order #' + o.id + ' • ' + (o.createdAt ? new Date(o.createdAt).toLocaleString('en-IN') : 'Just now');
+      document.getElementById('orderStatusSelectModal').value = o.status || 'Order Confirmed';
+
+      const addr = o.shippingAddress || o.deliveryAddress || {};
+      const items = o.items || [];
+      const custName = o.userName || addr.fullName || addr.name || 'Customer';
+      const custMobile = o.userMobile || addr.phone || addr.mobile || '+91 7013893165';
+      const addrLine = addr.addressLine || addr.address || 'Address Line';
+      const addrLoc = (addr.city || 'City') + (addr.state ? ', ' + addr.state : '') + (addr.pincode ? ' - ' + addr.pincode : '');
+      const totalPaid = Number(o.total || o.totalAmount || o.amount || 0);
+
+      const body = document.getElementById('orderDetailsBody');
+      body.innerHTML = `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+          <div style="background: var(--bg-surface-secondary); padding: 14px; border-radius: 12px; border: 1px solid var(--border-color);">
+            <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;">Customer & Account</div>
+            <div style="font-weight: 800; font-size: 14px; color: var(--text-heading);">${custName}</div>
+            <div style="font-size: 12px; color: var(--text-body); margin-top: 2px;"><i class="fa-solid fa-phone" style="font-size: 10px;"></i> ${custMobile}</div>
+            <div style="font-size: 11px; color: #64748B; font-family: monospace; margin-top: 2px;">User ID: ${o.userId || 'EPY31650'}</div>
+          </div>
+
+          <div style="background: var(--bg-surface-secondary); padding: 14px; border-radius: 12px; border: 1px solid var(--border-color);">
+            <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;">Delivery Shipping Address</div>
+            <div style="font-weight: 700; font-size: 13px; color: var(--text-heading);">${custName} (${custMobile})</div>
+            <div style="font-size: 12px; color: var(--text-body); margin-top: 2px;">${addrLine}</div>
+            <div style="font-size: 12px; color: var(--text-muted);">${addrLoc}</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <div style="font-size: 12px; font-weight: 800; color: var(--text-heading); margin-bottom: 8px;">Ordered Items (${items.length})</div>
+          <div style="border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden;">
+            ${items.map(it => `
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid var(--border-color); background: #FFF;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <img src="${it.image || it.img || '/assets/bachatpay/home/app_icon.png'}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: contain; border: 1px solid #E2E8F0;" onerror="this.src='/assets/bachatpay/home/app_icon.png'">
+                  <div>
+                    <div style="font-size: 13px; font-weight: 700; color: var(--text-heading);">${it.title}</div>
+                    <div style="font-size: 11px; color: var(--text-muted);">Qty: ${it.quantity || it.qty || 1} • ₹${Number(it.price || 0).toLocaleString('en-IN')} each</div>
+                  </div>
+                </div>
+                <div style="font-weight: 800; font-size: 13px; color: #0F172A;">₹${(Number(it.price || 0) * (Number(it.quantity || it.qty) || 1)).toLocaleString('en-IN')}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div style="background: #F8FAFC; padding: 14px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 11px; color: var(--text-muted);">Payment Method & Reference</div>
+            <div style="font-weight: 700; font-size: 13px; color: var(--text-heading);">${o.paymentMethod || 'EasyPay Wallet'}</div>
+            <div style="font-size: 11px; font-family: monospace; color: #64748B;">Tracking: ${o.trackingNumber || ('EPM-' + o.id)}</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 11px; color: var(--text-muted);">Total Amount Paid</div>
+            <div style="font-size: 18px; font-weight: 900; color: #059669;">₹${totalPaid.toLocaleString('en-IN')}</div>
+          </div>
+        </div>
+      `;
+
+      openModal('modalOrderDetails');
+    }
+
+    async function submitOrderStatusModal() {
+      const orderId = document.getElementById('modalCurrentOrderId').value;
+      const status = document.getElementById('orderStatusSelectModal').value;
+      if (!orderId) return;
+
+      const res = await fetch('/api/admin/orders/update-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId, status })
+      });
+      const data = await res.json();
+      closeModal('modalOrderDetails');
+      if (data.success) {
+        showToast('Order status updated to: ' + status);
+        refreshAdminData();
+      } else {
+        alert(data.error || 'Failed to update order status');
+      }
+    }
+
+    // 3. Coupons Management
+    function renderCouponsTable() {
+      const tbody = document.getElementById('adminCouponsTableBody');
+      if (!tbody) return;
+      const coupons = adminData.coupons || [];
+      if (coupons.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 24px; color: var(--text-muted);">No promotional coupons found. Click "Generate New Coupon" to create one.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = coupons.map(c => {
+        const isPercent = (c.discountType || c.type || '').toLowerCase().startsWith('percent');
+        const val = c.discountValue != null ? c.discountValue : (c.value != null ? c.value : 0);
+        const isActive = c.status ? c.status === 'ACTIVE' : c.active !== false;
+
+        return `
+        <tr>
+          <td>
+            <code style="font-size: 13px; font-weight: 800; color: #2563EB; background: #EFF6FF; padding: 4px 8px; border-radius: 6px; letter-spacing: 1px;">
+              ${c.code}
+            </code>
+          </td>
+          <td><span class="badge badge-purple">${isPercent ? 'Percentage %' : 'Flat ₹'}</span></td>
+          <td><strong style="color: #059669; font-size: 14px;">${isPercent ? val + '%' : '₹' + val}</strong></td>
+          <td><strong>₹${Number(c.minOrder || 0).toLocaleString('en-IN')}</strong></td>
+          <td><span style="font-size: 12px; color: var(--text-body);">${c.description || ''}</span></td>
+          <td>
+            <span class="badge ${isActive ? 'badge-green' : 'badge-red'}">
+              ${isActive ? 'Active' : 'Disabled'}
+            </span>
+          </td>
+          <td>
+            <div class="btn-group-actions">
+              <button class="action-btn" onclick="toggleCouponStatus('${c.code}')">${isActive ? 'Disable' : 'Enable'}</button>
+              <button class="action-btn danger" onclick="deleteCoupon('${c.code}')"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+      `;
+      }).join('');
+    }
+
+    function openCreateCouponModal() {
+      document.getElementById('couponCodeInput').value = '';
+      document.getElementById('couponTypeSelect').value = 'flat';
+      document.getElementById('couponValueInput').value = '150';
+      document.getElementById('couponMinOrderInput').value = '500';
+      document.getElementById('couponActiveSelect').value = 'true';
+      document.getElementById('couponDescInput').value = 'Flat ₹150 OFF on orders above ₹500';
+      openModal('modalCoupon');
+    }
+
+    async function submitCouponForm(e) {
+      e.preventDefault();
+      const code = document.getElementById('couponCodeInput').value.trim().toUpperCase();
+      const type = document.getElementById('couponTypeSelect').value;
+      const value = parseFloat(document.getElementById('couponValueInput').value) || 0;
+      const minOrder = parseFloat(document.getElementById('couponMinOrderInput').value) || 0;
+      const active = document.getElementById('couponActiveSelect').value === 'true';
+      const description = document.getElementById('couponDescInput').value.trim();
+
+      const res = await fetch('/api/admin/coupons/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, type, value, minOrder, active, description })
+      });
+      const data = await res.json();
+      closeModal('modalCoupon');
+      if (data.success) {
+        showToast('Coupon ' + code + ' generated successfully!');
+        refreshAdminData();
+      } else {
+        alert(data.error || 'Failed to create coupon');
+      }
+    }
+
+    async function toggleCouponStatus(code) {
+      const c = (adminData.coupons || []).find(coup => coup.code === code);
+      if (!c) return;
+      const currentlyActive = c.status ? c.status === 'ACTIVE' : c.active !== false;
+      const newStatus = currentlyActive ? 'INACTIVE' : 'ACTIVE';
+      await fetch('/api/admin/coupons/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...c, status: newStatus, active: !currentlyActive })
+      });
+      showToast('Coupon status updated');
+      refreshAdminData();
+    }
+
+    async function deleteCoupon(code) {
+      if (confirm('Delete promotional coupon ' + code + '?')) {
+        await fetch('/api/admin/coupons/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code })
+        });
+        showToast('Coupon deleted');
+        refreshAdminData();
+      }
     }
 
     // Auto-check session on page load
