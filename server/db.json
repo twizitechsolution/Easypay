@@ -12,19 +12,20 @@
     "vouchersCount": 18
   },
   "user": {
-    "id": "EPY31650",
+    "id": "EPY98808",
     "firstName": "Nirod",
     "lastName": "Behera",
     "name": "Nirod Behera",
-    "mobile": "7013893165",
-    "maskedMobile": "xxxxxx3165",
-    "email": "nirodbehera@gmail.com",
-    "payId": "7013893165@easypay",
+    "mobile": "9876548808",
+    "maskedMobile": "xxxxxx8808",
+    "email": "nirodbehera220@gmail.com",
+    "pincode": "400001",
+    "payId": "9876548808@easypay",
     "walletBalance": 14397,
     "securityPin": "1234",
     "mpin": "1234",
     "bankName": "STATE BANK OF INDIA",
-    "bankAccountMasked": "xxxx 3165",
+    "bankAccountMasked": "xxxx 8808",
     "cashbackEarned": 540,
     "paymentDetails": [
       {
@@ -40,7 +41,7 @@
       {
         "id": "pay_detail_2",
         "type": "upi",
-        "upiId": "7013893165@easypay",
+        "upiId": "9876548808@easypay",
         "holderName": "NIROD BEHERA",
         "isPrimary": false
       },
@@ -2762,8 +2763,8 @@
     {
       "id": "EPY98808",
       "firstName": "Nirod",
-      "lastName": "behera",
-      "name": "Nirod behera",
+      "lastName": "Behera",
+      "name": "Nirod Behera",
       "mobile": "9876548808",
       "maskedMobile": "xxxxxx8808",
       "email": "nirodbehera220@gmail.com",
@@ -2771,7 +2772,8 @@
       "walletBalance": 30584.13,
       "securityPin": "1234",
       "bankName": "BANK OF INDIA",
-      "bankAccountMasked": "xxxx 0975"
+      "bankAccountMasked": "xxxx 0975",
+      "pincode": "400001"
     },
     {
       "id": "EPY43210",
@@ -2880,22 +2882,6 @@
       "bankName": "STATE BANK OF INDIA",
       "bankAccountMasked": "xxxx 5409",
       "createdAt": "2026-11-20T08:37:41.473Z"
-    },
-    {
-      "id": "EPY31650",
-      "firstName": "arman",
-      "lastName": "khan",
-      "name": "arman khan",
-      "mobile": "7013893165",
-      "maskedMobile": "xxxxxx3165",
-      "email": "armankhan@gmail.com",
-      "payId": "7013893165@easypay",
-      "walletBalance": 14397,
-      "securityPin": "1234",
-      "mpin": "1234",
-      "bankName": "STATE BANK OF INDIA",
-      "bankAccountMasked": "xxxx 3165",
-      "cashbackEarned": 540
     }
   ],
   "adminAuth": {
