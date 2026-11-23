@@ -1147,12 +1147,77 @@
   ],
   "transactions": [
     {
+      "id": "TXN_98241029",
+      "title": "EasyPay Mall Order Confirmed (ORD-144901)",
+      "amount": -3697,
+      "type": "SHOPPING",
+      "category": "Shopping",
+      "status": "SUCCESS",
+      "timestamp": "2026-11-23T18:00:15.374Z",
+      "utr": "EPY_ORD_144901",
+      "userId": "EPY98808",
+      "userName": "Nirod Behera",
+      "userMobile": "9876548808"
+    },
+    {
+      "id": "TXN_98152011",
+      "title": "Instant Cashback Credited - Hubble Vouchers",
+      "amount": 120,
+      "type": "CREDIT",
+      "category": "Cashback",
+      "status": "SUCCESS",
+      "timestamp": "2026-11-23T17:30:15.374Z",
+      "utr": "EPY_CBK_829104",
+      "userId": "EPY98808",
+      "userName": "Nirod Behera",
+      "userMobile": "9876548808"
+    },
+    {
+      "id": "TXN_98091823",
+      "title": "Money Added via PhonePe UPI",
+      "amount": 5000,
+      "type": "WALLET_ADD",
+      "category": "Wallet",
+      "status": "SUCCESS",
+      "timestamp": "2026-11-23T16:15:15.374Z",
+      "utr": "UPI_980918234190",
+      "userId": "EPY98808",
+      "userName": "Nirod Behera",
+      "userMobile": "9876548808"
+    },
+    {
+      "id": "TXN_97981244",
+      "title": "Amazon Shopping Gift Voucher Issued",
+      "amount": -96,
+      "type": "GIFT_CARD",
+      "category": "Gift Card",
+      "status": "SUCCESS",
+      "timestamp": "2026-11-23T14:15:15.374Z",
+      "utr": "EPY_HB_AMZ96",
+      "userId": "EPY98808",
+      "userName": "Nirod Behera",
+      "userMobile": "9876548808"
+    },
+    {
+      "id": "TXN_97812903",
+      "title": "Reliance Jio 5G Prepaid Recharge",
+      "amount": -299,
+      "type": "RECHARGE",
+      "category": "Recharge",
+      "status": "SUCCESS",
+      "timestamp": "2026-11-23T12:15:15.374Z",
+      "utr": "EPY_RCG_JIO299",
+      "userId": "EPY98808",
+      "userName": "Nirod Behera",
+      "userMobile": "9876548808"
+    },
+    {
       "id": "TXN_76227388",
       "title": "Paid for EasyPay Mall Store Order",
       "category": "Shopping",
       "amount": -3697,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T18:15:15.372Z",
       "date": "23 Nov 2026, 01:07 am",
       "status": "SUCCESS",
       "type": "SHOPPING",
@@ -1168,62 +1233,12 @@
       }
     },
     {
-      "id": "TXN_76108491",
-      "title": "Received from arman khan",
-      "category": "Money Transfer",
-      "amount": 500,
-      "cashback": 0,
-      "timestamp": "Just now",
-      "date": "23 Nov 2026, 01:05 am",
-      "status": "SUCCESS",
-      "type": "UPI_CREDIT",
-      "icon": "/assets/bachatpay/history/credit_history.png",
-      "utr": "EPY333065102",
-      "details": {
-        "fromUser": "arman khan",
-        "fromMobile": "7013893165",
-        "utr": "EPY333065102"
-      }
-    },
-    {
-      "id": "TXN_76108490",
-      "title": "Paid to Rahul Sharma",
-      "category": "Money Transfer",
-      "amount": -500,
-      "cashback": 0,
-      "timestamp": "Just now",
-      "date": "23 Nov 2026, 01:05 am",
-      "status": "SUCCESS",
-      "type": "UPI_DEBIT",
-      "icon": "/assets/bachatpay/history/debit_history.png",
-      "utr": "EPY333065102",
-      "details": {
-        "brand": "",
-        "brandName": "",
-        "brandId": "",
-        "faceValue": 500,
-        "discount": 0,
-        "voucherCode": "",
-        "voucherPin": "",
-        "validTill": "",
-        "items": null,
-        "operator": null,
-        "rechargeNumber": null,
-        "recipientName": "Rahul Sharma",
-        "recipientQuery": "7013893165@easypay",
-        "utr": "EPY333065102",
-        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
-        "paymentMethod": "Wallet",
-        "note": "Transferred via EasyPay"
-      }
-    },
-    {
       "id": "TXN_76086535",
       "title": "Added via PhonePe",
       "category": "Wallet",
       "amount": 1000,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T17:15:15.373Z",
       "status": "SUCCESS",
       "type": "WALLET_ADD",
       "icon": "/assets/bachatpay/history/credit_history.png"
@@ -1234,7 +1249,7 @@
       "category": "Recharge",
       "amount": -666,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T16:15:15.373Z",
       "date": "22 Nov 2026, 11:57 pm",
       "status": "SUCCESS",
       "type": "RECHARGE",
@@ -1261,62 +1276,12 @@
       }
     },
     {
-      "id": "TXN_71986075",
-      "title": "Received from arman khan",
-      "category": "Money Transfer",
-      "amount": 500,
-      "cashback": 0,
-      "timestamp": "Just now",
-      "date": "22 Nov 2026, 11:56 pm",
-      "status": "SUCCESS",
-      "type": "UPI_CREDIT",
-      "icon": "/assets/bachatpay/history/credit_history.png",
-      "utr": "EPY360295484",
-      "details": {
-        "fromUser": "arman khan",
-        "fromMobile": "7013893165",
-        "utr": "EPY360295484"
-      }
-    },
-    {
-      "id": "TXN_71986074",
-      "title": "Paid to Rahul Sharma",
-      "category": "Money Transfer",
-      "amount": -500,
-      "cashback": 0,
-      "timestamp": "Just now",
-      "date": "22 Nov 2026, 11:56 pm",
-      "status": "SUCCESS",
-      "type": "UPI_DEBIT",
-      "icon": "/assets/bachatpay/history/debit_history.png",
-      "utr": "EPY360295484",
-      "details": {
-        "brand": "",
-        "brandName": "",
-        "brandId": "",
-        "faceValue": 500,
-        "discount": 0,
-        "voucherCode": "",
-        "voucherPin": "",
-        "validTill": "",
-        "items": null,
-        "operator": null,
-        "rechargeNumber": null,
-        "recipientName": "Rahul Sharma",
-        "recipientQuery": "7013893165@easypay",
-        "utr": "EPY360295484",
-        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
-        "paymentMethod": "Wallet",
-        "note": "Transferred via EasyPay"
-      }
-    },
-    {
       "id": "TXN_71916832",
       "title": "Paid for Amazon shopping Gift Voucher",
       "category": "Gift Card",
       "amount": -96,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T15:15:15.373Z",
       "date": "22 Nov 2026, 11:55 pm",
       "status": "SUCCESS",
       "type": "GIFT_CARD",
@@ -1348,7 +1313,7 @@
       "category": "Shopping",
       "amount": -2198,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T14:15:15.373Z",
       "date": "22 Nov 2026, 11:53 pm",
       "status": "SUCCESS",
       "type": "SHOPPING",
@@ -1369,7 +1334,7 @@
       "category": "Shopping",
       "amount": -2998,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T13:15:15.373Z",
       "date": "22 Nov 2026, 11:16 pm",
       "status": "SUCCESS",
       "type": "SHOPPING",
@@ -1390,7 +1355,7 @@
       "category": "Shopping",
       "amount": -1948,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T12:15:15.373Z",
       "date": "21 Nov 2026, 03:42 pm",
       "status": "SUCCESS",
       "type": "SHOPPING",
@@ -1406,62 +1371,12 @@
       }
     },
     {
-      "id": "TXN_33956304",
-      "title": "Received from arman khan",
-      "category": "Money Transfer",
-      "amount": 500,
-      "cashback": 0,
-      "timestamp": "Just now",
-      "date": "21 Nov 2026, 09:35 am",
-      "status": "SUCCESS",
-      "type": "UPI_CREDIT",
-      "icon": "/assets/bachatpay/history/credit_history.png",
-      "utr": "EPY754128541",
-      "details": {
-        "fromUser": "arman khan",
-        "fromMobile": "7013893165",
-        "utr": "EPY754128541"
-      }
-    },
-    {
-      "id": "TXN_33956303",
-      "title": "Paid to Rahul Sharma",
-      "category": "Money Transfer",
-      "amount": -500,
-      "cashback": 0,
-      "timestamp": "Just now",
-      "date": "21 Nov 2026, 09:35 am",
-      "status": "SUCCESS",
-      "type": "UPI_DEBIT",
-      "icon": "/assets/bachatpay/history/debit_history.png",
-      "utr": "EPY754128541",
-      "details": {
-        "brand": "",
-        "brandName": "",
-        "brandId": "",
-        "faceValue": 500,
-        "discount": 0,
-        "voucherCode": "",
-        "voucherPin": "",
-        "validTill": "",
-        "items": null,
-        "operator": null,
-        "rechargeNumber": null,
-        "recipientName": "Rahul Sharma",
-        "recipientQuery": "7013893165@easypay",
-        "utr": "EPY754128541",
-        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
-        "paymentMethod": "Wallet",
-        "note": "Transferred via EasyPay"
-      }
-    },
-    {
       "id": "TXN_33067825",
       "title": "Paid for EasyPay Mall Store",
       "category": "Shopping",
       "amount": -899,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T11:15:15.373Z",
       "date": "21 Nov 2026, 09:21 am",
       "status": "SUCCESS",
       "type": "SHOPPING",
@@ -1485,39 +1400,12 @@
       }
     },
     {
-      "id": "TXN_33067822",
-      "title": "Paid for Amazon shopping Gift Voucher",
-      "category": "Gift Card",
-      "amount": -96,
-      "cashback": 0,
-      "timestamp": "Just now",
-      "date": "21 Nov 2026, 09:21 am",
-      "status": "SUCCESS",
-      "type": "GIFT_CARD",
-      "icon": "/assets/bachatpay/history/gift_history.png",
-      "utr": "EPY_TEST_103",
-      "details": {
-        "brand": "Amazon Shopping",
-        "brandName": "Amazon Shopping",
-        "faceValue": 100,
-        "discount": 4,
-        "voucherCode": "HB-AMZN-88371946",
-        "voucherPin": "654321",
-        "recipientName": "Amazon shopping Gift Voucher",
-        "recipientQuery": "Instant Issuance",
-        "utr": "EPY_TEST_103",
-        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
-        "paymentMethod": "Wallet",
-        "note": "Transferred via EasyPay"
-      }
-    },
-    {
       "id": "TXN_33067819",
       "title": "Reliance Jio Recharge (9876543210)",
       "category": "Recharge",
       "amount": -299,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T10:15:15.373Z",
       "date": "21 Nov 2026, 09:21 am",
       "status": "SUCCESS",
       "type": "RECHARGE",
@@ -1536,90 +1424,12 @@
       }
     },
     {
-      "id": "TXN_33067816",
-      "title": "Received from arman khan",
-      "category": "Money Transfer",
-      "amount": 150,
-      "cashback": 0,
-      "timestamp": "Just now",
-      "date": "21 Nov 2026, 09:21 am",
-      "status": "SUCCESS",
-      "type": "UPI_CREDIT",
-      "icon": "/assets/bachatpay/history/credit_history.png",
-      "utr": "EPY_TEST_101",
-      "details": {
-        "fromUser": "arman khan",
-        "fromMobile": "7013893165",
-        "utr": "EPY_TEST_101"
-      }
-    },
-    {
-      "id": "TXN_33067815",
-      "title": "Paid to Rahul Sharma",
-      "category": "Money Transfer",
-      "amount": -150,
-      "cashback": 0,
-      "timestamp": "Just now",
-      "date": "21 Nov 2026, 09:21 am",
-      "status": "SUCCESS",
-      "type": "UPI_DEBIT",
-      "icon": "/assets/bachatpay/history/debit_history.png",
-      "utr": "EPY_TEST_101",
-      "details": {
-        "note": "Transferred via EasyPay",
-        "recipientName": "Rahul Sharma",
-        "recipientQuery": "9876548808@easypay",
-        "utr": "EPY_TEST_101",
-        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
-        "paymentMethod": "Wallet"
-      }
-    },
-    {
-      "id": "TXN_33017848",
-      "title": "Received from arman khan",
-      "category": "Money Transfer",
-      "amount": 150,
-      "cashback": 0,
-      "timestamp": "Just now",
-      "date": "21 Nov 2026, 09:20 am",
-      "status": "SUCCESS",
-      "type": "UPI_CREDIT",
-      "icon": "/assets/bachatpay/history/credit_history.png",
-      "utr": "EPY_TEST_101",
-      "details": {
-        "fromUser": "arman khan",
-        "fromMobile": "7013893165",
-        "utr": "EPY_TEST_101"
-      }
-    },
-    {
-      "id": "TXN_33017847",
-      "title": "Paid to Rahul Sharma",
-      "category": "Money Transfer",
-      "amount": -150,
-      "cashback": 0,
-      "timestamp": "Just now",
-      "date": "21 Nov 2026, 09:20 am",
-      "status": "SUCCESS",
-      "type": "UPI_DEBIT",
-      "icon": "/assets/bachatpay/history/debit_history.png",
-      "utr": "EPY_TEST_101",
-      "details": {
-        "note": "Transferred via EasyPay",
-        "recipientName": "Rahul Sharma",
-        "recipientQuery": "9876548808@easypay",
-        "utr": "EPY_TEST_101",
-        "debitedFrom": "EasyPay Main Wallet (3165@easypay)",
-        "paymentMethod": "Wallet"
-      }
-    },
-    {
       "id": "TXN_98297215",
       "title": "Amazon shopping Gift Voucher",
       "category": "Gift Card",
       "amount": -92,
       "cashback": 3.84,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T09:15:15.373Z",
       "status": "SUCCESS",
       "type": "GIFT_CARD",
       "icon": "https://cdn.myhubble.money/voucher-products/amazon/square-logo/active.webp",
@@ -1637,7 +1447,7 @@
       "category": "Gift Card",
       "amount": -46,
       "cashback": 4,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T08:15:15.373Z",
       "status": "SUCCESS",
       "type": "GIFT_CARD",
       "icon": "https://cdn.myhubble.money/voucher-products/apollo/square-logo/active.webp",
@@ -1650,24 +1460,6 @@
       }
     },
     {
-      "id": "TXN_82487567",
-      "title": "Apollo Gift Voucher",
-      "category": "Gift Card",
-      "amount": -46,
-      "cashback": 4,
-      "timestamp": "Just now",
-      "status": "SUCCESS",
-      "type": "GIFT_CARD",
-      "icon": "https://cdn.myhubble.money/voucher-products/apollo/square-logo/active.webp",
-      "details": {
-        "voucherCode": "9000000650078628",
-        "pin": "814337",
-        "validTill": "2027-11-20",
-        "paymentMethod": "Wallet",
-        "hubbleOrderId": "01M7WKDWCEYW41C3DVC987M4T1"
-      }
-    },
-    {
       "id": "TXN_1795163861473",
       "type": "CREDIT",
       "category": "WELCOME_BONUS",
@@ -1676,18 +1468,8 @@
       "amount": 100,
       "status": "SUCCESS",
       "date": "2026-11-20T08:37:41.473Z",
-      "reference": "JOIN_EPY36297"
-    },
-    {
-      "id": "TXN_1795161135772",
-      "type": "CREDIT",
-      "category": "WELCOME_BONUS",
-      "title": "EasyPay Welcome Joining Bonus",
-      "subtitle": "Welcome bonus credited to wallet",
-      "amount": 100,
-      "status": "SUCCESS",
-      "date": "2026-11-20T07:52:15.772Z",
-      "reference": "JOIN_EPY81145"
+      "reference": "JOIN_EPY36297",
+      "timestamp": "2026-11-23T07:15:15.373Z"
     },
     {
       "id": "TXN_DRW_49764266",
@@ -1695,7 +1477,7 @@
       "category": "Weekly Rewards",
       "amount": 50,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T06:15:15.373Z",
       "status": "SUCCESS",
       "type": "WALLET_DEBIT",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -1713,7 +1495,7 @@
       "category": "Weekly Rewards Winner",
       "amount": 25000,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T05:15:15.373Z",
       "status": "SUCCESS",
       "type": "WALLET_ADD",
       "icon": "/assets/bachatpay/history/credit_history.png",
@@ -1730,7 +1512,7 @@
       "category": "Weekly Rewards",
       "amount": 50,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T04:15:15.373Z",
       "status": "SUCCESS",
       "type": "WALLET_DEBIT",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -1748,7 +1530,7 @@
       "category": "Weekly Rewards",
       "amount": 50,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T03:15:15.373Z",
       "status": "SUCCESS",
       "type": "WALLET_DEBIT",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -1766,7 +1548,7 @@
       "category": "Weekly Rewards",
       "amount": 200,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T02:15:15.373Z",
       "status": "SUCCESS",
       "type": "WALLET_DEBIT",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -1784,7 +1566,7 @@
       "category": "Weekly Rewards",
       "amount": 200,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T01:15:15.373Z",
       "status": "SUCCESS",
       "type": "WALLET_DEBIT",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -1802,7 +1584,7 @@
       "category": "Weekly Rewards",
       "amount": 200,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-23T00:15:15.373Z",
       "status": "SUCCESS",
       "type": "WALLET_DEBIT",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -1820,7 +1602,7 @@
       "category": "Weekly Rewards",
       "amount": 50,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T23:15:15.373Z",
       "status": "SUCCESS",
       "type": "WALLET_DEBIT",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -1838,7 +1620,7 @@
       "category": "Weekly Rewards",
       "amount": 50,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T22:15:15.373Z",
       "status": "SUCCESS",
       "type": "WALLET_DEBIT",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -1856,7 +1638,7 @@
       "category": "Weekly Rewards",
       "amount": 50,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T21:15:15.373Z",
       "status": "SUCCESS",
       "type": "WALLET_DEBIT",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -1874,7 +1656,7 @@
       "category": "Weekly Rewards",
       "amount": 50,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T20:15:15.373Z",
       "status": "SUCCESS",
       "type": "WALLET_DEBIT",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -1887,23 +1669,12 @@
       }
     },
     {
-      "id": "TXN_09121987",
-      "title": "Added via PhonePe",
-      "category": "Wallet",
-      "amount": 1000,
-      "cashback": 0,
-      "timestamp": "Just now",
-      "status": "SUCCESS",
-      "type": "WALLET_ADD",
-      "icon": "/assets/bachatpay/history/credit_history.png"
-    },
-    {
       "id": "TXN_27592643",
       "title": "Received from Nirod behera",
       "category": "Pay ID Transfer",
       "amount": 50,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T19:15:15.373Z",
       "status": "SUCCESS",
       "type": "UPI_CREDIT",
       "icon": "/assets/bachatpay/history/credit_history.png",
@@ -1918,33 +1689,12 @@
       }
     },
     {
-      "id": "TXN_27592642",
-      "title": "Paid to Rahul Sharma",
-      "category": "Pay ID Transfer",
-      "amount": -50,
-      "cashback": 0,
-      "timestamp": "Just now",
-      "status": "SUCCESS",
-      "type": "UPI_DEBIT",
-      "icon": "/assets/bachatpay/history/debit_history.png",
-      "details": {
-        "recipientName": "Rahul Sharma",
-        "recipientPayId": "9876543210@easypay",
-        "recipientUserId": "EPY43210",
-        "fromUser": "Nirod behera",
-        "fromPayId": "9876548808@easypay",
-        "fromUserId": "EPY98808",
-        "utr": "EPY427592074",
-        "note": "Test P2P"
-      }
-    },
-    {
       "id": "TXN_24810903",
       "title": "Flipkart Gift Voucher",
       "category": "Gift Card",
       "amount": -250,
       "cashback": 5,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T18:15:15.373Z",
       "status": "SUCCESS",
       "type": "GIFT_CARD",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -1960,7 +1710,7 @@
       "category": "UPI Transfer",
       "amount": -500,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T17:15:15.373Z",
       "status": "SUCCESS",
       "type": "UPI_DEBIT",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -1976,7 +1726,7 @@
       "category": "Gift Card",
       "amount": -899,
       "cashback": 17.98,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T16:15:15.373Z",
       "status": "SUCCESS",
       "type": "GIFT_CARD",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -1987,28 +1737,12 @@
       }
     },
     {
-      "id": "TXN_24209284",
-      "title": "Flipkart Gift Voucher",
-      "category": "Gift Card",
-      "amount": -899,
-      "cashback": 17.98,
-      "timestamp": "Just now",
-      "status": "SUCCESS",
-      "type": "GIFT_CARD",
-      "icon": "/assets/bachatpay/history/debit_history.png",
-      "details": {
-        "voucherCode": "FLIP-5904-2676-6471",
-        "pin": "2226",
-        "paymentMethod": "Wallet"
-      }
-    },
-    {
       "id": "TXN_23545572",
       "title": "Paid to rahul@upi",
       "category": "UPI Transfer",
       "amount": -50,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T15:15:15.373Z",
       "status": "SUCCESS",
       "type": "UPI_DEBIT",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -2019,23 +1753,12 @@
       }
     },
     {
-      "id": "TXN_23068431",
-      "title": "Added via PhonePe",
-      "category": "Wallet",
-      "amount": 1000,
-      "cashback": 0,
-      "timestamp": "Just now",
-      "status": "SUCCESS",
-      "type": "WALLET_ADD",
-      "icon": "/assets/bachatpay/history/credit_history.png"
-    },
-    {
       "id": "TXN_18048022",
       "title": "Decathlon Sports Gift Voucher",
       "category": "Gift Card",
       "amount": -2000,
       "cashback": 80,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T14:15:15.373Z",
       "status": "SUCCESS",
       "type": "GIFT_CARD",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -2051,7 +1774,7 @@
       "category": "Gift Card",
       "amount": -250,
       "cashback": 42.5,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T13:15:15.373Z",
       "status": "SUCCESS",
       "type": "GIFT_CARD",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -2067,7 +1790,7 @@
       "category": "Mobile",
       "amount": -299,
       "cashback": 7.4750000000000005,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T12:15:15.373Z",
       "status": "SUCCESS",
       "type": "RECHARGE",
       "icon": "/assets/bachatpay/history/mobile_recharg_history.png",
@@ -2085,7 +1808,7 @@
       "category": "Gift Card",
       "amount": -250,
       "cashback": 10,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T11:15:15.373Z",
       "status": "SUCCESS",
       "type": "GIFT_CARD",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -2101,7 +1824,7 @@
       "category": "Gift Card",
       "amount": -100,
       "cashback": 2,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T10:15:15.374Z",
       "status": "SUCCESS",
       "type": "GIFT_CARD",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -2117,7 +1840,7 @@
       "category": "Gift Card",
       "amount": -250,
       "cashback": 30,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T09:15:15.374Z",
       "status": "SUCCESS",
       "type": "GIFT_CARD",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -2133,7 +1856,7 @@
       "category": "Interest Credit",
       "amount": 2.87,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T08:15:15.374Z",
       "status": "SUCCESS",
       "type": "INTEREST_CREDIT",
       "icon": "/assets/bachatpay/history/credit_history.png",
@@ -2151,7 +1874,7 @@
       "category": "Investment",
       "amount": -1000,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T07:15:15.374Z",
       "status": "SUCCESS",
       "type": "INVESTMENT",
       "icon": "/assets/curie/svg/verified_vpa_icon.svg",
@@ -2172,39 +1895,7 @@
       "category": "Yield",
       "amount": 248.37,
       "cashback": 0,
-      "timestamp": "Just now",
-      "status": "SUCCESS",
-      "type": "WALLET_ADD",
-      "icon": "/assets/bachatpay/history/credit_history.png"
-    },
-    {
-      "id": "TXN_09529158",
-      "title": "Suryoday SF Bank Plan Investment",
-      "category": "Investment",
-      "amount": -1000,
-      "cashback": 0,
-      "timestamp": "Just now",
-      "status": "SUCCESS",
-      "type": "INVESTMENT",
-      "icon": "/assets/curie/svg/verified_vpa_icon.svg",
-      "details": {
-        "folioNumber": "EP-FD-3025",
-        "certNumber": "DICGC-EP-465189",
-        "institution": "Suryoday SF Bank Plan",
-        "monthlyRate": "8.6% per month",
-        "dailyPayout": "₹2.87/day",
-        "maturityAmount": 1516,
-        "maturityDate": "11 May 2027",
-        "paymentMethod": "UPI"
-      }
-    },
-    {
-      "id": "TXN_07398835",
-      "title": "Added via PhonePe",
-      "category": "Wallet",
-      "amount": 1000,
-      "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T06:15:15.374Z",
       "status": "SUCCESS",
       "type": "WALLET_ADD",
       "icon": "/assets/bachatpay/history/credit_history.png"
@@ -2215,7 +1906,7 @@
       "category": "Investment",
       "amount": -50000,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T05:15:15.374Z",
       "status": "SUCCESS",
       "type": "INVESTMENT",
       "icon": "/assets/curie/svg/verified_vpa_icon.svg",
@@ -2234,7 +1925,7 @@
       "category": "Investment",
       "amount": -25000,
       "cashback": 0,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T04:15:15.374Z",
       "status": "SUCCESS",
       "type": "INVESTMENT",
       "icon": "/assets/curie/svg/verified_vpa_icon.svg",
@@ -2253,7 +1944,7 @@
       "category": "Gift Card",
       "amount": -2000,
       "cashback": 70,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T03:15:15.374Z",
       "status": "SUCCESS",
       "type": "GIFT_CARD",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -2269,7 +1960,7 @@
       "category": "Gift Card",
       "amount": -500,
       "cashback": 17.5,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T02:15:15.374Z",
       "status": "SUCCESS",
       "type": "GIFT_CARD",
       "icon": "/assets/bachatpay/history/debit_history.png",
@@ -2285,7 +1976,7 @@
       "category": "Merchant Pay",
       "amount": -1499,
       "cashback": 37.475,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T01:15:15.374Z",
       "status": "SUCCESS",
       "type": "RECHARGE",
       "icon": "/assets/bachatpay/history/mobile_recharg_history.png",
@@ -2298,63 +1989,18 @@
       }
     },
     {
-      "id": "TXN_44061770",
-      "title": "Added via PhonePe",
-      "category": "Wallet",
-      "amount": 1000,
-      "cashback": 0,
-      "timestamp": "Just now",
-      "status": "SUCCESS",
-      "type": "WALLET_ADD",
-      "icon": "/assets/bachatpay/history/credit_history.png"
-    },
-    {
       "id": "TXN_40978614",
       "title": "Swiggy Food & Instamart Gift Voucher",
       "category": "Gift Card",
       "amount": -250,
       "cashback": 15,
-      "timestamp": "Just now",
+      "timestamp": "2026-11-22T00:15:15.374Z",
       "status": "SUCCESS",
       "type": "GIFT_CARD",
       "icon": "/assets/bachatpay/history/debit_history.png",
       "details": {
         "voucherCode": "SWIG-4375-8462-5169",
         "pin": "4026",
-        "paymentMethod": "Wallet"
-      }
-    },
-    {
-      "id": "TXN_40003087",
-      "title": "Reliance Jio Recharge (9876543210)",
-      "category": "Mobile",
-      "amount": -299,
-      "cashback": 7.4750000000000005,
-      "timestamp": "Just now",
-      "status": "SUCCESS",
-      "type": "RECHARGE",
-      "icon": "/assets/bachatpay/history/mobile_recharg_history.png",
-      "details": {
-        "operator": "Reliance Jio",
-        "number": "9876543210",
-        "operatorRef": "BBPS195162606",
-        "planDetails": "Unlimited Calls + 1.5GB/Day",
-        "bbpsComplianceId": "NPCI-656164"
-      }
-    },
-    {
-      "id": "TXN_39990227",
-      "title": "Amazon Pay Gift Voucher",
-      "category": "Gift Card",
-      "amount": -500,
-      "cashback": 17.5,
-      "timestamp": "Just now",
-      "status": "SUCCESS",
-      "type": "GIFT_CARD",
-      "icon": "/assets/bachatpay/history/debit_history.png",
-      "details": {
-        "voucherCode": "AMAZ-6142-5367-2528",
-        "pin": "9708",
         "paymentMethod": "Wallet"
       }
     },
@@ -2773,7 +2419,19 @@
       "securityPin": "1234",
       "bankName": "BANK OF INDIA",
       "bankAccountMasked": "xxxx 0975",
-      "pincode": "400001"
+      "pincode": "400001",
+      "password": "EasyPay@8808",
+      "mpin": "1234",
+      "kycStatus": "VERIFIED",
+      "registeredAt": "2026-11-18T18:15:15.374Z",
+      "referralCode": "REF_EPY98808",
+      "referredBy": "SYSTEM",
+      "downlineCount": 6,
+      "totalDeposits": 15000,
+      "totalTransfers": 4500,
+      "totalShopping": 8893,
+      "totalVouchers": 480,
+      "totalLottery": 250
     },
     {
       "id": "EPY43210",
@@ -2787,7 +2445,13 @@
       "walletBalance": 3500,
       "securityPin": "1234",
       "bankName": "HDFC BANK",
-      "bankAccountMasked": "xxxx 4321"
+      "bankAccountMasked": "xxxx 4321",
+      "password": "EasyPay@3210",
+      "mpin": "1234",
+      "kycStatus": "VERIFIED",
+      "registeredAt": "2026-11-13T18:15:15.374Z",
+      "referralCode": "REF_EPY43210",
+      "referredBy": "EPY98808"
     },
     {
       "id": "EPY12345",
@@ -2801,7 +2465,13 @@
       "walletBalance": 1820,
       "securityPin": "1234",
       "bankName": "ICICI BANK",
-      "bankAccountMasked": "xxxx 8765"
+      "bankAccountMasked": "xxxx 8765",
+      "password": "EasyPay@5678",
+      "mpin": "1234",
+      "kycStatus": "VERIFIED",
+      "registeredAt": "2026-11-08T18:15:15.374Z",
+      "referralCode": "REF_EPY12345",
+      "referredBy": "EPY98808"
     },
     {
       "id": "EPY99887",
@@ -2815,7 +2485,13 @@
       "walletBalance": 2100,
       "securityPin": "1234",
       "bankName": "STATE BANK OF INDIA",
-      "bankAccountMasked": "xxxx 2233"
+      "bankAccountMasked": "xxxx 2233",
+      "password": "EasyPay@2233",
+      "mpin": "1234",
+      "kycStatus": "VERIFIED",
+      "registeredAt": "2026-11-03T18:15:15.374Z",
+      "referralCode": "REF_EPY99887",
+      "referredBy": "EPY98808"
     },
     {
       "id": "EPY55443",
@@ -2829,7 +2505,13 @@
       "walletBalance": 950,
       "securityPin": "1234",
       "bankName": "AXIS BANK",
-      "bankAccountMasked": "xxxx 9988"
+      "bankAccountMasked": "xxxx 9988",
+      "password": "EasyPay@2345",
+      "mpin": "1234",
+      "kycStatus": "VERIFIED",
+      "registeredAt": "2026-10-29T18:15:15.374Z",
+      "referralCode": "REF_EPY55443",
+      "referredBy": "EPY98808"
     },
     {
       "id": "EPY81145",
@@ -2846,7 +2528,7 @@
       "mpin": "2580",
       "securityPin": "2580",
       "password": "EasyPay@123",
-      "referralCode": "EPCUN68",
+      "referralCode": "REF_EPY81145",
       "walletBalance": 100,
       "cashbackEarned": 25,
       "dailyInterestWallet": 0,
@@ -2855,7 +2537,10 @@
       "payId": "9988776655@easypay",
       "bankName": "STATE BANK OF INDIA",
       "bankAccountMasked": "xxxx 8285",
-      "createdAt": "2026-11-20T07:52:15.772Z"
+      "createdAt": "2026-11-20T07:52:15.772Z",
+      "kycStatus": "VERIFIED",
+      "registeredAt": "2026-10-24T18:15:15.374Z",
+      "referredBy": "EPY98808"
     },
     {
       "id": "EPY36297",
@@ -2872,7 +2557,7 @@
       "mpin": "4321",
       "securityPin": "4321",
       "password": "EasyPay@123",
-      "referralCode": "EP9QDXW",
+      "referralCode": "REF_EPY36297",
       "walletBalance": 100,
       "cashbackEarned": 25,
       "dailyInterestWallet": 0,
@@ -2881,7 +2566,10 @@
       "payId": "9123456789@easypay",
       "bankName": "STATE BANK OF INDIA",
       "bankAccountMasked": "xxxx 5409",
-      "createdAt": "2026-11-20T08:37:41.473Z"
+      "createdAt": "2026-11-20T08:37:41.473Z",
+      "kycStatus": "VERIFIED",
+      "registeredAt": "2026-10-19T18:15:15.374Z",
+      "referredBy": "EPY98808"
     }
   ],
   "adminAuth": {
@@ -3176,9 +2864,9 @@
   "orders": [
     {
       "id": "ORD-144901",
-      "userId": "EPY31650",
-      "userName": "arman khan",
-      "userMobile": "7013893165",
+      "userId": "EPY98808",
+      "userName": "Nirod Behera",
+      "userMobile": "9876548808",
       "items": [
         {
           "id": "prod_4",
@@ -3223,11 +2911,12 @@
       },
       "shippingAddress": {
         "fullName": "arman khan",
-        "phone": "7013893165",
+        "phone": "9876548808",
         "addressLine": "Flat 402, Green Valley, Andheri West",
         "city": "Mumbai",
         "state": "Maharashtra",
-        "pincode": "400053"
+        "pincode": "400053",
+        "name": "Nirod Behera"
       },
       "status": "Order Confirmed",
       "createdAt": "2026-11-22T19:37:07.392Z",
@@ -3269,9 +2958,9 @@
     },
     {
       "id": "ORD-416391",
-      "userId": "EPY31650",
-      "userName": "arman khan",
-      "userMobile": "7013893165",
+      "userId": "EPY98808",
+      "userName": "Nirod Behera",
+      "userMobile": "9876548808",
       "items": [
         {
           "id": "prod_1",
@@ -3307,11 +2996,12 @@
       },
       "shippingAddress": {
         "fullName": "arman khan",
-        "phone": "7013893165",
+        "phone": "9876548808",
         "addressLine": "Flat 402, Green Valley, Andheri West",
         "city": "Mumbai",
         "state": "Maharashtra",
-        "pincode": "400053"
+        "pincode": "400053",
+        "name": "Nirod Behera"
       },
       "status": "Order Confirmed",
       "createdAt": "2026-11-22T18:23:37.103Z",
@@ -3353,9 +3043,9 @@
     },
     {
       "id": "ORD-783793",
-      "userId": "EPY31650",
-      "userName": "arman khan",
-      "userMobile": "7013893165",
+      "userId": "EPY98808",
+      "userName": "Nirod Behera",
+      "userMobile": "9876548808",
       "items": [
         {
           "id": "prod_1",
@@ -3391,11 +3081,12 @@
       },
       "shippingAddress": {
         "fullName": "arman khan",
-        "phone": "7013893165",
+        "phone": "9876548808",
         "addressLine": "Flat 402, Green Valley, Andheri West",
         "city": "Mumbai",
         "state": "Maharashtra",
-        "pincode": "400053"
+        "pincode": "400053",
+        "name": "Nirod Behera"
       },
       "status": "Order Confirmed",
       "createdAt": "2026-11-22T17:46:07.453Z",
@@ -3496,7 +3187,10 @@
           "date": "Expected in 4 days",
           "completed": false
         }
-      ]
+      ],
+      "userId": "EPY98808",
+      "userName": "Nirod Behera",
+      "userMobile": "9876548808"
     },
     {
       "id": "ORD-892415",
@@ -3558,7 +3252,10 @@
           "date": "Tomorrow, by 8:00 PM",
           "completed": false
         }
-      ]
+      ],
+      "userId": "EPY98808",
+      "userName": "Nirod Behera",
+      "userMobile": "9876548808"
     }
   ],
   "products": [
@@ -3581,7 +3278,13 @@
         "Model Name": "Wireless Active Noise Canceling Headphone Pro",
         "Warranty": "1 Year Brand Warranty",
         "In The Box": "Product, Accessories, User Guide"
-      }
+      },
+      "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60",
+      "images": [
+        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&auto=format&fit=crop&q=60"
+      ]
     },
     {
       "id": "prod_1",
@@ -3609,7 +3312,13 @@
         "Water Resistance": "IPX5 Sweat & Water Resistant",
         "Warranty": "1 Year Brand Replacement Warranty",
         "In The Box": "Earbuds, Charging Case, Type-C Cable, Extra Ear Tips, User Manual"
-      }
+      },
+      "image": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60",
+      "images": [
+        "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&auto=format&fit=crop&q=60"
+      ]
     },
     {
       "id": "prod_2",
@@ -3635,7 +3344,13 @@
         "Water Resistance": "IP68 Dust & Water Proof",
         "Warranty": "1 Year Manufacturer Warranty",
         "In The Box": "Smartwatch, Magnetic Charging Cable, User Manual, Warranty Card"
-      }
+      },
+      "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60",
+      "images": [
+        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&auto=format&fit=crop&q=60"
+      ]
     },
     {
       "id": "prod_3",
@@ -3660,7 +3375,13 @@
         "Protection": "12-Layer Advanced Short Circuit & Overheat Protection",
         "Warranty": "6 Months Brand Warranty",
         "In The Box": "Power Bank, Type-C Charging Cable, User Guide"
-      }
+      },
+      "image": "https://images.unsplash.com/photo-1609592424109-dd9892f1b177?w=500&auto=format&fit=crop&q=60",
+      "images": [
+        "https://images.unsplash.com/photo-1609592424109-dd9892f1b177?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&auto=format&fit=crop&q=60"
+      ]
     },
     {
       "id": "prod_4",
@@ -3684,7 +3405,13 @@
         "Weight": "280g per shoe",
         "Warranty": "30 Days Quality Replacement",
         "In The Box": "1 Pair of Running Shoes"
-      }
+      },
+      "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60",
+      "images": [
+        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&auto=format&fit=crop&q=60"
+      ]
     },
     {
       "id": "prod_5",
@@ -3708,7 +3435,13 @@
         "Waterproof": "IPX7 Waterproof",
         "Warranty": "1 Year Brand Warranty",
         "In The Box": "Bluetooth Speaker, USB-C Cable, AUX Cable, Quick Start Guide"
-      }
+      },
+      "image": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&auto=format&fit=crop&q=60",
+      "images": [
+        "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&auto=format&fit=crop&q=60"
+      ]
     },
     {
       "id": "prod_6",
@@ -3732,7 +3465,13 @@
         "Leak Proof": "Yes, 100% Spill Proof Lid",
         "Warranty": "1 Year Manufacturing Warranty",
         "In The Box": "1 Insulated Steel Flask"
-      }
+      },
+      "image": "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=500&auto=format&fit=crop&q=60",
+      "images": [
+        "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&auto=format&fit=crop&q=60"
+      ]
     }
   ],
   "coupons": [
