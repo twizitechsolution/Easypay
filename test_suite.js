@@ -4,6 +4,7 @@ console.log('Running Comprehensive Test Suite...');
 
 const appHtml = fs.readFileSync('public/app.html', 'utf8');
 const indexHtml = fs.readFileSync('public/index.html', 'utf8');
+const adminHtml = fs.readFileSync('public/admin.html', 'utf8');
 
 const tests = [
   {
@@ -132,7 +133,7 @@ const tests = [
   },
   {
     name: 'Req 29: Profile Header shows Nirod Behera, +91 9876548808, and EPY98808',
-    pass: appHtml.includes('id="profileAccountName" onclick="openProfileEditModal()" style="cursor:pointer;">Nirod Behera</div>') &&
+    pass: appHtml.includes('id="profileAccountName" onclick="openProfileEditModal()" style="cursor:pointer;">Nirod Behera</span>') &&
           appHtml.includes('id="profileAccountPhone">+91 9876548808</div>') &&
           appHtml.includes('id="profileAccountUserId" style="letter-spacing: 0.5px;">EPY98808</span>')
   },
@@ -197,8 +198,82 @@ const tests = [
     name: 'Req 39: Client App multi-angle product thumbnail gallery',
     pass: appHtml.includes('id="productDetailGalleryRow"') &&
           appHtml.includes('switchProductDetailImage')
+  },
+  {
+    name: 'Req 40: Profile photo upload via camera icon, preview, and API sync',
+    pass: appHtml.includes('id="profilePicFileInput"') &&
+          appHtml.includes('handleProfilePicChange') &&
+          appHtml.includes('Tap camera icon to select photo from gallery') &&
+          appHtml.includes('POST') &&
+          appHtml.includes('/api/user/profile')
+  },
+  {
+    name: 'Req 41: Account Active / Not Active status badge & activation warning banner',
+    pass: appHtml.includes('id="profileAccountStatusBadge"') &&
+          appHtml.includes('id="profileNotActiveAlert"') &&
+          appHtml.includes('Your account is not active.') &&
+          adminHtml.includes('NOT ACTIVE (Pending First Deposit)')
+  },
+  {
+    name: 'Req 42: Legal modals (About Bachat Pay, Terms & Conditions, Privacy Policy)',
+    pass: appHtml.includes('modalAboutApp') &&
+          appHtml.includes('modalTerms') &&
+          appHtml.includes('modalPrivacy') &&
+          appHtml.includes('openAboutAppModal') &&
+          appHtml.includes('openTermsModal') &&
+          appHtml.includes('openPrivacyModal')
+  },
+  {
+    name: 'Req 43: Add Funds modal with presets (1k-100k), 4 payment tabs & UTR proof submission',
+    pass: appHtml.includes('openAddFundsModal') &&
+          appHtml.includes('setAddFundsAmount') &&
+          appHtml.includes('selectDepositMethod') &&
+          appHtml.includes('addFundsAmountInput') &&
+          appHtml.includes('depMethodCard_upi') &&
+          appHtml.includes('depMethodCard_bank') &&
+          appHtml.includes('depMethodCard_qr') &&
+          appHtml.includes('depMethodCard_usdt') &&
+          appHtml.includes('depProofUtrInput') &&
+          appHtml.includes('submitDepositRequestFlow')
+  },
+  {
+    name: 'Req 44: Admin Deposit Requests management tab with filter pills and approve/reject actions',
+    pass: adminHtml.includes('tabDeposits') &&
+          adminHtml.includes('filterDepositRequests') &&
+          adminHtml.includes('approveDepositRequest') &&
+          adminHtml.includes('rejectDepositRequest') &&
+          adminHtml.includes('api/admin/deposit-requests')
+  },
+  {
+    name: 'Req 45: Admin Payment Details configuration tab (UPI, Bank, Cash, USDT)',
+    pass: adminHtml.includes('tabPaymentDetails') &&
+          adminHtml.includes('savePlatformPaymentDetails') &&
+          adminHtml.includes('cfgUpiId') &&
+          adminHtml.includes('cfgBankAcc') &&
+          adminHtml.includes('cfgUsdtAddress') &&
+          adminHtml.includes('api/admin/payment-settings')
+  },
+  {
+    name: 'Req 46: Bachat Pay Secure Access lock screen with MPIN keypad, Face ID & Password unlock',
+    pass: appHtml.includes('viewSecureAccess') &&
+          appHtml.includes('Bachat Pay Secure Access') &&
+          appHtml.includes('handleLockKeypad') &&
+          appHtml.includes('switchLockMethod') &&
+          appHtml.includes('triggerFaceIdScan') &&
+          appHtml.includes('submitLockPasswordUnlock') &&
+          appHtml.includes('lockApplicationNow')
+  },
+  {
+    name: 'Req 47: 100% Dynamic Admin User Dossier with unique credentials & downlines',
+    pass: adminHtml.includes('openUserDetailsModal') &&
+          adminHtml.includes('dossierStatWallet') &&
+          adminHtml.includes('dossierStatDeposits') &&
+          adminHtml.includes('dossierStatDownline') &&
+          adminHtml.includes('dossierDownlineTbody') &&
+          adminHtml.includes('dossierTxnTbody')
   }
 ];
+
 
 let failed = 0;
 tests.forEach((t, i) => {

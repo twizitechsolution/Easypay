@@ -1207,6 +1207,19 @@
             <span>Transactions Ledger</span>
           </button>
         </li>
+        <li>
+          <button class="nav-btn" onclick="switchTab('deposits')">
+            <i class="fa-solid fa-money-bill-transfer"></i>
+            <span>Deposit Requests</span>
+            <span class="nav-badge" id="badgeDepositsCount" style="background: #EF4444; color: #FFFFFF; font-weight: 800;">2</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" onclick="switchTab('paymentDetails')">
+            <i class="fa-solid fa-building-columns"></i>
+            <span>Payment Details</span>
+          </button>
+        </li>
 
         <div class="nav-group-label">Administration</div>
         <li>
@@ -1710,6 +1723,7 @@
                     <th>Wallet Balance</th>
                     <th>Security PIN</th>
                     <th>KYC Status</th>
+                    <th>Account Status</th>
                     <th>Linked Bank</th>
                     <th>Actions</th>
                   </tr>
@@ -1776,6 +1790,178 @@
                   <!-- Populated dynamically -->
                 </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             TAB: USER DEPOSIT REQUESTS & WALLET ADD AUDIT
+             ========================================== -->
+        <div id="tabDeposits" class="tab-view-content">
+          <div class="panel-card">
+            <div class="panel-toolbar" style="flex-direction: column; align-items: stretch; gap: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <div>
+                  <div class="card-title">User Deposit Requests & Add Funds Verification</div>
+                  <div class="card-subtitle">Verify user payment screenshots, UTRs, and approve wallet balance credits in real-time</div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                  <button class="btn-topbar primary" onclick="refreshAdminData()">
+                    <i class="fa-solid fa-arrows-rotate"></i> Sync Requests
+                  </button>
+                </div>
+              </div>
+
+              <!-- Filter Pills & Search -->
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-top: 1px solid #E2E8F0; padding-top: 12px;">
+                <div class="search-box-wrap" style="flex: 1; max-width: 380px;">
+                  <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                  <input type="text" class="search-input" id="depositSearchInput" placeholder="Search by UTR, User Mobile, Request ID..." oninput="filterDepositRequestsTable()">
+                </div>
+                <div id="depositFilterPills" style="display: flex; gap: 6px; flex-wrap: wrap;">
+                  <button type="button" class="action-btn filter-pill active" onclick="setDepositFilter('ALL', this)">All Requests</button>
+                  <button type="button" class="action-btn filter-pill" onclick="setDepositFilter('PENDING', this)">Pending Approval</button>
+                  <button type="button" class="action-btn filter-pill" onclick="setDepositFilter('APPROVED', this)">Approved</button>
+                  <button type="button" class="action-btn filter-pill" onclick="setDepositFilter('REJECTED', this)">Rejected</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Request ID & Date</th>
+                    <th>Customer Details</th>
+                    <th>Deposit Amount</th>
+                    <th>Method</th>
+                    <th>UTR / Reference No</th>
+                    <th>Proof Screenshot</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="depositRequestsTableBody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             TAB: PLATFORM PAYMENT DETAILS CONFIGURATION
+             ========================================== -->
+        <div id="tabPaymentDetails" class="tab-view-content">
+          <div class="panel-card">
+            <div class="card-head">
+              <div>
+                <div class="card-title">Platform Payment Details & Receiving Accounts</div>
+                <div class="card-subtitle">Configure company UPI, Bank, Cash counter, and USDT crypto details displayed to users on the Add Funds page</div>
+              </div>
+              <button class="btn-topbar primary" onclick="savePlatformPaymentDetails(event)">
+                <i class="fa-solid fa-floppy-disk"></i> Save Payment Details
+              </button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+              <!-- Card 1: UPI Details -->
+              <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 18px;">
+                <div style="font-size: 15px; font-weight: 800; color: #0F172A; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                  <i class="fa-solid fa-qrcode" style="color: #FF5722;"></i> Company UPI & QR Configuration
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                  <label>Account Holder Name</label>
+                  <input type="text" id="cfgUpiHolder" value="Lucifer Finer Solutions Private Limited" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #CBD5E1;">
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                  <label>Company UPI ID</label>
+                  <input type="text" id="cfgUpiId" value="yourbachatpay@kotak" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #CBD5E1;">
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                  <label>Merchant Terminal ID (TID)</label>
+                  <input type="text" id="cfgUpiTid" value="TID: 68359529" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #CBD5E1;">
+                </div>
+                <div class="form-group">
+                  <label>QR Code Image URL</label>
+                  <input type="text" id="cfgUpiQrUrl" value="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi%3A%2F%2Fpay%3Fpa%3Dyourbachatpay%40kotak" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #CBD5E1;">
+                </div>
+              </div>
+
+              <!-- Card 2: Bank Transfer Details -->
+              <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 18px;">
+                <div style="font-size: 15px; font-weight: 800; color: #0F172A; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                  <i class="fa-solid fa-building-columns" style="color: #2563EB;"></i> Company Bank Account Configuration
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                  <label>Bank Name</label>
+                  <input type="text" id="cfgBankName" value="Kotak Mahindra Bank" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #CBD5E1;">
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                  <label>Account Holder Name</label>
+                  <input type="text" id="cfgBankHolder" value="Lucifer Finer Solutions Private Limited" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #CBD5E1;">
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                  <label>Account Number</label>
+                  <input type="text" id="cfgBankAccountNo" value="983420192841" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #CBD5E1;">
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                  <div class="form-group">
+                    <label>IFSC Code</label>
+                    <input type="text" id="cfgBankIfsc" value="KKBK0000958" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #CBD5E1;">
+                  </div>
+                  <div class="form-group">
+                    <label>Branch / City</label>
+                    <input type="text" id="cfgBankBranch" value="Nariman Point, Mumbai" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #CBD5E1;">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 3: Cash Deposit Details -->
+              <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 18px;">
+                <div style="font-size: 15px; font-weight: 800; color: #0F172A; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                  <i class="fa-solid fa-money-bill-wave" style="color: #059669;"></i> Cash Deposit / Agent Collection Counter
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                  <label>Authorized Counter Name</label>
+                  <input type="text" id="cfgCashAgent" value="EasyPay Authorized Cashier & Agent Counter" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #CBD5E1;">
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                  <label>Center / Office Address</label>
+                  <input type="text" id="cfgCashAddress" value="Shop 14, Bachat Pay Hub, Andheri Link Road, Mumbai 400053" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #CBD5E1;">
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                  <label>Authorized Phone Number</label>
+                  <input type="text" id="cfgCashContact" value="+91 9876548808" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #CBD5E1;">
+                </div>
+                <div class="form-group">
+                  <label>Instructions to User</label>
+                  <input type="text" id="cfgCashInstructions" value="Visit authorized agent counter, submit cash and retain official receipt." style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #CBD5E1;">
+                </div>
+              </div>
+
+              <!-- Card 4: USDT Crypto Details -->
+              <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 18px;">
+                <div style="font-size: 15px; font-weight: 800; color: #0F172A; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                  <i class="fa-brands fa-ethereum" style="color: #097939;"></i> USDT Crypto Deposit Configuration
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                  <label>USDT Network</label>
+                  <input type="text" id="cfgUsdtNetwork" value="TRC-20 (Tron Network)" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #CBD5E1;">
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                  <label>USDT Receiving Wallet Address</label>
+                  <input type="text" id="cfgUsdtAddress" value="TYDzsYUEW8kWL65vQ7Q7E18t4G8Z78X8kL" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #CBD5E1; font-family:monospace;">
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                  <label>Exchange Rate (₹ per USDT)</label>
+                  <input type="number" step="0.1" id="cfgUsdtRate" value="92.50" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #CBD5E1;">
+                </div>
+                <div class="form-group">
+                  <label>USDT QR Code URL</label>
+                  <input type="text" id="cfgUsdtQrUrl" value="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=TYDzsYUEW8kWL65vQ7Q7E18t4G8Z78X8kL" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #CBD5E1;">
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -3078,6 +3264,8 @@
         'coupons': 'Promotional Coupons & Instant Discount Engine',
         'users': 'Customer Accounts & Wallet Balances',
         'transactions': 'Financial Transactions Ledger',
+        'deposits': 'User Add Funds & Deposit Requests Audit',
+        'paymentDetails': 'Platform Payment Details & Accounts Configuration',
         'settings': 'System Settings & App Customization',
         'reports': 'Enterprise Reports & Database Backup',
         'announcement': 'Home Announcement Pop-up & SMS Gateway Configuration'
@@ -3123,6 +3311,197 @@
       renderTransactionsTable();
       renderSettingsForm();
       renderLuckyDrawAdmin();
+      renderDepositRequestsTable();
+      renderPaymentSettingsForm();
+    }
+
+    // =======================================================
+    // DEPOSIT REQUESTS & PAYMENT DETAILS CONTROLLERS
+    // =======================================================
+    let activeDepositFilter = 'ALL';
+
+    function setDepositFilter(filterStatus, btn) {
+      activeDepositFilter = filterStatus;
+      document.querySelectorAll('#depositFilterPills .filter-pill').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      filterDepositRequestsTable();
+    }
+
+    function filterDepositRequestsTable() {
+      const q = (document.getElementById('depositSearchInput') ? document.getElementById('depositSearchInput').value : '').toLowerCase().trim();
+      const allReqs = adminData.depositRequests || [];
+      const filtered = allReqs.filter(r => {
+        if (activeDepositFilter !== 'ALL' && r.status !== activeDepositFilter) return false;
+        if (q) {
+          const matchUtr = (r.utr || '').toLowerCase().includes(q);
+          const matchUser = (r.userName || r.userMobile || r.userId || '').toLowerCase().includes(q);
+          const matchId = (r.id || '').toLowerCase().includes(q);
+          if (!matchUtr && !matchUser && !matchId) return false;
+        }
+        return true;
+      });
+      renderDepositRequestsRows(filtered);
+    }
+
+    function renderDepositRequestsTable() {
+      filterDepositRequestsTable();
+    }
+
+    function renderDepositRequestsRows(reqs) {
+      const tbody = document.getElementById('depositRequestsTableBody');
+      if (!tbody) return;
+      if (reqs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 24px; color: var(--text-muted); font-size: 13px;">No deposit requests match the selected criteria.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = reqs.map(r => {
+        const isPending = r.status === 'PENDING';
+        const isApproved = r.status === 'APPROVED';
+        const statusBadge = isPending 
+          ? '<span class="badge badge-amber"><i class="fa-solid fa-clock"></i> PENDING APPROVAL</span>'
+          : (isApproved ? '<span class="badge badge-green"><i class="fa-solid fa-check"></i> APPROVED</span>' : '<span class="badge badge-red"><i class="fa-solid fa-xmark"></i> REJECTED</span>');
+        const formattedDate = formatAdminTimestamp(r.timestamp);
+
+        return '<tr>' +
+          '<td><code>' + r.id + '</code><div style="font-size:11px; color:#64748B;">' + formattedDate + '</div></td>' +
+          '<td><strong>' + (r.userName || 'Customer') + '</strong><div style="font-size:11px; color:#64748B;">+91 ' + r.userMobile + ' • ' + (r.userId || '') + '</div></td>' +
+          '<td><strong style="font-size:15px; color:#059669;">₹' + Number(r.amount || 0).toLocaleString('en-IN') + '</strong></td>' +
+          '<td><span class="badge badge-purple">' + (r.method || 'UPI') + '</span></td>' +
+          '<td><code style="font-weight:700; color:#2563EB;">' + (r.utr || 'N/A') + '</code></td>' +
+          '<td>' + (r.screenshot ? '<a href="' + r.screenshot + '" target="_blank" style="display:inline-flex; align-items:center; gap:4px; font-size:12px; color:#2563EB; font-weight:700;"><i class="fa-solid fa-image"></i> View Proof</a>' : '<span style="color:#94A3B8; font-size:11px;">No Proof Attached</span>') + '</td>' +
+          '<td>' + statusBadge + '</td>' +
+          '<td>' +
+            (isPending ? (
+              '<div class="btn-group-actions">' +
+                '<button class="action-btn success" onclick="approveDepositRequest(\'' + r.id + '\')" title="Approve & Credit Wallet"><i class="fa-solid fa-check"></i> Approve</button>' +
+                '<button class="action-btn danger" onclick="rejectDepositRequest(\'' + r.id + '\')" title="Reject Request"><i class="fa-solid fa-xmark"></i> Reject</button>' +
+              '</div>'
+            ) : '<span style="font-size:11px; color:#64748B;">' + (isApproved ? 'Funds Credited' : 'Dismissed') + '</span>') +
+          '</td>' +
+        '</tr>';
+      }).join('');
+    }
+
+    async function approveDepositRequest(id) {
+      if (!confirm('Approve this deposit request and instantly credit funds to the user wallet?')) return;
+      try {
+        const res = await fetch('/api/admin/deposit-requests/approve', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Deposit approved! User wallet credited and account activated.');
+          refreshAdminData();
+        } else {
+          alert(data.error || 'Failed to approve deposit');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Server error approving deposit');
+      }
+    }
+
+    async function rejectDepositRequest(id) {
+      const reason = prompt('Enter rejection reason (optional):', 'Invalid UTR reference');
+      if (reason === null) return;
+      try {
+        const res = await fetch('/api/admin/deposit-requests/reject', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, reason })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Deposit request rejected');
+          refreshAdminData();
+        } else {
+          alert(data.error || 'Failed to reject deposit');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Server error rejecting deposit');
+      }
+    }
+
+    // Populate Platform Payment Settings Form
+    function renderPaymentSettingsForm() {
+      const s = adminData.platformPaymentDetails || {};
+      const upi = s.upi || {};
+      const bank = s.bank || {};
+      const cash = s.cash || {};
+      const usdt = s.usdt || {};
+
+      if (document.getElementById('cfgUpiHolder')) document.getElementById('cfgUpiHolder').value = upi.accountHolder || 'Lucifer Finer Solutions Private Limited';
+      if (document.getElementById('cfgUpiId')) document.getElementById('cfgUpiId').value = upi.upiId || 'yourbachatpay@kotak';
+      if (document.getElementById('cfgUpiTid')) document.getElementById('cfgUpiTid').value = upi.merchantTid || 'TID: 68359529';
+      if (document.getElementById('cfgUpiQrUrl')) document.getElementById('cfgUpiQrUrl').value = upi.qrCodeImage || '';
+
+      if (document.getElementById('cfgBankName')) document.getElementById('cfgBankName').value = bank.bankName || 'Kotak Mahindra Bank';
+      if (document.getElementById('cfgBankHolder')) document.getElementById('cfgBankHolder').value = bank.accountHolder || 'Lucifer Finer Solutions Private Limited';
+      if (document.getElementById('cfgBankAccountNo')) document.getElementById('cfgBankAccountNo').value = bank.accountNumber || '983420192841';
+      if (document.getElementById('cfgBankIfsc')) document.getElementById('cfgBankIfsc').value = bank.ifscCode || 'KKBK0000958';
+      if (document.getElementById('cfgBankBranch')) document.getElementById('cfgBankBranch').value = bank.branch || 'Nariman Point, Mumbai';
+
+      if (document.getElementById('cfgCashAgent')) document.getElementById('cfgCashAgent').value = cash.agentName || 'EasyPay Authorized Cashier & Agent Counter';
+      if (document.getElementById('cfgCashAddress')) document.getElementById('cfgCashAddress').value = cash.officeAddress || 'Shop 14, Bachat Pay Hub, Andheri Link Road, Mumbai 400053';
+      if (document.getElementById('cfgCashContact')) document.getElementById('cfgCashContact').value = cash.contactNumber || '+91 9876548808';
+      if (document.getElementById('cfgCashInstructions')) document.getElementById('cfgCashInstructions').value = cash.instructions || '';
+
+      if (document.getElementById('cfgUsdtNetwork')) document.getElementById('cfgUsdtNetwork').value = usdt.network || 'TRC-20 (Tron Network)';
+      if (document.getElementById('cfgUsdtAddress')) document.getElementById('cfgUsdtAddress').value = usdt.walletAddress || 'TYDzsYUEW8kWL65vQ7Q7E18t4G8Z78X8kL';
+      if (document.getElementById('cfgUsdtRate')) document.getElementById('cfgUsdtRate').value = usdt.exchangeRateInr || 92.50;
+      if (document.getElementById('cfgUsdtQrUrl')) document.getElementById('cfgUsdtQrUrl').value = usdt.qrCodeImage || '';
+    }
+
+    async function savePlatformPaymentDetails(e) {
+      if (e) e.preventDefault();
+      const payload = {
+        upi: {
+          accountHolder: document.getElementById('cfgUpiHolder').value.trim(),
+          upiId: document.getElementById('cfgUpiId').value.trim(),
+          merchantTid: document.getElementById('cfgUpiTid').value.trim(),
+          qrCodeImage: document.getElementById('cfgUpiQrUrl').value.trim()
+        },
+        bank: {
+          bankName: document.getElementById('cfgBankName').value.trim(),
+          accountHolder: document.getElementById('cfgBankHolder').value.trim(),
+          accountNumber: document.getElementById('cfgBankAccountNo').value.trim(),
+          ifscCode: document.getElementById('cfgBankIfsc').value.trim(),
+          branch: document.getElementById('cfgBankBranch').value.trim()
+        },
+        cash: {
+          agentName: document.getElementById('cfgCashAgent').value.trim(),
+          officeAddress: document.getElementById('cfgCashAddress').value.trim(),
+          contactNumber: document.getElementById('cfgCashContact').value.trim(),
+          instructions: document.getElementById('cfgCashInstructions').value.trim()
+        },
+        usdt: {
+          network: document.getElementById('cfgUsdtNetwork').value.trim(),
+          walletAddress: document.getElementById('cfgUsdtAddress').value.trim(),
+          exchangeRateInr: parseFloat(document.getElementById('cfgUsdtRate').value) || 92.50,
+          qrCodeImage: document.getElementById('cfgUsdtQrUrl').value.trim()
+        }
+      };
+
+      try {
+        const res = await fetch('/api/admin/payment-settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Platform payment details saved successfully!');
+          refreshAdminData();
+        } else {
+          alert(data.error || 'Failed to save payment details');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Server error saving payment settings');
+      }
     }
 
     // Render Badge Counts
@@ -3136,6 +3515,8 @@
       if (document.getElementById('badgeMallOrdersCount')) document.getElementById('badgeMallOrdersCount').innerText = (adminData.orders || []).length;
       if (document.getElementById('badgeMallCouponsCount')) document.getElementById('badgeMallCouponsCount').innerText = (adminData.coupons || []).length;
       document.getElementById('badgeUsersCount').innerText = (adminData.users || []).length;
+      const pendingDeps = (adminData.depositRequests || []).filter(r => r.status === 'PENDING').length;
+      if (document.getElementById('badgeDepositsCount')) document.getElementById('badgeDepositsCount').innerText = pendingDeps;
     }
 
     // Render KPIs
@@ -3431,6 +3812,11 @@
           </td>
           <td><code>${u.securityPin || '1234'}</code></td>
           <td><span class="badge badge-green"><i class="fa-solid fa-check"></i> ${u.kycStatus || 'VERIFIED'}</span></td>
+          <td>
+            <span class="badge ${u.isActivated !== false && (Number(u.walletBalance || 0) > 0 || u.status === 'ACTIVE') ? 'badge-green' : 'badge-amber'}">
+              ${u.isActivated !== false && (Number(u.walletBalance || 0) > 0 || u.status === 'ACTIVE') ? '<i class="fa-solid fa-circle-check"></i> Active' : '<i class="fa-solid fa-clock"></i> Not Active'}
+            </span>
+          </td>
           <td><div style="font-size: 12px;">${u.bankName || 'BANK OF INDIA'}</div></td>
           <td>
             <div class="btn-group-actions">
@@ -4251,10 +4637,10 @@
     // =======================================================
     async function openUserDetailsModal(userId) {
       try {
-        const res = await fetch("/api/admin/user-details?id=" + encodeURIComponent(userId));
+        const res = await fetch('/api/admin/user-details?id=' + encodeURIComponent(userId));
         const data = await res.json();
         if (!data.success || !data.dossier) {
-          alert(data.error || "User details not found");
+          alert(data.error || 'User details not found');
           return;
         }
         const d = data.dossier;
@@ -4263,89 +4649,127 @@
         const dl = d.downline || [];
         const txns = d.transactions || [];
 
-        const avatarEl = document.getElementById("dossierAvatar");
-        if (avatarEl) avatarEl.innerText = (u.firstName || u.name || "U")[0].toUpperCase();
-        if (document.getElementById("dossierUserName")) document.getElementById("dossierUserName").innerText = u.name || (u.firstName + " " + (u.lastName || "")).trim();
-        if (document.getElementById("dossierUserId")) document.getElementById("dossierUserId").innerText = u.id || "EPY98808";
-        if (document.getElementById("dossierRegisteredAt")) {
-          const regDate = u.registeredAt ? new Date(u.registeredAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "18 Nov 2026";
-          document.getElementById("dossierRegisteredAt").innerText = regDate;
+        // Header Avatar, Name, and Status Badges
+        const avatarEl = document.getElementById('dossierAvatar');
+        if (avatarEl) {
+          if (u.profilePicture) {
+            avatarEl.innerHTML = '<img src="' + u.profilePicture + '" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">';
+          } else {
+            avatarEl.innerHTML = (u.firstName || u.name || 'U')[0].toUpperCase();
+          }
+        }
+        if (document.getElementById('dossierUserName')) {
+          document.getElementById('dossierUserName').innerText = u.name || (u.firstName + ' ' + (u.lastName || '')).trim();
+        }
+        if (document.getElementById('dossierUserId')) {
+          document.getElementById('dossierUserId').innerText = u.id;
+        }
+        if (document.getElementById('dossierRegisteredAt')) {
+          const regDate = u.registeredAt ? new Date(u.registeredAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Recently';
+          document.getElementById('dossierRegisteredAt').innerText = regDate;
         }
 
-        if (document.getElementById("dossierStatWallet")) {
-          document.getElementById("dossierStatWallet").innerText = "₹" + Number(s.walletBalance || u.walletBalance || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 });
-        }
-        if (document.getElementById("dossierStatDeposits")) {
-          document.getElementById("dossierStatDeposits").innerText = "₹" + Number(s.totalDeposits || 15000).toLocaleString("en-IN", { minimumFractionDigits: 2 });
-        }
-        if (document.getElementById("dossierStatSpend")) {
-          const totalOutflow = (s.totalShopping || 0) + (s.totalVouchers || 0) + (s.totalLottery || 0) + (s.totalRecharges || 0);
-          document.getElementById("dossierStatSpend").innerText = "₹" + Number(totalOutflow || 11790).toLocaleString("en-IN", { minimumFractionDigits: 2 });
-        }
-        if (document.getElementById("dossierStatDownline")) {
-          document.getElementById("dossierStatDownline").innerText = (s.downlineCount != null ? s.downlineCount : dl.length) + " Members";
+        // Account Status & KYC Badges
+        const kycBadge = document.getElementById('dossierKycBadge');
+        if (kycBadge) {
+          const isActive = u.status === 'ACTIVE' || (u.isActivated && Number(u.walletBalance || 0) > 0);
+          kycBadge.className = isActive ? 'badge badge-green' : 'badge badge-amber';
+          kycBadge.innerHTML = isActive 
+            ? '<i class="fa-solid fa-circle-check"></i> ' + (u.kycStatus || 'VERIFIED') + ' • ACTIVE'
+            : '<i class="fa-solid fa-clock"></i> NOT ACTIVE (Pending First Deposit)';
         }
 
-        if (document.getElementById("dossierFieldFullName")) document.getElementById("dossierFieldFullName").innerText = u.name || (u.firstName + " " + (u.lastName || "")).trim();
-        if (document.getElementById("dossierFieldMobile")) document.getElementById("dossierFieldMobile").innerText = "+91 " + u.mobile;
-        if (document.getElementById("dossierFieldEmail")) document.getElementById("dossierFieldEmail").innerText = u.email || "nirodbehera220@gmail.com";
-        if (document.getElementById("dossierFieldPayId")) document.getElementById("dossierFieldPayId").innerText = u.payId || (u.mobile + "@easypay");
-        if (document.getElementById("dossierFieldPassword")) document.getElementById("dossierFieldPassword").value = u.password || "EasyPay@8808";
-        if (document.getElementById("dossierFieldPin")) document.getElementById("dossierFieldPin").value = u.securityPin || u.mpin || "1234";
-        if (document.getElementById("dossierFieldBank")) document.getElementById("dossierFieldBank").innerText = (u.bankName || "BANK OF INDIA") + " (" + (u.bankAccountMasked || "xxxx 0975") + ")";
-        if (document.getElementById("dossierFieldPincode")) document.getElementById("dossierFieldPincode").innerText = (u.pincode || "400001") + " (Mumbai)";
-        if (document.getElementById("dossierFieldReferral")) document.getElementById("dossierFieldReferral").innerText = (u.referralCode || ("REF_" + u.id)) + " (Sponsor: " + (u.referredBy || "SYSTEM") + ")";
+        // KPI Stats (100% Dynamic - Zero Static Fallbacks)
+        if (document.getElementById('dossierStatWallet')) {
+          document.getElementById('dossierStatWallet').innerText = '₹' + Number(u.walletBalance != null ? u.walletBalance : (s.walletBalance || 0)).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+        }
+        if (document.getElementById('dossierStatDeposits')) {
+          document.getElementById('dossierStatDeposits').innerText = '₹' + Number(s.totalDeposits != null ? s.totalDeposits : 0).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+        }
+        if (document.getElementById('dossierStatSpend')) {
+          const totalOutflow = (Number(s.totalShopping) || 0) + (Number(s.totalVouchers) || 0) + (Number(s.totalLottery) || 0) + (Number(s.totalRecharges) || 0);
+          document.getElementById('dossierStatSpend').innerText = '₹' + Number(totalOutflow).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+        }
+        if (document.getElementById('dossierStatDownline')) {
+          document.getElementById('dossierStatDownline').innerText = dl.length + ' Members';
+        }
 
-        if (document.getElementById("dossierActShopping")) document.getElementById("dossierActShopping").innerText = "₹" + Number(s.totalShopping || 11790).toLocaleString("en-IN");
-        if (document.getElementById("dossierActShoppingCount")) document.getElementById("dossierActShoppingCount").innerText = (d.orders || []).length + " Orders Placed";
-        if (document.getElementById("dossierActVouchers")) document.getElementById("dossierActVouchers").innerText = "₹" + Number(s.totalVouchers || 480).toLocaleString("en-IN");
-        if (document.getElementById("dossierActVouchersCount")) document.getElementById("dossierActVouchersCount").innerText = (d.vouchers || []).length + " Vouchers";
-        if (document.getElementById("dossierActRecharges")) document.getElementById("dossierActRecharges").innerText = "₹" + Number(s.totalRecharges || 299).toLocaleString("en-IN");
-        if (document.getElementById("dossierActLottery")) document.getElementById("dossierActLottery").innerText = "₹" + Number(s.totalLottery || 550).toLocaleString("en-IN");
-        if (document.getElementById("dossierActTransfers")) document.getElementById("dossierActTransfers").innerText = "₹" + Number(s.totalTransfersSent || 4500).toLocaleString("en-IN");
+        // Personal Credentials
+        if (document.getElementById('dossierFieldFullName')) document.getElementById('dossierFieldFullName').innerText = u.name || (u.firstName + ' ' + (u.lastName || '')).trim();
+        if (document.getElementById('dossierFieldMobile')) document.getElementById('dossierFieldMobile').innerText = '+91 ' + u.mobile;
+        if (document.getElementById('dossierFieldEmail')) document.getElementById('dossierFieldEmail').innerText = u.email || (u.mobile + '@easypay.in');
+        if (document.getElementById('dossierFieldPayId')) document.getElementById('dossierFieldPayId').innerText = u.payId || (u.mobile + '@easypay');
+        if (document.getElementById('dossierFieldPassword')) document.getElementById('dossierFieldPassword').value = u.password || ('EasyPay@' + u.mobile.slice(-4));
+        if (document.getElementById('dossierFieldPin')) document.getElementById('dossierFieldPin').value = u.securityPin || u.mpin || '1234';
+        if (document.getElementById('dossierFieldBank')) document.getElementById('dossierFieldBank').innerText = (u.bankName || 'Not Linked') + ' (' + (u.bankAccountMasked || 'None') + ')';
+        if (document.getElementById('dossierFieldPincode')) document.getElementById('dossierFieldPincode').innerText = (u.pincode || '400001') + ' (' + (u.city || 'Mumbai') + ')';
+        if (document.getElementById('dossierFieldReferral')) document.getElementById('dossierFieldReferral').innerText = (u.referralCode || ('REF_' + u.id)) + ' (Sponsor: ' + (u.referredBy || 'SYSTEM') + ')';
 
-        if (document.getElementById("dossierDownlineCount")) document.getElementById("dossierDownlineCount").innerText = dl.length;
-        const dlTbody = document.getElementById("dossierDownlineTbody");
+        // Activities Breakdown
+        if (document.getElementById('dossierActShopping')) document.getElementById('dossierActShopping').innerText = '₹' + Number(s.totalShopping || 0).toLocaleString('en-IN');
+        if (document.getElementById('dossierActShoppingCount')) document.getElementById('dossierActShoppingCount').innerText = (d.orders || []).length + ' Orders Placed';
+        if (document.getElementById('dossierActVouchers')) document.getElementById('dossierActVouchers').innerText = '₹' + Number(s.totalVouchers || 0).toLocaleString('en-IN');
+        if (document.getElementById('dossierActVouchersCount')) document.getElementById('dossierActVouchersCount').innerText = (d.vouchers || []).length + ' Vouchers';
+        if (document.getElementById('dossierActRecharges')) document.getElementById('dossierActRecharges').innerText = '₹' + Number(s.totalRecharges || 0).toLocaleString('en-IN');
+        if (document.getElementById('dossierActLottery')) document.getElementById('dossierActLottery').innerText = '₹' + Number(s.totalLottery || 0).toLocaleString('en-IN');
+        if (document.getElementById('dossierActTransfers')) document.getElementById('dossierActTransfers').innerText = '₹' + Number(s.totalTransfersSent || 0).toLocaleString('en-IN');
+
+        // Downline Table (100% specific to this user)
+        if (document.getElementById('dossierDownlineCount')) document.getElementById('dossierDownlineCount').innerText = dl.length;
+        const dlTbody = document.getElementById('dossierDownlineTbody');
         if (dlTbody) {
           if (dl.length === 0) {
-            dlTbody.innerHTML = "<tr><td colspan=\"5\" style=\"text-align:center; padding:16px; color:#64748B;\">No referred downline members yet.</td></tr>";
+            dlTbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:18px; color:#64748B;">No referred downline members linked yet.</td></tr>';
           } else {
             dlTbody.innerHTML = dl.map(function(m) {
-              return "<tr><td><div style=\"display:flex; align-items:center; gap:8px;\"><div style=\"width:24px; height:24px; border-radius:50%; background:#7C3AED; color:white; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;\">" +
-                (m.firstName || m.name || "M")[0] + "</div><div><strong>" + (m.name || (m.firstName + " " + (m.lastName || ""))) +
-                "</strong><div style=\"font-size:10px; color:#64748B;\">ID: " + m.id + "</div></div></div></td>" +
-                "<td><strong>+91 " + m.mobile + "</strong></td>" +
-                "<td><strong style=\"color:#059669;\">₹" + Number(m.walletBalance || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 }) + "</strong></td>" +
-                "<td><span class=\"badge badge-green\"><i class=\"fa-solid fa-check\"></i> " + (m.kycStatus || "VERIFIED") + "</span></td>" +
-                "<td style=\"color:#64748B;\">" + (m.registeredAt ? new Date(m.registeredAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "Recently") + "</td></tr>";
-            }).join("");
+              const mActive = m.status === 'ACTIVE' || (m.isActivated && Number(m.walletBalance || 0) > 0);
+              const badgeClass = mActive ? 'badge-green' : 'badge-amber';
+              const badgeLabel = mActive ? '<i class="fa-solid fa-check"></i> ACTIVE' : '<i class="fa-solid fa-clock"></i> NOT ACTIVE';
+              const initial = (m.firstName || m.name || 'M')[0];
+              const memName = m.name || (m.firstName + ' ' + (m.lastName || ''));
+              const joinDate = m.registeredAt ? new Date(m.registeredAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Recently';
+              const bal = Number(m.walletBalance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+              
+              return '<tr><td><div style="display:flex; align-items:center; gap:8px;"><div style="width:24px; height:24px; border-radius:50%; background:#7C3AED; color:white; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">' +
+                initial + '</div><div><strong>' + memName +
+                '</strong><div style="font-size:10px; color:#64748B;">ID: ' + m.id + '</div></div></div></td>' +
+                '<td><strong>+91 ' + m.mobile + '</strong></td>' +
+                '<td><strong style="color:#059669;">₹' + bal + '</strong></td>' +
+                '<td><span class="badge ' + badgeClass + '">' + badgeLabel + '</span></td>' +
+                '<td style="color:#64748B;">' + joinDate + '</td></tr>';
+            }).join('');
           }
         }
 
-        const txnCountBadge = document.getElementById("dossierTxnCountBadge");
-        if (txnCountBadge) txnCountBadge.innerText = txns.length + " Transactions Found";
-        const txnTbody = document.getElementById("dossierTxnTbody");
+        // Transactions Table (100% specific to this user)
+        const txnCountBadge = document.getElementById('dossierTxnCountBadge');
+        if (txnCountBadge) txnCountBadge.innerText = txns.length + ' Transactions Found';
+        const txnTbody = document.getElementById('dossierTxnTbody');
         if (txnTbody) {
           if (txns.length === 0) {
-            txnTbody.innerHTML = "<tr><td colspan=\"6\" style=\"text-align:center; padding:16px; color:#64748B;\">No transactions recorded for this user.</td></tr>";
+            txnTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:18px; color:#64748B;">No transactions recorded for this user yet.</td></tr>';
           } else {
             txnTbody.innerHTML = txns.map(function(t) {
-              const isCredit = (t.type || "").includes("CREDIT") || t.type === "WALLET_ADD";
-              const amtStr = (isCredit ? "+" : "-") + "₹" + Math.abs(Number(t.amount || 0)).toLocaleString("en-IN", { minimumFractionDigits: 2 });
+              const isCredit = (t.type || '').includes('CREDIT') || t.type === 'WALLET_ADD';
+              const amtStr = (isCredit ? '+' : '-') + '₹' + Math.abs(Number(t.amount || 0)).toLocaleString('en-IN', { minimumFractionDigits: 2 });
               const dateStr = formatAdminTimestamp(t.timestamp);
-              return "<tr><td><code>" + (t.id || "TXN") + "</code></td>" +
-                "<td style=\"color:#64748B; font-size:11px; white-space:nowrap;\">" + dateStr + "</td>" +
-                "<td><strong>" + (t.title || "Transaction") + "</strong></td>" +
-                "<td><span class=\"badge badge-gray\">" + (t.category || "Payment") + "</span></td>" +
-                "<td><strong style=\"color:" + (isCredit ? "#059669" : "#0F172A") + ";\">" + amtStr + "</strong></td>" +
-                "<td><span class=\"badge badge-green\">" + (t.status || "SUCCESS") + "</span></td></tr>";
-            }).join("");
+              const utrHtml = t.utr ? '<div style="font-size:10px; color:#64748B; font-family:monospace;">UTR: ' + t.utr + '</div>' : '';
+              const amtColor = isCredit ? '#059669' : '#0F172A';
+              
+              return '<tr><td><code>' + (t.id || 'TXN') + '</code></td>' +
+                '<td style="color:#64748B; font-size:11px; white-space:nowrap;">' + dateStr + '</td>' +
+                '<td><strong>' + (t.title || 'Transaction') + '</strong>' + utrHtml + '</td>' +
+                '<td><span class="badge badge-gray">' + (t.category || 'Payment') + '</span></td>' +
+                '<td><strong style="color:' + amtColor + ';">' + amtStr + '</strong></td>' +
+                '<td><span class="badge badge-green">' + (t.status || 'SUCCESS') + '</span></td></tr>';
+            }).join('');
           }
         }
-        openModal("modalUserDetails");
+
+        openModal('modalUserDetails');
       } catch (err) {
-        console.error("Error opening user details:", err);
-        alert("Could not fetch user dossier");
+        console.error('Error opening user details:', err);
+        alert('Could not fetch user dossier');
       }
     }
 

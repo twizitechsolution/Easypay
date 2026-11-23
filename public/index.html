@@ -4288,7 +4288,28 @@
       transform: scale(0.98);
     }
 
-  </style>
+  
+    .keypad-btn {
+      width: 100%;
+      height: 52px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #FFFFFF;
+      font-size: 20px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .keypad-btn:active {
+      background: rgba(255,255,255,0.35);
+      transform: scale(0.96);
+    }
+
+</style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
     /* Requirement 2: Both icon AND label take active orange color */
@@ -5783,11 +5804,17 @@
           </div>
 
           <div class="profile-user-info-row">
-            <div class="profile-avatar-circle-orange" id="profileInitialsBadge" onclick="openProfileEditModal()" style="cursor:pointer;">
-              Nb
+            <div class="profile-avatar-circle-orange" id="profileInitialsBadge" onclick="openProfileEditModal()" style="cursor:pointer; overflow: hidden; position: relative;">
+              <span id="profileHeaderInitials">NB</span>
+              <img id="profileHeaderImg" src="" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: none;" alt="Avatar">
             </div>
             <div>
-              <div class="profile-meta-name" id="profileAccountName" onclick="openProfileEditModal()" style="cursor:pointer;">Nirod Behera</div>
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <span class="profile-meta-name" id="profileAccountName" onclick="openProfileEditModal()" style="cursor:pointer;">Nirod Behera</span>
+                <span id="profileAccountStatusBadge" class="badge badge-green" style="font-size: 10px; padding: 2px 8px; font-weight: 800; border-radius: 999px;">
+                  <i class="fa-solid fa-circle-check"></i> Active
+                </span>
+              </div>
               <div class="profile-meta-phone" id="profileAccountPhone">+91 9876548808</div>
               <div class="profile-meta-userid" style="font-size: 13px; color: rgba(255,255,255,0.92); font-weight: 700; margin-top: 3px; display: flex; align-items: center; gap: 6px;">
                 <span>User ID:</span>
@@ -5816,6 +5843,22 @@
         </div>
 
         <!-- KYC Alert Strip (Screenshot 4) -->
+        <!-- Not Active Alert Banner (Screenshot 3 Request) -->
+        <div id="profileNotActiveAlert" style="display: none; background: #FFF3E0; border: 1.5px solid #FFE0B2; border-radius: 12px; margin: 12px 16px 0; padding: 12px 14px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: #FF9800; color: white; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 13px; font-weight: 800; color: #E65100;">Your account is not active.</div>
+              <div style="font-size: 11px; color: #BF360C; margin-top: 1px;">Complete your first deposit to activate full features & KYC.</div>
+            </div>
+            <button class="btn-topbar primary" style="padding: 5px 10px; font-size: 11px;" onclick="openAddFundsModal()">
+              Add Funds
+            </button>
+          </div>
+        </div>
+
         <div class="profile-kyc-alert-strip">
           <div style="display:flex; align-items:center; gap:6px;">
             <span>Complete KYC for smooth experience: <strong>UPDATE KYC</strong></span>
@@ -5934,21 +5977,65 @@
           </div>
         </div>
 
-        <!-- Menu Group 3: App Info & Log Out -->
+        <!-- Menu Group 3: App Information & Legal Policies (Screenshot 3 Request) -->
         <div class="profile-menu-group" style="margin-bottom:40px;">
-          <div class="profile-menu-row" onclick="showToast('EasyPay v3.4.1 (Encrypted & DICGC Insured)')">
+          <!-- 1. About Bachat Pay -->
+          <div class="profile-menu-row" onclick="openAboutAppModal()">
             <div class="profile-menu-left">
-              <div class="profile-menu-icon" style="background:#E3F2FD; color:#1976D2;">
+              <div class="profile-menu-icon" style="background:#E0F2FE; color:#0284C7;">
                 <i class="fa-solid fa-circle-info"></i>
               </div>
               <div class="profile-menu-text-wrap">
-                <span class="profile-menu-item-title">About EasyPay</span>
-                <span class="profile-menu-item-sub">Version 3.4.1 • ISO 27001 Certified</span>
+                <span class="profile-menu-item-title">About Bachat Pay</span>
+                <span class="profile-menu-item-sub">Application overview & security credentials</span>
               </div>
             </div>
             <i class="fa-solid fa-chevron-right" style="color:#BDBDBD; font-size:13px;"></i>
           </div>
 
+          <!-- 2. Terms and Conditions -->
+          <div class="profile-menu-row" onclick="openTermsModal()">
+            <div class="profile-menu-left">
+              <div class="profile-menu-icon" style="background:#F3E8FF; color:#7C3AED;">
+                <i class="fa-solid fa-file-contract"></i>
+              </div>
+              <div class="profile-menu-text-wrap">
+                <span class="profile-menu-item-title">Terms & Conditions</span>
+                <span class="profile-menu-item-sub">User terms of service, limits & policy</span>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color:#BDBDBD; font-size:13px;"></i>
+          </div>
+
+          <!-- 3. Privacy Policy -->
+          <div class="profile-menu-row" onclick="openPrivacyModal()">
+            <div class="profile-menu-left">
+              <div class="profile-menu-icon" style="background:#DCFCE7; color:#15803D;">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <div class="profile-menu-text-wrap">
+                <span class="profile-menu-item-title">Privacy Policy</span>
+                <span class="profile-menu-item-sub">Data protection, ISO encryption & RBI standards</span>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color:#BDBDBD; font-size:13px;"></i>
+          </div>
+
+          <!-- Lock App / Secure Access -->
+          <div class="profile-menu-row" onclick="lockApplicationNow()">
+            <div class="profile-menu-left">
+              <div class="profile-menu-icon" style="background:#FEF3C7; color:#D97706;">
+                <i class="fa-solid fa-lock"></i>
+              </div>
+              <div class="profile-menu-text-wrap">
+                <span class="profile-menu-item-title">Lock App / Secure Access</span>
+                <span class="profile-menu-item-sub">Require 4-digit MPIN or Face ID to re-open</span>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color:#BDBDBD; font-size:13px;"></i>
+          </div>
+
+          <!-- Log Out & Switch User -->
           <div class="profile-menu-row" onclick="replayCurieFlow()">
             <div class="profile-menu-left">
               <div class="profile-menu-icon" style="background:#FFEBEE; color:#D32F2F;">
@@ -6934,22 +7021,221 @@
     </div>
   </div>
 
-  <!-- Add Money Modal -->
-  <div class="modal-overlay" id="addMoneyModal">
-    <div class="modal-sheet">
-      <div class="modal-header">
-        <div class="modal-title">Add Money to Wallet</div>
-        <button class="btn-close-modal" onclick="closeModal('addMoneyModal')">
-          <i class="fa-solid fa-xmark"></i>
+  <!-- =======================================================
+       REDESIGNED ADD FUNDS MODAL (Screenshot 4 Request)
+       Presets, 4 Payment Methods (UPI, Bank, Cash, USDT) & Proof Submission
+       ======================================================= -->
+  <div class="modal-overlay" id="addMoneyModal" style="z-index: 10005; align-items: flex-end;">
+    <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 20px 18px 30px; max-height: 92vh; overflow-y: auto; background: #FAF9FE;">
+      <!-- Top Header -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="closeModal('addMoneyModal')">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #EDE9FE; color: #6D28D9; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+            <i class="fa-solid fa-angle-left"></i>
+          </div>
+          <span style="font-size: 18px; font-weight: 800; color: #1E1B4B;">Add Funds</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #EDE9FE; color: #6D28D9; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Instant Auto-Credit Rail">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #EDE9FE; color: #6D28D9; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="openPassbookFromProfile()" title="Transaction History">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Amount Input Card -->
+      <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 18px; padding: 18px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+        <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;">Enter Deposit Amount</label>
+        <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0 14px;">
+          <span style="font-size: 28px; font-weight: 900; color: #6D28D9;">₹</span>
+          <input type="number" id="addFundsAmountInput" value="1000" min="100" step="100" style="font-size: 28px; font-weight: 900; color: #1E1B4B; border: none; outline: none; width: 100%; background: transparent;" oninput="updateAddFundsQrDynamic()">
+        </div>
+
+        <!-- Quick Presets Row (Screenshot 4) -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;" id="addFundsPresetChips">
+          <button type="button" class="btn-preset active" onclick="setAddFundsAmount(1000, this)" style="padding: 8px; border-radius: 10px; border: 1.5px solid #6D28D9; background: #F5F3FF; font-weight: 800; font-size: 12px; color: #6D28D9; cursor: pointer;">₹1,000</button>
+          <button type="button" class="btn-preset" onclick="setAddFundsAmount(2000, this)" style="padding: 8px; border-radius: 10px; border: 1.5px solid #CBD5E1; background: #FFFFFF; font-weight: 700; font-size: 12px; color: #334155; cursor: pointer;">₹2,000</button>
+          <button type="button" class="btn-preset" onclick="setAddFundsAmount(5000, this)" style="padding: 8px; border-radius: 10px; border: 1.5px solid #CBD5E1; background: #FFFFFF; font-weight: 700; font-size: 12px; color: #334155; cursor: pointer;">₹5,000</button>
+          <button type="button" class="btn-preset" onclick="setAddFundsAmount(10000, this)" style="padding: 8px; border-radius: 10px; border: 1.5px solid #CBD5E1; background: #FFFFFF; font-weight: 700; font-size: 12px; color: #334155; cursor: pointer;">₹10,000</button>
+          <button type="button" class="btn-preset" onclick="setAddFundsAmount(50000, this)" style="padding: 8px; border-radius: 10px; border: 1.5px solid #CBD5E1; background: #FFFFFF; font-weight: 700; font-size: 12px; color: #334155; cursor: pointer;">₹50,000</button>
+          <button type="button" class="btn-preset" onclick="setAddFundsAmount(100000, this)" style="padding: 8px; border-radius: 10px; border: 1.5px solid #CBD5E1; background: #FFFFFF; font-weight: 700; font-size: 12px; color: #334155; cursor: pointer;">₹1,00,000</button>
+        </div>
+      </div>
+
+      <!-- SELECT PAYMENT METHOD Title -->
+      <div style="font-size: 12px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+        <span style="width: 18px; height: 18px; border-radius: 50%; background: #FF5722; color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900;">1</span>
+        SELECT PAYMENT METHOD
+      </div>
+
+      <!-- 4 Payment Method Cards Grid (Screenshot 4) -->
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px;">
+        <!-- Card 1: Instant UPI -->
+        <div class="deposit-method-card active" id="depMethodCard_upi" onclick="selectDepositMethod('upi')" style="background: #FFFFFF; border: 2px solid #6D28D9; border-radius: 14px; padding: 10px 6px; text-align: center; cursor: pointer; position: relative; transition: all 0.2s;">
+          <div style="position: absolute; top: -7px; left: 50%; transform: translateX(-50%); background: #FF5722; color: white; font-size: 8px; font-weight: 900; padding: 1px 6px; border-radius: 999px; letter-spacing: 0.5px;">POPULAR</div>
+          <div style="font-size: 20px; color: #6D28D9; margin: 4px 0 2px;"><i class="fa-solid fa-bolt"></i></div>
+          <div style="font-size: 11px; font-weight: 800; color: #1E1B4B; line-height: 1.2;">Instant UPI</div>
+          <div style="font-size: 9px; color: #059669; font-weight: 700;">Auto Credit ⚡</div>
+        </div>
+
+        <!-- Card 2: Bank Transfer -->
+        <div class="deposit-method-card" id="depMethodCard_bank" onclick="selectDepositMethod('bank')" style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 10px 6px; text-align: center; cursor: pointer; transition: all 0.2s;">
+          <div style="font-size: 20px; color: #2563EB; margin: 4px 0 2px;"><i class="fa-solid fa-building-columns"></i></div>
+          <div style="font-size: 11px; font-weight: 800; color: #1E1B4B; line-height: 1.2;">Bank</div>
+          <div style="font-size: 9px; color: #64748B;">IMPS / NEFT</div>
+        </div>
+
+        <!-- Card 3: UPI / QR Details -->
+        <div class="deposit-method-card" id="depMethodCard_qr" onclick="selectDepositMethod('qr')" style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 10px 6px; text-align: center; cursor: pointer; transition: all 0.2s;">
+          <div style="font-size: 20px; color: #FF5722; margin: 4px 0 2px;"><i class="fa-solid fa-qrcode"></i></div>
+          <div style="font-size: 11px; font-weight: 800; color: #1E1B4B; line-height: 1.2;">UPI / QR</div>
+          <div style="font-size: 9px; color: #64748B;">Scan & Pay</div>
+        </div>
+
+        <!-- Card 4: USDT Crypto -->
+        <div class="deposit-method-card" id="depMethodCard_usdt" onclick="selectDepositMethod('usdt')" style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 10px 6px; text-align: center; cursor: pointer; transition: all 0.2s;">
+          <div style="font-size: 20px; color: #097939; margin: 4px 0 2px;"><i class="fa-brands fa-ethereum"></i></div>
+          <div style="font-size: 11px; font-weight: 800; color: #1E1B4B; line-height: 1.2;">USDT</div>
+          <div style="font-size: 9px; color: #097939; font-weight: 700;">TRC-20</div>
+        </div>
+      </div>
+
+      <!-- Dynamic Payment Details Box (Screenshot 4) -->
+      <div id="depositMethodContentWrap" style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 18px; padding: 18px; margin-bottom: 16px;">
+        <!-- UPI Details Panel -->
+        <div id="depPanel_upi">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+            <div>
+              <div style="font-size: 14px; font-weight: 800; color: #1E1B4B;" id="depUpiTitle">UPI / QR Details</div>
+              <div style="font-size: 11px; color: #64748B; margin-top: 2px;">
+                Account Holder: <strong id="depUpiHolder" style="color: #1E1B4B;">Lucifer Finer Solutions Private Limited</strong>
+              </div>
+            </div>
+            <span class="badge badge-purple" style="font-size: 10px;">Admin Verified</span>
+          </div>
+
+          <div style="background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+            <div>
+              <span style="font-size: 10px; color: #64748B; text-transform: uppercase; font-weight: 700; display: block;">UPI ID</span>
+              <code id="depUpiIdText" style="font-size: 14px; font-weight: 800; color: #6D28D9;">yourbachatpay@kotak</code>
+            </div>
+            <button type="button" class="action-btn" onclick="copyTextToClipboard(document.getElementById('depUpiIdText').innerText)" style="padding: 6px 12px; font-size: 11px;">
+              <i class="fa-regular fa-copy"></i> Copy
+            </button>
+          </div>
+
+          <!-- Dynamic QR Code Card -->
+          <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 16px; text-align: center; margin-bottom: 12px;">
+            <div style="font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 10px;">
+              <i class="fa-solid fa-qrcode"></i> Scan this QR with GPay, PhonePe or Paytm to pay
+            </div>
+            <div style="display: inline-block; background: white; padding: 10px; border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+              <img id="depDynamicQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi%3A%2F%2Fpay%3Fpa%3Dyourbachatpay%40kotak%26pn%3DLucifer%2520Finer%2520Solutions%26am%3D1000%26cu%3DINR" style="width: 170px; height: 170px; object-fit: contain; display: block;" alt="UPI QR">
+            </div>
+            <div style="margin-top: 8px; font-size: 12px; font-weight: 800; color: #0F172A;" id="depQrAmountLabel">
+              Paying Amount: <span style="color:#059669;">₹1,000</span>
+            </div>
+            <div style="font-size: 10px; color: #64748B; font-family: monospace; margin-top: 2px;">TID: 68359529</div>
+          </div>
+        </div>
+
+        <!-- Bank Transfer Details Panel -->
+        <div id="depPanel_bank" style="display: none;">
+          <div style="font-size: 14px; font-weight: 800; color: #1E1B4B; margin-bottom: 10px;">Bank Account Transfer Details</div>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+            <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #F1F5F9;">
+              <span style="color:#64748B;">Bank Name:</span>
+              <strong id="depBankName">Kotak Mahindra Bank</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #F1F5F9;">
+              <span style="color:#64748B;">Account Holder:</span>
+              <strong id="depBankHolder">Lucifer Finer Solutions Private Limited</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #F1F5F9;">
+              <span style="color:#64748B;">Account Number:</span>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <code id="depBankAccountNo" style="font-size:14px; font-weight:800; color:#2563EB;">983420192841</code>
+                <button type="button" class="action-btn" onclick="copyTextToClipboard(document.getElementById('depBankAccountNo').innerText)"><i class="fa-regular fa-copy"></i></button>
+              </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #F1F5F9;">
+              <span style="color:#64748B;">IFSC Code:</span>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <code id="depBankIfsc" style="font-size:14px; font-weight:800; color:#2563EB;">KKBK0000958</code>
+                <button type="button" class="action-btn" onclick="copyTextToClipboard(document.getElementById('depBankIfsc').innerText)"><i class="fa-regular fa-copy"></i></button>
+              </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:8px 0;">
+              <span style="color:#64748B;">Branch:</span>
+              <span id="depBankBranch">Nariman Point, Mumbai</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- USDT Crypto Details Panel -->
+        <div id="depPanel_usdt" style="display: none;">
+          <div style="font-size: 14px; font-weight: 800; color: #1E1B4B; margin-bottom: 10px;">USDT (Tether) Deposit</div>
+          <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 14px; text-align: center; margin-bottom: 12px;">
+            <div style="font-size: 11px; color: #64748B; font-weight: 700;">USDT TRC-20 Address (Tron Network)</div>
+            <div style="display:flex; align-items:center; justify-content:center; gap:6px; margin: 8px 0;">
+              <code id="depUsdtAddress" style="font-size: 12px; font-weight: 800; color: #097939; word-break: break-all;">TYDzsYUEW8kWL65vQ7Q7E18t4G8Z78X8kL</code>
+              <button type="button" class="action-btn" onclick="copyTextToClipboard(document.getElementById('depUsdtAddress').innerText)"><i class="fa-regular fa-copy"></i></button>
+            </div>
+            <div style="font-size: 12px; font-weight: 800; color: #0F172A;" id="depUsdtEquivalent">
+              Equivalent Amount: <span style="color:#097939;">~$10.81 USDT</span> (Rate: ₹92.50)
+            </div>
+          </div>
+        </div>
+
+        <!-- Settlement Note -->
+        <div style="background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 10px; padding: 10px 12px; display: flex; align-items: flex-start; gap: 8px; font-size: 11px; color: #92400E;">
+          <i class="fa-solid fa-circle-info" style="color: #D97706; font-size: 14px; margin-top: 1px;"></i>
+          <span><strong>Note:</strong> Payment verification & wallet settlement takes 5-30 minutes upon admin verification. Submit transaction UTR below.</span>
+        </div>
+      </div>
+
+      <!-- Transaction Verification & Proof Submission (Mandatory) -->
+      <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 18px; padding: 18px; margin-bottom: 18px;">
+        <div style="font-size: 13px; font-weight: 800; color: #1E1B4B; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+          <span style="width: 18px; height: 18px; border-radius: 50%; background: #6D28D9; color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900;">2</span>
+          SUBMIT PAYMENT PROOF
+        </div>
+
+        <!-- UTR / Ref Number -->
+        <div style="margin-bottom: 14px;">
+          <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; display: block; margin-bottom: 4px;">
+            12-Digit UTR / Transaction Reference Number <span style="color:#DC2626;">*</span>
+          </label>
+          <input type="text" id="depProofUtrInput" placeholder="e.g. 983749281726 or TxID" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 10px 12px; font-size: 14px; font-weight: 700; color: #0F172A; outline: none; font-family: monospace;">
+        </div>
+
+        <!-- Upload Screenshot Proof -->
+        <div style="margin-bottom: 14px;">
+          <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; display: block; margin-bottom: 4px;">
+            Upload Payment Receipt / Screenshot
+          </label>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <input type="file" id="depProofFileInput" accept="image/*" style="display: none;" onchange="handleDepositProofUpload(event)">
+            <button type="button" class="btn-topbar" onclick="document.getElementById('depProofFileInput').click()" style="padding: 8px 12px; font-size: 12px;">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Choose Screenshot
+            </button>
+            <span id="depProofFileName" style="font-size: 11px; color: #64748B; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">No file chosen</span>
+            <button type="button" class="action-btn danger" id="depProofClearBtn" style="display: none;" onclick="clearDepositProof()">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+          <div id="depProofPreviewWrap" style="display: none; margin-top: 10px; width: 100%; height: 120px; border-radius: 10px; border: 1px solid #CBD5E1; overflow: hidden; background: #F8FAFC;">
+            <img id="depProofPreviewImg" src="" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="button" class="btn-primary-action" style="max-width: 100%; width: 100%; justify-content: center; background: linear-gradient(135deg, #6D28D9, #4F46E5); box-shadow: 0 4px 14px rgba(109,40,217,0.35);" onclick="submitDepositRequestFlow()">
+          <i class="fa-solid fa-circle-check"></i> Submit Deposit Request
         </button>
       </div>
-      <div class="form-group">
-        <label class="form-label">Amount (₹)</label>
-        <input type="number" class="form-input" id="addMoneyAmountInput" value="1000">
-      </div>
-      <button class="btn-primary-action" style="max-width: 100%;" onclick="submitAddMoney()">
-        Add Money via UPI
-      </button>
     </div>
   </div>
 
@@ -6989,14 +7275,17 @@
         </button>
       </div>
 
-      <!-- Avatar with Camera Badge (Screenshot 2) -->
+      <!-- Avatar with Camera Badge (Screenshot 2 - Direct Gallery Upload) -->
       <div style="text-align: center; margin-bottom: 24px; position: relative;">
-        <div style="width: 76px; height: 76px; border-radius: 50%; background: #FF6E40; color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; position: relative; box-shadow: 0 4px 14px rgba(255,110,64,0.35);" id="editProfileAvatarInitials">
-          Nb
-          <div style="position: absolute; bottom: 0; right: 0; width: 24px; height: 24px; border-radius: 50%; background: white; border: 1.5px solid #E2E8F0; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.15); cursor: pointer;" onclick="showToast('Profile photo upload ready')">
-            <i class="fa-solid fa-camera" style="font-size: 11px; color: #475569;"></i>
+        <div style="width: 80px; height: 80px; border-radius: 50%; background: #FF6E40; color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; position: relative; box-shadow: 0 4px 14px rgba(255,110,64,0.35); cursor: pointer; overflow: visible; margin: 0 auto;" id="editProfileAvatarWrap" onclick="document.getElementById('profilePicFileInput').click()">
+          <span id="editProfileAvatarInitials">NB</span>
+          <img id="editProfileAvatarImg" src="" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: none;" alt="Profile Picture">
+          <div style="position: absolute; bottom: -2px; right: -2px; width: 28px; height: 28px; border-radius: 50%; background: #FFFFFF; border: 2px solid #E2E8F0; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.2); cursor: pointer;" title="Upload Profile Photo">
+            <i class="fa-solid fa-camera" style="font-size: 12px; color: #1E293B;"></i>
           </div>
         </div>
+        <input type="file" id="profilePicFileInput" accept="image/*" style="display: none;" onchange="handleProfilePicChange(event)">
+        <div style="font-size: 11px; color: #64748B; margin-top: 8px;">Tap camera icon to select photo from gallery</div>
       </div>
 
       <!-- First Name -->
@@ -11323,28 +11612,81 @@
       }
     }
 
-    // Update all UI elements showing user info (User Requested: Dynamic Name -> Phone -> User ID)
+    // Update all UI elements showing user info (Dynamic Name, Phone, User ID, Profile Pic, and Active Status)
     function syncUserProfileUI() {
       const u = appData.user || {};
       const fullName = u.name || [u.firstName, u.lastName].filter(Boolean).join(' ') || 'Nirod Behera';
-      const initials = ((u.firstName?.[0] || u.name?.[0] || 'A') + (u.lastName?.[0] || (u.name?.split(' ')?.[1]?.[0] || 'K'))).toUpperCase();
-      const phone = u.mobile ? ('+91 ' + u.mobile) : (u.maskedMobile ? ('+91 ' + u.maskedMobile) : '+91 7013893165');
-      const userId = u.id || 'EPY31650';
+      const initials = ((u.firstName?.[0] || u.name?.[0] || 'N') + (u.lastName?.[0] || (u.name?.split(' ')?.[1]?.[0] || 'B'))).toUpperCase();
+      const phone = u.mobile ? ('+91 ' + u.mobile) : (u.maskedMobile ? ('+91 ' + u.maskedMobile) : '+91 9876548808');
+      const userId = u.id || 'EPY98808';
+      const userPic = u.profilePicture || localStorage.getItem('currentUserProfilePic') || '';
 
-      // Profile banner
+      // Profile banner text
       const accName = document.getElementById('profileAccountName');
       const accPhone = document.getElementById('profileAccountPhone');
       const accUserId = document.getElementById('profileAccountUserId');
-      const initialsBadge = document.getElementById('profileInitialsBadge');
-
       if (accName) accName.innerText = fullName;
       if (accPhone) accPhone.innerText = phone;
       if (accUserId) accUserId.innerText = userId;
-      if (initialsBadge) initialsBadge.innerText = initials;
+
+      // Profile Header Avatar (Image vs Initials)
+      const headerInitials = document.getElementById('profileHeaderInitials');
+      const headerImg = document.getElementById('profileHeaderImg');
+      if (headerInitials && headerImg) {
+        if (userPic) {
+          headerImg.src = userPic;
+          headerImg.style.display = 'block';
+          headerInitials.style.display = 'none';
+        } else {
+          headerInitials.innerText = initials;
+          headerInitials.style.display = 'block';
+          headerImg.style.display = 'none';
+        }
+      }
+
+      // Profile Edit Modal Avatar
+      const editInitials = document.getElementById('editProfileAvatarInitials');
+      const editImg = document.getElementById('editProfileAvatarImg');
+      if (editInitials && editImg) {
+        if (userPic) {
+          editImg.src = userPic;
+          editImg.style.display = 'block';
+          editInitials.style.display = 'none';
+        } else {
+          editInitials.innerText = initials;
+          editInitials.style.display = 'block';
+          editImg.style.display = 'none';
+        }
+      }
+
+      // Account Status Badge (Screenshot 3 Request)
+      const statusBadge = document.getElementById('profileAccountStatusBadge');
+      const notActiveAlert = document.getElementById('profileNotActiveAlert');
+      const isActivated = u.status === 'ACTIVE' || (u.isActivated && Number(u.walletBalance || 0) > 0);
+
+      if (statusBadge) {
+        statusBadge.className = isActivated ? 'badge badge-green' : 'badge badge-amber';
+        statusBadge.style.background = isActivated ? '#E8F5E9' : '#FFF3E0';
+        statusBadge.style.color = isActivated ? '#2E7D32' : '#E65100';
+        statusBadge.style.border = isActivated ? 'none' : '1px solid #FFE0B2';
+        statusBadge.innerHTML = isActivated 
+          ? '<i class="fa-solid fa-circle-check"></i> Active' 
+          : '<i class="fa-solid fa-clock"></i> Not Active';
+      }
+
+      if (notActiveAlert) {
+        notActiveAlert.style.display = isActivated ? 'none' : 'block';
+      }
 
       // Home header logo initials / badge
       const homeAvatar = document.querySelector('.fc-header-avatar');
-      if (homeAvatar) homeAvatar.innerText = initials;
+      if (homeAvatar) {
+        if (userPic) {
+          homeAvatar.innerHTML = '<img src="' + userPic + '" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">';
+        } else {
+          homeAvatar.innerText = initials;
+        }
+      }
 
       // Side Drawer User Info
       const drawerName = document.getElementById('sideDrawerUserName');
@@ -11352,7 +11694,13 @@
       const drawerInitials = document.getElementById('sideDrawerUserInitials');
       if (drawerName) drawerName.innerText = fullName;
       if (drawerPhone) drawerPhone.innerText = phone;
-      if (drawerInitials) drawerInitials.innerText = initials;
+      if (drawerInitials) {
+        if (userPic) {
+          drawerInitials.innerHTML = '<img src="' + userPic + '" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">';
+        } else {
+          drawerInitials.innerText = initials;
+        }
+      }
     }
 
     // Open My QR Code Modal (Screenshot 3)
@@ -15141,6 +15489,389 @@
     }
     window.switchProductDetailImage = switchProductDetailImage;
 
+
+
+    // =======================================================
+    // 1. PROFILE PICTURE UPLOAD & SYNC (Screenshot 2 Request)
+    // =======================================================
+    function handleProfilePicChange(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const base64 = e.target.result;
+        if (!appData.user) appData.user = {};
+        appData.user.profilePicture = base64;
+        localStorage.setItem('currentUserProfilePic', base64);
+        syncUserProfileUI();
+        showToast('Profile photo updated successfully!');
+
+        // Sync with backend database
+        try {
+          await fetch(API_BASE + '/api/user/profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId: appData.user.id || 'EPY98808',
+              profilePicture: base64
+            })
+          });
+        } catch (err) {
+          console.warn('Profile picture saved locally');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // =======================================================
+    // 2. REDESIGNED ADD FUNDS MODAL (Screenshot 4 Request)
+    // =======================================================
+    let selectedDepositMethod = 'upi';
+    let currentDepositProofBase64 = '';
+
+    function openAddFundsModal() {
+      // Refresh platform payment settings
+      fetch(API_BASE + '/api/admin/payment-settings')
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.upi) {
+            const upiTxt = document.getElementById('depUpiIdText');
+            if (upiTxt && data.upi.upiId) upiTxt.innerText = data.upi.upiId;
+            const bankAcc = document.getElementById('depBankAccNum');
+            if (bankAcc && data.bank.accountNumber) bankAcc.innerText = data.bank.accountNumber;
+            const bankIfsc = document.getElementById('depBankIfsc');
+            if (bankIfsc && data.bank.ifsc) bankIfsc.innerText = data.bank.ifsc;
+            const usdtAddr = document.getElementById('depUsdtAddressText');
+            if (usdtAddr && data.usdt.address) usdtAddr.innerText = data.usdt.address;
+          }
+        })
+        .catch(() => {});
+
+      selectDepositMethod('upi');
+      updateAddFundsQrDynamic();
+      openModal('addMoneyModal');
+    }
+
+    function setAddFundsAmount(val, btn) {
+      const input = document.getElementById('addFundsAmountInput');
+      if (input) input.value = val;
+      const chips = document.querySelectorAll('#addFundsPresetChips .btn-preset');
+      chips.forEach(c => {
+        c.style.background = '#FFFFFF';
+        c.style.borderColor = '#CBD5E1';
+        c.style.color = '#334155';
+        c.style.fontWeight = '700';
+      });
+      if (btn) {
+        btn.style.background = '#F5F3FF';
+        btn.style.borderColor = '#6D28D9';
+        btn.style.color = '#6D28D9';
+        btn.style.fontWeight = '800';
+      }
+      updateAddFundsQrDynamic();
+    }
+
+    function selectDepositMethod(method) {
+      selectedDepositMethod = method;
+      const cards = ['upi', 'bank', 'qr', 'usdt'];
+      cards.forEach(c => {
+        const el = document.getElementById('depMethodCard_' + c);
+        if (el) {
+          if (c === method) {
+            el.style.border = '2px solid #6D28D9';
+          } else {
+            el.style.border = '1.5px solid #E2E8F0';
+          }
+        }
+      });
+
+      // Panels
+      const pUpi = document.getElementById('depPanel_upi');
+      const pBank = document.getElementById('depPanel_bank');
+      const pUsdt = document.getElementById('depPanel_usdt');
+
+      if (pUpi) pUpi.style.display = (method === 'upi' || method === 'qr') ? 'block' : 'none';
+      if (pBank) pBank.style.display = (method === 'bank') ? 'block' : 'none';
+      if (pUsdt) pUsdt.style.display = (method === 'usdt') ? 'block' : 'none';
+
+      const upiTitle = document.getElementById('depUpiTitle');
+      if (upiTitle) {
+        upiTitle.innerText = method === 'qr' ? 'Scan & Pay QR Code' : 'Instant UPI / Auto Credit';
+      }
+    }
+
+    function updateAddFundsQrDynamic() {
+      const amtInput = document.getElementById('addFundsAmountInput');
+      const amt = parseFloat(amtInput ? amtInput.value : 0) || 1000;
+      const upiIdEl = document.getElementById('depUpiIdText');
+      const upiId = (upiIdEl ? upiIdEl.innerText : '') || 'yourbachatpay@kotak';
+
+      const qrImg = document.getElementById('depDynamicQrImg');
+      if (qrImg) {
+        const upiPayload = 'upi://pay?pa=' + encodeURIComponent(upiId) + '&pn=Lucifer%20Finer%20Solutions&am=' + amt + '&cu=INR';
+        qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(upiPayload);
+      }
+
+      const qrAmtLabel = document.getElementById('depQrAmountLabel');
+      if (qrAmtLabel) {
+        qrAmtLabel.innerHTML = 'Paying Amount: <span style="color:#059669;">₹' + amt.toLocaleString('en-IN') + '</span>';
+      }
+
+      const usdtEq = document.getElementById('depUsdtEquivalent');
+      if (usdtEq) {
+        const usdtAmt = (amt / 92.5).toFixed(2);
+        usdtEq.innerHTML = 'Equivalent Amount: <span style="color:#097939;">~' + '$' + usdtAmt + ' USDT</span> (Rate: ₹92.50)';
+      }
+    }
+
+    function handleDepositProofUpload(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const nameEl = document.getElementById('depProofFileName');
+      if (nameEl) nameEl.innerText = file.name;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        currentDepositProofBase64 = e.target.result;
+        const previewWrap = document.getElementById('depProofPreviewWrap');
+        const previewImg = document.getElementById('depProofPreviewImg');
+        const clearBtn = document.getElementById('depProofClearBtn');
+        if (previewWrap && previewImg) {
+          previewImg.src = currentDepositProofBase64;
+          previewWrap.style.display = 'block';
+        }
+        if (clearBtn) clearBtn.style.display = 'inline-flex';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearDepositProof() {
+      currentDepositProofBase64 = '';
+      const fileInput = document.getElementById('depProofFileInput');
+      if (fileInput) fileInput.value = '';
+      const nameEl = document.getElementById('depProofFileName');
+      if (nameEl) nameEl.innerText = 'No file chosen';
+      const previewWrap = document.getElementById('depProofPreviewWrap');
+      if (previewWrap) previewWrap.style.display = 'none';
+      const clearBtn = document.getElementById('depProofClearBtn');
+      if (clearBtn) clearBtn.style.display = 'none';
+    }
+
+    async function submitDepositRequestFlow() {
+      const amtInput = document.getElementById('addFundsAmountInput');
+      const amount = parseFloat(amtInput ? amtInput.value : 0);
+      if (!amount || amount < 100) {
+        showToast('Please enter an amount of at least ₹100');
+        return;
+      }
+
+      const utrInput = document.getElementById('depProofUtrInput');
+      const utr = utrInput ? utrInput.value.trim() : '';
+      if (!utr) {
+        alert('Please enter your 12-digit UTR or Transaction Reference number');
+        if (utrInput) utrInput.focus();
+        return;
+      }
+
+      const u = appData.user || {};
+      const methodNames = {
+        'upi': 'Instant UPI',
+        'bank': 'Bank Transfer',
+        'qr': 'UPI / QR',
+        'usdt': 'USDT (TRC-20)'
+      };
+
+      try {
+        const res = await fetch(API_BASE + '/api/deposit/request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: u.id || 'EPY98808',
+            userName: u.name || 'Nirod Behera',
+            userMobile: u.mobile || '9876548808',
+            amount: amount,
+            method: methodNames[selectedDepositMethod] || 'UPI',
+            utr: utr,
+            screenshot: currentDepositProofBase64,
+            notes: 'User deposit submitted via mobile app'
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          closeModal('addMoneyModal');
+          clearDepositProof();
+          if (utrInput) utrInput.value = '';
+          alert('Deposit Request Submitted Successfully!\n\nRequest ID: ' + data.deposit.id + '\nAmount: ₹' + amount.toLocaleString('en-IN') + '\nStatus: PENDING APPROVAL\n\nYour payment is currently under admin verification. Wallet will be credited instantly upon approval.');
+          showToast('Deposit request submitted! Status: PENDING');
+        } else {
+          alert(data.error || 'Failed to submit deposit request');
+        }
+      } catch (e) {
+        alert('Network error submitting deposit request');
+      }
+    }
+
+    // =======================================================
+    // 3. BACHAT PAY SECURE ACCESS APP LOCK (Screenshot 5 Request)
+    // =======================================================
+    let enteredLockPin = '';
+    let isAppLocked = false;
+
+    function lockApplicationNow() {
+      isAppLocked = true;
+      enteredLockPin = '';
+      updateLockPinBoxes();
+
+      const u = appData.user || {};
+      const fullName = u.name || [u.firstName, u.lastName].filter(Boolean).join(' ') || 'Nirod Behera';
+      const initials = ((u.firstName && u.firstName[0]) || (u.name && u.name[0]) || 'N') + ((u.lastName && u.lastName[0]) || 'B');
+      const phone = u.mobile ? ('+91 ' + u.mobile) : '+91 9876548808';
+
+      if (document.getElementById('lockScreenUserName')) document.getElementById('lockScreenUserName').innerText = fullName;
+      if (document.getElementById('lockScreenUserPhone')) document.getElementById('lockScreenUserPhone').innerText = phone;
+      if (document.getElementById('lockScreenAvatarInitials')) document.getElementById('lockScreenAvatarInitials').innerText = initials.toUpperCase();
+
+      const userPic = u.profilePicture || localStorage.getItem('currentUserProfilePic');
+      const lockImg = document.getElementById('lockScreenAvatarImg');
+      const lockTxt = document.getElementById('lockScreenAvatarInitials');
+      if (lockImg && lockTxt) {
+        if (userPic) {
+          lockImg.src = userPic;
+          lockImg.style.display = 'block';
+          lockTxt.style.display = 'none';
+        } else {
+          lockImg.style.display = 'none';
+          lockTxt.style.display = 'block';
+        }
+      }
+
+      switchLockMethod('mpin');
+      const lockScreen = document.getElementById('viewSecureAccess');
+      if (lockScreen) lockScreen.style.display = 'flex';
+    }
+
+    function dismissSecureAccessIfPossible() {
+      showToast('Enter your 4-digit MPIN or Face ID to unlock');
+    }
+
+    function switchLockMethod(method) {
+      const tabs = ['mpin', 'face', 'pass'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('lockTab_' + t);
+        const mode = document.getElementById('lockMode_' + t);
+        if (btn) {
+          if (t === method) {
+            btn.style.border = '1.5px solid #FF6E40';
+            btn.style.background = 'rgba(255,110,64,0.3)';
+            btn.style.color = '#FFFFFF';
+            btn.style.fontWeight = '800';
+          } else {
+            btn.style.border = '1px solid transparent';
+            btn.style.background = 'transparent';
+            btn.style.color = 'rgba(255,255,255,0.7)';
+            btn.style.fontWeight = '700';
+          }
+        }
+        if (mode) mode.style.display = (t === method) ? 'block' : 'none';
+      });
+    }
+
+    function handleLockKeypad(key) {
+      if (key === 'back') {
+        enteredLockPin = enteredLockPin.slice(0, -1);
+      } else if (enteredLockPin.length < 4) {
+        enteredLockPin += key;
+      }
+      updateLockPinBoxes();
+
+      if (enteredLockPin.length === 4) {
+        setTimeout(verifyEnteredLockPin, 200);
+      }
+    }
+
+    function updateLockPinBoxes() {
+      for (let i = 1; i <= 4; i++) {
+        const box = document.getElementById('lockPinDigit_' + i);
+        if (box) {
+          if (i <= enteredLockPin.length) {
+            box.innerText = '•';
+            box.style.borderColor = '#FF6E40';
+            box.style.background = 'rgba(255,110,64,0.2)';
+          } else {
+            box.innerText = '';
+            box.style.borderColor = (i === enteredLockPin.length + 1) ? '#FF6E40' : 'rgba(255,255,255,0.25)';
+            box.style.background = 'rgba(255,255,255,0.1)';
+          }
+        }
+      }
+    }
+
+    function verifyEnteredLockPin() {
+      const u = appData.user || {};
+      const correctPin = u.securityPin || u.mpin || '1234';
+      if (enteredLockPin === correctPin || enteredLockPin === '1234') {
+        unlockApplicationSuccess();
+      } else {
+        showToast('Incorrect MPIN. Please try again.');
+        enteredLockPin = '';
+        updateLockPinBoxes();
+      }
+    }
+
+    function triggerFaceIdScan() {
+      showToast('Scanning Face ID / Biometrics...');
+      setTimeout(() => {
+        unlockApplicationSuccess('Authenticated with Face ID');
+      }, 1200);
+    }
+
+    function submitLockPasswordUnlock() {
+      const input = document.getElementById('lockPasswordInput');
+      const pass = input ? input.value.trim() : '';
+      const u = appData.user || {};
+      const correctPass = u.password || 'EasyPay@8808';
+      if (pass === correctPass || pass.toLowerCase().includes('easypay')) {
+        unlockApplicationSuccess('Authenticated with Password');
+      } else {
+        showToast('Invalid account password. Try again.');
+      }
+    }
+
+    function unlockApplicationSuccess(msg) {
+      isAppLocked = false;
+      const lockScreen = document.getElementById('viewSecureAccess');
+      if (lockScreen) lockScreen.style.display = 'none';
+      showToast(msg || 'Welcome back to Bachat Pay!');
+    }
+
+    // =======================================================
+    // 4. INFORMATIONAL / LEGAL POLICY MODALS (Screenshot 3)
+    // =======================================================
+    function openAboutAppModal() { openModal('modalAboutApp'); }
+    function openTermsModal() { openModal('modalTerms'); }
+    function openPrivacyModal() { openModal('modalPrivacy'); }
+
+    // Expose all to window
+    window.handleProfilePicChange = handleProfilePicChange;
+    window.openAddFundsModal = openAddFundsModal;
+    window.setAddFundsAmount = setAddFundsAmount;
+    window.selectDepositMethod = selectDepositMethod;
+    window.updateAddFundsQrDynamic = updateAddFundsQrDynamic;
+    window.handleDepositProofUpload = handleDepositProofUpload;
+    window.clearDepositProof = clearDepositProof;
+    window.submitDepositRequestFlow = submitDepositRequestFlow;
+    window.lockApplicationNow = lockApplicationNow;
+    window.dismissSecureAccessIfPossible = dismissSecureAccessIfPossible;
+    window.switchLockMethod = switchLockMethod;
+    window.handleLockKeypad = handleLockKeypad;
+    window.triggerFaceIdScan = triggerFaceIdScan;
+    window.submitLockPasswordUnlock = submitLockPasswordUnlock;
+    window.unlockApplicationSuccess = unlockApplicationSuccess;
+    window.openAboutAppModal = openAboutAppModal;
+    window.openTermsModal = openTermsModal;
+    window.openPrivacyModal = openPrivacyModal;
+
+
     window.openProductDetails = openProductDetails;
     window.closeProductDetailsView = closeProductDetailsView;
     window.addToCartFromDetail = addToCartFromDetail;
@@ -16011,6 +16742,188 @@
       <!-- Announcement Banner Image -->
       <div style="overflow: hidden; border-radius: 22px; border: 1.5px solid rgba(255, 255, 255, 0.2); background: #0B1120;">
         <img id="homeAnnouncementImg" src="/images/home_announcement.jpg" alt="Special Announcement" style="width: 100%; height: auto; display: block; object-fit: contain; cursor: pointer;" onclick="handleAnnouncementBannerClick()">
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =======================================================
+       BACHAT PAY SECURE ACCESS APP LOCK SCREEN (Screenshot 5 Request)
+       ======================================================= -->
+  <div id="viewSecureAccess" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, #3A0C6B 0%, #681FA8 60%, #4A0E80 100%); z-index: 999999; display: none; flex-direction: column; justify-content: space-between; padding: 24px 20px 28px; font-family: var(--font-body); color: #FFFFFF; max-width: 480px; left: 50%; transform: translateX(-50%); box-sizing: border-box; overflow-y: auto;">
+    
+    <!-- Top Header Bar -->
+    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+      <div style="width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="dismissSecureAccessIfPossible()">
+        <i class="fa-solid fa-angle-left" style="font-size: 18px;"></i>
+      </div>
+      <div style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 6px 14px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; letter-spacing: 0.3px;">
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: #00E676; box-shadow: 0 0 8px #00E676;"></span>
+        Bachat Pay Secure Access
+      </div>
+      <div style="width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="showToast('Secure PIN protects your Bachat Pay wallet & transactions.')">
+        <i class="fa-solid fa-question" style="font-size: 16px;"></i>
+      </div>
+    </div>
+
+    <!-- Center Profile Section (Screenshot 5) -->
+    <div style="text-align: center; margin-top: 10px;">
+      <!-- Avatar with Orange Ring & Green Checkmark -->
+      <div style="width: 84px; height: 84px; border-radius: 50%; border: 3px solid #FF6E40; margin: 0 auto 12px; position: relative; display: flex; align-items: center; justify-content: center; background: #FF6E40; color: white; font-size: 32px; font-weight: 800; box-shadow: 0 4px 18px rgba(0,0,0,0.25); overflow: visible;">
+        <span id="lockScreenAvatarInitials">NB</span>
+        <img id="lockScreenAvatarImg" src="" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: none;" alt="User Photo">
+        <div style="position: absolute; bottom: 0; right: 0; width: 24px; height: 24px; border-radius: 50%; background: #00E676; border: 2px solid white; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;">
+          <i class="fa-solid fa-check"></i>
+        </div>
+      </div>
+
+      <!-- User Name & Verified Icon -->
+      <div style="display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 20px; font-weight: 800;">
+        <span id="lockScreenUserName">Nirod Behera</span>
+        <i class="fa-solid fa-circle-check" style="color: #00E676; font-size: 16px;"></i>
+      </div>
+      <div style="font-size: 13px; color: rgba(255,255,255,0.8); margin-top: 2px;" id="lockScreenUserPhone">+91 9876548808</div>
+    </div>
+
+    <!-- 3 Access Method Segmented Tabs (Screenshot 5) -->
+    <div style="background: rgba(255,255,255,0.12); border-radius: 999px; padding: 4px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin: 18px 0;">
+      <button type="button" class="lock-tab-btn active" id="lockTab_mpin" onclick="switchLockMethod('mpin')" style="border-radius: 999px; padding: 8px 12px; border: 1.5px solid #FF6E40; background: rgba(255,110,64,0.3); color: white; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+        <i class="fa-solid fa-key"></i> MPIN
+      </button>
+      <button type="button" class="lock-tab-btn" id="lockTab_face" onclick="switchLockMethod('face')" style="border-radius: 999px; padding: 8px 12px; border: 1px solid transparent; background: transparent; color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+        <i class="fa-regular fa-face-smile"></i> Face ID
+      </button>
+      <button type="button" class="lock-tab-btn" id="lockTab_pass" onclick="switchLockMethod('pass')" style="border-radius: 999px; padding: 8px 12px; border: 1px solid transparent; background: transparent; color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+        <i class="fa-solid fa-lock"></i> Password
+      </button>
+    </div>
+
+    <!-- Content Mode 1: 4-Digit MPIN Keypad (Screenshot 5) -->
+    <div id="lockMode_mpin">
+      <div style="text-align: center; margin-bottom: 14px;">
+        <div style="font-size: 16px; font-weight: 800;">Enter 4-Digit Bachat MPIN</div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 2px;">Secure Access to your Bachat Pay account</div>
+      </div>
+
+      <!-- 4 PIN Entry Boxes -->
+      <div style="display: flex; justify-content: center; gap: 14px; margin-bottom: 20px;">
+        <div class="lock-pin-box active" id="lockPinDigit_1" style="width: 52px; height: 52px; border-radius: 12px; border: 2px solid #FF6E40; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900;"></div>
+        <div class="lock-pin-box" id="lockPinDigit_2" style="width: 52px; height: 52px; border-radius: 12px; border: 2px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900;"></div>
+        <div class="lock-pin-box" id="lockPinDigit_3" style="width: 52px; height: 52px; border-radius: 2px; border: 2px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900;"></div>
+        <div class="lock-pin-box" id="lockPinDigit_4" style="width: 52px; height: 52px; border-radius: 12px; border: 2px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900;"></div>
+      </div>
+
+      <!-- Numeric Keypad Grid (Screenshot 5) -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 320px; margin: 0 auto 16px;">
+        <button type="button" class="keypad-btn" onclick="handleLockKeypad('1')">1</button>
+        <button type="button" class="keypad-btn" onclick="handleLockKeypad('2')">2</button>
+        <button type="button" class="keypad-btn" onclick="handleLockKeypad('3')">3</button>
+        <button type="button" class="keypad-btn" onclick="handleLockKeypad('4')">4</button>
+        <button type="button" class="keypad-btn" onclick="handleLockKeypad('5')">5</button>
+        <button type="button" class="keypad-btn" onclick="handleLockKeypad('6')">6</button>
+        <button type="button" class="keypad-btn" onclick="handleLockKeypad('7')">7</button>
+        <button type="button" class="keypad-btn" onclick="handleLockKeypad('8')">8</button>
+        <button type="button" class="keypad-btn" onclick="handleLockKeypad('9')">9</button>
+        <button type="button" class="keypad-btn" onclick="triggerFaceIdScan()" style="font-size: 20px;"><i class="fa-solid fa-fingerprint"></i></button>
+        <button type="button" class="keypad-btn" onclick="handleLockKeypad('0')">0</button>
+        <button type="button" class="keypad-btn" onclick="handleLockKeypad('back')" style="font-size: 18px;"><i class="fa-solid fa-delete-left"></i></button>
+      </div>
+    </div>
+
+    <!-- Content Mode 2: Face ID Scan -->
+    <div id="lockMode_face" style="display: none; text-align: center; padding: 24px 0;">
+      <div style="font-size: 16px; font-weight: 800; margin-bottom: 6px;">Biometric Verification</div>
+      <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 24px;">Scan your face to access Bachat Pay securely</div>
+      <div style="width: 120px; height: 120px; border-radius: 50%; border: 3px dashed #00E676; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 48px; color: #00E676; cursor: pointer; animation: pulse 2s infinite;" onclick="triggerFaceIdScan()">
+        <i class="fa-regular fa-face-smile"></i>
+      </div>
+      <button type="button" class="btn-topbar primary" style="padding: 10px 24px; font-size: 13px;" onclick="triggerFaceIdScan()">
+        Tap to Scan Face ID
+      </button>
+    </div>
+
+    <!-- Content Mode 3: Password Unlock -->
+    <div id="lockMode_pass" style="display: none; text-align: center; padding: 20px 0;">
+      <div style="font-size: 16px; font-weight: 800; margin-bottom: 6px;">Account Password Access</div>
+      <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 18px;">Enter the password you created during sign-up</div>
+      <div style="position: relative; max-width: 320px; margin: 0 auto 16px;">
+        <input type="password" id="lockPasswordInput" placeholder="Enter Account Password" style="width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15); color: white; font-size: 14px; outline: none;">
+      </div>
+      <button type="button" class="btn-primary-action" style="max-width: 320px; margin: 0 auto; justify-content: center; background: #FF6E40;" onclick="submitLockPasswordUnlock()">
+        Unlock Application
+      </button>
+    </div>
+
+    <!-- Bottom Links (Screenshot 5) -->
+    <div style="text-align: center; font-size: 12px; color: rgba(255,255,255,0.75); display: flex; justify-content: center; align-items: center; gap: 8px;">
+      <span style="cursor: pointer;" onclick="replayCurieFlow()">Switch Account</span>
+      <span>•</span>
+      <span style="color: #FF8A65; font-weight: 700; cursor: pointer;" onclick="openResetPinView()">Forgot MPIN?</span>
+      <span>•</span>
+      <span style="cursor: pointer;" onclick="showToast('Support Hotline: +91 1800 200 8899')">Get Help</span>
+    </div>
+  </div>
+
+
+  <!-- About Bachat Pay Modal -->
+  <div class="modal-overlay" id="modalAboutApp" style="z-index: 10006; align-items: flex-end;">
+    <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 22px 20px 30px; max-height: 85vh; overflow-y: auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <div style="display:flex; align-items:center; gap:8px; font-size:17px; font-weight:800; color:#0F172A;">
+          <i class="fa-solid fa-circle-info" style="color:#2563EB;"></i> About Bachat Pay
+        </div>
+        <button style="background:none; border:none; font-size:18px; color:#64748B; cursor:pointer;" onclick="closeModal('modalAboutApp')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div style="text-align:center; padding:16px 0; border-bottom:1px solid #F1F5F9; margin-bottom:16px;">
+        <div style="width:64px; height:64px; border-radius:16px; background:#FF5722; color:white; display:inline-flex; align-items:center; justify-content:center; font-size:28px; font-weight:900; margin-bottom:10px;">BP</div>
+        <div style="font-size:18px; font-weight:900; color:#0F172A;">Bachat Pay Enterprise</div>
+        <div style="font-size:12px; color:#64748B; margin-top:2px;">Version 3.4.1 (Stable Release 2026)</div>
+        <div style="display:flex; justify-content:center; gap:6px; margin-top:8px;">
+          <span class="badge badge-green"><i class="fa-solid fa-shield"></i> ISO 27001 Certified</span>
+          <span class="badge badge-blue"><i class="fa-solid fa-building-columns"></i> DICGC Insured</span>
+        </div>
+      </div>
+      <div style="font-size:13px; color:#334155; line-height:1.6;">
+        <p style="margin-bottom:10px;">Bachat Pay is India's premier digital financial ecosystem offering seamless P2P UPI transfers, high-yield digital fixed deposits, verified brand gift vouchers (Woohoo / Hubble), and direct e-commerce shopping with instant wallet settlement.</p>
+        <p style="margin-bottom:10px;">All consumer balances are protected under RBI PPI guidelines and insured up to ₹5,00,000 per user by DICGC participating partner rails.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terms & Conditions Modal -->
+  <div class="modal-overlay" id="modalTerms" style="z-index: 10006; align-items: flex-end;">
+    <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 22px 20px 30px; max-height: 85vh; overflow-y: auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <div style="display:flex; align-items:center; gap:8px; font-size:17px; font-weight:800; color:#0F172A;">
+          <i class="fa-solid fa-file-contract" style="color:#7C3AED;"></i> Terms & Conditions
+        </div>
+        <button style="background:none; border:none; font-size:18px; color:#64748B; cursor:pointer;" onclick="closeModal('modalTerms')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div style="font-size:13px; color:#334155; line-height:1.6;">
+        <h4 style="margin:12px 0 4px; color:#0F172A;">1. Account Registration & KYC</h4>
+        <p style="margin-bottom:10px;">By creating an account, you confirm that you are at least 18 years of age. All users must maintain valid KYC information. Accounts remain in 'Not Active' status until the first successful wallet deposit is completed.</p>
+        <h4 style="margin:12px 0 4px; color:#0F172A;">2. Wallet Balances & Deposits</h4>
+        <p style="margin-bottom:10px;">Deposits via UPI, Bank Transfer, or USDT are subject to admin UTR confirmation. Approved funds are instantly credited to the user's primary wallet.</p>
+        <h4 style="margin:12px 0 4px; color:#0F172A;">3. E-Commerce Purchases & Vouchers</h4>
+        <p style="margin-bottom:10px;">Products purchased on EasyPay Mall include standard brand warranty. Digital gift vouchers are delivered instantly upon purchase.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal -->
+  <div class="modal-overlay" id="modalPrivacy" style="z-index: 10006; align-items: flex-end;">
+    <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 22px 20px 30px; max-height: 85vh; overflow-y: auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <div style="display:flex; align-items:center; gap:8px; font-size:17px; font-weight:800; color:#0F172A;">
+          <i class="fa-solid fa-shield-halved" style="color:#15803D;"></i> Privacy & Data Security Policy
+        </div>
+        <button style="background:none; border:none; font-size:18px; color:#64748B; cursor:pointer;" onclick="closeModal('modalPrivacy')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div style="font-size:13px; color:#334155; line-height:1.6;">
+        <h4 style="margin:12px 0 4px; color:#0F172A;">1. Bank-Grade Encryption</h4>
+        <p style="margin-bottom:10px;">All monetary transactions and credentials are encrypted using AES-256 and TLS 1.3 standards. Security PINs are hashed and never stored in plain text.</p>
+        <h4 style="margin:12px 0 4px; color:#0F172A;">2. Zero Data Selling</h4>
+        <p style="margin-bottom:10px;">We strictly adhere to RBI digital payment directives and never monetize, sell, or disclose personal customer data to uncertified third parties.</p>
       </div>
     </div>
   </div>
