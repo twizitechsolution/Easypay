@@ -215,7 +215,7 @@ const tests = [
           adminHtml.includes('NOT ACTIVE (Pending First Deposit)')
   },
   {
-    name: 'Req 42: Legal modals (About Bachat Pay, Terms & Conditions, Privacy Policy)',
+    name: 'Req 42: Legal modals (About EasyPay, Terms & Conditions, Privacy Policy)',
     pass: appHtml.includes('modalAboutApp') &&
           appHtml.includes('modalTerms') &&
           appHtml.includes('modalPrivacy') &&
@@ -254,9 +254,9 @@ const tests = [
           adminHtml.includes('api/admin/payment-settings')
   },
   {
-    name: 'Req 46: Bachat Pay Secure Access lock screen with MPIN keypad, Face ID & Password unlock',
+    name: 'Req 46: EasyPay Secure Access lock screen with MPIN keypad, Face ID & Password unlock',
     pass: appHtml.includes('viewSecureAccess') &&
-          appHtml.includes('Bachat Pay Secure Access') &&
+          appHtml.includes('EasyPay Secure Access') &&
           appHtml.includes('handleLockKeypad') &&
           appHtml.includes('switchLockMethod') &&
           appHtml.includes('triggerFaceIdScan') &&

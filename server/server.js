@@ -3707,7 +3707,7 @@ const server = http.createServer(requestHandler);
 if (require.main === module) {
   server.listen(PORT, () => {
     console.log(`====================================================`);
-    console.log(`  BACHAT PAY ENTERPRISE PLATFORM (ONLINE ON PORT ${PORT})`);
+    console.log(`  EASYPAY ENTERPRISE PLATFORM (ONLINE ON PORT ${PORT})`);
     console.log(`  -> Official Website:      http://localhost:${PORT}/`);
     console.log(`  -> Mobile Native App:     http://localhost:${PORT}/app`);
     console.log(`  -> Enterprise Admin:      http://localhost:${PORT}/admin`);

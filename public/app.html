@@ -4291,21 +4291,24 @@
   
     .keypad-btn {
       width: 100%;
-      height: 52px;
-      border-radius: 12px;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #FFFFFF;
+      height: 50px;
+      border-radius: 14px;
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      color: #0F172A;
       font-size: 20px;
       font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.15s;
+      box-shadow: 0 2px 6px rgba(15,23,42,0.04);
+      transition: all 0.12s;
     }
     .keypad-btn:active {
-      background: rgba(255,255,255,0.35);
+      background: #FFF3E0;
+      border-color: #FF5722;
+      color: #FF5722;
       transform: scale(0.96);
     }
 
@@ -5859,15 +5862,7 @@
           </div>
         </div>
 
-        <div class="profile-kyc-alert-strip">
-          <div style="display:flex; align-items:center; gap:6px;">
-            <span>Complete KYC for smooth experience: <strong>UPDATE KYC</strong></span>
-          </div>
-          <div style="display:flex; gap:4px;">
-            <span style="width:6px; height:6px; border-radius:50%; background:#FF5722;"></span>
-            <span style="width:6px; height:6px; border-radius:50%; background:#FFE0B2;"></span>
-          </div>
-        </div>
+
 
         <!-- Menu Group 1: Scanner & Payments (Screenshot 4) -->
         <div class="profile-menu-group">
@@ -5979,14 +5974,14 @@
 
         <!-- Menu Group 3: App Information & Legal Policies (Screenshot 3 Request) -->
         <div class="profile-menu-group" style="margin-bottom:40px;">
-          <!-- 1. About Bachat Pay -->
+          <!-- 1. About EasyPay -->
           <div class="profile-menu-row" onclick="openAboutAppModal()">
             <div class="profile-menu-left">
               <div class="profile-menu-icon" style="background:#E0F2FE; color:#0284C7;">
                 <i class="fa-solid fa-circle-info"></i>
               </div>
               <div class="profile-menu-text-wrap">
-                <span class="profile-menu-item-title">About Bachat Pay</span>
+                <span class="profile-menu-item-title">About EasyPay</span>
                 <span class="profile-menu-item-sub">Application overview & security credentials</span>
               </div>
             </div>
@@ -6021,19 +6016,7 @@
             <i class="fa-solid fa-chevron-right" style="color:#BDBDBD; font-size:13px;"></i>
           </div>
 
-          <!-- Lock App / Secure Access -->
-          <div class="profile-menu-row" onclick="lockApplicationNow()">
-            <div class="profile-menu-left">
-              <div class="profile-menu-icon" style="background:#FEF3C7; color:#D97706;">
-                <i class="fa-solid fa-lock"></i>
-              </div>
-              <div class="profile-menu-text-wrap">
-                <span class="profile-menu-item-title">Lock App / Secure Access</span>
-                <span class="profile-menu-item-sub">Require 4-digit MPIN or Face ID to re-open</span>
-              </div>
-            </div>
-            <i class="fa-solid fa-chevron-right" style="color:#BDBDBD; font-size:13px;"></i>
-          </div>
+
 
           <!-- Log Out & Switch User -->
           <div class="profile-menu-row" onclick="replayCurieFlow()">
@@ -6542,7 +6525,7 @@
       <!-- ==============================================================
            VIEW: SET / RESET SECURITY PIN (USER REQUESTED DEDICATED VIEW)
            ============================================================== -->
-      <div class="view-panel" id="viewResetPin" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+      <div class="view-panel" id="viewResetPin" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000000; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
         <!-- Top App Bar -->
         <div style="background: #FFFFFF; padding: 14px 16px; border-bottom: 1px solid #E2E8F0; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;">
           <div style="display: flex; align-items: center; gap: 12px;">
@@ -10132,6 +10115,7 @@
     }
 
     // Direct URL hash / initial tab listener with production Auth Guard
+    let hasRunInitialAppLaunch = false;
     function handleInitialRoute() {
       const hash = (window.location.hash || '').replace('#', '').toLowerCase();
       const path = (window.location.pathname || '').replace('/', '').toLowerCase();
@@ -10141,15 +10125,10 @@
 
       // If user is not authenticated, start with Splash -> Login sequence
       if (!isAuthed) {
+        hasRunInitialAppLaunch = true;
         launchEasyPaySplash();
         return;
       }
-
-      // Hide all auth screens immediately for authenticated user
-      document.querySelectorAll('.ep-auth-fullscreen').forEach(el => {
-        el.classList.remove('active');
-        el.style.display = 'none';
-      });
 
       // Restore cached user profile if present
       try {
@@ -10162,6 +10141,22 @@
           }
         }
       } catch(e) {}
+
+      // On fresh app open while already logged in: Splash Screen -> EasyPay Lock Screen
+      if (!hasRunInitialAppLaunch) {
+        hasRunInitialAppLaunch = true;
+        const validTabs = ['home', 'giftcards', 'bonds', 'shopping', 'passbook', 'profile'];
+        const target = validTabs.find(t => t === hash || t === path) || 'home';
+        switchNavTab(target);
+        launchEasyPaySplash();
+        return;
+      }
+
+      // Hide all auth screens for in-app hash navigation
+      document.querySelectorAll('.ep-auth-fullscreen').forEach(el => {
+        el.classList.remove('active');
+        el.style.display = 'none';
+      });
 
       if (hash === 'auth' || hash === 'splash' || path === 'auth' || path === 'splash' || hash === 'login' || path === 'login' || hash === 'otp' || path === 'otp') {
         switchNavTab('home');
@@ -10184,10 +10179,13 @@
       localStorage.removeItem('easypay_logged_mobile');
       localStorage.removeItem('easypay_session_user');
       sessionStorage.removeItem('easypay_auth_completed');
+      const lockScreen = document.getElementById('viewSecureAccess');
+      if (lockScreen) lockScreen.style.display = 'none';
+      if (typeof isAppLocked !== 'undefined') isAppLocked = false;
       showToast('Logged out of EasyPay');
       setTimeout(() => {
         launchEasyPaySplash();
-      }, 500);
+      }, 400);
     }
 
     function openModal(id) {
@@ -13192,23 +13190,41 @@
             setTimeout(() => {
               const sp = document.getElementById('epSplashScreen');
               if (sp && (sp.classList.contains('active') || sp.style.display === 'flex')) {
-                goToEasyPayLogin();
+                finishEasyPaySplash();
               }
-            }, 900);
+            }, 700);
           }
-        }, 120);
+        }, 110);
       }
 
-      // Safety watchdog: after 2.2 seconds unconditionally advance to login if splash is still displayed
+      // Safety watchdog: after 2.0 seconds advance from splash to Lock Screen (if logged in) or Login
       setTimeout(() => {
         const sp = document.getElementById('epSplashScreen');
         const login = document.getElementById('epLoginScreen');
         if (sp && (sp.classList.contains('active') || sp.style.display === 'flex')) {
           if (login && !login.classList.contains('active')) {
-            goToEasyPayLogin();
+            finishEasyPaySplash();
           }
         }
-      }, 2200);
+      }, 2000);
+    }
+
+    function finishEasyPaySplash() {
+      if (typewriterInterval) {
+        clearInterval(typewriterInterval);
+        typewriterInterval = null;
+      }
+      const splash = document.getElementById('epSplashScreen');
+      if (splash) {
+        splash.classList.remove('active');
+        splash.style.display = 'none';
+      }
+      const isAuthed = localStorage.getItem('easypay_auth_completed') === 'true' || sessionStorage.getItem('easypay_auth_completed') === 'true';
+      if (isAuthed && typeof lockApplicationNow === 'function') {
+        lockApplicationNow();
+      } else {
+        goToEasyPayLogin();
+      }
     }
 
     // 2. Login Screen
@@ -15373,8 +15389,12 @@
     // ==============================================================
     // SET / RESET SECURITY PIN CONTROLLER (USER REQUESTED DEDICATED VIEW)
     // ==============================================================
-    function openResetPinView() {
-      document.querySelectorAll('.view-panel').forEach(v => v.style.display = 'none');
+    let resetPinFromLockScreen = false;
+    function openResetPinView(fromLock) {
+      resetPinFromLockScreen = (fromLock === true);
+      if (!resetPinFromLockScreen) {
+        document.querySelectorAll('.view-panel').forEach(v => v.style.display = 'none');
+      }
       const v = document.getElementById('viewResetPin');
       if (v) v.style.display = 'block';
 
@@ -15399,6 +15419,12 @@
     function closeResetPinView() {
       const v = document.getElementById('viewResetPin');
       if (v) v.style.display = 'none';
+      if (resetPinFromLockScreen) {
+        resetPinFromLockScreen = false;
+        const lockScreen = document.getElementById('viewSecureAccess');
+        if (lockScreen) lockScreen.style.display = 'flex';
+        return;
+      }
       switchNavTab('profile');
     }
 
@@ -15761,15 +15787,17 @@
         const mode = document.getElementById('lockMode_' + t);
         if (btn) {
           if (t === method) {
-            btn.style.border = '1.5px solid #FF6E40';
-            btn.style.background = 'rgba(255,110,64,0.3)';
+            btn.style.border = '1.5px solid #FF5722';
+            btn.style.background = '#FF5722';
             btn.style.color = '#FFFFFF';
             btn.style.fontWeight = '800';
+            btn.style.boxShadow = '0 2px 8px rgba(255,87,34,0.25)';
           } else {
             btn.style.border = '1px solid transparent';
             btn.style.background = 'transparent';
-            btn.style.color = 'rgba(255,255,255,0.7)';
+            btn.style.color = '#64748B';
             btn.style.fontWeight = '700';
+            btn.style.boxShadow = 'none';
           }
         }
         if (mode) mode.style.display = (t === method) ? 'block' : 'none';
@@ -15795,12 +15823,14 @@
         if (box) {
           if (i <= enteredLockPin.length) {
             box.innerText = '•';
-            box.style.borderColor = '#FF6E40';
-            box.style.background = 'rgba(255,110,64,0.2)';
+            box.style.borderColor = '#FF5722';
+            box.style.background = '#FFF3E0';
+            box.style.color = '#FF5722';
           } else {
             box.innerText = '';
-            box.style.borderColor = (i === enteredLockPin.length + 1) ? '#FF6E40' : 'rgba(255,255,255,0.25)';
-            box.style.background = 'rgba(255,255,255,0.1)';
+            box.style.borderColor = (i === enteredLockPin.length + 1) ? '#FF5722' : '#E2E8F0';
+            box.style.background = '#F8FAFC';
+            box.style.color = '#0F172A';
           }
         }
       }
@@ -15841,7 +15871,7 @@
       isAppLocked = false;
       const lockScreen = document.getElementById('viewSecureAccess');
       if (lockScreen) lockScreen.style.display = 'none';
-      showToast(msg || 'Welcome back to Bachat Pay!');
+      showToast(msg || 'Welcome back to EasyPay!');
     }
 
     // =======================================================
@@ -16748,135 +16778,138 @@
 
 
   <!-- =======================================================
-       BACHAT PAY SECURE ACCESS APP LOCK SCREEN (Screenshot 5 Request)
+       EASYPAY SECURE ACCESS APP LOCK SCREEN (Matched Orange/White App Theme)
        ======================================================= -->
-  <div id="viewSecureAccess" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, #3A0C6B 0%, #681FA8 60%, #4A0E80 100%); z-index: 999999; display: none; flex-direction: column; justify-content: space-between; padding: 24px 20px 28px; font-family: var(--font-body); color: #FFFFFF; max-width: 480px; left: 50%; transform: translateX(-50%); box-sizing: border-box; overflow-y: auto;">
+  <div id="viewSecureAccess" style="position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; height: 100%; background: #F8FAFC; z-index: 999999; display: none; flex-direction: column; font-family: var(--font-body); color: #0F172A; box-sizing: border-box; overflow-y: auto;">
     
-    <!-- Top Header Bar -->
-    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-      <div style="width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="dismissSecureAccessIfPossible()">
-        <i class="fa-solid fa-angle-left" style="font-size: 18px;"></i>
-      </div>
-      <div style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 6px 14px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; letter-spacing: 0.3px;">
-        <span style="width: 8px; height: 8px; border-radius: 50%; background: #00E676; box-shadow: 0 0 8px #00E676;"></span>
-        Bachat Pay Secure Access
-      </div>
-      <div style="width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="showToast('Secure PIN protects your Bachat Pay wallet & transactions.')">
-        <i class="fa-solid fa-question" style="font-size: 16px;"></i>
-      </div>
-    </div>
-
-    <!-- Center Profile Section (Screenshot 5) -->
-    <div style="text-align: center; margin-top: 10px;">
-      <!-- Avatar with Orange Ring & Green Checkmark -->
-      <div style="width: 84px; height: 84px; border-radius: 50%; border: 3px solid #FF6E40; margin: 0 auto 12px; position: relative; display: flex; align-items: center; justify-content: center; background: #FF6E40; color: white; font-size: 32px; font-weight: 800; box-shadow: 0 4px 18px rgba(0,0,0,0.25); overflow: visible;">
-        <span id="lockScreenAvatarInitials">NB</span>
-        <img id="lockScreenAvatarImg" src="" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: none;" alt="User Photo">
-        <div style="position: absolute; bottom: 0; right: 0; width: 24px; height: 24px; border-radius: 50%; background: #00E676; border: 2px solid white; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;">
-          <i class="fa-solid fa-check"></i>
+    <!-- Top Orange Hero Banner (Matches EasyPay Profile Page Theme) -->
+    <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 18px 18px 34px; color: #FFFFFF; position: relative; flex-shrink: 0;">
+      <!-- Top Bar (No Back Button; Centered Secure Pill + Help Button) -->
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 14px;">
+        <div style="width: 34px;"></div>
+        <div style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 6px 14px; font-size: 12px; font-weight: 800; display: flex; align-items: center; gap: 6px; letter-spacing: 0.3px;">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: #00E676; box-shadow: 0 0 8px #00E676;"></span>
+          EasyPay Secure Access
+        </div>
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="showToast('Secure PIN protects your EasyPay wallet & transactions.')">
+          <i class="fa-solid fa-question" style="font-size: 14px;"></i>
         </div>
       </div>
 
-      <!-- User Name & Verified Icon -->
-      <div style="display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 20px; font-weight: 800;">
-        <span id="lockScreenUserName">Nirod Behera</span>
-        <i class="fa-solid fa-circle-check" style="color: #00E676; font-size: 16px;"></i>
-      </div>
-      <div style="font-size: 13px; color: rgba(255,255,255,0.8); margin-top: 2px;" id="lockScreenUserPhone">+91 9876548808</div>
-    </div>
-
-    <!-- 3 Access Method Segmented Tabs (Screenshot 5) -->
-    <div style="background: rgba(255,255,255,0.12); border-radius: 999px; padding: 4px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin: 18px 0;">
-      <button type="button" class="lock-tab-btn active" id="lockTab_mpin" onclick="switchLockMethod('mpin')" style="border-radius: 999px; padding: 8px 12px; border: 1.5px solid #FF6E40; background: rgba(255,110,64,0.3); color: white; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
-        <i class="fa-solid fa-key"></i> MPIN
-      </button>
-      <button type="button" class="lock-tab-btn" id="lockTab_face" onclick="switchLockMethod('face')" style="border-radius: 999px; padding: 8px 12px; border: 1px solid transparent; background: transparent; color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
-        <i class="fa-regular fa-face-smile"></i> Face ID
-      </button>
-      <button type="button" class="lock-tab-btn" id="lockTab_pass" onclick="switchLockMethod('pass')" style="border-radius: 999px; padding: 8px 12px; border: 1px solid transparent; background: transparent; color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
-        <i class="fa-solid fa-lock"></i> Password
-      </button>
-    </div>
-
-    <!-- Content Mode 1: 4-Digit MPIN Keypad (Screenshot 5) -->
-    <div id="lockMode_mpin">
-      <div style="text-align: center; margin-bottom: 14px;">
-        <div style="font-size: 16px; font-weight: 800;">Enter 4-Digit Bachat MPIN</div>
-        <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 2px;">Secure Access to your Bachat Pay account</div>
-      </div>
-
-      <!-- 4 PIN Entry Boxes -->
-      <div style="display: flex; justify-content: center; gap: 14px; margin-bottom: 20px;">
-        <div class="lock-pin-box active" id="lockPinDigit_1" style="width: 52px; height: 52px; border-radius: 12px; border: 2px solid #FF6E40; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900;"></div>
-        <div class="lock-pin-box" id="lockPinDigit_2" style="width: 52px; height: 52px; border-radius: 12px; border: 2px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900;"></div>
-        <div class="lock-pin-box" id="lockPinDigit_3" style="width: 52px; height: 52px; border-radius: 2px; border: 2px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900;"></div>
-        <div class="lock-pin-box" id="lockPinDigit_4" style="width: 52px; height: 52px; border-radius: 12px; border: 2px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900;"></div>
-      </div>
-
-      <!-- Numeric Keypad Grid (Screenshot 5) -->
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 320px; margin: 0 auto 16px;">
-        <button type="button" class="keypad-btn" onclick="handleLockKeypad('1')">1</button>
-        <button type="button" class="keypad-btn" onclick="handleLockKeypad('2')">2</button>
-        <button type="button" class="keypad-btn" onclick="handleLockKeypad('3')">3</button>
-        <button type="button" class="keypad-btn" onclick="handleLockKeypad('4')">4</button>
-        <button type="button" class="keypad-btn" onclick="handleLockKeypad('5')">5</button>
-        <button type="button" class="keypad-btn" onclick="handleLockKeypad('6')">6</button>
-        <button type="button" class="keypad-btn" onclick="handleLockKeypad('7')">7</button>
-        <button type="button" class="keypad-btn" onclick="handleLockKeypad('8')">8</button>
-        <button type="button" class="keypad-btn" onclick="handleLockKeypad('9')">9</button>
-        <button type="button" class="keypad-btn" onclick="triggerFaceIdScan()" style="font-size: 20px;"><i class="fa-solid fa-fingerprint"></i></button>
-        <button type="button" class="keypad-btn" onclick="handleLockKeypad('0')">0</button>
-        <button type="button" class="keypad-btn" onclick="handleLockKeypad('back')" style="font-size: 18px;"><i class="fa-solid fa-delete-left"></i></button>
+      <!-- Center Profile Section -->
+      <div style="text-align: center;">
+        <div style="width: 76px; height: 76px; border-radius: 50%; border: 3px solid #FFFFFF; margin: 0 auto 10px; position: relative; display: flex; align-items: center; justify-content: center; background: #E64A19; color: white; font-size: 28px; font-weight: 800; box-shadow: 0 4px 14px rgba(0,0,0,0.18); overflow: visible;">
+          <span id="lockScreenAvatarInitials">NB</span>
+          <img id="lockScreenAvatarImg" src="" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: none;" alt="User Photo">
+          <div style="position: absolute; bottom: -2px; right: -2px; width: 22px; height: 22px; border-radius: 50%; background: #00C853; border: 2px solid white; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px;">
+            <i class="fa-solid fa-check"></i>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 19px; font-weight: 800;">
+          <span id="lockScreenUserName">Nirod Behera</span>
+          <i class="fa-solid fa-circle-check" style="color: #B9F6CA; font-size: 15px;"></i>
+        </div>
+        <div style="font-size: 13px; color: rgba(255,255,255,0.92); margin-top: 2px;" id="lockScreenUserPhone">+91 9876548808</div>
       </div>
     </div>
 
-    <!-- Content Mode 2: Face ID Scan -->
-    <div id="lockMode_face" style="display: none; text-align: center; padding: 24px 0;">
-      <div style="font-size: 16px; font-weight: 800; margin-bottom: 6px;">Biometric Verification</div>
-      <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 24px;">Scan your face to access Bachat Pay securely</div>
-      <div style="width: 120px; height: 120px; border-radius: 50%; border: 3px dashed #00E676; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 48px; color: #00E676; cursor: pointer; animation: pulse 2s infinite;" onclick="triggerFaceIdScan()">
-        <i class="fa-regular fa-face-smile"></i>
-      </div>
-      <button type="button" class="btn-topbar primary" style="padding: 10px 24px; font-size: 13px;" onclick="triggerFaceIdScan()">
-        Tap to Scan Face ID
-      </button>
-    </div>
+    <!-- Clean White Card Body (Matches EasyPay App Cards) -->
+    <div style="background: #FFFFFF; border-radius: 24px 24px 0 0; margin-top: -18px; padding: 20px 20px 24px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 -4px 18px rgba(0,0,0,0.06); position: relative; z-index: 2;">
+      <div>
+        <!-- 3 Access Method Segmented Tabs -->
+        <div style="background: #F1F5F9; border-radius: 999px; padding: 4px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-bottom: 18px;">
+          <button type="button" class="lock-tab-btn active" id="lockTab_mpin" onclick="switchLockMethod('mpin')" style="border-radius: 999px; padding: 8px 12px; border: 1.5px solid #FF5722; background: #FF5722; color: #FFFFFF; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <i class="fa-solid fa-key"></i> MPIN
+          </button>
+          <button type="button" class="lock-tab-btn" id="lockTab_face" onclick="switchLockMethod('face')" style="border-radius: 999px; padding: 8px 12px; border: 1px solid transparent; background: transparent; color: #64748B; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <i class="fa-regular fa-face-smile"></i> Face ID
+          </button>
+          <button type="button" class="lock-tab-btn" id="lockTab_pass" onclick="switchLockMethod('pass')" style="border-radius: 999px; padding: 8px 12px; border: 1px solid transparent; background: transparent; color: #64748B; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <i class="fa-solid fa-lock"></i> Password
+          </button>
+        </div>
 
-    <!-- Content Mode 3: Password Unlock -->
-    <div id="lockMode_pass" style="display: none; text-align: center; padding: 20px 0;">
-      <div style="font-size: 16px; font-weight: 800; margin-bottom: 6px;">Account Password Access</div>
-      <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 18px;">Enter the password you created during sign-up</div>
-      <div style="position: relative; max-width: 320px; margin: 0 auto 16px;">
-        <input type="password" id="lockPasswordInput" placeholder="Enter Account Password" style="width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15); color: white; font-size: 14px; outline: none;">
-      </div>
-      <button type="button" class="btn-primary-action" style="max-width: 320px; margin: 0 auto; justify-content: center; background: #FF6E40;" onclick="submitLockPasswordUnlock()">
-        Unlock Application
-      </button>
-    </div>
+        <!-- Content Mode 1: 4-Digit MPIN Keypad -->
+        <div id="lockMode_mpin">
+          <div style="text-align: center; margin-bottom: 14px;">
+            <div style="font-size: 16px; font-weight: 800; color: #0F172A;">Enter 4-Digit EasyPay MPIN</div>
+            <div style="font-size: 12px; color: #64748B; margin-top: 2px;">Secure Access to your EasyPay account</div>
+          </div>
 
-    <!-- Bottom Links (Screenshot 5) -->
-    <div style="text-align: center; font-size: 12px; color: rgba(255,255,255,0.75); display: flex; justify-content: center; align-items: center; gap: 8px;">
-      <span style="cursor: pointer;" onclick="replayCurieFlow()">Switch Account</span>
-      <span>•</span>
-      <span style="color: #FF8A65; font-weight: 700; cursor: pointer;" onclick="openResetPinView()">Forgot MPIN?</span>
-      <span>•</span>
-      <span style="cursor: pointer;" onclick="showToast('Support Hotline: +91 1800 200 8899')">Get Help</span>
+          <!-- 4 PIN Entry Boxes -->
+          <div style="display: flex; justify-content: center; gap: 14px; margin-bottom: 18px;">
+            <div class="lock-pin-box active" id="lockPinDigit_1" style="width: 52px; height: 52px; border-radius: 14px; border: 2px solid #FF5722; background: #F8FAFC; color: #0F172A; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900;"></div>
+            <div class="lock-pin-box" id="lockPinDigit_2" style="width: 52px; height: 52px; border-radius: 14px; border: 2px solid #E2E8F0; background: #F8FAFC; color: #0F172A; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900;"></div>
+            <div class="lock-pin-box" id="lockPinDigit_3" style="width: 52px; height: 52px; border-radius: 14px; border: 2px solid #E2E8F0; background: #F8FAFC; color: #0F172A; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900;"></div>
+            <div class="lock-pin-box" id="lockPinDigit_4" style="width: 52px; height: 52px; border-radius: 14px; border: 2px solid #E2E8F0; background: #F8FAFC; color: #0F172A; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900;"></div>
+          </div>
+
+          <!-- Numeric Keypad Grid -->
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 320px; margin: 0 auto 14px;">
+            <button type="button" class="keypad-btn" onclick="handleLockKeypad('1')">1</button>
+            <button type="button" class="keypad-btn" onclick="handleLockKeypad('2')">2</button>
+            <button type="button" class="keypad-btn" onclick="handleLockKeypad('3')">3</button>
+            <button type="button" class="keypad-btn" onclick="handleLockKeypad('4')">4</button>
+            <button type="button" class="keypad-btn" onclick="handleLockKeypad('5')">5</button>
+            <button type="button" class="keypad-btn" onclick="handleLockKeypad('6')">6</button>
+            <button type="button" class="keypad-btn" onclick="handleLockKeypad('7')">7</button>
+            <button type="button" class="keypad-btn" onclick="handleLockKeypad('8')">8</button>
+            <button type="button" class="keypad-btn" onclick="handleLockKeypad('9')">9</button>
+            <button type="button" class="keypad-btn" onclick="triggerFaceIdScan()" style="font-size: 20px; color: #FF5722;"><i class="fa-solid fa-fingerprint"></i></button>
+            <button type="button" class="keypad-btn" onclick="handleLockKeypad('0')">0</button>
+            <button type="button" class="keypad-btn" onclick="handleLockKeypad('back')" style="font-size: 18px; color: #64748B;"><i class="fa-solid fa-delete-left"></i></button>
+          </div>
+        </div>
+
+        <!-- Content Mode 2: Face ID Scan -->
+        <div id="lockMode_face" style="display: none; text-align: center; padding: 24px 0;">
+          <div style="font-size: 16px; font-weight: 800; color: #0F172A; margin-bottom: 6px;">Biometric Verification</div>
+          <div style="font-size: 12px; color: #64748B; margin-bottom: 24px;">Scan your face to access EasyPay securely</div>
+          <div style="width: 116px; height: 116px; border-radius: 50%; border: 3px dashed #FF5722; background: #FFF3E0; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 46px; color: #FF5722; cursor: pointer;" onclick="triggerFaceIdScan()">
+            <i class="fa-regular fa-face-smile"></i>
+          </div>
+          <button type="button" class="btn-primary-action" style="max-width: 240px; margin: 0 auto; justify-content: center; background: #FF5722; color: #FFFFFF; border-radius: 12px; padding: 12px 20px;" onclick="triggerFaceIdScan()">
+            Tap to Scan Face ID
+          </button>
+        </div>
+
+        <!-- Content Mode 3: Password Unlock -->
+        <div id="lockMode_pass" style="display: none; text-align: center; padding: 20px 0;">
+          <div style="font-size: 16px; font-weight: 800; color: #0F172A; margin-bottom: 6px;">Account Password Access</div>
+          <div style="font-size: 12px; color: #64748B; margin-bottom: 18px;">Enter the password you created during sign-up</div>
+          <div style="position: relative; max-width: 320px; margin: 0 auto 16px;">
+            <input type="password" id="lockPasswordInput" placeholder="Enter Account Password" style="width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid #CBD5E1; background: #F8FAFC; color: #0F172A; font-size: 14px; outline: none; box-sizing: border-box;">
+          </div>
+          <button type="button" class="btn-primary-action" style="max-width: 320px; margin: 0 auto; justify-content: center; background: #FF5722; color: #FFFFFF; border-radius: 12px; padding: 12px 20px;" onclick="submitLockPasswordUnlock()">
+            Unlock Application
+          </button>
+        </div>
+      </div>
+
+      <!-- Bottom Links -->
+      <div style="text-align: center; font-size: 12.5px; color: #64748B; display: flex; justify-content: center; align-items: center; gap: 10px; padding-top: 10px; border-top: 1px solid #F1F5F9;">
+        <span style="cursor: pointer; font-weight: 600;" onclick="logoutUser()">Switch Account</span>
+        <span>•</span>
+        <span style="color: #FF5722; font-weight: 800; cursor: pointer;" onclick="openResetPinView(true)">Forgot MPIN?</span>
+        <span>•</span>
+        <span style="cursor: pointer; font-weight: 600;" onclick="showToast('Support Hotline: +91 1800 200 8899')">Get Help</span>
+      </div>
     </div>
   </div>
 
 
-  <!-- About Bachat Pay Modal -->
+  <!-- About EasyPay Modal -->
   <div class="modal-overlay" id="modalAboutApp" style="z-index: 10006; align-items: flex-end;">
     <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 22px 20px 30px; max-height: 85vh; overflow-y: auto;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
         <div style="display:flex; align-items:center; gap:8px; font-size:17px; font-weight:800; color:#0F172A;">
-          <i class="fa-solid fa-circle-info" style="color:#2563EB;"></i> About Bachat Pay
+          <i class="fa-solid fa-circle-info" style="color:#FF5722;"></i> About EasyPay
         </div>
         <button style="background:none; border:none; font-size:18px; color:#64748B; cursor:pointer;" onclick="closeModal('modalAboutApp')"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div style="text-align:center; padding:16px 0; border-bottom:1px solid #F1F5F9; margin-bottom:16px;">
-        <div style="width:64px; height:64px; border-radius:16px; background:#FF5722; color:white; display:inline-flex; align-items:center; justify-content:center; font-size:28px; font-weight:900; margin-bottom:10px;">BP</div>
-        <div style="font-size:18px; font-weight:900; color:#0F172A;">Bachat Pay Enterprise</div>
+        <div style="width:64px; height:64px; border-radius:16px; background:linear-gradient(135deg, #FF5722, #FF7043); color:white; display:inline-flex; align-items:center; justify-content:center; font-size:28px; font-weight:900; margin-bottom:10px;">EP</div>
+        <div style="font-size:18px; font-weight:900; color:#0F172A;">EasyPay Enterprise</div>
         <div style="font-size:12px; color:#64748B; margin-top:2px;">Version 3.4.1 (Stable Release 2026)</div>
         <div style="display:flex; justify-content:center; gap:6px; margin-top:8px;">
           <span class="badge badge-green"><i class="fa-solid fa-shield"></i> ISO 27001 Certified</span>
@@ -16884,7 +16917,7 @@
         </div>
       </div>
       <div style="font-size:13px; color:#334155; line-height:1.6;">
-        <p style="margin-bottom:10px;">Bachat Pay is India's premier digital financial ecosystem offering seamless P2P UPI transfers, high-yield digital fixed deposits, verified brand gift vouchers (Woohoo / Hubble), and direct e-commerce shopping with instant wallet settlement.</p>
+        <p style="margin-bottom:10px;">EasyPay is India's premier digital financial ecosystem offering seamless P2P UPI transfers, high-yield digital fixed deposits, verified brand gift vouchers (Woohoo / Hubble), and direct e-commerce shopping with instant wallet settlement.</p>
         <p style="margin-bottom:10px;">All consumer balances are protected under RBI PPI guidelines and insured up to ₹5,00,000 per user by DICGC participating partner rails.</p>
       </div>
     </div>
