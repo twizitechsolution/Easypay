@@ -34,7 +34,34 @@
     "profilePicture": "",
     "referralCode": "REF_EPY98808",
     "referredBy": "SYSTEM",
-    "registeredAt": "2026-11-18T18:15:15.374Z"
+    "registeredAt": "2026-11-18T18:15:15.374Z",
+    "paymentDetails": [
+      {
+        "id": "pay_detail_1",
+        "type": "bank",
+        "bankName": "Bank of India",
+        "accountMasked": "5108XXXXXXXX0975",
+        "accountRaw": "510810110000975",
+        "ifsc": "BKID0005108",
+        "holderName": "NIROD BEHERA",
+        "isPrimary": true
+      },
+      {
+        "id": "pay_detail_2",
+        "type": "upi",
+        "upiId": "9876548808@easypay",
+        "holderName": "NIROD BEHERA",
+        "isPrimary": false
+      },
+      {
+        "id": "pay_detail_3",
+        "type": "usdt",
+        "usdtNetwork": "TRC-20 (Tron)",
+        "usdtAddress": "TXj4b9...89zKq2",
+        "usdtAddressRaw": "TXj4b9A7vPq1WzK88L0sR89zKq2",
+        "isPrimary": false
+      }
+    ]
   },
   "giftCards": [
     {
@@ -822,7 +849,8 @@
       "validTill": "2027-11-22",
       "purchasedAt": "2026-11-22T18:25:16.832Z",
       "status": "ACTIVE",
-      "category": "Voucher"
+      "category": "Voucher",
+      "brandName": "Amazon shopping"
     },
     {
       "id": "VOUCH_1795233067822",
@@ -838,7 +866,8 @@
       "validTill": "2027-11-21",
       "purchasedAt": "2026-11-21T03:51:07.822Z",
       "status": "ACTIVE",
-      "category": "Voucher"
+      "category": "Voucher",
+      "brandName": "Amazon Shopping"
     },
     {
       "id": "vouch_01M7X2GA8WHJS1VVH18QEHFB2Z",
@@ -879,7 +908,8 @@
             "Your Voucher Balance can be selected as a payment option during the checkout process on Amazon.in."
           ]
         }
-      ]
+      ],
+      "brandName": "Amazon shopping"
     },
     {
       "id": "vouch_01M7WQWVB8KEWDHV09CE8545Q1",
@@ -910,7 +940,8 @@
             "Cashier to use Billing Code to redeem the 16 Digit Card No and its Pin No. Please call Apollo Pharmacy Customer Care 1860 500 0101 for any issues."
           ]
         }
-      ]
+      ],
+      "brandName": "Apollo"
     },
     {
       "id": "vouch_01M7WKDWCEYW41C3DVC987M4T1",
@@ -941,7 +972,8 @@
             "Cashier to use Billing Code to redeem the 16 Digit Card No and its Pin No. Please call Apollo Pharmacy Customer Care 1860 500 0101 for any issues."
           ]
         }
-      ]
+      ],
+      "brandName": "Apollo"
     },
     {
       "id": "vouch_1794424810903",
@@ -954,7 +986,9 @@
       "purchasedAt": "2026-11-11T19:20:10.903Z",
       "cashbackEarned": 5,
       "status": "ACTIVE",
-      "category": "E-Commerce"
+      "category": "E-Commerce",
+      "brandName": "Flipkart",
+      "validTill": "2027-11-11"
     },
     {
       "id": "vouch_1794424214190",
@@ -967,7 +1001,9 @@
       "purchasedAt": "2026-11-11T19:10:14.191Z",
       "cashbackEarned": 17.98,
       "status": "ACTIVE",
-      "category": "E-Commerce"
+      "category": "E-Commerce",
+      "brandName": "Flipkart",
+      "validTill": "2027-11-11"
     },
     {
       "id": "vouch_1794424209284",
@@ -980,7 +1016,9 @@
       "purchasedAt": "2026-11-11T19:10:09.284Z",
       "cashbackEarned": 17.98,
       "status": "ACTIVE",
-      "category": "E-Commerce"
+      "category": "E-Commerce",
+      "brandName": "Flipkart",
+      "validTill": "2027-11-11"
     },
     {
       "id": "vouch_1794418048022",
@@ -993,7 +1031,9 @@
       "purchasedAt": "2026-11-11T17:27:28.022Z",
       "cashbackEarned": 80,
       "status": "ACTIVE",
-      "category": "Fashion"
+      "category": "Fashion",
+      "brandName": "Decathlon Sports",
+      "validTill": "2027-11-11"
     },
     {
       "id": "vouch_1794418028921",
@@ -1006,7 +1046,9 @@
       "purchasedAt": "2026-11-11T17:27:08.921Z",
       "cashbackEarned": 42.5,
       "status": "ACTIVE",
-      "category": "OTT & Subs"
+      "category": "OTT & Subs",
+      "brandName": "PVR INOX Cinemas",
+      "validTill": "2027-11-11"
     },
     {
       "id": "vouch_1794417828866",
@@ -1019,7 +1061,9 @@
       "purchasedAt": "2026-11-11T17:23:48.866Z",
       "cashbackEarned": 10,
       "status": "ACTIVE",
-      "category": "Gaming"
+      "category": "Gaming",
+      "brandName": "Apple App Store",
+      "validTill": "2027-11-11"
     },
     {
       "id": "vouch_1794413256850",
@@ -1032,7 +1076,9 @@
       "purchasedAt": "2026-11-11T16:07:36.850Z",
       "cashbackEarned": 2,
       "status": "ACTIVE",
-      "category": "E-Commerce"
+      "category": "E-Commerce",
+      "brandName": "Flipkart",
+      "validTill": "2027-11-11"
     },
     {
       "id": "vouch_1794411683751",
@@ -1045,7 +1091,9 @@
       "purchasedAt": "2026-11-11T15:41:23.751Z",
       "cashbackEarned": 30,
       "status": "ACTIVE",
-      "category": "Food & Dining"
+      "category": "Food & Dining",
+      "brandName": "Domino's Pizza",
+      "validTill": "2027-11-11"
     },
     {
       "id": "vouch_1794344155137",
@@ -1058,7 +1106,9 @@
       "purchasedAt": "2026-11-10T20:55:55.138Z",
       "cashbackEarned": 70,
       "status": "ACTIVE",
-      "category": "E-Commerce"
+      "category": "E-Commerce",
+      "brandName": "Amazon Pay",
+      "validTill": "2027-11-10"
     },
     {
       "id": "vouch_1794344094803",
@@ -1071,7 +1121,9 @@
       "purchasedAt": "2026-11-10T20:54:54.803Z",
       "cashbackEarned": 17.5,
       "status": "ACTIVE",
-      "category": "E-Commerce"
+      "category": "E-Commerce",
+      "brandName": "Amazon Pay",
+      "validTill": "2027-11-10"
     },
     {
       "id": "vouch_1794340978614",
@@ -1084,7 +1136,9 @@
       "purchasedAt": "2026-11-10T20:02:58.614Z",
       "cashbackEarned": 15,
       "status": "ACTIVE",
-      "category": "Food & Dining"
+      "category": "Food & Dining",
+      "brandName": "Swiggy Food & Instamart",
+      "validTill": "2027-11-10"
     },
     {
       "id": "vouch_1794339990227",
@@ -1097,7 +1151,9 @@
       "purchasedAt": "2026-11-10T19:46:30.227Z",
       "cashbackEarned": 17.5,
       "status": "ACTIVE",
-      "category": "E-Commerce"
+      "category": "E-Commerce",
+      "brandName": "Amazon Pay",
+      "validTill": "2027-11-10"
     },
     {
       "id": "vouch_101",
@@ -1110,7 +1166,9 @@
       "purchasedAt": "2026-02-15T10:30:00Z",
       "cashbackEarned": 35,
       "status": "ACTIVE",
-      "category": "E-Commerce"
+      "category": "E-Commerce",
+      "brandName": "Amazon Pay",
+      "validTill": "2027-02-15"
     },
     {
       "id": "vouch_102",
@@ -1123,7 +1181,9 @@
       "purchasedAt": "2026-03-01T14:22:00Z",
       "cashbackEarned": 30,
       "status": "ACTIVE",
-      "category": "Food & Dining"
+      "category": "Food & Dining",
+      "brandName": "Swiggy Food & Instamart",
+      "validTill": "2026-12-31"
     }
   ],
   "transactions": [
@@ -2506,7 +2566,36 @@
       "profilePicture": "",
       "referralCode": "REF_EPY98808",
       "referredBy": "SYSTEM",
-      "registeredAt": "2026-11-18T18:15:15.374Z"
+      "registeredAt": "2026-11-18T18:15:15.374Z",
+      "paymentDetails": [
+        {
+          "id": "pay_detail_1",
+          "type": "bank",
+          "bankName": "Bank of India",
+          "accountMasked": "5108XXXXXXXX0975",
+          "accountRaw": "510810110000975",
+          "ifsc": "BKID0005108",
+          "holderName": "NIROD BEHERA",
+          "isPrimary": true
+        },
+        {
+          "id": "pay_detail_2",
+          "type": "upi",
+          "upiId": "9876548808@easypay",
+          "holderName": "NIROD BEHERA",
+          "isPrimary": false
+        },
+        {
+          "id": "pay_detail_3",
+          "type": "usdt",
+          "usdtNetwork": "TRC-20 (Tron)",
+          "usdtAddress": "TXj4b9...89zKq2",
+          "usdtAddressRaw": "TXj4b9A7vPq1WzK88L0sR89zKq2",
+          "isPrimary": false
+        }
+      ],
+      "referralEarnings": 0,
+      "firstDepositBonusPaid": true
     },
     {
       "id": "EPY43210",
@@ -2531,7 +2620,9 @@
       "profilePicture": "",
       "referralCode": "REF_EPY43210",
       "referredBy": "EPY98808",
-      "registeredAt": "2026-11-13T10:20:00.000Z"
+      "registeredAt": "2026-11-13T10:20:00.000Z",
+      "referralEarnings": 0,
+      "firstDepositBonusPaid": true
     },
     {
       "id": "EPY12345",
@@ -2556,7 +2647,9 @@
       "profilePicture": "",
       "referralCode": "REF_EPY12345",
       "referredBy": "EPY98808",
-      "registeredAt": "2026-11-08T12:00:00.000Z"
+      "registeredAt": "2026-11-08T12:00:00.000Z",
+      "referralEarnings": 0,
+      "firstDepositBonusPaid": true
     },
     {
       "id": "EPY99887",
@@ -2581,7 +2674,9 @@
       "profilePicture": "",
       "referralCode": "REF_EPY99887",
       "referredBy": "EPY98808",
-      "registeredAt": "2026-11-02T15:30:00.000Z"
+      "registeredAt": "2026-11-02T15:30:00.000Z",
+      "referralEarnings": 0,
+      "firstDepositBonusPaid": true
     },
     {
       "id": "EPY55443",
@@ -2606,7 +2701,9 @@
       "profilePicture": "",
       "referralCode": "REF_EPY55443",
       "referredBy": "EPY43210",
-      "registeredAt": "2026-11-10T16:45:00.000Z"
+      "registeredAt": "2026-11-10T16:45:00.000Z",
+      "referralEarnings": 0,
+      "firstDepositBonusPaid": true
     },
     {
       "id": "EPY81145",
@@ -2631,7 +2728,9 @@
       "profilePicture": "",
       "referralCode": "REF_EPY81145",
       "referredBy": "EPY12345",
-      "registeredAt": "2026-11-22T19:00:00.000Z"
+      "registeredAt": "2026-11-22T19:00:00.000Z",
+      "referralEarnings": 0,
+      "firstDepositBonusPaid": false
     },
     {
       "id": "EPY36297",
@@ -2656,7 +2755,9 @@
       "profilePicture": "",
       "referralCode": "REF_EPY36297",
       "referredBy": "EPY99887",
-      "registeredAt": "2026-11-23T11:15:00.000Z"
+      "registeredAt": "2026-11-23T11:15:00.000Z",
+      "referralEarnings": 0,
+      "firstDepositBonusPaid": false
     }
   ],
   "adminAuth": {
@@ -3671,5 +3772,21 @@
       "status": "APPROVED",
       "notes": "Instant UPI wallet load approved"
     }
-  ]
+  ],
+  "withdrawalRequests": [],
+  "referralSettings": {
+    "firstDepositBonusPercent": 5,
+    "levelCommissions": [
+      5,
+      3,
+      2,
+      1.5,
+      1,
+      0.75,
+      0.5,
+      0.5,
+      0.25,
+      0.25
+    ]
+  }
 }

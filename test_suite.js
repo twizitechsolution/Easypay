@@ -271,6 +271,38 @@ const tests = [
           adminHtml.includes('dossierStatDownline') &&
           adminHtml.includes('dossierDownlineTbody') &&
           adminHtml.includes('dossierTxnTbody')
+  },
+  {
+    name: 'Req 48: To Bank / Self Saved Payment Picker, Dynamic USDT Conversion & Withdrawal Request Flow',
+    pass: appHtml.includes('selectSavedPaymentModal') &&
+          appHtml.includes('selectSavedMethodForWithdrawal') &&
+          appHtml.includes('updateWithdrawalUsdtConversion') &&
+          appHtml.includes('/api/withdrawal/request') &&
+          adminHtml.includes('tabWithdrawals') &&
+          adminHtml.includes('approveWithdrawalRequest') &&
+          adminHtml.includes('rejectWithdrawalRequest')
+  },
+  {
+    name: 'Req 49: Passbook & Portfolio Mobile-Responsive Zerodha/FD-Style EasyPay Orange Redesign',
+    pass: appHtml.includes('FD & Bonds Portfolio') &&
+          appHtml.includes('portfolioDailyReturn') &&
+          appHtml.includes('DAILY RETURN') &&
+          appHtml.includes('MATURITY VALUE')
+  },
+  {
+    name: 'Req 50: Gift Vouchers No-Undefined Fix with Purchase Date/Time & Validity Period',
+    pass: appHtml.includes("v.brand || v.brandName || v.name || 'EasyPay Gift Voucher'") &&
+          appHtml.includes('PURCHASED ON') &&
+          appHtml.includes('VALID UNTIL')
+  },
+  {
+    name: 'Req 51: 10-Level Refer & Earn Network, User ID Search, Link Sharing & Admin Commission Engine',
+    pass: appHtml.includes('Refer & Earn (10 Levels)') &&
+          appHtml.includes('referSearchUserInput') &&
+          appHtml.includes('referLevelPills') &&
+          appHtml.includes('/api/referral/network') &&
+          adminHtml.includes('cfgFirstDepositBonus') &&
+          adminHtml.includes('cfgLvlComm_10')
   }
 ];
 
