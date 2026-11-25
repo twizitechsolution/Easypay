@@ -3952,15 +3952,34 @@ async function requestHandler(req, res) {
 
       for (let lvl = 1; lvl <= 10; lvl++) {
         const membersAtLevel = users.filter(u => currentParentIds.includes(u.referredBy));
+        const bonusPct = Number(refCfg.firstDepositBonusPercent || 5);
         const mapped = membersAtLevel.map(m => {
-          const isAct = m.status === 'ACTIVE' || (m.isActivated && Number(m.walletBalance || 0) > 0);
+          const hasApprovedDep = (data.depositRequests || []).some(d => (d.userId === m.id || d.userMobile === m.mobile) && d.status === 'APPROVED');
+          const isAct = m.status === 'ACTIVE' || m.isActivated === true || hasApprovedDep || Number(m.walletBalance || 0) > 0;
           if (isAct) activeMembers++;
           totalMembers++;
+
+          // Calculate First Deposit Bonus received from this specific user
+          const mName = m.name || ((m.firstName || '') + ' ' + (m.lastName || '')).trim();
+          const bonusTxns = (data.transactions || []).filter(t =>
+            (t.userId === myId || (me && t.userMobile === me.mobile)) &&
+            t.category === 'Referral Bonus' &&
+            ((t.title || '').includes(m.id) || (mName && (t.title || '').includes(mName)))
+          );
+          let firstDepBonus = bonusTxns.reduce((sum, t) => sum + Number(t.amount || 0), 0);
+          if (firstDepBonus === 0 && lvl === 1 && isAct) {
+            const firstDep = (data.depositRequests || []).find(d => (d.userId === m.id || d.userMobile === m.mobile) && d.status === 'APPROVED');
+            if (firstDep) {
+              firstDepBonus = Math.round((Number(firstDep.amount || 0) * bonusPct / 100) * 100) / 100;
+            }
+          }
+
           return {
             id: m.id,
-            name: m.name || ((m.firstName || '') + ' ' + (m.lastName || '')).trim(),
+            name: mName,
             mobile: m.mobile,
-            status: isAct ? 'ACTIVE' : 'NOT_ACTIVE',
+            status: isAct ? 'ACTIVE' : 'INACTIVE',
+            firstDepositBonus: firstDepBonus,
             registeredAt: m.registeredAt || new Date().toISOString()
           };
         });

@@ -1870,16 +1870,23 @@
                   <div class="card-title">User Withdrawal Requests (Bank, UPI & USDT)</div>
                   <div class="card-subtitle">Verify destination account details, INR/USDT amounts & timestamps before approving or rejecting payouts</div>
                 </div>
-                <div class="search-box" style="width: 300px;">
-                  <i class="fa-solid fa-magnifying-glass"></i>
-                  <input type="text" id="withdrawalSearchInput" placeholder="Search user ID, name, mobile, WDR ID..." oninput="filterWithdrawalRequests(currentWdrFilter)">
+                <div style="display: flex; gap: 10px;">
+                  <button class="btn-topbar primary" onclick="refreshAdminData()">
+                    <i class="fa-solid fa-arrows-rotate"></i> Sync Requests
+                  </button>
                 </div>
               </div>
-              <div id="withdrawalFilterPills" style="display: flex; gap: 6px; flex-wrap: wrap;">
-                <button type="button" class="action-btn filter-pill active" onclick="filterWithdrawalRequests('ALL', this)">All Requests</button>
-                <button type="button" class="action-btn filter-pill" onclick="filterWithdrawalRequests('PENDING', this)">Pending Approval</button>
-                <button type="button" class="action-btn filter-pill" onclick="filterWithdrawalRequests('APPROVED', this)">Approved</button>
-                <button type="button" class="action-btn filter-pill" onclick="filterWithdrawalRequests('REJECTED', this)">Rejected (Refunded)</button>
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-top: 1px solid #E2E8F0; padding-top: 12px;">
+                <div class="search-box-wrap" style="flex: 1; max-width: 380px;">
+                  <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                  <input type="text" class="search-input" id="withdrawalSearchInput" placeholder="Search user ID, name, mobile, WDR ID..." oninput="filterWithdrawalRequests(currentWdrFilter)">
+                </div>
+                <div id="withdrawalFilterPills" style="display: flex; gap: 6px; flex-wrap: wrap;">
+                  <button type="button" class="action-btn filter-pill active" onclick="filterWithdrawalRequests('ALL', this)">All Requests</button>
+                  <button type="button" class="action-btn filter-pill" onclick="filterWithdrawalRequests('PENDING', this)">Pending Approval</button>
+                  <button type="button" class="action-btn filter-pill" onclick="filterWithdrawalRequests('APPROVED', this)">Approved</button>
+                  <button type="button" class="action-btn filter-pill" onclick="filterWithdrawalRequests('REJECTED', this)">Rejected (Refunded)</button>
+                </div>
               </div>
             </div>
             <div class="table-responsive">

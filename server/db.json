@@ -20,7 +20,7 @@
     "maskedMobile": "xxxxxx8808",
     "email": "nirodbehera220@gmail.com",
     "payId": "9876548808@easypay",
-    "walletBalance": 30584.13,
+    "walletBalance": 30084.13,
     "securityPin": "1234",
     "mpin": "1234",
     "password": "EasyPay@8808",
@@ -1187,6 +1187,21 @@
     }
   ],
   "transactions": [
+    {
+      "id": "TXN_WDR_118264",
+      "withdrawalId": "WDR_3118264",
+      "userId": "EPY98808",
+      "userMobile": "9876548808",
+      "timestamp": "2026-11-25T18:58:38.264Z",
+      "date": "26 Nov 2026",
+      "title": "Withdrawal to Bank of India (NIROD BEHERA)",
+      "category": "Withdrawal",
+      "amount": 500,
+      "type": "WITHDRAWAL",
+      "status": "SUCCESS",
+      "utr": "WDR_3118264",
+      "icon": "/assets/bachatpay/history/debit_history.png"
+    },
     {
       "id": "TXN_98241029",
       "title": "EasyPay Mall Order Confirmed (ORD-144901)",
@@ -2552,7 +2567,7 @@
       "maskedMobile": "xxxxxx8808",
       "email": "nirodbehera220@gmail.com",
       "payId": "9876548808@easypay",
-      "walletBalance": 30584.13,
+      "walletBalance": 30084.13,
       "securityPin": "1234",
       "mpin": "1234",
       "password": "EasyPay@8808",
@@ -3773,7 +3788,34 @@
       "notes": "Instant UPI wallet load approved"
     }
   ],
-  "withdrawalRequests": [],
+  "withdrawalRequests": [
+    {
+      "id": "WDR_3118264",
+      "transactionId": "TXN_WDR_118264",
+      "userId": "EPY98808",
+      "userName": "Nirod Behera",
+      "userMobile": "9876548808",
+      "methodType": "bank",
+      "methodLabel": "Bank of India (NIROD BEHERA)",
+      "destinationDetails": {
+        "id": "pay_detail_1",
+        "type": "bank",
+        "bankName": "Bank of India",
+        "accountMasked": "5108XXXXXXXX0975",
+        "accountRaw": "510810110000975",
+        "ifsc": "BKID0005108",
+        "holderName": "NIROD BEHERA",
+        "isPrimary": true
+      },
+      "amountInr": 500,
+      "amountUsdt": null,
+      "usdtRate": null,
+      "note": "",
+      "status": "APPROVED",
+      "createdAt": "2026-11-25T18:58:38.264Z",
+      "approvedAt": "2026-11-25T19:01:17.539Z"
+    }
+  ],
   "referralSettings": {
     "firstDepositBonusPercent": 5,
     "levelCommissions": [

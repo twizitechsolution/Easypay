@@ -297,10 +297,11 @@ const tests = [
           appHtml.includes('VALID UNTIL')
   },
   {
-    name: 'Req 51: 10-Level Refer & Earn Network, User ID Search, Link Sharing & Admin Commission Engine',
-    pass: appHtml.includes('Refer & Earn (10 Levels)') &&
+    name: 'Req 51: 10-Level Refer & Earn Network Dropdown, First Deposit Bonus per User, User ID Search & Admin Commission Engine',
+    pass: appHtml.includes('Network Levels') &&
           appHtml.includes('referSearchUserInput') &&
-          appHtml.includes('referLevelPills') &&
+          appHtml.includes('referLevelSelect') &&
+          appHtml.includes('First Deposit Bonus') &&
           appHtml.includes('/api/referral/network') &&
           adminHtml.includes('cfgFirstDepositBonus') &&
           adminHtml.includes('cfgLvlComm_10')

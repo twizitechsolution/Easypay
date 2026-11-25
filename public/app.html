@@ -5320,24 +5320,28 @@
       <!-- ==============================================================
            GIFT VOUCHERS HISTORY VIEW (SCREENSHOT 5)
            ============================================================== -->
-      <div id="viewGiftHistory" class="history-view-modal">
-        <div class="history-top-bar">
-          <button class="gift-nav-btn" onclick="closeGiftHistoryView()" title="Back to Gift Cards">
-            <i class="fa-solid fa-arrow-left"></i>
-          </button>
-          <div class="history-title">Gift Vouchers & Deals</div>
-          <div style="display: flex; align-items: center; gap: 14px;">
-            <i class="fa-solid fa-sliders" style="font-size: 17px; color: #0F172A; cursor: pointer;" onclick="openHistoryFilterModal()" title="Filter Orders"></i>
-            <i class="fa-solid fa-magnifying-glass" style="font-size: 17px; color: #0F172A; cursor: pointer;"></i>
+      <div id="viewGiftHistory" class="history-view-modal" style="max-width: 480px; left: 50%; transform: translateX(-50%); width: 100%; background: #F8FAFC;">
+        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 20px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <button onclick="closeGiftHistoryView()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;" title="Back to Gift Cards">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div>
+              <div style="font-family: var(--font-heading); font-size: 17px; font-weight: 800; color: #FFFFFF;">Gift Vouchers & Deals</div>
+              <div style="font-size: 11px; color: rgba(255,255,255,0.9);">Purchased Brand Vouchers & PINs</div>
+            </div>
           </div>
+          <button onclick="openHistoryFilterModal()" style="background: rgba(255,255,255,0.2); border: none; width: 34px; height: 34px; border-radius: 50%; color: #FFFFFF; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Filter Orders">
+            <i class="fa-solid fa-sliders"></i>
+          </button>
         </div>
 
-        <div class="history-filter-pills-row">
-          <span class="history-filter-chip active" id="filterLast6Months" onclick="openHistoryFilterModal()">
+        <div class="history-filter-pills-row" style="padding: 12px 16px 4px; display: flex; gap: 8px; flex-wrap: wrap;">
+          <span class="history-filter-chip active" id="filterLast6Months" onclick="openHistoryFilterModal()" style="background: #FF5722; color: #FFFFFF; border-color: #FF5722;">
             <span id="activeFilterPillText">Last 6 months</span> <i class="fa-solid fa-xmark" onclick="event.stopPropagation(); clearHistoryFilters();"></i>
           </span>
-          <span class="history-filter-chip" onclick="openHistoryFilterModal()">All Time</span>
-          <span class="history-filter-chip" onclick="openHistoryFilterModal()">Active Only</span>
+          <span class="history-filter-chip" onclick="openHistoryFilterModal()" style="background: #FFFFFF; border: 1px solid #E2E8F0; color: #475569;">All Time</span>
+          <span class="history-filter-chip" onclick="openHistoryFilterModal()" style="background: #FFFFFF; border: 1px solid #E2E8F0; color: #475569;">Active Only</span>
         </div>
 
         <!-- Orders List Container -->
@@ -6430,7 +6434,7 @@
                 <i class="fa-solid fa-arrow-left"></i>
               </button>
               <div>
-                <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800;">Refer & Earn (10 Levels)</div>
+                <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800;">Refer & Earn</div>
                 <div style="font-size: 11px; color: rgba(255,255,255,0.9);">Earn First Deposit Bonus & Multi-Level Income</div>
               </div>
             </div>
@@ -6487,20 +6491,20 @@
             <input type="text" id="referSearchUserInput" placeholder="Enter User ID (e.g. EPY43210) or Name..." oninput="renderReferralLevelView()" style="width: 100%; box-sizing: border-box; padding: 10px 12px; border-radius: 10px; border: 1.5px solid #CBD5E1; font-size: 13px; outline: none; background: #F8FAFC;">
           </div>
 
-          <!-- 10-Level Commission & Network Explorer -->
+          <!-- Network Levels & Downline Members -->
           <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 14px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-              <div style="font-size: 14px; font-weight: 800; color: #0F172A;">10-Level Referral Structure</div>
-              <span style="font-size: 11px; font-weight: 700; color: #FF5722;" id="referSelectedLevelMeta">Level 1 • 5%</span>
-            </div>
-
-            <!-- Level 1 to 10 Horizontal Scroll Pills -->
-            <div id="referLevelPills" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 14px;">
-              <!-- Populated dynamically L1-L10 -->
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px;">
+              <div>
+                <div style="font-size: 15px; font-weight: 800; color: #0F172A;">Network Levels</div>
+                <div style="font-size: 11px; font-weight: 700; color: #FF5722;" id="referSelectedLevelMeta">All Levels</div>
+              </div>
+              <select id="referLevelSelect" onchange="selectReferralLevel(this.value)" style="padding: 8px 12px; border-radius: 10px; border: 1.5px solid #FF5722; background: #FFF8F5; color: #0F172A; font-size: 12.5px; font-weight: 800; outline: none; cursor: pointer;">
+                <option value="ALL">All Levels</option>
+              </select>
             </div>
 
             <!-- Members List for Selected Level / Search -->
-            <div id="referLevelMembersList" style="display: flex; flex-direction: column; gap: 8px;">
+            <div id="referLevelMembersList" style="display: flex; flex-direction: column; gap: 10px;">
               <!-- Populated dynamically -->
             </div>
           </div>
@@ -9885,6 +9889,7 @@
     // GIFT VOUCHERS HISTORY VIEW (SCREENSHOT 5)
     // ==============================================================
     function openGiftHistoryView() {
+      pushAppNavState('viewGiftHistory');
       const modal = document.getElementById('viewGiftHistory');
       if (!modal) return;
       modal.classList.add('active');
@@ -9951,7 +9956,7 @@
                 <div style="font-size: 11px; color: #64748B;">Category: ${v.category || 'Voucher'} • Valid till ${v.expiryDate || '2027'}</div>
               </div>
               <span style="background: #ECFDF5; color: #059669; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px;">
-                +₹${(v.cashbackEarned || 0).toFixed(2)} Bachat
+                +₹${(v.cashbackEarned || 0).toFixed(2)} Cashback
               </span>
             </div>
 
@@ -9968,7 +9973,7 @@
 
             <div style="display: flex; justify-content: space-between; font-size: 12px; color: #64748B;">
               <span>Amount: <strong style="color: #0F172A; font-size: 14px;">₹${(v.amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</strong></span>
-              <span>Paid via <strong style="color: #0F172A;">Main Wallet</strong></span>
+              <span>Paid via <strong style="color: #0F172A;">E-Pay Wallet</strong></span>
             </div>
           </div>
         `).join('');
@@ -10191,6 +10196,67 @@
         }
       } catch (e) {}
     })();
+
+    // ==============================================================
+    // STEP-BY-STEP HARDWARE BACK BUTTON & NAVIGATION STACK
+    // ==============================================================
+    let appNavDepth = 0;
+    let isHandlingPopState = false;
+
+    function pushAppNavState(label) {
+      if (isHandlingPopState) return;
+      try {
+        appNavDepth++;
+        history.pushState({ easyPayNav: label, depth: appNavDepth }, '');
+      } catch (e) {}
+    }
+
+    window.addEventListener('popstate', function(e) {
+      isHandlingPopState = true;
+      try {
+        // 1. If any modal overlay is open, close the topmost modal
+        const openModals = Array.from(document.querySelectorAll('.modal-overlay.active'));
+        if (openModals.length > 0) {
+          openModals[openModals.length - 1].classList.remove('active');
+          return;
+        }
+
+        // 2. Check open full-screen sub-views and close step-by-step
+        const isVis = (id) => {
+          const el = document.getElementById(id);
+          return el && el.style.display !== 'none' && el.style.display !== '';
+        };
+        if (isVis('viewResetPin')) { closeResetPinView(); return; }
+        if (isVis('viewMyOrders')) { closeMyOrdersView(); return; }
+        if (isVis('viewBankAccounts')) { closeBankAccountsView(); return; }
+        if (isVis('viewReferEarn')) { closeReferEarnView(); return; }
+        if (isVis('viewPassbook')) { closePassbookView(); return; }
+        if (isVis('viewPayAnyone')) { closePayAnyoneView(); return; }
+        if (isVis('viewGiftHistory')) { closeGiftHistoryView(); return; }
+        if (isVis('viewGiftCardPurchase')) { closeGiftCardPurchasePage(); return; }
+        if (isVis('viewProductDetails')) { closeProductDetailsView(); return; }
+        if (isVis('viewEcommerceCheckout')) { closeEcommerceCheckoutView(); return; }
+        if (isVis('viewLuckyDrawDedicated')) { closeLuckyDrawDedicatedPage(); return; }
+
+        // 3. If on a non-home bottom nav tab, go back to Home
+        const homeEl = document.getElementById('viewHome');
+        if (homeEl && homeEl.style.display === 'none') {
+          switchNavTab('home');
+          return;
+        }
+
+        // 4. Keep one safety history entry at Home so app doesn't close accidentally
+        if (appNavDepth <= 0) {
+          history.pushState({ easyPayNav: 'home', depth: 0 }, '');
+        }
+      } finally {
+        isHandlingPopState = false;
+      }
+    });
+
+    // Seed initial history anchor so hardware back never exits immediately from sub-pages
+    try { history.replaceState({ easyPayNav: 'home', depth: 0 }, ''); } catch (e) {}
+
     let hasRunInitialAppLaunch = false;
     function handleInitialRoute() {
       const hash = (window.location.hash || '').replace('#', '').toLowerCase();
@@ -10842,6 +10908,7 @@
 
     // Passbook opened from Profile (Screenshot 7: Full dedicated view with Back button, hiding bottom nav)
     function openPassbookFromProfile() {
+      pushAppNavState('viewPassbook');
       document.getElementById('homeMainHeader').style.display = 'none';
       const subHeader = document.getElementById('subpageHeader');
       if (subHeader) subHeader.style.display = 'none';
@@ -12040,6 +12107,12 @@
 
       currentPendingPayment = {
         amount: amt,
+        amountUsdt: options.amountUsdt || null,
+        usdtRate: options.usdtRate || null,
+        isWithdrawal: !!options.isWithdrawal,
+        methodType: options.methodType || null,
+        destinationDetails: options.destinationDetails || null,
+        note: options.note || '',
         recipientName: recName,
         recipientSubtitle: recSubtitle,
         type: options.type || 'P2P Transfer'
@@ -12406,6 +12479,7 @@
     ];
 
     function openPayAnyoneView() {
+      pushAppNavState('viewPayAnyone');
       // Hide home and subpage headers completely
       const mainH = document.getElementById('homeMainHeader');
       if (mainH) mainH.style.display = 'none';
@@ -12503,14 +12577,16 @@
     // 4. REFER & EARN CONTROLLER (SCREENSHOT 3)
     // ==============================================================
     let currentReferralData = null;
-    let activeReferralLevel = 1;
+    let activeReferralLevel = 'ALL';
 
     async function openReferEarnView() {
+      pushAppNavState('viewReferEarn');
       document.querySelectorAll('.view-panel').forEach(v => v.style.display = 'none');
       const v = document.getElementById('viewReferEarn');
       if (v) v.style.display = 'block';
       window.scrollTo(0, 0);
 
+      activeReferralLevel = 'ALL';
       const u = appData.user || {};
       const myId = u.id || 'EPY98808';
       const refLink = window.location.origin + '/app?ref=' + myId;
@@ -12530,36 +12606,35 @@
           if (document.getElementById('referTotalTeamText')) {
             document.getElementById('referTotalTeamText').innerText = currentReferralData.totalMembers || 0;
           }
+          populateReferralDropdown();
           renderReferralLevelView();
         }
       } catch (e) {
-        console.warn('Could not load 10-level referral network', e);
+        console.warn('Could not load referral network', e);
       }
     }
 
+    function populateReferralDropdown() {
+      const sel = document.getElementById('referLevelSelect');
+      if (!sel || !currentReferralData || !currentReferralData.levels) return;
+      const total = currentReferralData.totalMembers || 0;
+      sel.innerHTML = '<option value="ALL">All Levels (' + total + ')</option>' +
+        currentReferralData.levels.map(l => '<option value="' + l.level + '">Level ' + l.level + ' (' + l.count + ') • ' + l.commissionPercent + '%</option>').join('');
+      sel.value = activeReferralLevel;
+    }
+
     function selectReferralLevel(lvl) {
-      activeReferralLevel = lvl;
+      activeReferralLevel = lvl === 'ALL' ? 'ALL' : parseInt(lvl, 10);
       renderReferralLevelView();
     }
 
     function renderReferralLevelView() {
       const data = currentReferralData;
-      const pillsWrap = document.getElementById('referLevelPills');
       const listWrap = document.getElementById('referLevelMembersList');
       const metaEl = document.getElementById('referSelectedLevelMeta');
       const searchQ = (document.getElementById('referSearchUserInput')?.value || '').trim().toLowerCase();
 
       if (!data || !data.levels) return;
-
-      if (pillsWrap) {
-        pillsWrap.innerHTML = data.levels.map(l => {
-          const isAct = l.level === activeReferralLevel;
-          return '<button type="button" onclick="selectReferralLevel(' + l.level + ')" style="padding: 7px 4px; border-radius: 10px; border: 1.5px solid ' + (isAct ? '#FF5722' : '#E2E8F0') + '; background: ' + (isAct ? '#FFF3E0' : '#F8FAFC') + '; color: ' + (isAct ? '#FF5722' : '#334155') + '; cursor: pointer; text-align: center;">' +
-            '<div style="font-size: 11px; font-weight: 800;">L' + l.level + ' (' + l.count + ')</div>' +
-            '<div style="font-size: 9.5px; font-weight: 700; color: ' + (isAct ? '#E65100' : '#64748B') + ';">' + l.commissionPercent + '%</div>' +
-          '</button>';
-        }).join('');
-      }
 
       let membersToShow = [];
       if (searchQ) {
@@ -12571,6 +12646,11 @@
           });
         });
         if (metaEl) metaEl.innerText = 'Search Results (' + membersToShow.length + ')';
+      } else if (activeReferralLevel === 'ALL') {
+        data.levels.forEach(l => {
+          (l.members || []).forEach(m => membersToShow.push({ ...m, level: l.level }));
+        });
+        if (metaEl) metaEl.innerText = 'All Levels • ' + membersToShow.length + ' Members';
       } else {
         const lvlObj = data.levels.find(l => l.level === activeReferralLevel) || data.levels[0];
         membersToShow = (lvlObj.members || []).map(m => ({ ...m, level: lvlObj.level }));
@@ -12579,20 +12659,27 @@
 
       if (listWrap) {
         if (membersToShow.length === 0) {
-          listWrap.innerHTML = '<div style="text-align: center; padding: 20px; color: #94A3B8; font-size: 12px;">No members found at this level. Share your referral link to grow your team!</div>';
+          listWrap.innerHTML = '<div style="text-align: center; padding: 20px; color: #94A3B8; font-size: 12px;">No members found. Share your referral link to grow your team!</div>';
         } else {
           listWrap.innerHTML = membersToShow.map(m => {
             const isAct = m.status === 'ACTIVE';
+            const bonusAmt = Number(m.firstDepositBonus || 0);
             const jDate = m.registeredAt ? new Date(m.registeredAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Joined';
-            return '<div style="display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 10px 12px;">' +
-              '<div style="display: flex; align-items: center; gap: 10px;">' +
-                '<div style="width: 34px; height: 34px; border-radius: 50%; background: #FF5722; color: #FFFFFF; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center;">' + (m.name || 'U')[0].toUpperCase() + '</div>' +
-                '<div>' +
-                  '<div style="font-size: 13px; font-weight: 800; color: #0F172A;">' + m.name + ' <span style="font-size: 10px; color: #7C3AED; font-weight: 800;">(L' + m.level + ')</span></div>' +
-                  '<div style="font-size: 11px; color: #64748B;">ID: <strong>' + m.id + '</strong> • ' + jDate + '</div>' +
+            return '<div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 12px;">' +
+              '<div style="display: flex; justify-content: space-between; align-items: center;">' +
+                '<div style="display: flex; align-items: center; gap: 10px;">' +
+                  '<div style="width: 36px; height: 36px; border-radius: 50%; background: #FF5722; color: #FFFFFF; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center;">' + (m.name || 'U')[0].toUpperCase() + '</div>' +
+                  '<div>' +
+                    '<div style="font-size: 13.5px; font-weight: 800; color: #0F172A;">' + m.name + ' <span style="font-size: 10.5px; color: #FF5722; font-weight: 800;">(Level ' + m.level + ')</span></div>' +
+                    '<div style="font-size: 11px; color: #64748B;">ID: <strong>' + m.id + '</strong> • ' + jDate + '</div>' +
+                  '</div>' +
                 '</div>' +
+                '<span style="font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 999px; background: ' + (isAct ? '#DCFCE7' : '#FEF3C7') + '; color: ' + (isAct ? '#15803D' : '#B45309') + ';">' + (isAct ? 'ACTIVE' : 'INACTIVE') + '</span>' +
               '</div>' +
-              '<span style="font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 999px; background: ' + (isAct ? '#DCFCE7' : '#FEF3C7') + '; color: ' + (isAct ? '#15803D' : '#B45309') + ';">' + (isAct ? 'ACTIVE' : 'NOT ACTIVE') + '</span>' +
+              '<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #E2E8F0; font-size: 11.5px;">' +
+                '<span style="color: #64748B; font-weight: 600;">First Deposit Bonus</span>' +
+                '<strong style="color: ' + (bonusAmt > 0 ? '#059669' : '#64748B') + ';">₹' + bonusAmt.toLocaleString('en-IN', { minimumFractionDigits: 2 }) + '</strong>' +
+              '</div>' +
             '</div>';
           }).join('');
         }
@@ -12625,6 +12712,7 @@
     // 5. BANK ACCOUNTS & TO BANK/SELF CONTROLLER (SCREENSHOT 4)
     // ==============================================================
     function openBankAccountsView() {
+      pushAppNavState('viewBankAccounts');
       document.querySelectorAll('.view-panel').forEach(v => v.style.display = 'none');
       const v = document.getElementById('viewBankAccounts');
       if (v) v.style.display = 'block';
@@ -14847,6 +14935,7 @@
     ];
 
     function openProductDetails(prodId) {
+      pushAppNavState('viewProductDetails');
       const p = (typeof dropshipProducts !== 'undefined' ? dropshipProducts : []).find(item => item.id === prodId) || {
         id: prodId,
         title: 'boAt Airdopes 141 ANC TWS Earbuds 42H Playtime',
@@ -15255,6 +15344,7 @@
     }
 
     function openEcommerceCheckoutView() {
+      pushAppNavState('viewEcommerceCheckout');
       closeModal('easyPayCartModal');
       ['viewPayAnyone', 'viewBankAccounts', 'viewReferEarn', 'viewProductDetails', 'viewLuckyDrawDedicated', 'viewResetPin', 'viewMyOrders'].forEach(id => {
         const el = document.getElementById(id);
@@ -15447,6 +15537,7 @@
     // MY ORDERS & SHIPMENT TRACKING CONTROLLER (AMAZON/FLIPKART STYLE)
     // ==============================================================
     function openMyOrdersView() {
+      pushAppNavState('viewMyOrders');
       document.querySelectorAll('.view-panel').forEach(v => v.style.display = 'none');
       const v = document.getElementById('viewMyOrders');
       if (v) v.style.display = 'block';
@@ -15734,6 +15825,7 @@
     // ==============================================================
     let resetPinFromLockScreen = false;
     function openResetPinView(fromLock) {
+      pushAppNavState('viewResetPin');
       resetPinFromLockScreen = (fromLock === true);
       if (!resetPinFromLockScreen) {
         document.querySelectorAll('.view-panel').forEach(v => v.style.display = 'none');
@@ -16375,19 +16467,19 @@
   <!-- ==============================================================
        DEDICATED FULL-PAGE E-COMMERCE CHECKOUT (USER REQUESTED - NO POPUP)
        ============================================================== -->
-  <div class="view-panel" id="viewEcommerceCheckout" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
-    <!-- Top Sticky Bar (Mobile Responsive Max-Width 480px) -->
-    <div id="checkoutTopBar" style="background: #FFFFFF; padding: 14px 16px; border-bottom: 1px solid #E2E8F0; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; max-width: 480px; margin: 0 auto; width: 100%; box-sizing: border-box;">
+  <div class="view-panel" id="viewEcommerceCheckout" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 9999; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+    <!-- Unified EasyPay Orange Hero Header -->
+    <div id="checkoutTopBar" style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 20px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; width: 100%; box-sizing: border-box;">
       <div style="display: flex; align-items: center; gap: 12px;">
-        <button onclick="closeEcommerceCheckoutView()" style="background: none; border: none; font-size: 18px; color: #0F172A; cursor: pointer; display: flex; align-items: center;">
+        <button onclick="closeEcommerceCheckoutView()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;">
           <i class="fa-solid fa-arrow-left"></i>
         </button>
         <div>
-          <div style="font-family: var(--font-heading); font-size: 17px; font-weight: 800; color: #0F172A;">Checkout & Delivery</div>
-          <div style="font-size: 11px; color: #64748B;">Order Review & Secure Payment</div>
+          <div style="font-family: var(--font-heading); font-size: 17px; font-weight: 800; color: #FFFFFF;">Checkout & Delivery</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.9);">Order Review & Secure Payment</div>
         </div>
       </div>
-      <div style="display: flex; align-items: center; gap: 6px; background: #ECFDF5; color: #059669; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800;">
+      <div style="display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.22); border: 1px solid rgba(255,255,255,0.35); color: #FFFFFF; padding: 5px 10px; border-radius: 999px; font-size: 10.5px; font-weight: 800;">
         <i class="fa-solid fa-lock"></i> 100% Secure
       </div>
     </div>
