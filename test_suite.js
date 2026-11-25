@@ -300,11 +300,19 @@ const tests = [
     name: 'Req 51: 10-Level Refer & Earn Network Dropdown, First Deposit Bonus per User, User ID Search & Admin Commission Engine',
     pass: appHtml.includes('Network Levels') &&
           appHtml.includes('referSearchUserInput') &&
-          appHtml.includes('referLevelSelect') &&
+          appHtml.includes('referLevelDropdownMenu') &&
           appHtml.includes('First Deposit Bonus') &&
           appHtml.includes('/api/referral/network') &&
           adminHtml.includes('cfgFirstDepositBonus') &&
           adminHtml.includes('cfgLvlComm_10')
+  },
+  {
+    name: 'Req 52: v42 PIN-Gated Wallet Payments, Restored Pay Anyone, EasyPay Orange UI & Non-Sticky Headers',
+    pass: appHtml.includes('finalizeBondBookingAfterPin') &&
+          appHtml.includes('finalizeCredLuckyDrawAfterPin') &&
+          appHtml.includes('id="viewPayAnyone"') &&
+          appHtml.includes('id="referLevelDropdownBtn"') &&
+          appHtml.includes('id="viewProductDetails" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px;')
   }
 ];
 

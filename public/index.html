@@ -169,6 +169,19 @@
         return;
       }
 
+      currentPendingPayment = {
+        type: 'Investment',
+        amount: amt,
+        recipientName: activeBondPlan.title + ' (' + tenure + 'M)',
+        onPinVerified: async () => {
+          await finalizeBondBookingAfterPin(amt, tenure);
+        }
+      };
+      openSecurityPinModal();
+    }
+
+    async function finalizeBondBookingAfterPin(amt, tenure) {
+      const u = appData.user || {};
       const btn = document.getElementById('btnConfirmInvestBooking');
       if (btn) btn.disabled = true;
 
@@ -3213,11 +3226,11 @@
     .gift-purchase-page {
       position: fixed;
       top: 0;
-      left: 0;
-      right: 0;
+      left: 50%;
+      transform: translateX(-50%);
       bottom: 0;
       width: 100% !important;
-      max-width: 100% !important;
+      max-width: 480px !important;
       background: #F8FAFC;
       z-index: 2500;
       display: none;
@@ -3241,29 +3254,29 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 14px 18px;
-      background: #FFFFFF;
-      position: sticky;
-      top: 0;
+      padding: 14px 16px 18px;
+      background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%);
+      color: #FFFFFF;
+      position: relative;
       z-index: 10;
-      border-bottom: 1px solid #F1F5F9;
+      border-bottom: none;
     }
     .purchase-top-title {
       font-family: var(--font-heading);
       font-size: 18px;
       font-weight: 800;
-      color: #0F172A;
+      color: #FFFFFF;
     }
 
-    /* Gradient Hero Card (Screenshot 1) */
+    /* Gradient Hero Card (EasyPay Orange) */
     .purchase-hero-card {
-      background: linear-gradient(135deg, #025492 0%, #0078D7 100%);
+      background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%);
       border-radius: 24px;
       margin: 0 0 16px 0 !important;
       padding: 22px 18px 20px;
       color: #FFFFFF;
       text-align: center;
-      box-shadow: 0 10px 25px rgba(2, 84, 146, 0.25);
+      box-shadow: 0 10px 25px rgba(255, 87, 34, 0.24);
       position: relative;
       width: 100%;
       box-sizing: border-box;
@@ -3349,10 +3362,10 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.02);
     }
     .price-point-chip.active {
-      background: #0047AB;
-      border-color: #0047AB;
+      background: #FF5722;
+      border-color: #FF5722;
       color: #FFFFFF;
-      box-shadow: 0 4px 10px rgba(0, 71, 171, 0.3);
+      box-shadow: 0 4px 10px rgba(255, 87, 34, 0.28);
     }
 
     /* Discount / Cashback Strip (Screenshot 1) */
@@ -3377,26 +3390,26 @@
 
     /* Proceed to Pay Button (Screenshot 1) */
     .btn-proceed-pay {
-      width: calc(100% - 32px);
-      margin: 0 16px 20px;
-      background: #0047AB;
+      width: 100%;
+      margin: 0 0 18px 0;
+      background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%);
       color: #FFFFFF;
       border: none;
-      border-radius: 26px;
-      padding: 16px 20px;
+      border-radius: 16px;
+      padding: 15px 20px;
       font-family: var(--font-heading);
-      font-size: 16px;
+      font-size: 15.5px;
       font-weight: 800;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      box-shadow: 0 8px 20px rgba(0, 71, 171, 0.25);
-      transition: transform 0.15s, background 0.15s;
+      box-shadow: 0 8px 20px rgba(255, 87, 34, 0.28);
+      transition: transform 0.15s, opacity 0.15s;
     }
     .btn-proceed-pay:hover {
-      background: #00388A;
+      opacity: 0.96;
       transform: translateY(-1px);
     }
 
@@ -5381,7 +5394,7 @@
            GIFT VOUCHERS HISTORY VIEW (SCREENSHOT 5)
            ============================================================== -->
       <div id="viewGiftHistory" class="history-view-modal" style="max-width: 480px; left: 50%; transform: translateX(-50%); width: 100%; background: #F8FAFC;">
-        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 20px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;">
+        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 20px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 100;">
           <div style="display: flex; align-items: center; gap: 12px;">
             <button onclick="closeGiftHistoryView()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;" title="Back to Gift Cards">
               <i class="fa-solid fa-arrow-left"></i>
@@ -5416,7 +5429,7 @@
       <div id="viewGiftCardPurchase" class="gift-purchase-page">
         <!-- Top Navigation -->
         <div class="purchase-top-bar" style="width: 100%; box-sizing: border-box; max-width: 480px; margin: 0 auto;">
-          <button class="gift-nav-btn" onclick="closeGiftCardPurchasePage()" title="Back">
+          <button onclick="closeGiftCardPurchasePage()" title="Back" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;">
             <i class="fa-solid fa-arrow-left"></i>
           </button>
           <div class="purchase-top-title" id="purchasePageBrandTitle">Flipkart Gift Voucher</div>
@@ -5790,7 +5803,7 @@
       <div id="viewPassbook" class="view-panel" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 9999; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
         
         <!-- EasyPay Orange Hero Header (Matches Home & Profile) -->
-        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 26px; color: #FFFFFF; position: sticky; top: 0; z-index: 100;">
+        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 26px; color: #FFFFFF; position: relative; z-index: 100;">
           <div style="display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 12px;">
               <button onclick="closePassbookView()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;">
@@ -6204,12 +6217,44 @@
       <!-- ==============================================================
            PAY ANYONE / SEARCH CONTACTS & UPI ID (SCREENSHOT 2)
            ============================================================== -->
-        <!-- ==============================================================
+      <div class="view-panel" id="viewPayAnyone" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 9999; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+        <!-- Unified EasyPay Orange Hero Header -->
+        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 26px; color: #FFFFFF; position: relative; z-index: 100;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <button onclick="closePayAnyoneView()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div>
+              <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #FFFFFF;">Pay ID / Mobile</div>
+              <div style="font-size: 11px; color: rgba(255,255,255,0.9);">Send money to any Mobile Number, Contact or UPI ID</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding: 0 16px 40px; margin-top: -14px; position: relative; z-index: 101;">
+          <!-- Search Input Card -->
+          <div style="background: #FFFFFF; border: 1.5px solid #FFE0B2; border-radius: 16px; padding: 10px 14px; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 14px rgba(255,87,34,0.08);">
+            <i class="fa-solid fa-magnifying-glass" style="color: #FF5722; font-size: 15px;"></i>
+            <input type="text" id="payAnyoneSearchInput" oninput="filterPayAnyoneContacts(this.value)" placeholder="Enter Mobile Number, Name or UPI ID..." style="flex: 1; border: none; outline: none; font-size: 14px; font-weight: 600; color: #0F172A; background: transparent;">
+            <button type="button" onclick="const inp=document.getElementById('payAnyoneSearchInput'); if(inp){inp.value=''; filterPayAnyoneContacts('');}" style="background: #FFF3E0; color: #FF5722; border: none; border-radius: 8px; padding: 4px 8px; font-size: 11px; font-weight: 800; cursor: pointer;">Clear</button>
+          </div>
+
+          <div id="payAnyoneSectionLabel" style="font-size: 12.5px; font-weight: 800; color: #0F172A; margin-bottom: 10px;">
+            Recent &amp; Verified Contacts
+          </div>
+
+          <div id="payAnyoneResultsList" style="display: flex; flex-direction: column; gap: 10px;">
+            <!-- Populated dynamically by filterPayAnyoneContacts -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ==============================================================
        DEDICATED FULL-SCREEN LUCKY DRAW PAGE (IMAGE 2 CRED STYLE)
        ============================================================== -->
   <div class="view-panel" id="viewLuckyDrawDedicated" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 9999; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch; color: #0F172A;">
     <!-- Unified EasyPay Orange Hero Header -->
-    <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 28px; color: #FFFFFF; position: sticky; top: 0; z-index: 100;">
+    <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 28px; color: #FFFFFF; position: relative; z-index: 100;">
       <div style="display: flex; align-items: center; justify-content: space-between;">
         <div style="display: flex; align-items: center; gap: 12px;">
           <button onclick="closeLuckyDrawDedicatedPage()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;">
@@ -6319,7 +6364,7 @@
            ============================================================== -->
       <div class="view-panel" id="viewReferEarn" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 9999; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
         <!-- EasyPay Orange Hero Header -->
-        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 28px; color: #FFFFFF; position: sticky; top: 0; z-index: 100;">
+        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 28px; color: #FFFFFF; position: relative; z-index: 100;">
           <div style="display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 12px;">
               <button onclick="closeReferEarnView()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;">
@@ -6390,9 +6435,15 @@
                 <div style="font-size: 15px; font-weight: 800; color: #0F172A;">Network Levels</div>
                 <div style="font-size: 11px; font-weight: 700; color: #FF5722;" id="referSelectedLevelMeta">All Levels</div>
               </div>
-              <select id="referLevelSelect" onchange="selectReferralLevel(this.value)" style="padding: 8px 12px; border-radius: 10px; border: 1.5px solid #FF5722; background: #FFF8F5; color: #0F172A; font-size: 12.5px; font-weight: 800; outline: none; cursor: pointer;">
-                <option value="ALL">All Levels</option>
-              </select>
+              <div id="referLevelDropdownWrap" style="position: relative; display: inline-block;">
+                <button type="button" id="referLevelDropdownBtn" onclick="toggleReferralDropdown(event)" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 9px; border: 1.5px solid #FF5722; background: #FFF8F5; color: #0F172A; font-size: 11.5px; font-weight: 800; cursor: pointer; line-height: 1.2;">
+                  <span id="referLevelDropdownLabel">All Levels</span>
+                  <i class="fa-solid fa-chevron-down" style="font-size: 9px; color: #FF5722;"></i>
+                </button>
+                <div id="referLevelDropdownMenu" style="display: none; position: absolute; right: 0; top: calc(100% + 5px); min-width: 190px; max-height: 230px; overflow-y: auto; background: #FFFFFF; border: 1.5px solid #FFE0B2; border-radius: 12px; box-shadow: 0 10px 25px rgba(15,23,42,0.14); z-index: 500; padding: 4px;">
+                  <button type="button" onclick="selectReferralLevel('ALL')" style="width:100%; text-align:left; padding:7px 10px; border:none; border-radius:8px; background:#FFF3E0; color:#FF5722; font-size:11.5px; font-weight:800; cursor:pointer;">All Levels</button>
+                </div>
+              </div>
             </div>
 
             <!-- Members List for Selected Level / Search -->
@@ -6408,7 +6459,7 @@
            ============================================================== -->
       <div class="view-panel" id="viewBankAccounts" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 9999; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
         <!-- Unified EasyPay Orange Hero Header (Max-Width 480px) -->
-        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 22px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; width: 100%; box-sizing: border-box;">
+        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 22px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 100; width: 100%; box-sizing: border-box;">
           <div style="display: flex; align-items: center; gap: 12px;">
             <button onclick="closeBankAccountsView()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;">
               <i class="fa-solid fa-arrow-left"></i>
@@ -6441,7 +6492,7 @@
            ============================================================== -->
       <div class="view-panel" id="viewResetPin" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 1000000; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
         <!-- Unified EasyPay Orange Hero Header -->
-        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 26px; color: #FFFFFF; position: sticky; top: 0; z-index: 100;">
+        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 26px; color: #FFFFFF; position: relative; z-index: 100;">
           <div style="display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 12px;">
               <button onclick="closeResetPinView()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;">
@@ -6525,7 +6576,7 @@
            ============================================================== -->
       <div class="view-panel" id="viewMyOrders" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 9999; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
         <!-- Unified EasyPay Orange Hero Header -->
-        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 24px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; width: 100%; box-sizing: border-box;">
+        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 24px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 100; width: 100%; box-sizing: border-box;">
           <div style="display: flex; align-items: center; gap: 12px;">
             <button onclick="closeMyOrdersView()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;">
               <i class="fa-solid fa-arrow-left"></i>
@@ -6568,7 +6619,7 @@
       <div class="view-panel" id="viewShopping" style="display: none; padding-bottom: 100px; background: #F8FAFC;">
         
         <!-- Unified EasyPay Orange Hero Header -->
-        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 16px; color: #FFFFFF; position: sticky; top: 0; z-index: 100; border-radius: 0 0 20px 20px; box-shadow: 0 4px 14px rgba(255,87,34,0.18);">
+        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 16px; color: #FFFFFF; position: relative; z-index: 100; border-radius: 0 0 20px 20px; box-shadow: 0 4px 14px rgba(255,87,34,0.18);">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
             <div style="font-family:var(--font-heading); font-size:19px; font-weight:800; color:#FFFFFF; display:flex; align-items:center; gap:8px;">
               <span style="width:32px; height:32px; border-radius:9px; background:rgba(255,255,255,0.22); display:inline-flex; align-items:center; justify-content:center; font-size:15px;"><i class="fa-solid fa-bag-shopping"></i></span>
@@ -6785,7 +6836,7 @@
        ============================================================== -->
   <div class="view-panel" id="bondBookingModal" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 10005; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
     <!-- Unified EasyPay Orange Hero Header -->
-    <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 26px; color: #FFFFFF; position: sticky; top: 0; z-index: 100;">
+    <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 26px; color: #FFFFFF; position: relative; z-index: 100;">
       <div style="display: flex; align-items: center; justify-content: space-between;">
         <div style="display: flex; align-items: center; gap: 12px;">
           <button onclick="closeModal('bondBookingModal')" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;">
@@ -6956,7 +7007,7 @@
        ======================================================= -->
   <div class="view-panel" id="addMoneyModal" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 10005; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
     <!-- Unified EasyPay Orange Hero Header -->
-    <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 26px; color: #FFFFFF; position: sticky; top: 0; z-index: 100;">
+    <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 26px; color: #FFFFFF; position: relative; z-index: 100;">
       <div style="display: flex; align-items: center; justify-content: space-between;">
         <div style="display: flex; align-items: center; gap: 12px;">
           <button onclick="closeModal('addMoneyModal')" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;">
@@ -7522,27 +7573,27 @@
           Payment Completed
         </div>
 
-        <!-- Dynamic Gift Voucher Details Card (Shown for Gift Card Purchases) -->
-        <div id="pinSuccessVoucherCard" style="display: none; background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border-radius: 16px; padding: 14px; color: white; text-align: left; margin-bottom: 16px; box-shadow: 0 6px 16px rgba(15,23,42,0.2);">
+        <!-- Dynamic Gift Voucher Details Card (EasyPay Orange Theme) -->
+        <div id="pinSuccessVoucherCard" style="display: none; background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); border-radius: 16px; padding: 14px; color: white; text-align: left; margin-bottom: 16px; box-shadow: 0 6px 18px rgba(255, 87, 34, 0.25);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <div style="font-size: 12px; font-weight: 800; color: #38BDF8; letter-spacing: 0.5px;" id="pinVoucherBrandTag">GIFT VOUCHER ISSUED</div>
-            <span style="background: rgba(16,185,129,0.2); color: #34D399; font-size: 10.5px; font-weight: 800; padding: 2px 8px; border-radius: 20px;" id="pinVoucherBachatTag">+₹0 Instant Bachat</span>
+            <div style="font-size: 12px; font-weight: 800; color: #FFFFFF; letter-spacing: 0.5px;" id="pinVoucherBrandTag">GIFT VOUCHER ISSUED</div>
+            <span style="background: rgba(255,255,255,0.22); color: #FFFFFF; font-size: 10.5px; font-weight: 800; padding: 2px 8px; border-radius: 20px;" id="pinVoucherBachatTag">+₹0 Instant Bachat</span>
           </div>
-          <div style="background: rgba(255,255,255,0.08); border: 1px dashed rgba(255,255,255,0.25); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;">
-            <div style="font-size: 10px; color: #94A3B8; text-transform: uppercase; margin-bottom: 3px; font-weight: 600;">Voucher / Card Code</div>
+          <div style="background: rgba(255,255,255,0.16); border: 1px dashed rgba(255,255,255,0.45); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;">
+            <div style="font-size: 10px; color: rgba(255,255,255,0.85); text-transform: uppercase; margin-bottom: 3px; font-weight: 600;">Voucher / Card Code</div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span style="font-family: monospace; font-size: 15px; font-weight: 800; letter-spacing: 1.5px; color: #FFFFFF;" id="pinVoucherCodeText">---- ---- ---- ----</span>
-              <button type="button" style="background: #3B82F6; color: white; border: none; border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 700; cursor: pointer;" onclick="copyVoucherCodeFromSuccess()">Copy</button>
+              <button type="button" style="background: #FFFFFF; color: #FF5722; border: none; border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: 800; cursor: pointer;" onclick="copyVoucherCodeFromSuccess()">Copy</button>
             </div>
           </div>
-          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: #CBD5E1;">
-            <div>PIN: <strong style="color: #FBBF24; font-family: monospace; font-size: 13px;" id="pinVoucherPinText">----</strong></div>
-            <div id="pinVoucherExpiryText" style="color: #94A3B8;">Valid for 1 Year</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: rgba(255,255,255,0.92);">
+            <div>PIN: <strong style="color: #FFFFFF; font-family: monospace; font-size: 13px;" id="pinVoucherPinText">----</strong></div>
+            <div id="pinVoucherExpiryText" style="color: rgba(255,255,255,0.85);">Valid for 1 Year</div>
           </div>
         </div>
 
         <!-- Transaction Details Card -->
-        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 12px 14px; text-align: left; margin-bottom: 20px;">
+        <div style="background: #FFF8F5; border: 1px solid #FFE0B2; border-radius: 16px; padding: 12px 14px; text-align: left; margin-bottom: 20px;">
           <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;">
             <span style="color: #64748B;">Reference / UTR</span>
             <strong style="color: #0F172A;" id="pinSuccessUtrText">EPY--------</strong>
@@ -7559,10 +7610,10 @@
 
         <!-- Buttons Row -->
         <div style="display: flex; gap: 10px;">
-          <button onclick="finishPinPaymentSuccess()" style="flex: 1; height: 48px; background: #0052CC; color: #FFFFFF; border: none; border-radius: 14px; font-size: 14.5px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 82, 204, 0.3);">
+          <button onclick="finishPinPaymentSuccess()" style="flex: 1; height: 48px; background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); color: #FFFFFF; border: none; border-radius: 14px; font-size: 14.5px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 14px rgba(255, 87, 34, 0.3);">
             Done
           </button>
-          <button onclick="sharePaymentReceipt()" style="width: 48px; height: 48px; border-radius: 14px; background: #F1F5F9; border: 1px solid #CBD5E1; color: #334155; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+          <button onclick="sharePaymentReceipt()" style="width: 48px; height: 48px; border-radius: 14px; background: #FFF8F5; border: 1.5px solid #FFE0B2; color: #FF5722; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
             <i class="fa-solid fa-share-nodes"></i>
           </button>
         </div>
@@ -10311,9 +10362,7 @@
       // Update Hero Card
       const heroCard = document.getElementById('purchaseHeroCardGradient');
       if (heroCard) {
-        heroCard.style.background = card.bgColor 
-          ? `linear-gradient(135deg, ${card.bgColor} 0%, #0F172A 100%)`
-          : 'linear-gradient(135deg, #025492 0%, #0078D7 100%)';
+        heroCard.style.background = 'linear-gradient(135deg, #FF5722 0%, #FF7043 100%)';
       }
       const heroBrandName = document.getElementById('purchaseHeroBrandName');
       if (heroBrandName) heroBrandName.innerText = card.name;
@@ -12462,7 +12511,7 @@
                 </div>
               </div>
             </div>
-            <button onclick="initiatePaymentToRecipient('${c.name}', '${c.mobile}', '${c.payId}', ${c.defaultAmount})" style="background: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE; border-radius: 20px; padding: 8px 18px; font-size: 13px; font-weight: 800; cursor: pointer;">
+            <button onclick="initiatePaymentToRecipient('${c.name}', '${c.mobile}', '${c.payId}', ${c.defaultAmount})" style="background: #FFF3E0; color: #FF5722; border: 1px solid #FFCCBC; border-radius: 20px; padding: 8px 18px; font-size: 13px; font-weight: 800; cursor: pointer;">
               Pay
             </button>
           </div>
@@ -12472,7 +12521,7 @@
         listEl.innerHTML = `
           <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 14px; display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 12px;">
-              <div style="width: 48px; height: 48px; border-radius: 50%; background: #EFF6FF; color: #2563EB; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+              <div style="width: 48px; height: 48px; border-radius: 50%; background: #FFF3E0; color: #FF5722; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 18px;">
                 <i class="fa-solid fa-user"></i>
               </div>
               <div>
@@ -12480,11 +12529,32 @@
                 <div style="font-size: 11px; color: #16A34A; font-weight: 700;">Verified UPI Recipient</div>
               </div>
             </div>
-            <button onclick="initiatePaymentToRecipient('+91 ' + '${q}', '${q}', '${q}@easypay', 250)" style="background: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE; border-radius: 20px; padding: 8px 18px; font-size: 13px; font-weight: 800; cursor: pointer;">
+            <button onclick="initiatePaymentToRecipient('+91 ' + '${q}', '${q}', '${q}@easypay', 250)" style="background: #FF5722; color: #FFFFFF; border: none; border-radius: 20px; padding: 8px 18px; font-size: 13px; font-weight: 800; cursor: pointer;">
               Pay
             </button>
           </div>
         `;
+      } else if (q.includes('@') && q.length >= 4) {
+        if (labelEl) labelEl.innerHTML = 'UPI / Pay ID <span style="font-weight: 500; color: #64748B;">(Direct Transfer)</span>';
+        listEl.innerHTML = `
+          <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 14px; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 48px; height: 48px; border-radius: 50%; background: #FFF3E0; color: #FF5722; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+                <i class="fa-solid fa-at"></i>
+              </div>
+              <div>
+                <div style="font-size: 15px; font-weight: 800; color: #0F172A;">${q}</div>
+                <div style="font-size: 11px; color: #16A34A; font-weight: 700;">Verified UPI / EasyPay ID</div>
+              </div>
+            </div>
+            <button onclick="initiatePaymentToRecipient('${q}', '', '${q}', 250)" style="background: #FF5722; color: #FFFFFF; border: none; border-radius: 20px; padding: 8px 18px; font-size: 13px; font-weight: 800; cursor: pointer;">
+              Pay
+            </button>
+          </div>
+        `;
+      } else {
+        if (labelEl) labelEl.innerHTML = 'No matching contacts';
+        listEl.innerHTML = '<div style="text-align:center; padding: 28px 16px; color:#64748B; font-size:13px;">Enter a 10-digit mobile number or UPI ID (e.g. name@easypay) to send money.</div>';
       }
     }
 
@@ -12539,17 +12609,52 @@
       }
     }
 
+    function toggleReferralDropdown(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById('referLevelDropdownMenu');
+      if (!menu) return;
+      menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    }
+
+    document.addEventListener('click', function(ev) {
+      const wrap = document.getElementById('referLevelDropdownWrap');
+      const menu = document.getElementById('referLevelDropdownMenu');
+      if (menu && wrap && !wrap.contains(ev.target)) {
+        menu.style.display = 'none';
+      }
+    });
+
     function populateReferralDropdown() {
-      const sel = document.getElementById('referLevelSelect');
-      if (!sel || !currentReferralData || !currentReferralData.levels) return;
+      const menu = document.getElementById('referLevelDropdownMenu');
+      const label = document.getElementById('referLevelDropdownLabel');
+      if (!menu || !currentReferralData || !currentReferralData.levels) return;
       const total = currentReferralData.totalMembers || 0;
-      sel.innerHTML = '<option value="ALL">All Levels (' + total + ')</option>' +
-        currentReferralData.levels.map(l => '<option value="' + l.level + '">Level ' + l.level + ' (' + l.count + ') • ' + l.commissionPercent + '%</option>').join('');
-      sel.value = activeReferralLevel;
+      const isAll = activeReferralLevel === 'ALL';
+      if (label) {
+        if (isAll) {
+          label.innerText = 'All Levels (' + total + ')';
+        } else {
+          const lvlObj = currentReferralData.levels.find(l => l.level === activeReferralLevel);
+          label.innerText = lvlObj ? ('Level ' + lvlObj.level + ' (' + lvlObj.count + ')') : 'All Levels';
+        }
+      }
+      const items = [
+        `<button type="button" onclick="selectReferralLevel('ALL')" style="width:100%; display:flex; justify-content:space-between; align-items:center; padding:7px 10px; border:none; border-radius:8px; background:${isAll ? '#FFF3E0' : 'transparent'}; color:${isAll ? '#FF5722' : '#0F172A'}; font-size:11.5px; font-weight:${isAll ? '800' : '700'}; cursor:pointer; text-align:left;"><span>All Levels</span><span>${total}</span></button>`
+      ];
+      currentReferralData.levels.forEach(l => {
+        const active = activeReferralLevel === l.level;
+        items.push(
+          `<button type="button" onclick="selectReferralLevel(${l.level})" style="width:100%; display:flex; justify-content:space-between; align-items:center; padding:7px 10px; border:none; border-radius:8px; background:${active ? '#FFF3E0' : 'transparent'}; color:${active ? '#FF5722' : '#0F172A'}; font-size:11.5px; font-weight:${active ? '800' : '700'}; cursor:pointer; text-align:left;"><span>Level ${l.level} • ${l.commissionPercent}%</span><span style="color:#64748B;">${l.count}</span></button>`
+        );
+      });
+      menu.innerHTML = items.join('');
     }
 
     function selectReferralLevel(lvl) {
       activeReferralLevel = lvl === 'ALL' ? 'ALL' : parseInt(lvl, 10);
+      const menu = document.getElementById('referLevelDropdownMenu');
+      if (menu) menu.style.display = 'none';
+      populateReferralDropdown();
       renderReferralLevelView();
     }
 
@@ -13362,8 +13467,17 @@
         if (currentSecurityPin === validPin || currentSecurityPin === '1234') {
           // Play success chime
           try { playPaymentSuccessChime(); } catch(e){ try { playWebAudioTone(880, 0.2); } catch(e2){} }
-          // Trigger inline animated success screen with real-time DB sync
-          setTimeout(showInlinePinPaymentSuccess, 100);
+          if (currentPendingPayment && typeof currentPendingPayment.onPinVerified === 'function') {
+            const cb = currentPendingPayment.onPinVerified;
+            currentPendingPayment.onPinVerified = null;
+            setTimeout(() => {
+              closeModal('securityPinModal');
+              cb();
+            }, 120);
+          } else {
+            // Trigger inline animated success screen with real-time DB sync
+            setTimeout(showInlinePinPaymentSuccess, 100);
+          }
         } else {
           // Shake PIN dots for incorrect PIN
           const dotsWrap = document.getElementById('pinDotsWrap');
@@ -14181,6 +14295,18 @@
         return;
       }
 
+      currentPendingPayment = {
+        type: 'Lucky Draw Entry',
+        amount: currentLdEntryAmount,
+        recipientName: 'Weekly Lucky Draw',
+        onPinVerified: async () => {
+          await finalizeCredLuckyDrawAfterPin();
+        }
+      };
+      openSecurityPinModal();
+    }
+
+    async function finalizeCredLuckyDrawAfterPin() {
       const btn = document.getElementById('btnCredEnter');
       const btnText = document.getElementById('btnCredEnterText');
       if (btn) btn.disabled = true;
@@ -15395,6 +15521,23 @@
           showToast('Insufficient wallet balance. Available: ₹' + currentBal + ', Required: ₹' + payable);
           return;
         }
+        if (!window.__bypassCheckoutPinOnce) {
+          currentPendingPayment = {
+            type: 'Mall Order',
+            amount: payable,
+            recipientName: 'EasyPay Mall Store',
+            onPinVerified: async () => {
+              window.__bypassCheckoutPinOnce = true;
+              try {
+                await submitFinalMallOrder();
+              } finally {
+                window.__bypassCheckoutPinOnce = false;
+              }
+            }
+          };
+          openSecurityPinModal();
+          return;
+        }
 
         // Deduct from wallet via backend transaction engine
         const utrNum = 'EPY' + Math.floor(100000000 + Math.random() * 900000000);
@@ -16432,7 +16575,7 @@
        ============================================================== -->
   <div class="view-panel" id="viewEcommerceCheckout" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 9999; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
     <!-- Unified EasyPay Orange Hero Header -->
-    <div id="checkoutTopBar" style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 20px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; width: 100%; box-sizing: border-box;">
+    <div id="checkoutTopBar" style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 20px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 100; width: 100%; box-sizing: border-box;">
       <div style="display: flex; align-items: center; gap: 12px;">
         <button onclick="closeEcommerceCheckoutView()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;">
           <i class="fa-solid fa-arrow-left"></i>
@@ -16989,18 +17132,18 @@
       <!-- ==============================================================
            FULL-SCREEN PRODUCT DETAILS VIEW (E-COMMERCE)
            ============================================================== -->
-      <div id="viewProductDetails" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; background: #FFFFFF; overflow-y: auto; -webkit-overflow-scrolling: touch;">
-        <!-- Top Sticky Bar -->
-        <div style="background: #FFFFFF; padding: 14px 16px; border-bottom: 1px solid #E2E8F0; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <button onclick="closeProductDetailsView()" style="background: none; border: none; font-size: 18px; color: #0F172A; cursor: pointer; display: flex; align-items: center;">
+      <div id="viewProductDetails" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 9999; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+        <!-- Unified EasyPay Orange Hero Header -->
+        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 18px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 100;">
+          <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+            <button onclick="closeProductDetailsView()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;">
               <i class="fa-solid fa-arrow-left"></i>
             </button>
-            <div style="font-family: var(--font-heading); font-size: 17px; font-weight: 800; color: #0F172A;" id="productDetailTopTitle">Product Details</div>
+            <div style="font-family: var(--font-heading); font-size: 17px; font-weight: 800; color: #FFFFFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="productDetailTopTitle">Product Details</div>
           </div>
-          <button onclick="openCartModal()" style="background: none; border: none; font-size: 19px; color: #0F172A; cursor: pointer; position: relative;">
+          <button onclick="openCartModal()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; position: relative; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
             <i class="fa-solid fa-cart-shopping"></i>
-            <span class="cart-badge-count" style="position: absolute; top: -6px; right: -8px; background: #FF5722; color: #FFF; font-size: 10px; font-weight: 800; border-radius: 10px; padding: 2px 5px; min-width: 16px; text-align: center;">0</span>
+            <span class="cart-badge-count" style="position: absolute; top: -4px; right: -4px; background: #FFFFFF; color: #FF5722; font-size: 10px; font-weight: 900; border-radius: 10px; padding: 1px 5px; min-width: 16px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">0</span>
           </button>
         </div>
 
