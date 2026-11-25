@@ -163,9 +163,10 @@ const tests = [
           appHtml.includes('fa-spin')
   },
   {
-    name: 'Req 34: Bank Accounts and My Orders headers are strictly constrained to mobile responsive 480px',
-    pass: appHtml.includes('<!-- Top App Bar (Mobile Responsive Centered Max-Width 480px) -->') &&
-          appHtml.includes('Segmented Tab Bar (Mobile Responsive Centered Max-Width 480px)')
+    name: 'Req 34: Bank Accounts, My Orders, Reset PIN & Pay Anyone views are strictly constrained to mobile responsive 480px',
+    pass: appHtml.includes('id="viewBankAccounts" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px;') &&
+          appHtml.includes('id="viewMyOrders" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px;') &&
+          appHtml.includes('id="viewResetPin" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px;')
   },
   {
     name: 'Req 35: Admin Product Modal multi-angle photography upload slots and previews',
