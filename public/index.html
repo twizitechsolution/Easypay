@@ -90,16 +90,31 @@
       }, 800);
     }
 
+    let activeBondPlan = { id: 'suryoday_fd', title: 'Suryoday SF Bank FD', rate: 8.60 };
+
     function openBondBookingModal(title, rate, planId) {
-      const modal = document.getElementById('bondBookingModal');
-      if (title && document.getElementById('bookBondTitle')) {
-        document.getElementById('bookBondTitle').innerText = title;
+      pushAppNavState('bondBookingModal');
+      const parsedRate = parseFloat(String(rate || '8.60').replace(/[^0-9.]/g, '')) || 8.60;
+      activeBondPlan = {
+        id: planId || 'suryoday_fd',
+        title: title || 'Suryoday SF Bank FD',
+        rate: parsedRate
+      };
+      if (document.getElementById('bookBondTitle')) {
+        document.getElementById('bookBondTitle').innerText = activeBondPlan.title;
       }
-      if (rate && document.getElementById('bookBondRateTag')) {
-        document.getElementById('bookBondRateTag').innerText = rate + ' Guaranteed Return per month';
+      if (document.getElementById('bookBondRateTag')) {
+        document.getElementById('bookBondRateTag').innerText = parsedRate.toFixed(2) + '% Guaranteed Return per month';
+      }
+      const wEl = document.getElementById('investPageWalletDisplay');
+      if (wEl) {
+        const bal = (appData.user && appData.user.walletBalance) || 0;
+        wEl.innerText = '₹' + bal.toLocaleString('en-IN', { minimumFractionDigits: 2 });
       }
       calculateBondMaturity();
-      if (modal) modal.classList.add('active');
+      const modal = document.getElementById('bondBookingModal');
+      if (modal) modal.style.display = 'block';
+      window.scrollTo(0, 0);
     }
 
     function calculateBondMaturity() {
@@ -107,7 +122,7 @@
       const tenureSelect = document.getElementById('bondTenureSelect');
       const principal = parseFloat(amtInput ? amtInput.value : 1000) || 1000;
       const months = parseInt(tenureSelect ? tenureSelect.value : 6) || 6;
-      const rate = 8.60;
+      const rate = activeBondPlan.rate || 8.60;
 
       const monthlyYield = (principal * rate) / 100;
       const dailyCredit = monthlyYield / 30;
@@ -140,32 +155,77 @@
     }
 
     async function executeBondBooking() {
-      const amt = parseFloat(document.getElementById('bondAmountInput').value) || 1000;
+      const amt = parseFloat(document.getElementById('bondAmountInput').value) || 0;
       const tenure = parseInt(document.getElementById('bondTenureSelect').value) || 6;
-      const title = document.getElementById('bookBondTitle').innerText;
+      if (amt < 1000) {
+        showToast('Minimum investment amount is ₹1,000');
+        return;
+      }
+
+      const u = appData.user || {};
+      const currentBal = Number(u.walletBalance || 0);
+      if (amt > currentBal) {
+        showToast('Insufficient E-Pay Wallet balance (Available: ₹' + currentBal.toLocaleString('en-IN') + ')');
+        return;
+      }
+
+      const btn = document.getElementById('btnConfirmInvestBooking');
+      if (btn) btn.disabled = true;
 
       try {
-        const res = await fetch(API_BASE + '/api/bonds/book', {
+        const res = await fetch(API_BASE + '/api/invest/book', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ planId: 'suryoday_fd', amount: amt, tenureMonths: tenure })
+          body: JSON.stringify({
+            bondId: activeBondPlan.id,
+            planId: activeBondPlan.id,
+            title: activeBondPlan.title,
+            rate: activeBondPlan.rate,
+            amount: amt,
+            tenureMonths: tenure,
+            userId: u.id || 'EPY98808',
+            userMobile: u.mobile || '9876548808'
+          })
         });
         const data = await res.json();
         if (data.success) {
+          if (appData.user) {
+            appData.user.walletBalance = data.newBalance;
+            localStorage.setItem('easypay_session_user', JSON.stringify(appData.user));
+          }
+          if (!appData.investments) appData.investments = [];
+          if (data.investment) appData.investments.unshift(data.investment);
+          if (!appData.transactions) appData.transactions = [];
+          if (data.transaction) appData.transactions.unshift(data.transaction);
+
+          if (typeof updateWalletDisplay === 'function') updateWalletDisplay();
+          if (typeof renderWallet === 'function') renderWallet();
+          if (typeof renderBookedBonds === 'function') renderBookedBonds();
+          if (typeof renderTransactions === 'function') renderTransactions();
+
+          if (document.getElementById('successCertNum') && data.investment) {
+            document.getElementById('successCertNum').innerText = data.investment.certNumber;
+          }
+          if (document.getElementById('successInstName')) {
+            document.getElementById('successInstName').innerText = activeBondPlan.title;
+          }
+          if (document.getElementById('successPrincipal')) {
+            document.getElementById('successPrincipal').innerText = '₹' + amt.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+          }
+          if (document.getElementById('successMaturity') && data.investment) {
+            document.getElementById('successMaturity').innerText = '₹' + Number(data.investment.maturityAmount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+          }
+
           closeModal('bondBookingModal');
           openModal('bondSuccessModal');
-          loadData();
-    renderGiftCards();
-      loadLuckyDrawData();
-    renderShoppingProducts(); // INITIAL AUTO-LOAD
-    startGiftCardTopDealsCarousel();
-          showToast('🎉 Investment of ₹' + amt + ' confirmed successfully!');
+          showToast('Investment of ₹' + amt.toLocaleString('en-IN') + ' booked! Wallet updated.');
         } else {
-          showToast(data.error || 'Failed to book bond');
+          showToast(data.error || 'Failed to book investment');
         }
       } catch (e) {
-        showToast('Investment confirmed!');
-        closeModal('bondBookingModal');
+        showToast('Network error booking investment');
+      } finally {
+        if (btn) btn.disabled = false;
       }
     }
 
@@ -5613,17 +5673,7 @@
             </div>
           </div>
 
-          <!-- 8-Dot Carousel Indicators -->
-          <div class="slider-dots-row">
-            <span class="slider-dot active"></span>
-            <span class="slider-dot"></span>
-            <span class="slider-dot"></span>
-            <span class="slider-dot"></span>
-            <span class="slider-dot"></span>
-            <span class="slider-dot"></span>
-            <span class="slider-dot"></span>
-            <span class="slider-dot"></span>
-          </div>
+
         </div>
 
         <!-- 2. "Invest with EasyPay" Top 3 Cards (Screenshot 1) -->
@@ -5632,95 +5682,81 @@
         </div>
 
         <div class="bonds-category-row">
-          <!-- Card 1: Bonds 12.00% -->
-          <div class="bonds-cat-card" onclick="triggerRadarConnecting('Senior Secured Corporate Bonds', '12.00%', 'senior_secured_bonds')">
+          <!-- Card 1: Fixed Deposit (FD) -->
+          <div class="bonds-cat-card" onclick="triggerRadarConnecting('Suryoday SF Bank FD', '8.60%', 'suryoday_fd')" style="border: 1.5px solid #FFE0B2;">
             <div class="cat-card-header">
               <div class="cat-title-row">
-                <span class="cat-name">Bonds</span>
-                <span class="cat-badge-pill purple">Senior secured</span>
+                <span class="cat-name">Fixed Deposit</span>
+                <span class="cat-badge-pill" style="background: #FFF3E0; color: #FF5722;">DICGC</span>
               </div>
-              <span class="cat-reg-text">SEBI-registered</span>
-              <div class="cat-rate-text">12.00% <span style="font-size: 11px; font-weight: 700; color: #10B981;">/mo</span></div>
+              <span class="cat-reg-text">RBI-insured FD</span>
+              <div class="cat-rate-text" style="color: #FF5722;">8.60% <span style="font-size: 11px; font-weight: 700; color: #059669;">/mo</span></div>
             </div>
-            <div class="cat-illustration-box">
-              <i class="fa-solid fa-scroll"></i>
+            <div class="cat-illustration-box" style="background: #FFF3E0; color: #FF5722;">
+              <i class="fa-solid fa-landmark"></i>
             </div>
           </div>
 
-          <!-- Card 2: RD -->
-          <div class="bonds-cat-card" onclick="triggerRadarConnecting('RBI Regulated Recurring Deposit', '9.10%', 'rbi_rd')">
+          <!-- Card 2: Recurring Deposit (RD) -->
+          <div class="bonds-cat-card" onclick="triggerRadarConnecting('RBI Regulated Recurring Deposit', '9.10%', 'rbi_rd')" style="border: 1.5px solid #E2E8F0;">
             <div class="cat-card-header">
               <div class="cat-title-row">
-                <span class="cat-name">RD</span>
+                <span class="cat-name">Recurring RD</span>
               </div>
               <span class="cat-reg-text">RBI-regulated</span>
-              <div class="cat-rate-text" style="color: #2563EB;">9.10% <span style="font-size: 11px; font-weight: 700; color: #2563EB;">/mo</span></div>
+              <div class="cat-rate-text" style="color: #059669;">9.10% <span style="font-size: 11px; font-weight: 700; color: #059669;">/mo</span></div>
             </div>
-            <div class="cat-illustration-box" style="background: #EFF6FF; color: #2563EB;">
+            <div class="cat-illustration-box" style="background: #ECFDF5; color: #059669;">
               <i class="fa-solid fa-calendar-days"></i>
             </div>
           </div>
 
-          <!-- Card 3: FD Card -->
-          <div class="bonds-cat-card" onclick="triggerRadarConnecting('EasyPay FD Credit Card', '8.75%', 'fd_card')">
+          <!-- Card 3: Senior Secured Bonds -->
+          <div class="bonds-cat-card" onclick="triggerRadarConnecting('Senior Secured Corporate Bonds', '12.00%', 'senior_secured_bonds')" style="border: 1.5px solid #E2E8F0;">
             <div class="cat-card-header">
               <div class="cat-title-row">
-                <span class="cat-name">FD card</span>
+                <span class="cat-name">Senior Bonds</span>
               </div>
-              <span class="cat-reg-text">0.5% cashback</span>
-              <div class="cat-rate-text" style="color: #9333EA;">8.75% <span style="font-size: 11px; font-weight: 700; color: #9333EA;">/mo</span></div>
+              <span class="cat-reg-text">SEBI-registered</span>
+              <div class="cat-rate-text" style="color: #FF5722;">12.00% <span style="font-size: 11px; font-weight: 700; color: #059669;">/mo</span></div>
             </div>
-            <div class="cat-illustration-box" style="background: #FAF5FF; color: #9333EA;">
-              <i class="fa-solid fa-credit-card"></i>
+            <div class="cat-illustration-box" style="background: #FFF8F5; color: #FF5722;">
+              <i class="fa-solid fa-scroll"></i>
             </div>
           </div>
         </div>
 
-                <!-- 3. WEEKLY LUCKY DRAW ADVERTISEMENT / PROMO BANNER (CLICK OPENS DEDICATED PAGE) -->
-        <div class="lucky-draw-promo-banner" onclick="openLuckyDrawDedicatedPage()">
-          <div class="ld-promo-content">
-            <div class="ld-promo-badge">
-              <span class="ld-promo-pulse"></span>
-              <span>Weekly Lucky Draw</span>
-              <span class="ld-promo-time"><i class="fa-solid fa-clock"></i> Sunday 8 PM</span>
+        <!-- 3. WEEKLY LUCKY DRAW PROMO BANNER (Unified EasyPay Orange Theme) -->
+        <div onclick="openLuckyDrawDedicatedPage()" style="margin: 14px 16px; background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); border-radius: 18px; padding: 16px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; cursor: pointer; box-shadow: 0 6px 18px rgba(255,87,34,0.22);">
+          <div>
+            <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.2); border-radius: 999px; padding: 3px 10px; font-size: 10px; font-weight: 800; margin-bottom: 6px;">
+              <span style="width: 7px; height: 7px; border-radius: 50%; background: #B9F6CA;"></span>
+              WEEKLY LUCKY DRAW • SUNDAY 8 PM
             </div>
-            <div class="ld-promo-title">Win ₹25,000 Mega Jackpot</div>
-            <div class="ld-promo-sub">Direct wallet prize • Enter from ₹50 • Provably fair draw</div>
+            <div style="font-family: var(--font-heading); font-size: 17px; font-weight: 900;">Win ₹25,000 Mega Jackpot</div>
+            <div style="font-size: 11.5px; color: rgba(255,255,255,0.9); margin-top: 2px;">Direct wallet prize • Enter from ₹50</div>
           </div>
-          <div class="ld-promo-action">
-            <div class="ld-promo-gift-icon">
-              <i class="fa-solid fa-gift"></i>
-            </div>
-            <button class="ld-promo-enter-btn" onclick="event.stopPropagation(); openLuckyDrawDedicatedPage();">
-              <span>Enter</span>
-              <i class="fa-solid fa-arrow-right"></i>
-            </button>
-          </div>
+          <button type="button" onclick="event.stopPropagation(); openLuckyDrawDedicatedPage();" style="background: #FFFFFF; color: #FF5722; border: none; border-radius: 12px; padding: 9px 14px; font-size: 12.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+            <span>Enter</span> <i class="fa-solid fa-arrow-right"></i>
+          </button>
         </div>
 
-        <!-- 4. "Why invest with EasyPay" Cards (Screenshot 1) -->
-        <div style="padding: 10px 18px 0;">
-          <div style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: #0F172A;">Why invest with EasyPay</div>
-        </div>
-
-        <div class="why-invest-row">
-          <div class="why-card">
-            <div>
-              <div class="why-card-title">All in one place</div>
-              <div class="why-card-desc">FDs, Recurring Deposits, Senior Bonds, and track portfolio.</div>
-            </div>
-            <div class="why-card-icon-box">
-              <i class="fa-solid fa-circle-check"></i>
-            </div>
+        <!-- 4. Highlighted "Why invest with EasyPay" Cards -->
+        <div style="margin: 14px 16px; background: #FFF8F5; border: 1.5px solid #FFE0B2; border-radius: 18px; padding: 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+            <div style="font-family: var(--font-heading); font-size: 16px; font-weight: 900; color: #0F172A;">Why invest with EasyPay</div>
+            <span style="background: #FF5722; color: #FFFFFF; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 999px;">100% Safe</span>
           </div>
-
-          <div class="why-card">
-            <div>
-              <div class="why-card-title">No hidden fees. Complete transparency</div>
-              <div class="why-card-desc">No annual charges or hidden platform fees, just transparent investing.</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div style="background: #FFFFFF; border: 1px solid #FFEDD5; border-radius: 14px; padding: 12px;">
+              <div style="width: 32px; height: 32px; border-radius: 9px; background: #FFF3E0; color: #FF5722; display: flex; align-items: center; justify-content: center; font-size: 15px; margin-bottom: 8px;"><i class="fa-solid fa-clock"></i></div>
+              <div style="font-size: 13px; font-weight: 800; color: #0F172A;">12:00 AM Daily Payout</div>
+              <div style="font-size: 11px; color: #64748B; margin-top: 3px;">Interest credits automatically to your E-Pay Wallet every midnight.</div>
             </div>
-            <div class="why-card-icon-box" style="background: #ECFDF5; color: #059669;">
-              <i class="fa-solid fa-shield-halved"></i>
+            <div style="background: #FFFFFF; border: 1px solid #FFEDD5; border-radius: 14px; padding: 12px;">
+              <div style="width: 32px; height: 32px; border-radius: 9px; background: #ECFDF5; color: #059669; display: flex; align-items: center; justify-content: center; font-size: 15px; margin-bottom: 8px;"><i class="fa-solid fa-shield-halved"></i></div>
+              <div style="font-size: 13px; font-weight: 800; color: #0F172A;">DICGC Insured ₹5L</div>
+              <div style="font-size: 11px; color: #64748B; margin-top: 3px;">Zero hidden fees. RBI-regulated partner banks & instant tracking.</div>
             </div>
           </div>
         </div>
@@ -6171,257 +6207,113 @@
         <!-- ==============================================================
        DEDICATED FULL-SCREEN LUCKY DRAW PAGE (IMAGE 2 CRED STYLE)
        ============================================================== -->
-  <div class="view-panel" id="viewLuckyDrawDedicated" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; background: #050811; overflow-y: auto; -webkit-overflow-scrolling: touch; color: #FFFFFF;">
-    
-    <!-- Top Nav Bar (Image 2 style) -->
-    <header class="cred-top-navbar">
-      <div class="cred-nav-left">
-        <button class="cred-back-btn" onclick="closeLuckyDrawDedicatedPage()" title="Back to Invest Hub">
-          <i class="fa-solid fa-arrow-left"></i>
-        </button>
-        <span class="cred-nav-tagline">use balance to enter & win ₹25,000 every week</span>
-      </div>
-      <button class="cred-my-contests-btn" onclick="scrollToMyContests()">
-        <i class="fa-solid fa-ticket"></i>
-        <span>my contests</span>
-        <span class="cred-badge-num" id="credMyContestsBadge">0</span>
-      </button>
-    </header>
-
-    <!-- Main Hero Carousel Stage (Image 2 style) -->
-    <section class="cred-hero-container">
-      <div class="cred-deal-title">LUCKY DRAW OF THE WEEK</div>
-
-      <!-- 3D Card Stage with Left, Center, and Right perspective cards -->
-      <!-- Animated 3D Gift Box Stage (Image 2 Redesign) -->
-      <div class="giftbox-scene-stage" id="giftboxSceneStage">
-        
-        <!-- Magic Aura Glow & Burst Rays -->
-        <div class="giftbox-magic-glow"></div>
-        <div class="giftbox-burst-rays" id="giftboxBurstRays"></div>
-
-        <!-- 3D Interactive Gift Box (Lid lifts when opened!) -->
-        <div class="giftbox-interactive-cube" id="giftboxInteractiveCube" onclick="toggleGiftboxPreview()">
-          
-          <!-- Top 3D Lid with Bow & Ribbon -->
-          <div class="giftbox-lid-3d">
-            <div class="giftbox-bow-knot">
-              <div class="bow-loop left"></div>
-              <div class="bow-loop right"></div>
-              <div class="bow-knot-center"></div>
-            </div>
-            <div class="giftbox-lid-ribbon-v"></div>
-          </div>
-
-          <!-- Main Box Body -->
-          <div class="giftbox-body-3d">
-            <div class="giftbox-body-ribbon-v"></div>
-            <div class="giftbox-body-ribbon-h"></div>
-            
-            <div class="giftbox-seal-row">
-              <span class="giftbox-exclusive-seal"><i class="fa-solid fa-crown" style="color: #F59E0B;"></i> EasyPay Exclusive</span>
-              <span class="giftbox-fair-seal"><i class="fa-solid fa-circle-check"></i> 100% FAIR</span>
-            </div>
-
-            <div class="giftbox-center-content">
-              <div class="giftbox-front-sub">SUNDAY 8:00 PM MEGA JACKPOT</div>
-              <div class="giftbox-front-amount" id="giftboxFrontAmount">₹25,000</div>
-              <div class="giftbox-front-note">Direct Wallet Cash Credit</div>
-            </div>
-
-            <div style="font-size: 10px; color: #94A3B8; text-align: center; position: relative; z-index: 2;">
-              <span style="color: #FBBF24; font-weight: 700;" id="giftboxEntryFeeBadge">₹50 Entry</span> • Automated RNG Draw
-            </div>
-          </div>
-
-          <!-- Prize Reveal Card (Emerged when box opens!) -->
-          <div class="giftbox-revealed-prize" id="giftboxRevealedPrize">
-            <div class="revealed-trophy"><i class="fa-solid fa-trophy"></i></div>
-            <div class="revealed-title">🎉 SUNDAY 8:00 PM WINNER!</div>
-            <div class="revealed-winner-name" id="giftboxWinnerName">Rahul Sharma</div>
-            <div class="revealed-ticket" id="giftboxWinnerTicket">Ticket #TKT-SUN-62914</div>
-            <div class="revealed-prize-tag" id="giftboxWinnerPrize">Won ₹25,000 Mega Cash</div>
-            <div style="font-size: 10px; color: #34D399; font-weight: 700; margin-top: 3px;">
-              <i class="fa-solid fa-circle-check"></i> Credited to EasyPay Wallet
-            </div>
-          </div>
-        </div>
-
-        <!-- Countdown Timer Display On/Near the Gift Box -->
-        <div class="giftbox-countdown-capsule" id="giftboxCountdownCapsule">
-          <div class="countdown-top-label">
-            <span class="ld-promo-pulse"></span>
-            <span id="giftboxCountdownHeadline">LUCKY DRAW COUNTDOWN</span>
-          </div>
-          <div class="countdown-digits-row" id="giftboxTimerString">
-            <div class="countdown-unit"><strong id="cdDays">02</strong><small>days</small></div>
-            <span class="countdown-sep">:</span>
-            <div class="countdown-unit"><strong id="cdHours">10</strong><small>hours</small></div>
-            <span class="countdown-sep">:</span>
-            <div class="countdown-unit"><strong id="cdMins">24</strong><small>mins</small></div>
-            <span class="countdown-sep">:</span>
-            <div class="countdown-unit"><strong id="cdSecs">15</strong><small>secs</small></div>
-          </div>
-          <div class="countdown-human-readable" id="giftboxHumanReadable">2 days remaining until Sunday 8:00 PM</div>
-        </div>
-
-      </div>
-
-      <!-- Benefit Row Under Card (Image 2 style) -->
-      <div class="cred-benefit-row">
-        <span class="cred-benefit-title">Mega Sunday Winner Gets</span>
-        <div class="cred-benefit-highlight">
-          <span id="credHeroPrizeAmountDisplay">₹25,000</span>
-          <span style="font-size: 16px; color: #94A3B8;">+</span>
-          <span class="cred-gift-icon-3d">🎁</span>
-        </div>
-      </div>
-
-      <!-- Raised 3D Podium & ENTER Button (Direct ₹50 Entry) -->
-      <div class="cred-podium-wrap">
-        <div class="cred-podium-base">
-          <button class="cred-btn-unlock-gold" id="btnCredEnter" onclick="executeCredLuckyDrawEntry()">
-            <i class="fa-solid fa-ticket" style="font-size: 18px;"></i>
-            <span id="btnCredEnterText">ENTER</span>
+  <div class="view-panel" id="viewLuckyDrawDedicated" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 9999; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch; color: #0F172A;">
+    <!-- Unified EasyPay Orange Hero Header -->
+    <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 28px; color: #FFFFFF; position: sticky; top: 0; z-index: 100;">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button onclick="closeLuckyDrawDedicatedPage()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;">
+            <i class="fa-solid fa-arrow-left"></i>
           </button>
-          <div class="cred-cost-hint">
-            <span>using</span>
-            <i class="fa-solid fa-circle-dollar-to-slot cred-coin-icon"></i>
-            <span id="credPodiumCostSpan">₹50</span>
-            <span>• Balance: <strong id="credWalletBalanceDisplay" style="color: #FFFFFF;">₹5,384.13</strong></span>
+          <div>
+            <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #FFFFFF;">Weekly Lucky Draw</div>
+            <div style="font-size: 11px; color: rgba(255,255,255,0.9);">Win ₹25,000 Every Sunday at 8:00 PM</div>
           </div>
+        </div>
+        <button onclick="scrollToMyContests()" style="background: rgba(255,255,255,0.22); border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 5px 12px; color: #FFFFFF; font-size: 11.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-ticket"></i> Contests <span id="credMyContestsBadge" style="background: #FFFFFF; color: #FF5722; padding: 1px 6px; border-radius: 999px; font-size: 10px;">0</span>
+        </button>
+      </div>
+    </div>
+
+    <div style="padding: 0 14px 40px; margin-top: -16px; position: relative; z-index: 101;">
+      <!-- Wallet & Winning Balance Strip -->
+      <div style="background: #FFFFFF; border: 1.5px solid #FFE0B2; border-radius: 16px; padding: 12px 14px; margin-bottom: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; box-shadow: 0 4px 14px rgba(255,87,34,0.08);">
+        <div style="background: #FFF8F5; border-radius: 12px; padding: 10px;">
+          <div style="font-size: 10px; font-weight: 700; color: #64748B;">E-PAY WALLET</div>
+          <div style="font-size: 16px; font-weight: 900; color: #0F172A; margin-top: 2px;" id="credWalletBalanceDisplay">₹0.00</div>
+        </div>
+        <div style="background: #ECFDF5; border-radius: 12px; padding: 10px;">
+          <div style="font-size: 10px; font-weight: 700; color: #047857;">WINNING BALANCE</div>
+          <div style="font-size: 16px; font-weight: 900; color: #059669; margin-top: 2px;" id="ldWinningBalanceDisplay">₹0.00</div>
         </div>
       </div>
-    </section>
 
-    <!-- Content Sections Below Podium -->
-    <div class="cred-content-section">
-      
-      <!-- My Contests Section (Image 2 User Participations) -->
-      <div id="sectionMyContests" style="margin-bottom: 24px;">
-        <div class="cred-section-title">
-          <span>My Contests & Tickets</span>
-          <span class="cred-section-badge" id="credMyTicketCountBadge">0 Active</span>
+      <!-- Main Jackpot & Live Countdown Card -->
+      <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 20px; padding: 18px; margin-bottom: 14px; text-align: center; box-shadow: 0 3px 12px rgba(15,23,42,0.04);">
+        <span style="display: inline-flex; align-items: center; gap: 6px; background: #FFF3E0; color: #FF5722; font-size: 10.5px; font-weight: 800; padding: 4px 12px; border-radius: 999px; margin-bottom: 10px;">
+          <i class="fa-solid fa-crown"></i> MEGA SUNDAY JACKPOT • 100% FAIR RNG
+        </span>
+        <div style="font-family: var(--font-heading); font-size: 36px; font-weight: 900; color: #FF5722; line-height: 1.1;" id="giftboxFrontAmount">₹25,000</div>
+        <div style="display: none;" id="credHeroPrizeAmountDisplay">₹25,000</div>
+        <div style="font-size: 12px; color: #64748B; font-weight: 600; margin-top: 4px;">Direct Instant Cash Credit to E-Pay Wallet</div>
+
+        <!-- Countdown Boxes -->
+        <div id="giftboxCountdownCapsule" style="margin: 16px 0; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 12px;">
+          <div style="font-size: 10px; font-weight: 800; color: #64748B; letter-spacing: 0.6px; margin-bottom: 8px;" id="giftboxCountdownHeadline">NEXT DRAW COUNTDOWN</div>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 8px;" id="giftboxTimerString">
+            <div style="background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 10px; padding: 6px 10px; min-width: 48px;"><strong id="cdDays" style="display:block; font-size:18px; color:#0F172A;">02</strong><small style="font-size:9px; color:#64748B;">DAYS</small></div>
+            <span style="font-weight:900; color:#FF5722;">:</span>
+            <div style="background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 10px; padding: 6px 10px; min-width: 48px;"><strong id="cdHours" style="display:block; font-size:18px; color:#0F172A;">10</strong><small style="font-size:9px; color:#64748B;">HRS</small></div>
+            <span style="font-weight:900; color:#FF5722;">:</span>
+            <div style="background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 10px; padding: 6px 10px; min-width: 48px;"><strong id="cdMins" style="display:block; font-size:18px; color:#0F172A;">24</strong><small style="font-size:9px; color:#64748B;">MINS</small></div>
+            <span style="font-weight:900; color:#FF5722;">:</span>
+            <div style="background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 10px; padding: 6px 10px; min-width: 48px;"><strong id="cdSecs" style="display:block; font-size:18px; color:#0F172A;">15</strong><small style="font-size:9px; color:#64748B;">SECS</small></div>
+          </div>
+          <div style="font-size: 11px; color: #64748B; margin-top: 8px;" id="giftboxHumanReadable">Every Sunday at 8:00 PM</div>
         </div>
-        <div class="cred-feed-box" id="credMyContestsList">
-          <div style="text-align: center; padding: 20px 10px; color: #64748B; font-size: 12px;">
-            <i class="fa-solid fa-ticket" style="font-size: 24px; color: #334155; margin-bottom: 8px; display: block;"></i>
-            You haven't entered this Sunday's draw yet.<br>Click <strong style="color: #F59E0B;">UNLOCK</strong> above to get your first ticket!
+
+        <!-- Ticket Selector & Enter Draw CTA -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;">
+          <button type="button" onclick="selectLdEntryTier(50, this)" class="ld-tier-chip active" style="padding: 8px; border-radius: 10px; border: 1.5px solid #FF5722; background: #FFF3E0; color: #FF5722; font-size: 12px; font-weight: 800; cursor: pointer;">1 Ticket • ₹50</button>
+          <button type="button" onclick="selectLdEntryTier(100, this)" class="ld-tier-chip" style="padding: 8px; border-radius: 10px; border: 1.5px solid #E2E8F0; background: #FFFFFF; color: #334155; font-size: 12px; font-weight: 700; cursor: pointer;">2 Tickets • ₹100</button>
+          <button type="button" onclick="selectLdEntryTier(200, this)" class="ld-tier-chip" style="padding: 8px; border-radius: 10px; border: 1.5px solid #E2E8F0; background: #FFFFFF; color: #334155; font-size: 12px; font-weight: 700; cursor: pointer;">4 Tickets • ₹200</button>
+        </div>
+
+        <button type="button" id="btnCredEnter" onclick="executeCredLuckyDrawEntry()" style="width: 100%; padding: 14px; border-radius: 14px; border: none; background: linear-gradient(135deg, #FF5722, #FF7043); color: #FFFFFF; font-size: 15px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px rgba(255,87,34,0.28);">
+          <i class="fa-solid fa-ticket"></i>
+          <span id="btnCredEnterText">Enter Draw (<span id="credPodiumCostSpan">₹50</span>)</span>
+        </button>
+      </div>
+
+      <!-- Latest Winner Spotlight (Clean Non-Overlapping Card) -->
+      <div id="giftboxRevealedPrize" style="background: #ECFDF5; border: 1.5px solid #A7F3D0; border-radius: 16px; padding: 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 42px; height: 42px; border-radius: 12px; background: #059669; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+            <i class="fa-solid fa-trophy"></i>
+          </div>
+          <div>
+            <div style="font-size: 10px; font-weight: 800; color: #047857;">LAST SUNDAY WINNER</div>
+            <div style="font-size: 14px; font-weight: 800; color: #0F172A;" id="giftboxWinnerName">Nirod Behera</div>
+            <div style="font-size: 11px; color: #065F46;" id="giftboxWinnerTicket">Ticket #TKT-SUN-42569</div>
           </div>
         </div>
+        <div style="text-align: right;">
+          <div style="font-size: 13px; font-weight: 900; color: #059669;" id="giftboxWinnerPrize">₹25,000</div>
+          <div style="font-size: 10px; color: #047857; font-weight: 700;">Credited</div>
+        </div>
+      </div>
+
+      <!-- My Contests & Tickets -->
+      <div id="sectionMyContests" style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 16px; margin-bottom: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="font-size: 14px; font-weight: 800; color: #0F172A;">My Contests & Tickets</span>
+          <span id="credMyTicketCountBadge" style="background: #FFF3E0; color: #FF5722; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 999px;">0 Active</span>
+        </div>
+        <div id="credMyContestsList" style="display: flex; flex-direction: column; gap: 8px;"></div>
       </div>
 
       <!-- Live Participants Feed -->
-      <div style="margin-bottom: 24px;">
-        <div class="cred-section-title">
-          <span>Participants Who Entered</span>
-          <span class="cred-section-badge" id="credLiveCount"><i class="fa-solid fa-users"></i> Live Feed</span>
+      <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="font-size: 14px; font-weight: 800; color: #0F172A;">Participants Who Entered</span>
+          <span id="credLiveCount" style="background: #ECFDF5; color: #059669; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 999px;"><i class="fa-solid fa-users"></i> Live</span>
         </div>
-        <div class="cred-feed-box" id="credParticipantsContainer">
-          <div style="text-align: center; padding: 10px; color: #64748B; font-size: 12px;">Loading participants...</div>
-        </div>
+        <div id="credParticipantsContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
       </div>
-
-      <!-- Past Sunday 8:00 PM Winners -->
-      <div style="margin-bottom: 30px;">
-        <div class="cred-section-title">
-          <span>Past Sunday Winners (Hall of Fame)</span>
-          <span class="cred-section-badge"><i class="fa-solid fa-crown" style="color: #F59E0B;"></i> 8:00 PM Draws</span>
-        </div>
-        <div class="cred-feed-box" id="credPastWinnersContainer">
-          <div style="text-align: center; padding: 10px; color: #64748B; font-size: 12px;">Loading winners...</div>
-        </div>
-      </div>
-
-      <!-- Provably Fair Seal -->
-      <div style="text-align: center; padding: 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px;">
-        <i class="fa-solid fa-shield-halved" style="color: #10B981; font-size: 20px; margin-bottom: 6px;"></i>
-        <div style="font-size: 12px; font-weight: 700; color: #E2E8F0;">100% Provably Fair & Automated</div>
-        <div style="font-size: 11px; color: #64748B; margin-top: 4px;">Draw takes place every Sunday at 8:00 PM sharp. Winning amount is instantly credited to your EasyPay Wallet.</div>
-      </div>
-
     </div>
   </div>
 
-<div class="view-panel" id="viewPayAnyone" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 9999; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
-        <!-- Unified EasyPay Orange Hero Header -->
-        <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 24px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <button onclick="closePayAnyoneView()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;">
-              <i class="fa-solid fa-arrow-left"></i>
-            </button>
-            <div>
-              <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #FFFFFF;">Pay Anyone</div>
-              <div style="font-size: 11px; color: rgba(255,255,255,0.88);">Instant UPI & Mobile Wallet Transfers</div>
-            </div>
-          </div>
-        </div>
-
-        <div style="padding: 0 16px 32px; margin-top: -12px; position: relative; z-index: 101;">
-          <!-- Search Input Box -->
-          <div style="display: flex; align-items: center; background: #FFFFFF; border: 1.5px solid #FF5722; border-radius: 14px; padding: 12px 14px; gap: 10px; margin-bottom: 20px; box-shadow: 0 4px 14px rgba(255,87,34,0.1);">
-            <input type="text" id="payAnyoneSearchInput" placeholder="Enter mobile number or UPI ID" value="7013893165" oninput="filterPayAnyoneContacts(this.value)" style="border: none; background: transparent; outline: none; font-size: 16px; font-weight: 700; width: 100%; color: #0F172A;">
-            <div style="border-left: 1px solid #CBD5E1; padding-left: 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer;" onclick="showToast('Accessing Phone Contacts...')">
-              <i class="fa-regular fa-address-book" style="color: #FF5722; font-size: 18px;"></i>
-              <span style="font-size: 9px; font-weight: 700; color: #64748B; margin-top: 2px;">Contacts</span>
-            </div>
-          </div>
-
-          <!-- Section Label -->
-          <div style="font-size: 13px; font-weight: 800; color: #0F172A; margin-bottom: 12px;" id="payAnyoneSectionLabel">
-            New number <span style="font-weight: 500; color: #64748B;">(Not in your contact list)</span>
-          </div>
-
-          <!-- Contact Results Container (Screenshot 2) -->
-          <div id="payAnyoneResultsList" style="display: flex; flex-direction: column; gap: 12px;">
-            <!-- Twizitech Solution (Screenshot 2 Match) -->
-            <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 14px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 48px; height: 48px; border-radius: 50%; background: #FFD54F; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 900; color: #000000; border: 2px solid #FFCA28; flex-shrink: 0;">
-                  TS
-                </div>
-                <div>
-                  <div style="display: flex; align-items: center; gap: 6px;">
-                    <span style="font-size: 15px; font-weight: 800; color: #0F172A;">Twizitech Solution</span>
-                    <i class="fa-solid fa-circle-check" style="color: #0284C7; font-size: 13px;"></i>
-                  </div>
-                  <div style="font-size: 13px; font-weight: 700; color: #0F172A; margin-top: 1px;">+91 7013893165</div>
-                  <div style="font-size: 11px; color: #64748B; margin-top: 2px; display: flex; align-items: center; gap: 4px;">
-                    <span style="color: #FF5722;">▲</span> Bank A/c linked on UPI
-                  </div>
-                </div>
-              </div>
-              <button onclick="initiatePaymentToRecipient('Twizitech Solution', '7013893165', 'twizitech.solutions@kotak', 280)" style="background: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE; border-radius: 20px; padding: 8px 18px; font-size: 13px; font-weight: 800; cursor: pointer;">
-                Pay
-              </button>
-            </div>
-
-            <!-- Rahul Sharma -->
-            <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 14px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 48px; height: 48px; border-radius: 50%; background: #EFF6FF; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 900; color: #2563EB; border: 2px solid #BFDBFE; flex-shrink: 0;">
-                  RS
-                </div>
-                <div>
-                  <div style="display: flex; align-items: center; gap: 6px;">
-                    <span style="font-size: 15px; font-weight: 800; color: #0F172A;">Rahul Sharma</span>
-                    <i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 13px;"></i>
-                  </div>
-                  <div style="font-size: 13px; font-weight: 700; color: #0F172A; margin-top: 1px;">+91 9876543210</div>
-                  <div style="font-size: 11px; color: #64748B; margin-top: 2px; display: flex; align-items: center; gap: 4px;">
-                    <span style="color: #FF5722;">▲</span> 9876543210@easypay
-                  </div>
-                </div>
-              </div>
-              <button onclick="initiatePaymentToRecipient('Rahul Sharma', '9876543210', '9876543210@easypay', 500)" style="background: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE; border-radius: 20px; padding: 8px 18px; font-size: 13px; font-weight: 800; cursor: pointer;">
-                Pay
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      
       <!-- ==============================================================
            REFER & EARN — 10-LEVEL NETWORK & COMMISSION ENGINE
            ============================================================== -->
@@ -6891,33 +6783,58 @@
   <!-- ==============================================================
        BOND INVESTMENT BOOKING MODAL
        ============================================================== -->
-  <div class="modal-overlay" id="bondBookingModal">
-    <div class="modal-sheet">
-      <div class="modal-header">
-        <div>
-          <div class="modal-title" id="bookBondTitle">Suryoday SF Bank FD</div>
-          <div style="font-size: 11px; color: #059669; font-weight: 700;" id="bookBondRateTag">8.60% Guaranteed Return per month</div>
+  <div class="view-panel" id="bondBookingModal" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 10005; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+    <!-- Unified EasyPay Orange Hero Header -->
+    <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 26px; color: #FFFFFF; position: sticky; top: 0; z-index: 100;">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button onclick="closeModal('bondBookingModal')" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <div>
+            <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #FFFFFF;" id="bookBondTitle">Suryoday SF Bank FD</div>
+            <div style="font-size: 11px; color: rgba(255,255,255,0.92);" id="bookBondRateTag">8.60% Guaranteed Return per month</div>
+          </div>
         </div>
-        <button class="btn-close-modal" onclick="closeModal('bondBookingModal')">
-          <i class="fa-solid fa-xmark"></i>
+        <span style="background: rgba(255,255,255,0.22); border: 1px solid rgba(255,255,255,0.35); padding: 4px 10px; border-radius: 999px; font-size: 10.5px; font-weight: 800;">
+          <i class="fa-solid fa-shield-halved"></i> DICGC
+        </span>
+      </div>
+    </div>
+
+    <div style="padding: 0 16px 36px; margin-top: -14px; position: relative; z-index: 101;">
+      <!-- Wallet Balance & Plan Summary Strip -->
+      <div style="background: #FFFFFF; border: 1.5px solid #FFE0B2; border-radius: 16px; padding: 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 14px rgba(255,87,34,0.08);">
+        <div>
+          <div style="font-size: 10.5px; font-weight: 700; color: #64748B;">AVAILABLE E-PAY WALLET</div>
+          <div style="font-size: 18px; font-weight: 900; color: #059669;" id="investPageWalletDisplay">₹0.00</div>
+        </div>
+        <button type="button" onclick="openAddFundsModal()" style="background: #FFF3E0; border: 1px solid #FFCC80; color: #FF5722; border-radius: 999px; padding: 6px 12px; font-size: 11.5px; font-weight: 800; cursor: pointer;">
+          + Add Funds
         </button>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Investment Amount (₹) - Min ₹1,000</label>
-        <input type="number" class="form-input" id="bondAmountInput" value="1000" min="1000" step="500" oninput="calculateBondMaturity()">
-        <div class="denom-chips-wrap">
-          <button class="denom-chip active" onclick="setBondAmount(1000, this)">₹1,000</button>
-          <button class="denom-chip" onclick="setBondAmount(10000, this)">₹10,000</button>
-          <button class="denom-chip" onclick="setBondAmount(20000, this)">₹20,000</button>
-          <button class="denom-chip" onclick="setBondAmount(100000, this)">₹1,00,000</button>
-          <button class="denom-chip" onclick="setBondAmount(500000, this)">₹5,00,000</button>
+      <!-- Amount & Quick Chips Card -->
+      <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 16px; margin-bottom: 14px;">
+        <label style="font-size: 11px; font-weight: 800; color: #64748B; text-transform: uppercase; display: block; margin-bottom: 8px;">Investment Amount (₹) • Min ₹1,000</label>
+        <div style="display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #FF5722; padding-bottom: 6px; margin-bottom: 14px;">
+          <span style="font-size: 26px; font-weight: 900; color: #FF5722;">₹</span>
+          <input type="number" id="bondAmountInput" value="1000" min="1000" step="500" oninput="calculateBondMaturity()" style="font-size: 28px; font-weight: 900; color: #0F172A; border: none; outline: none; width: 100%; background: transparent;">
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+          <button type="button" class="denom-chip active" onclick="setBondAmount(1000, this)">₹1,000</button>
+          <button type="button" class="denom-chip" onclick="setBondAmount(5000, this)">₹5,000</button>
+          <button type="button" class="denom-chip" onclick="setBondAmount(10000, this)">₹10,000</button>
+          <button type="button" class="denom-chip" onclick="setBondAmount(25000, this)">₹25,000</button>
+          <button type="button" class="denom-chip" onclick="setBondAmount(50000, this)">₹50,000</button>
+          <button type="button" class="denom-chip" onclick="setBondAmount(100000, this)">₹1,00,000</button>
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Select Lock-in Tenure (Starts from 6 Months)</label>
-        <select class="form-input" id="bondTenureSelect" onchange="calculateBondMaturity()">
+      <!-- Lock-in Tenure Selector Card -->
+      <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 16px; margin-bottom: 14px;">
+        <label style="font-size: 11px; font-weight: 800; color: #64748B; text-transform: uppercase; display: block; margin-bottom: 8px;">Select Lock-in Tenure</label>
+        <select id="bondTenureSelect" onchange="calculateBondMaturity()" style="width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid #CBD5E1; background: #F8FAFC; font-size: 14px; font-weight: 700; color: #0F172A; outline: none;">
           <option value="6" selected>6 Months (Starts from 6 Months)</option>
           <option value="12">12 Months (1 Year)</option>
           <option value="24">24 Months (2 Years)</option>
@@ -6926,36 +6843,33 @@
         </select>
       </div>
 
-      <!-- Live Compound Interest Summary -->
-      <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 14px; margin-bottom: 16px;">
-        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+      <!-- Real-Time Yield & Maturity Calculator -->
+      <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 18px; padding: 16px; margin-bottom: 16px;">
+        <div style="font-size: 12px; font-weight: 800; color: #0F172A; margin-bottom: 10px;">Live Return Breakdown</div>
+        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px;">
           <span style="color: #64748B;">Principal Invested:</span>
           <strong id="calcPrincipalDisplay">₹1,000.00</strong>
         </div>
-        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px;">
           <span style="color: #64748B;">Monthly Return Rate:</span>
-          <strong style="color: #7C3AED;" id="calcMonthlyRateDisplay">8.60% / month (₹86.00/mo)</strong>
+          <strong style="color: #FF5722;" id="calcMonthlyRateDisplay">8.60% / mo (₹86.00/mo)</strong>
         </div>
-        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; background: #ECFDF5; padding: 6px 10px; border-radius: 8px; border: 1px solid #A7F3D0;">
-          <span style="color: #047857; font-weight: 600;"><i class="fa-solid fa-calendar-day"></i> Daily Interest to Wallet:</span>
+        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; background: #ECFDF5; padding: 8px 10px; border-radius: 10px; border: 1px solid #A7F3D0;">
+          <span style="color: #047857; font-weight: 700;"><i class="fa-solid fa-clock"></i> Daily 12:00 AM Interest:</span>
           <strong style="color: #059669;" id="calcDailyCreditDisplay">+₹2.87 / day</strong>
         </div>
-        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px;">
           <span style="color: #64748B;">Total Tenure Interest:</span>
           <strong style="color: #059669;" id="calcInterestDisplay">+₹516.00</strong>
         </div>
-        <div style="display: flex; justify-content: space-between; font-size: 15px; border-top: 1px dashed #CBD5E1; padding-top: 8px;">
-          <span style="font-weight: 700;">Guaranteed Maturity Value:</span>
-          <strong style="color: #0F172A; font-size: 17px;" id="calcMaturityDisplay">₹1,516.00</strong>
+        <div style="display: flex; justify-content: space-between; font-size: 16px; border-top: 1px dashed #CBD5E1; padding-top: 10px;">
+          <span style="font-weight: 800;">Guaranteed Maturity Value:</span>
+          <strong style="color: #0F172A; font-size: 18px;" id="calcMaturityDisplay">₹1,516.00</strong>
         </div>
       </div>
 
-      <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: #059669; font-weight: 700; margin-bottom: 16px;">
-        <i class="fa-solid fa-shield-check"></i> Insured by DICGC (RBI Subsidiary) up to ₹5,00,000
-      </div>
-
-      <button class="btn-primary-action" style="max-width: 100%;" onclick="executeBondBooking()">
-        <i class="fa-solid fa-lock"></i> Confirm & Book Now
+      <button type="button" id="btnConfirmInvestBooking" onclick="executeBondBooking()" style="width: 100%; padding: 15px; border-radius: 14px; border: none; background: linear-gradient(135deg, #FF5722, #FF7043); color: #FFFFFF; font-size: 15px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px rgba(255,87,34,0.28);">
+        <i class="fa-solid fa-lock"></i> Confirm & Book Investment
       </button>
     </div>
   </div>
@@ -7038,106 +6952,98 @@
   </div>
 
   <!-- =======================================================
-       REDESIGNED ADD FUNDS MODAL (Screenshot 4 Request)
-       Presets, 4 Payment Methods (UPI, Bank, Cash, USDT) & Proof Submission
+       DEDICATED ADD FUNDS PAGE (Full-Page EasyPay Orange/White UI)
        ======================================================= -->
-  <div class="modal-overlay" id="addMoneyModal" style="z-index: 10005; align-items: flex-end;">
-    <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 20px 18px 30px; max-height: 92vh; overflow-y: auto; background: #FAF9FE;">
-      <!-- Top Header -->
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-        <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="closeModal('addMoneyModal')">
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: #EDE9FE; color: #6D28D9; display: flex; align-items: center; justify-content: center; font-size: 16px;">
-            <i class="fa-solid fa-angle-left"></i>
-          </div>
-          <span style="font-size: 18px; font-weight: 800; color: #1E1B4B;">Add Funds</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: #EDE9FE; color: #6D28D9; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Instant Auto-Credit Rail">
-            <i class="fa-solid fa-bolt"></i>
-          </div>
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: #EDE9FE; color: #6D28D9; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="openPassbookFromProfile()" title="Transaction History">
-            <i class="fa-solid fa-clock-rotate-left"></i>
+  <div class="view-panel" id="addMoneyModal" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 10005; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+    <!-- Unified EasyPay Orange Hero Header -->
+    <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 26px; color: #FFFFFF; position: sticky; top: 0; z-index: 100;">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button onclick="closeModal('addMoneyModal')" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <div>
+            <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #FFFFFF;">Add Funds</div>
+            <div style="font-size: 11px; color: rgba(255,255,255,0.9);">Deposit to E-Pay Wallet via UPI, Bank & USDT</div>
           </div>
         </div>
+        <button onclick="closeModal('addMoneyModal'); openPassbookFromProfile(); switchPassbookSegment('txns');" style="background: rgba(255,255,255,0.22); border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 6px 12px; color: #FFFFFF; font-size: 11.5px; font-weight: 800; cursor: pointer;">
+          <i class="fa-solid fa-clock-rotate-left"></i> History
+        </button>
       </div>
+    </div>
 
+    <div style="padding: 0 16px 40px; margin-top: -14px; position: relative; z-index: 101;">
       <!-- Amount Input Card -->
-      <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 18px; padding: 18px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
-        <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;">Enter Deposit Amount</label>
-        <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0 14px;">
-          <span style="font-size: 28px; font-weight: 900; color: #6D28D9;">₹</span>
-          <input type="number" id="addFundsAmountInput" value="1000" min="100" step="100" style="font-size: 28px; font-weight: 900; color: #1E1B4B; border: none; outline: none; width: 100%; background: transparent;" oninput="updateAddFundsQrDynamic()">
+      <div style="background: #FFFFFF; border: 1.5px solid #FFE0B2; border-radius: 18px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 14px rgba(255,87,34,0.08);">
+        <label style="font-size: 11px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;">Enter Deposit Amount</label>
+        <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0 14px; border-bottom: 2px solid #FF5722; padding-bottom: 6px;">
+          <span style="font-size: 28px; font-weight: 900; color: #FF5722;">₹</span>
+          <input type="number" id="addFundsAmountInput" value="1000" min="100" step="100" style="font-size: 28px; font-weight: 900; color: #0F172A; border: none; outline: none; width: 100%; background: transparent;" oninput="updateAddFundsQrDynamic()">
         </div>
 
-        <!-- Quick Presets Row (Screenshot 4) -->
+        <!-- Quick Presets Row -->
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;" id="addFundsPresetChips">
-          <button type="button" class="btn-preset active" onclick="setAddFundsAmount(1000, this)" style="padding: 8px; border-radius: 10px; border: 1.5px solid #6D28D9; background: #F5F3FF; font-weight: 800; font-size: 12px; color: #6D28D9; cursor: pointer;">₹1,000</button>
-          <button type="button" class="btn-preset" onclick="setAddFundsAmount(2000, this)" style="padding: 8px; border-radius: 10px; border: 1.5px solid #CBD5E1; background: #FFFFFF; font-weight: 700; font-size: 12px; color: #334155; cursor: pointer;">₹2,000</button>
-          <button type="button" class="btn-preset" onclick="setAddFundsAmount(5000, this)" style="padding: 8px; border-radius: 10px; border: 1.5px solid #CBD5E1; background: #FFFFFF; font-weight: 700; font-size: 12px; color: #334155; cursor: pointer;">₹5,000</button>
-          <button type="button" class="btn-preset" onclick="setAddFundsAmount(10000, this)" style="padding: 8px; border-radius: 10px; border: 1.5px solid #CBD5E1; background: #FFFFFF; font-weight: 700; font-size: 12px; color: #334155; cursor: pointer;">₹10,000</button>
-          <button type="button" class="btn-preset" onclick="setAddFundsAmount(50000, this)" style="padding: 8px; border-radius: 10px; border: 1.5px solid #CBD5E1; background: #FFFFFF; font-weight: 700; font-size: 12px; color: #334155; cursor: pointer;">₹50,000</button>
-          <button type="button" class="btn-preset" onclick="setAddFundsAmount(100000, this)" style="padding: 8px; border-radius: 10px; border: 1.5px solid #CBD5E1; background: #FFFFFF; font-weight: 700; font-size: 12px; color: #334155; cursor: pointer;">₹1,00,000</button>
+          <button type="button" class="btn-preset active" onclick="setAddFundsAmount(1000, this)" style="padding: 9px; border-radius: 10px; border: 1.5px solid #FF5722; background: #FFF3E0; font-weight: 800; font-size: 12px; color: #FF5722; cursor: pointer;">₹1,000</button>
+          <button type="button" class="btn-preset" onclick="setAddFundsAmount(2000, this)" style="padding: 9px; border-radius: 10px; border: 1.5px solid #E2E8F0; background: #FFFFFF; font-weight: 700; font-size: 12px; color: #334155; cursor: pointer;">₹2,000</button>
+          <button type="button" class="btn-preset" onclick="setAddFundsAmount(5000, this)" style="padding: 9px; border-radius: 10px; border: 1.5px solid #E2E8F0; background: #FFFFFF; font-weight: 700; font-size: 12px; color: #334155; cursor: pointer;">₹5,000</button>
+          <button type="button" class="btn-preset" onclick="setAddFundsAmount(10000, this)" style="padding: 9px; border-radius: 10px; border: 1.5px solid #E2E8F0; background: #FFFFFF; font-weight: 700; font-size: 12px; color: #334155; cursor: pointer;">₹10,000</button>
+          <button type="button" class="btn-preset" onclick="setAddFundsAmount(50000, this)" style="padding: 9px; border-radius: 10px; border: 1.5px solid #E2E8F0; background: #FFFFFF; font-weight: 700; font-size: 12px; color: #334155; cursor: pointer;">₹50,000</button>
+          <button type="button" class="btn-preset" onclick="setAddFundsAmount(100000, this)" style="padding: 9px; border-radius: 10px; border: 1.5px solid #E2E8F0; background: #FFFFFF; font-weight: 700; font-size: 12px; color: #334155; cursor: pointer;">₹1,00,000</button>
         </div>
       </div>
 
       <!-- SELECT PAYMENT METHOD Title -->
       <div style="font-size: 12px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
-        <span style="width: 18px; height: 18px; border-radius: 50%; background: #FF5722; color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900;">1</span>
+        <span style="width: 20px; height: 20px; border-radius: 50%; background: #FF5722; color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900;">1</span>
         SELECT PAYMENT METHOD
       </div>
 
-      <!-- 4 Payment Method Cards Grid (Screenshot 4) -->
+      <!-- 4 Payment Method Cards Grid -->
       <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px;">
-        <!-- Card 1: Instant UPI -->
-        <div class="deposit-method-card active" id="depMethodCard_upi" onclick="selectDepositMethod('upi')" style="background: #FFFFFF; border: 2px solid #6D28D9; border-radius: 14px; padding: 10px 6px; text-align: center; cursor: pointer; position: relative; transition: all 0.2s;">
-          <div style="position: absolute; top: -7px; left: 50%; transform: translateX(-50%); background: #FF5722; color: white; font-size: 8px; font-weight: 900; padding: 1px 6px; border-radius: 999px; letter-spacing: 0.5px;">POPULAR</div>
-          <div style="font-size: 20px; color: #6D28D9; margin: 4px 0 2px;"><i class="fa-solid fa-bolt"></i></div>
-          <div style="font-size: 11px; font-weight: 800; color: #1E1B4B; line-height: 1.2;">Instant UPI</div>
-          <div style="font-size: 9px; color: #059669; font-weight: 700;">Auto Credit ⚡</div>
+        <div class="deposit-method-card active" id="depMethodCard_upi" onclick="selectDepositMethod('upi')" style="background: #FFFFFF; border: 2px solid #FF5722; border-radius: 14px; padding: 10px 6px; text-align: center; cursor: pointer; position: relative; transition: all 0.2s;">
+          <div style="position: absolute; top: -7px; left: 50%; transform: translateX(-50%); background: #FF5722; color: white; font-size: 8px; font-weight: 900; padding: 1px 6px; border-radius: 999px;">POPULAR</div>
+          <div style="font-size: 20px; color: #FF5722; margin: 4px 0 2px;"><i class="fa-solid fa-bolt"></i></div>
+          <div style="font-size: 11px; font-weight: 800; color: #0F172A; line-height: 1.2;">Instant UPI</div>
+          <div style="font-size: 9px; color: #059669; font-weight: 700;">Auto Credit</div>
         </div>
-
-        <!-- Card 2: Bank Transfer -->
         <div class="deposit-method-card" id="depMethodCard_bank" onclick="selectDepositMethod('bank')" style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 10px 6px; text-align: center; cursor: pointer; transition: all 0.2s;">
-          <div style="font-size: 20px; color: #2563EB; margin: 4px 0 2px;"><i class="fa-solid fa-building-columns"></i></div>
-          <div style="font-size: 11px; font-weight: 800; color: #1E1B4B; line-height: 1.2;">Bank</div>
+          <div style="font-size: 20px; color: #0F172A; margin: 4px 0 2px;"><i class="fa-solid fa-building-columns"></i></div>
+          <div style="font-size: 11px; font-weight: 800; color: #0F172A; line-height: 1.2;">Bank</div>
           <div style="font-size: 9px; color: #64748B;">IMPS / NEFT</div>
         </div>
-
-        <!-- Card 3: UPI / QR Details -->
         <div class="deposit-method-card" id="depMethodCard_qr" onclick="selectDepositMethod('qr')" style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 10px 6px; text-align: center; cursor: pointer; transition: all 0.2s;">
           <div style="font-size: 20px; color: #FF5722; margin: 4px 0 2px;"><i class="fa-solid fa-qrcode"></i></div>
-          <div style="font-size: 11px; font-weight: 800; color: #1E1B4B; line-height: 1.2;">UPI / QR</div>
+          <div style="font-size: 11px; font-weight: 800; color: #0F172A; line-height: 1.2;">UPI / QR</div>
           <div style="font-size: 9px; color: #64748B;">Scan & Pay</div>
         </div>
-
-        <!-- Card 4: USDT Crypto -->
         <div class="deposit-method-card" id="depMethodCard_usdt" onclick="selectDepositMethod('usdt')" style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 10px 6px; text-align: center; cursor: pointer; transition: all 0.2s;">
-          <div style="font-size: 20px; color: #097939; margin: 4px 0 2px;"><i class="fa-brands fa-ethereum"></i></div>
-          <div style="font-size: 11px; font-weight: 800; color: #1E1B4B; line-height: 1.2;">USDT</div>
-          <div style="font-size: 9px; color: #097939; font-weight: 700;">TRC-20</div>
+          <div style="font-size: 20px; color: #059669; margin: 4px 0 2px;"><i class="fa-brands fa-ethereum"></i></div>
+          <div style="font-size: 11px; font-weight: 800; color: #0F172A; line-height: 1.2;">USDT</div>
+          <div style="font-size: 9px; color: #059669; font-weight: 700;">TRC-20</div>
         </div>
       </div>
 
-      <!-- Dynamic Payment Details Box (Screenshot 4) -->
+      <!-- Dynamic Payment Details Box -->
       <div id="depositMethodContentWrap" style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 18px; padding: 18px; margin-bottom: 16px;">
         <!-- UPI Details Panel -->
         <div id="depPanel_upi">
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
             <div>
-              <div style="font-size: 14px; font-weight: 800; color: #1E1B4B;" id="depUpiTitle">UPI / QR Details</div>
+              <div style="font-size: 14px; font-weight: 800; color: #0F172A;" id="depUpiTitle">UPI / QR Details</div>
               <div style="font-size: 11px; color: #64748B; margin-top: 2px;">
-                Account Holder: <strong id="depUpiHolder" style="color: #1E1B4B;">Lucifer Finer Solutions Private Limited</strong>
+                Account Holder: <strong id="depUpiHolder" style="color: #0F172A;">Lucifer Finer Solutions Private Limited</strong>
               </div>
             </div>
-            <span class="badge badge-purple" style="font-size: 10px;">Admin Verified</span>
+            <span style="background: #ECFDF5; color: #059669; font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 999px;">Verified</span>
           </div>
 
-          <div style="background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+          <div style="background: #FFF8F5; border: 1.5px dashed #FDBA74; border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
             <div>
-              <span style="font-size: 10px; color: #64748B; text-transform: uppercase; font-weight: 700; display: block;">UPI ID</span>
-              <code id="depUpiIdText" style="font-size: 14px; font-weight: 800; color: #6D28D9;">yourbachatpay@kotak</code>
+              <span style="font-size: 10px; color: #9A3412; text-transform: uppercase; font-weight: 800; display: block;">UPI ID</span>
+              <code id="depUpiIdText" style="font-size: 14px; font-weight: 800; color: #FF5722;">yourbachatpay@kotak</code>
             </div>
-            <button type="button" class="action-btn" onclick="copyTextToClipboard(document.getElementById('depUpiIdText').innerText)" style="padding: 6px 12px; font-size: 11px;">
+            <button type="button" onclick="copyTextToClipboard(document.getElementById('depUpiIdText').innerText)" style="background: #FF5722; color: #FFFFFF; border: none; border-radius: 8px; padding: 7px 14px; font-size: 11.5px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
               <i class="fa-regular fa-copy"></i> Copy
             </button>
           </div>
@@ -7145,12 +7051,12 @@
           <!-- Dynamic QR Code Card -->
           <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 16px; text-align: center; margin-bottom: 12px;">
             <div style="font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 10px;">
-              <i class="fa-solid fa-qrcode"></i> Scan this QR with GPay, PhonePe or Paytm to pay
+              <i class="fa-solid fa-qrcode" style="color: #FF5722;"></i> Scan this QR with GPay, PhonePe or Paytm
             </div>
             <div style="display: inline-block; background: white; padding: 10px; border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
               <img id="depDynamicQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi%3A%2F%2Fpay%3Fpa%3Dyourbachatpay%40kotak%26pn%3DLucifer%2520Finer%2520Solutions%26am%3D1000%26cu%3DINR" style="width: 170px; height: 170px; object-fit: contain; display: block;" alt="UPI QR">
             </div>
-            <div style="margin-top: 8px; font-size: 12px; font-weight: 800; color: #0F172A;" id="depQrAmountLabel">
+            <div style="margin-top: 8px; font-size: 12.5px; font-weight: 800; color: #0F172A;" id="depQrAmountLabel">
               Paying Amount: <span style="color:#059669;">₹1,000</span>
             </div>
             <div style="font-size: 10px; color: #64748B; font-family: monospace; margin-top: 2px;">TID: 68359529</div>
@@ -7159,7 +7065,7 @@
 
         <!-- Bank Transfer Details Panel -->
         <div id="depPanel_bank" style="display: none;">
-          <div style="font-size: 14px; font-weight: 800; color: #1E1B4B; margin-bottom: 10px;">Bank Account Transfer Details</div>
+          <div style="font-size: 14px; font-weight: 800; color: #0F172A; margin-bottom: 10px;">Bank Account Transfer Details</div>
           <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
             <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #F1F5F9;">
               <span style="color:#64748B;">Bank Name:</span>
@@ -7172,15 +7078,15 @@
             <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #F1F5F9;">
               <span style="color:#64748B;">Account Number:</span>
               <div style="display:flex; align-items:center; gap:6px;">
-                <code id="depBankAccountNo" style="font-size:14px; font-weight:800; color:#2563EB;">983420192841</code>
-                <button type="button" class="action-btn" onclick="copyTextToClipboard(document.getElementById('depBankAccountNo').innerText)"><i class="fa-regular fa-copy"></i></button>
+                <code id="depBankAccountNo" style="font-size:14px; font-weight:800; color:#FF5722;">983420192841</code>
+                <button type="button" onclick="copyTextToClipboard(document.getElementById('depBankAccountNo').innerText)" style="background:#FFF3E0; border:1px solid #FFCC80; color:#FF5722; border-radius:6px; padding:4px 8px; font-size:11px; font-weight:800; cursor:pointer;"><i class="fa-regular fa-copy"></i> Copy</button>
               </div>
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #F1F5F9;">
               <span style="color:#64748B;">IFSC Code:</span>
               <div style="display:flex; align-items:center; gap:6px;">
-                <code id="depBankIfsc" style="font-size:14px; font-weight:800; color:#2563EB;">KKBK0000958</code>
-                <button type="button" class="action-btn" onclick="copyTextToClipboard(document.getElementById('depBankIfsc').innerText)"><i class="fa-regular fa-copy"></i></button>
+                <code id="depBankIfsc" style="font-size:14px; font-weight:800; color:#FF5722;">KKBK0000958</code>
+                <button type="button" onclick="copyTextToClipboard(document.getElementById('depBankIfsc').innerText)" style="background:#FFF3E0; border:1px solid #FFCC80; color:#FF5722; border-radius:6px; padding:4px 8px; font-size:11px; font-weight:800; cursor:pointer;"><i class="fa-regular fa-copy"></i> Copy</button>
               </div>
             </div>
             <div style="display:flex; justify-content:space-between; padding:8px 0;">
@@ -7192,15 +7098,15 @@
 
         <!-- USDT Crypto Details Panel -->
         <div id="depPanel_usdt" style="display: none;">
-          <div style="font-size: 14px; font-weight: 800; color: #1E1B4B; margin-bottom: 10px;">USDT (Tether) Deposit</div>
+          <div style="font-size: 14px; font-weight: 800; color: #0F172A; margin-bottom: 10px;">USDT (Tether) Deposit</div>
           <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 14px; text-align: center; margin-bottom: 12px;">
             <div style="font-size: 11px; color: #64748B; font-weight: 700;">USDT TRC-20 Address (Tron Network)</div>
-            <div style="display:flex; align-items:center; justify-content:center; gap:6px; margin: 8px 0;">
-              <code id="depUsdtAddress" style="font-size: 12px; font-weight: 800; color: #097939; word-break: break-all;">TYDzsYUEW8kWL65vQ7Q7E18t4G8Z78X8kL</code>
-              <button type="button" class="action-btn" onclick="copyTextToClipboard(document.getElementById('depUsdtAddress').innerText)"><i class="fa-regular fa-copy"></i></button>
+            <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin: 8px 0; flex-wrap: wrap;">
+              <code id="depUsdtAddress" style="font-size: 12px; font-weight: 800; color: #059669; word-break: break-all;">TYDzsYUEW8kWL65vQ7Q7E18t4G8Z78X8kL</code>
+              <button type="button" onclick="copyTextToClipboard(document.getElementById('depUsdtAddress').innerText)" style="background:#ECFDF5; border:1px solid #A7F3D0; color:#059669; border-radius:6px; padding:4px 10px; font-size:11px; font-weight:800; cursor:pointer;"><i class="fa-regular fa-copy"></i> Copy</button>
             </div>
             <div style="font-size: 12px; font-weight: 800; color: #0F172A;" id="depUsdtEquivalent">
-              Equivalent Amount: <span style="color:#097939;">~$10.81 USDT</span> (Rate: ₹92.50)
+              Equivalent Amount: <span style="color:#059669;">~$10.81 USDT</span> (Rate: ₹92.50)
             </div>
           </div>
         </div>
@@ -7214,8 +7120,8 @@
 
       <!-- Transaction Verification & Proof Submission (Mandatory) -->
       <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 18px; padding: 18px; margin-bottom: 18px;">
-        <div style="font-size: 13px; font-weight: 800; color: #1E1B4B; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-          <span style="width: 18px; height: 18px; border-radius: 50%; background: #6D28D9; color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900;">2</span>
+        <div style="font-size: 13px; font-weight: 800; color: #0F172A; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+          <span style="width: 20px; height: 20px; border-radius: 50%; background: #FF5722; color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900;">2</span>
           SUBMIT PAYMENT PROOF
         </div>
 
@@ -7224,31 +7130,36 @@
           <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; display: block; margin-bottom: 4px;">
             12-Digit UTR / Transaction Reference Number <span style="color:#DC2626;">*</span>
           </label>
-          <input type="text" id="depProofUtrInput" placeholder="e.g. 983749281726 or TxID" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 10px 12px; font-size: 14px; font-weight: 700; color: #0F172A; outline: none; font-family: monospace;">
+          <input type="text" id="depProofUtrInput" placeholder="e.g. 983749281726 or TxID" style="width: 100%; box-sizing: border-box; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 11px 12px; font-size: 14px; font-weight: 700; color: #0F172A; outline: none; font-family: monospace; background: #F8FAFC;">
         </div>
 
-        <!-- Upload Screenshot Proof -->
-        <div style="margin-bottom: 14px;">
-          <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; display: block; margin-bottom: 4px;">
+        <!-- Upload Screenshot Proof (Polished EasyPay Dropzone) -->
+        <div style="margin-bottom: 16px;">
+          <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; display: block; margin-bottom: 6px;">
             Upload Payment Receipt / Screenshot
           </label>
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <input type="file" id="depProofFileInput" accept="image/*" style="display: none;" onchange="handleDepositProofUpload(event)">
-            <button type="button" class="btn-topbar" onclick="document.getElementById('depProofFileInput').click()" style="padding: 8px 12px; font-size: 12px;">
-              <i class="fa-solid fa-cloud-arrow-up"></i> Choose Screenshot
-            </button>
-            <span id="depProofFileName" style="font-size: 11px; color: #64748B; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">No file chosen</span>
-            <button type="button" class="action-btn danger" id="depProofClearBtn" style="display: none;" onclick="clearDepositProof()">
+          <input type="file" id="depProofFileInput" accept="image/*" style="display: none;" onchange="handleDepositProofUpload(event)">
+          <div onclick="document.getElementById('depProofFileInput').click()" style="border: 1.5px dashed #FDBA74; background: #FFF8F5; border-radius: 12px; padding: 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer;">
+            <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+              <div style="width: 36px; height: 36px; border-radius: 10px; background: #FF5722; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+              </div>
+              <div style="min-width: 0;">
+                <div style="font-size: 12.5px; font-weight: 800; color: #0F172A;">Tap to Choose Screenshot</div>
+                <div id="depProofFileName" style="font-size: 11px; color: #64748B; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">No file chosen (PNG / JPG)</div>
+              </div>
+            </div>
+            <button type="button" id="depProofClearBtn" style="display: none; background: #FEE2E2; color: #DC2626; border: none; border-radius: 8px; padding: 6px 10px; font-size: 12px; font-weight: 800; cursor: pointer;" onclick="event.stopPropagation(); clearDepositProof();">
               <i class="fa-solid fa-trash"></i>
             </button>
           </div>
-          <div id="depProofPreviewWrap" style="display: none; margin-top: 10px; width: 100%; height: 120px; border-radius: 10px; border: 1px solid #CBD5E1; overflow: hidden; background: #F8FAFC;">
+          <div id="depProofPreviewWrap" style="display: none; margin-top: 10px; width: 100%; height: 130px; border-radius: 12px; border: 1.5px solid #E2E8F0; overflow: hidden; background: #FFFFFF;">
             <img id="depProofPreviewImg" src="" style="width: 100%; height: 100%; object-fit: contain;">
           </div>
         </div>
 
         <!-- Submit Button -->
-        <button type="button" class="btn-primary-action" style="max-width: 100%; width: 100%; justify-content: center; background: linear-gradient(135deg, #6D28D9, #4F46E5); box-shadow: 0 4px 14px rgba(109,40,217,0.35);" onclick="submitDepositRequestFlow()">
+        <button type="button" style="width: 100%; padding: 14px; border-radius: 14px; border: none; background: linear-gradient(135deg, #FF5722, #FF7043); color: #FFFFFF; font-size: 15px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px rgba(255,87,34,0.28);" onclick="submitDepositRequestFlow()">
           <i class="fa-solid fa-circle-check"></i> Submit Deposit Request
         </button>
       </div>
@@ -10236,6 +10147,8 @@
         if (isVis('viewGiftCardPurchase')) { closeGiftCardPurchasePage(); return; }
         if (isVis('viewProductDetails')) { closeProductDetailsView(); return; }
         if (isVis('viewEcommerceCheckout')) { closeEcommerceCheckoutView(); return; }
+        if (isVis('addMoneyModal')) { closeModal('addMoneyModal'); return; }
+        if (isVis('bondBookingModal')) { closeModal('bondBookingModal'); return; }
         if (isVis('viewLuckyDrawDedicated')) { closeLuckyDrawDedicatedPage(); return; }
 
         // 3. If on a non-home bottom nav tab, go back to Home
@@ -10337,10 +10250,22 @@
         }
         return;
       }
+      if (id === 'addMoneyModal') {
+        if (typeof openAddFundsModal === 'function') {
+          openAddFundsModal();
+          return;
+        }
+      }
       const el = document.getElementById(id);
       if (!el) return;
-      el.classList.add('active');
-      el.style.display = 'flex';
+      if (el.classList.contains('view-panel')) {
+        pushAppNavState(id);
+        el.style.display = 'block';
+        window.scrollTo(0, 0);
+      } else {
+        el.classList.add('active');
+        el.style.display = 'flex';
+      }
     }
     function closeModal(id) {
       if (id === 'ecommerceCheckoutModal') {
@@ -14228,6 +14153,27 @@
       }
     }
 
+    function selectLdEntryTier(amt, btn) {
+      currentLdEntryAmount = amt;
+      document.querySelectorAll('.ld-tier-chip').forEach(b => {
+        b.style.borderColor = '#E2E8F0';
+        b.style.background = '#FFFFFF';
+        b.style.color = '#334155';
+        b.style.fontWeight = '700';
+      });
+      if (btn) {
+        btn.style.borderColor = '#FF5722';
+        btn.style.background = '#FFF3E0';
+        btn.style.color = '#FF5722';
+        btn.style.fontWeight = '800';
+      }
+      const span = document.getElementById('credPodiumCostSpan');
+      if (span) span.innerText = '₹' + amt;
+      const btnText = document.getElementById('btnCredEnterText');
+      if (btnText) btnText.innerHTML = 'Enter Draw (<span id="credPodiumCostSpan">₹' + amt + '</span>)';
+    }
+    window.selectLdEntryTier = selectLdEntryTier;
+
     async function executeCredLuckyDrawEntry() {
       const bal = (appData.user && appData.user.walletBalance) || 0;
       if (bal < currentLdEntryAmount) {
@@ -14279,7 +14225,7 @@
         showToast('Entry failed. Please check connection.');
       } finally {
         if (btn) btn.disabled = false;
-        if (btnText) btnText.innerText = 'ENTER';
+        if (btnText) btnText.innerHTML = 'Enter Draw (<span id="credPodiumCostSpan">₹' + currentLdEntryAmount + '</span>)';
       }
     }
 
@@ -14302,6 +14248,8 @@
       currentLdEntryAmount = ld.entryAmount || 50;
       currentLdPrizeAmount = ld.prizeAmount || 25000;
       currentLdNextDrawTime = ld.nextDrawTime ? new Date(ld.nextDrawTime) : getNextSunday8PM();
+      const winBalEl = document.getElementById('ldWinningBalanceDisplay');
+      if (winBalEl) winBalEl.innerText = '₹' + Number(data.userWinningBalance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 });
 
       // Update configured Entry Fee displays
       const costEl = document.getElementById('credPodiumCostSpan');
@@ -16008,9 +15956,12 @@
         })
         .catch(() => {});
 
+      pushAppNavState('addMoneyModal');
       selectDepositMethod('upi');
       updateAddFundsQrDynamic();
-      openModal('addMoneyModal');
+      const addPage = document.getElementById('addMoneyModal');
+      if (addPage) addPage.style.display = 'block';
+      window.scrollTo(0, 0);
     }
 
     function setAddFundsAmount(val, btn) {
@@ -16024,9 +15975,9 @@
         c.style.fontWeight = '700';
       });
       if (btn) {
-        btn.style.background = '#F5F3FF';
-        btn.style.borderColor = '#6D28D9';
-        btn.style.color = '#6D28D9';
+        btn.style.background = '#FFF3E0';
+        btn.style.borderColor = '#FF5722';
+        btn.style.color = '#FF5722';
         btn.style.fontWeight = '800';
       }
       updateAddFundsQrDynamic();
@@ -16039,7 +15990,7 @@
         const el = document.getElementById('depMethodCard_' + c);
         if (el) {
           if (c === method) {
-            el.style.border = '2px solid #6D28D9';
+            el.style.border = '2px solid #FF5722';
           } else {
             el.style.border = '1.5px solid #E2E8F0';
           }
@@ -16159,6 +16110,18 @@
 
         const data = await res.json();
         if (data.success) {
+          if (!appData.transactions) appData.transactions = [];
+          appData.transactions.unshift({
+            id: data.deposit.id,
+            title: 'Wallet Deposit Request (' + (methodNames[selectedDepositMethod] || 'UPI') + ')',
+            category: 'Wallet',
+            amount: amount,
+            type: 'WALLET_ADD',
+            status: 'PENDING',
+            utr: utr,
+            timestamp: new Date().toISOString()
+          });
+          if (typeof renderTransactions === 'function') renderTransactions();
           closeModal('addMoneyModal');
           clearDepositProof();
           if (utrInput) utrInput.value = '';

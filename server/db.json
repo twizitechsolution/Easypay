@@ -2,7 +2,7 @@
   "analytics": {
     "totalUsers": 8,
     "totalTransactions": 58,
-    "totalGmv": 267776.24,
+    "totalGmv": 268776.24,
     "platformCommissionEarned": 6631.389999999999,
     "giftCardsSold": 19,
     "rechargesDone": 6,
@@ -20,7 +20,7 @@
     "maskedMobile": "xxxxxx8808",
     "email": "nirodbehera220@gmail.com",
     "payId": "9876548808@easypay",
-    "walletBalance": 30084.13,
+    "walletBalance": 29034.13,
     "securityPin": "1234",
     "mpin": "1234",
     "password": "EasyPay@8808",
@@ -61,7 +61,8 @@
         "usdtAddressRaw": "TXj4b9A7vPq1WzK88L0sR89zKq2",
         "isPrimary": false
       }
-    ]
+    ],
+    "dailyPayoutRate": 2.87
   },
   "giftCards": [
     {
@@ -1187,6 +1188,49 @@
     }
   ],
   "transactions": [
+    {
+      "id": "TXN_DRW_35330363",
+      "title": "Weekly Lucky Draw Entry (Ticket #TKT-SUN-23382)",
+      "category": "Weekly Rewards",
+      "amount": 50,
+      "cashback": 0,
+      "timestamp": "Just now",
+      "status": "SUCCESS",
+      "type": "WALLET_DEBIT",
+      "icon": "/assets/bachatpay/history/debit_history.png",
+      "details": {
+        "ticketId": "TKT-SUN-23382",
+        "chances": 1,
+        "drawSchedule": "Every Sunday at 8:00 PM",
+        "nextDrawTime": "2026-11-22T20:00:00.000Z",
+        "paymentMethod": "WALLET"
+      }
+    },
+    {
+      "id": "TXN_INV_5264016",
+      "userId": "EPY98808",
+      "userMobile": "9876548808",
+      "title": "Suryoday SF Bank Investment",
+      "category": "Investment",
+      "amount": 1000,
+      "cashback": 0,
+      "timestamp": "2026-11-25T19:34:24.016Z",
+      "date": "26 Nov 2026",
+      "status": "SUCCESS",
+      "type": "INVESTMENT",
+      "utr": "DICGC-EP-135123",
+      "icon": "/assets/bachatpay/history/debit_history.png",
+      "details": {
+        "folioNumber": "EP-FD-3276",
+        "certNumber": "DICGC-EP-135123",
+        "institution": "Suryoday SF Bank",
+        "monthlyRate": "8.6% per month",
+        "dailyPayout": "₹2.87/day",
+        "maturityAmount": 1516,
+        "maturityDate": "26 May 2027",
+        "paymentMethod": "E-Pay Wallet"
+      }
+    },
     {
       "id": "TXN_WDR_118264",
       "withdrawalId": "WDR_3118264",
@@ -2357,6 +2401,33 @@
   ],
   "investments": [
     {
+      "id": "INV_BOND_264016",
+      "institution": "Suryoday SF Bank",
+      "bondId": "suryoday_fd",
+      "category": "Fixed Deposit",
+      "principal": 1000,
+      "monthlyRate": 8.6,
+      "interestRate": 8.6,
+      "rateText": "8.6% per month",
+      "monthlyInterest": 86,
+      "dailyPayout": 2.87,
+      "totalInterest": 516,
+      "tenureMonths": 6,
+      "maturityAmount": 1516,
+      "bookingDate": "26 Nov 2026",
+      "maturityDate": "26 May 2027",
+      "lastInterestDate": "2026-11-26",
+      "totalInterestCredited": 0,
+      "payoutFreq": "Daily Auto-Credit at 12:00 AM",
+      "status": "ACTIVE",
+      "dicgcInsured": true,
+      "certNumber": "DICGC-EP-135123",
+      "folioNumber": "EP-FD-3276",
+      "userId": "EPY98808",
+      "userMobile": "9876548808",
+      "userName": "Nirod Behera"
+    },
+    {
       "id": "INV_BOND_683618",
       "institution": "Suryoday SF Bank Plan",
       "bondId": "suryoday_fd",
@@ -2379,7 +2450,8 @@
       "folioNumber": "EP-FD-8517",
       "userMobile": "+91 7013893165",
       "userId": "EPY31650",
-      "userName": "arman khan"
+      "userName": "arman khan",
+      "lastInterestDate": "2026-11-26"
     },
     {
       "id": "INV_BOND_529158",
@@ -2403,7 +2475,8 @@
       "folioNumber": "EP-FD-3025",
       "userMobile": "+91 7013893165",
       "userId": "EPY31650",
-      "userName": "arman khan"
+      "userName": "arman khan",
+      "lastInterestDate": "2026-11-26"
     },
     {
       "id": "INV_BOND_328620",
@@ -2427,7 +2500,8 @@
       "monthlyInterest": 4375,
       "userMobile": "+91 9876548808",
       "userId": "EPY98808",
-      "userName": "Nirod behera"
+      "userName": "Nirod behera",
+      "lastInterestDate": "2026-11-26"
     },
     {
       "id": "INV_BOND_775826",
@@ -2451,7 +2525,8 @@
       "monthlyInterest": 2150,
       "userMobile": "+91 9876543210",
       "userId": "EPY43210",
-      "userName": "Rahul Sharma"
+      "userName": "Rahul Sharma",
+      "lastInterestDate": "2026-11-26"
     },
     {
       "id": "INV_BOND_998124",
@@ -2474,7 +2549,8 @@
       "monthlyInterest": 4300,
       "userMobile": "+91 9812345678",
       "userId": "EPY12345",
-      "userName": "Priya Patel"
+      "userName": "Priya Patel",
+      "lastInterestDate": "2026-11-26"
     }
   ],
   "investmentWorth": {
@@ -2567,7 +2643,7 @@
       "maskedMobile": "xxxxxx8808",
       "email": "nirodbehera220@gmail.com",
       "payId": "9876548808@easypay",
-      "walletBalance": 30084.13,
+      "walletBalance": 29034.13,
       "securityPin": "1234",
       "mpin": "1234",
       "password": "EasyPay@8808",
@@ -2610,7 +2686,8 @@
         }
       ],
       "referralEarnings": 0,
-      "firstDepositBonusPaid": true
+      "firstDepositBonusPaid": true,
+      "dailyPayoutRate": 2.87
     },
     {
       "id": "EPY43210",
@@ -2849,6 +2926,19 @@
     ],
     "status": "OPEN",
     "tickets": [
+      {
+        "ticketId": "TKT-SUN-23382",
+        "userId": "EPY98808",
+        "userName": "Nirod Behera",
+        "userMobile": "9876548808",
+        "tierId": "direct_entry",
+        "tierName": "Direct Entry",
+        "amount": 50,
+        "chances": 1,
+        "bookedAt": "2026-11-25T19:35:30.363Z",
+        "drawDate": "Every Sunday at 8:00 PM",
+        "status": "ENROLLED"
+      },
       {
         "ticketId": "TKT-SUN-69026",
         "userId": "EPY98808",
