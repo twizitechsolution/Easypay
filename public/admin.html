@@ -1026,14 +1026,133 @@
     .tab-view-content { display: none; }
     .tab-view-content.active { display: flex; flex-direction: column; gap: 24px; }
 
+    /* Mobile Menu & Drawer Controls */
+    .admin-mobile-menu-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      color: #0F172A;
+      font-size: 17px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .admin-mobile-close-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: #FFFFFF;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .admin-mobile-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(2px);
+      z-index: 1150;
+    }
+    .admin-mobile-backdrop.active {
+      display: block;
+    }
+
     /* Responsive */
     @media (max-width: 1024px) {
       .kpi-grid { grid-template-columns: repeat(2, 1fr); }
       .charts-row { grid-template-columns: 1fr; }
     }
-    @media (max-width: 768px) {
-      .admin-sidebar { display: none; }
+    @media (max-width: 900px) {
+      html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
+      }
+      #adminAppSection {
+        flex-direction: column;
+        width: 100%;
+        overflow-x: hidden;
+      }
+      .admin-mobile-menu-btn {
+        display: inline-flex;
+      }
+      .admin-mobile-close-btn {
+        display: inline-flex;
+      }
+      .admin-sidebar {
+        display: flex !important;
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 270px !important;
+        max-width: 82vw;
+        height: 100vh;
+        z-index: 1200;
+        transform: translateX(-105%);
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 8px 0 30px rgba(15, 23, 42, 0.35);
+        overflow-y: auto;
+      }
+      .admin-sidebar.mobile-open {
+        transform: translateX(0);
+      }
+      .admin-main {
+        width: 100% !important;
+        margin-left: 0 !important;
+        min-width: 0;
+      }
+      .admin-topbar {
+        padding: 12px 14px;
+        gap: 10px;
+        flex-wrap: wrap;
+        height: auto;
+      }
+      .topbar-title-box h1 {
+        font-size: 17px;
+        line-height: 1.25;
+      }
+      .topbar-sub {
+        font-size: 11px;
+        flex-wrap: wrap;
+      }
+      .admin-content {
+        padding: 14px;
+        gap: 16px;
+      }
+      .table-card, .panel-card, .card {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+      }
+      .table-card table, .panel-card table {
+        min-width: 600px;
+      }
+      .login-card {
+        width: 92% !important;
+        max-width: 400px !important;
+        padding: 26px 20px !important;
+      }
+    }
+    @media (max-width: 560px) {
       .kpi-grid { grid-template-columns: 1fr; }
+      .form-grid, .modal-grid-2 {
+        grid-template-columns: 1fr !important;
+      }
+      .modal-overlay > div, .modal-box, .modal-card {
+        width: 94% !important;
+        max-width: 94vw !important;
+        max-height: 90vh !important;
+        padding: 16px !important;
+      }
     }
   </style>
 </head>
@@ -1099,9 +1218,12 @@
        ============================================================== -->
   <section id="adminAppSection" style="display: none;">
     
+    <!-- Mobile Drawer Backdrop -->
+    <div id="adminMobileBackdrop" class="admin-mobile-backdrop" onclick="toggleAdminMobileMenu(false)"></div>
+
     <!-- Left Sidebar -->
-    <aside class="admin-sidebar">
-      <div class="sidebar-header">
+    <aside class="admin-sidebar" id="adminSidebarDrawer">
+      <div class="sidebar-header" style="display:flex; align-items:center; justify-content:space-between;">
         <div class="sidebar-brand-box">
           <div class="sidebar-logo-icon">
             <i class="fa-solid fa-layer-group"></i>
@@ -1111,6 +1233,9 @@
             <span class="sidebar-brand-badge">ENTERPRISE 3.0</span>
           </div>
         </div>
+        <button type="button" class="admin-mobile-close-btn" onclick="toggleAdminMobileMenu(false)" aria-label="Close menu">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
 
       <!-- Admin Profile Box -->
@@ -1268,13 +1393,18 @@
       
       <!-- Top Navigation Bar -->
       <header class="admin-topbar">
-        <div class="topbar-title-box">
+        <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+          <button type="button" id="adminMobileMenuBtn" class="admin-mobile-menu-btn" onclick="toggleAdminMobileMenu(true)" aria-label="Open admin menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="topbar-title-box">
           <h1 id="topbarTitle">Executive Dashboard</h1>
           <div class="topbar-sub">
             <span style="color: #10B981; font-weight: 700;"><i class="fa-solid fa-circle" style="font-size: 8px;"></i> DB Synchronized</span>
             <span>•</span>
             <span id="topbarTimestamp">Real-Time</span>
           </div>
+        </div>
         </div>
 
         <div class="topbar-actions"></div>
@@ -3323,7 +3453,17 @@
     }
 
     // Tab Switching
+    function toggleAdminMobileMenu(forceOpen) {
+      const sidebar = document.getElementById('adminSidebarDrawer') || document.querySelector('.admin-sidebar');
+      const backdrop = document.getElementById('adminMobileBackdrop');
+      if (!sidebar) return;
+      const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : !sidebar.classList.contains('mobile-open');
+      sidebar.classList.toggle('mobile-open', shouldOpen);
+      if (backdrop) backdrop.classList.toggle('active', shouldOpen);
+    }
+
     function switchTab(tabId) {
+      toggleAdminMobileMenu(false);
       // Update sidebar nav buttons
       document.querySelectorAll('.admin-sidebar .nav-btn').forEach(btn => btn.classList.remove('active'));
       const activeBtn = Array.from(document.querySelectorAll('.admin-sidebar .nav-btn')).find(b => b.getAttribute('onclick')?.includes(tabId));
