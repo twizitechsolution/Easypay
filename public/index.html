@@ -5131,86 +5131,20 @@
            ============================================================== -->
       <div id="viewHome" class="view-panel" style="display: none;">
 
-        <!-- 1. Top Promotional Carousel Slider (Screenshot 3) -->
+        <!-- 1. Top Promotional Image Carousel Slider (Admin-Managed 3 Banners) -->
         <div class="home-promo-slider-wrap">
           <div class="home-promo-slider-track" id="homePromoSliderTrack">
-            <!-- Slide 1: EasyPay Recharge & Cashback -->
-            <div class="home-promo-slide-card" style="background: linear-gradient(135deg, #FF5722 0%, #D84315 100%);">
-              <div>
-                <div style="background: rgba(0,0,0,0.25); display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; color: #FFF; margin-bottom: 4px;">
-                  ⚡ INSTANT RECHARGE & BILLS
-                </div>
-                <div class="promo-cashback-headline">Flat 25% Cashback* on Recharge</div>
-                <div class="promo-bank-subtext">Jio, Airtel, Vi & Electricity • <strong>₹0 Convenience Fee</strong></div>
-              </div>
-              <div style="margin-top: 8px;">
-                <button class="promo-cta-btn" style="background: #FFFFFF; color: #D84315;" onclick="switchNavTab('home'); document.getElementById('rechargeSectionWrap')?.scrollIntoView({behavior:'smooth'}); showToast('Select operator to recharge');">RECHARGE NOW</button>
-                <div style="font-size: 8px; opacity: 0.85; margin-top: 4px;">*Instant cashback credited to EasyPay Wallet</div>
-              </div>
-              <div class="promo-graphic-badge">
-                <i class="fa-solid fa-bolt-lightning" style="font-size: 38px; color: #FFD54F; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));"></i>
-                <span style="font-size: 10px; font-weight: 800; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 6px;">25% Bachat</span>
-              </div>
+            <div class="home-promo-slide-card" style="padding:0; overflow:hidden; border-radius:18px; background:#FF5722; cursor:pointer;" onclick="handleHomeSliderClick('recharge')">
+              <img src="/images/slider_recharge.jpg" alt="Recharge & Bills Cashback" style="width:100%; height:172px; object-fit:cover; display:block;">
             </div>
-
-            <!-- Slide 2: EasyPay 12% Guaranteed Bonds -->
-            <div class="home-promo-slide-card" style="background: linear-gradient(135deg, #059669 0%, #064E3B 100%);">
-              <div>
-                <div style="background: rgba(0,0,0,0.25); display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; color: #FFF; margin-bottom: 4px;">
-                  🛡️ DICGC INSURED UP TO ₹5 LAKH
-                </div>
-                <div class="promo-cashback-headline">Earn 12% Guaranteed Returns</div>
-                <div class="promo-bank-subtext">Powered by <strong>Suryoday Small Finance Bank</strong></div>
-              </div>
-              <div style="margin-top: 8px;">
-                <button class="promo-cta-btn" style="background: #10B981; color: #FFFFFF;" onclick="switchNavTab('bonds')">INVEST NOW</button>
-                <div style="font-size: 8px; opacity: 0.85; margin-top: 4px;">Interest credited daily directly to wallet</div>
-              </div>
-              <div class="promo-graphic-badge">
-                <i class="fa-solid fa-chart-line" style="font-size: 38px; color: #6EE7B7; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));"></i>
-                <span style="font-size: 10px; font-weight: 800; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 6px;">12% / mo</span>
-              </div>
+            <div class="home-promo-slide-card" style="padding:0; overflow:hidden; border-radius:18px; background:#0F172A; cursor:pointer;" onclick="handleHomeSliderClick('bonds')">
+              <img src="/images/slider_invest.jpg" alt="Earn up to 12% Returns" style="width:100%; height:172px; object-fit:cover; display:block;">
             </div>
-
-            <!-- Slide 3: Official Brand Gift Cards -->
-            <div class="home-promo-slide-card" style="background: linear-gradient(135deg, #2563EB 0%, #1E3A8A 100%);">
-              <div>
-                <div style="background: rgba(0,0,0,0.25); display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; color: #FFF; margin-bottom: 4px;">
-                  🎁 INSTANT VOUCHERS + CODES
-                </div>
-                <div class="promo-cashback-headline">Save up to 16% on Gift Cards</div>
-                <div class="promo-bank-subtext">Amazon, Flipkart, Apple, Zomato & Domino's</div>
-              </div>
-              <div style="margin-top: 8px;">
-                <button class="promo-cta-btn" style="background: #FFFFFF; color: #1E3A8A;" onclick="switchNavTab('giftCard')">BUY VOUCHERS</button>
-                <div style="font-size: 8px; opacity: 0.85; margin-top: 4px;">Zero hidden charges • Instant delivery</div>
-              </div>
-              <div class="promo-graphic-badge">
-                <i class="fa-solid fa-gift" style="font-size: 38px; color: #93C5FD; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));"></i>
-                <span style="font-size: 10px; font-weight: 800; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 6px;">Top Deals</span>
-              </div>
-            </div>
-
-            <!-- Slide 4: Zero-Fee UPI & QR Payments -->
-            <div class="home-promo-slide-card" style="background: linear-gradient(135deg, #7C3AED 0%, #4C1D95 100%);">
-              <div>
-                <div style="background: rgba(0,0,0,0.25); display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; color: #FFF; margin-bottom: 4px;">
-                  ⚡ NPCI CERTIFIED HIGH-SPEED
-                </div>
-                <div class="promo-cashback-headline">Scan Any UPI QR & Pay Instantly</div>
-                <div class="promo-bank-subtext">Bank-to-Bank via <strong>EasyPay Direct Rail</strong></div>
-              </div>
-              <div style="margin-top: 8px;">
-                <button class="promo-cta-btn" style="background: #A78BFA; color: #FFFFFF;" onclick="openQrScannerModal()">SCAN & PAY</button>
-                <div style="font-size: 8px; opacity: 0.85; margin-top: 4px;">24x7 instant settlement with ₹0 fee</div>
-              </div>
-              <div class="promo-graphic-badge">
-                <i class="fa-solid fa-qrcode" style="font-size: 38px; color: #DDD6FE; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));"></i>
-                <span style="font-size: 10px; font-weight: 800; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 6px;">Scan & Pay</span>
-              </div>
+            <div class="home-promo-slide-card" style="padding:0; overflow:hidden; border-radius:18px; background:#FF5722; cursor:pointer;" onclick="handleHomeSliderClick('luckydraw')">
+              <img src="/images/slider_luckydraw.jpg" alt="Weekly Lucky Draw" style="width:100%; height:172px; object-fit:cover; display:block;">
             </div>
           </div>
-        <div class="promo-slider-dots-row">
+          <div class="promo-slider-dots-row">
             <span class="promo-dot active" id="pDot0" onclick="setPromoSlide(0)"></span>
             <span class="promo-dot" id="pDot1" onclick="setPromoSlide(1)"></span>
             <span class="promo-dot" id="pDot2" onclick="setPromoSlide(2)"></span>
@@ -5345,73 +5279,9 @@
             </span>
           </div>
 
-          <!-- 4x2 Brand Tiles Grid matching Screenshot 1 -->
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px 6px; text-align: center;">
-            
-            <!-- 1. Apple -->
-            <div style="cursor: pointer; display: flex; flex-direction: column; align-items: center;" onclick="openBuyGiftCardModal('apple_app_store')">
-              <div style="width: 56px; height: 56px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #F1F5F9; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; padding: 6px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <img src="/assets/brands/apple.svg" alt="Apple" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
-              </div>
-              <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 5px;">Save 4%</div>
-            </div>
-
-            <!-- 2. Domino's -->
-            <div style="cursor: pointer; display: flex; flex-direction: column; align-items: center;" onclick="openBuyGiftCardModal('dominos')">
-              <div style="width: 56px; height: 56px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #F1F5F9; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; padding: 6px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <img src="/assets/brands/dominos.svg" alt="Domino's" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
-              </div>
-              <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 5px;">Save 12%</div>
-            </div>
-
-            <!-- 3. Amazon Shopping Voucher -->
-            <div style="cursor: pointer; display: flex; flex-direction: column; align-items: center;" onclick="openBuyGiftCardModal('amazon_shopping')">
-              <div style="width: 56px; height: 56px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #F1F5F9; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; padding: 6px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <img src="/assets/brands/amazon.svg" alt="Amazon Shopping" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
-              </div>
-              <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 5px;">Save 1.5%</div>
-            </div>
-
-            <!-- 4. Myntra -->
-            <div style="cursor: pointer; display: flex; flex-direction: column; align-items: center;" onclick="openBuyGiftCardModal('myntra')">
-              <div style="width: 56px; height: 56px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #F1F5F9; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; padding: 6px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <img src="/assets/brands/myntra.svg" alt="Myntra" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
-              </div>
-              <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 5px;">Save 4%</div>
-            </div>
-
-            <!-- 5. Amazon Prime -->
-            <div style="cursor: pointer; display: flex; flex-direction: column; align-items: center;" onclick="openBuyGiftCardModal('amazon_prime')">
-              <div style="width: 56px; height: 56px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #F1F5F9; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; padding: 6px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <img src="/assets/brands/amazon_prime.svg" alt="Amazon Prime" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
-              </div>
-              <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 5px;">Save 16%</div>
-            </div>
-
-            <!-- 6. Smart Bazaar -->
-            <div style="cursor: pointer; display: flex; flex-direction: column; align-items: center;" onclick="openBuyGiftCardModal('smart_bazaar')">
-              <div style="width: 56px; height: 56px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #F1F5F9; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; padding: 6px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <img src="/assets/brands/smart_bazaar.svg" alt="Smart Bazaar" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
-              </div>
-              <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 5px;">Save 3%</div>
-            </div>
-
-            <!-- 7. BGMI -->
-            <div style="cursor: pointer; display: flex; flex-direction: column; align-items: center;" onclick="openBuyGiftCardModal('bgmi')">
-              <div style="width: 56px; height: 56px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #F1F5F9; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; padding: 6px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <img src="/assets/brands/bgmi.svg" alt="BGMI" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
-              </div>
-              <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 5px;">Save 10%</div>
-            </div>
-
-            <!-- 8. Decathlon -->
-            <div style="cursor: pointer; display: flex; flex-direction: column; align-items: center;" onclick="openBuyGiftCardModal('decathlon')">
-              <div style="width: 56px; height: 56px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #F1F5F9; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; padding: 6px; transition: transform 0.15s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <img src="/assets/brands/decathlon.svg" alt="Decathlon" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
-              </div>
-              <div style="font-size: 11px; font-weight: 700; color: #16A34A; margin-top: 5px;">Save 4%</div>
-            </div>
-
+          <!-- 4x2 Brand Tiles Grid (Synced with Gift Vouchers Brand Images) -->
+          <div class="brand-4col-grid" id="homeGiftCardsDealsGrid">
+            <!-- Populated dynamically by renderGiftCards() using real brand images -->
           </div>
         </div>
 
@@ -9995,6 +9865,22 @@
         homeList.innerHTML = cards.slice(0, 4).map(c => renderBrandItem(c)).join('');
       }
 
+      // 0. Render Home Page Gift Cards & Deals 4x2 Grid with real brand images
+      const homeDealsGrid = document.getElementById('homeGiftCardsDealsGrid');
+      if (homeDealsGrid) {
+        const homeCards = cards.filter(c => c.isTop).slice(0, 8);
+        const listToUse = homeCards.length >= 8 ? homeCards : cards.slice(0, 8);
+        homeDealsGrid.innerHTML = listToUse.map(c => `
+          <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('${c.id}')">
+            <div class="brand-4col-icon">
+              <img src="${c.logo}" alt="${c.name}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+            </div>
+            <span class="brand-save-text">${c.saveText || 'Save ' + c.cashbackRate + '%'}</span>
+            <span class="brand-sub-title">${c.subName || c.name}</span>
+          </div>
+        `).join('');
+      }
+
       // 1. Render Top Brands 4x2 Grid (User Requested: Clean Rounded White Tiles, No Black Borders)
       const topGrid = document.getElementById('topBrandsGridContainer');
       if (topGrid) {
@@ -11319,12 +11205,41 @@
       });
     }
 
+    function handleHomeSliderClick(action) {
+      if (action === 'bonds') switchNavTab('bonds');
+      else if (action === 'luckydraw') openLuckyDrawDedicatedPage();
+      else if (action === 'giftcards') switchNavTab('giftcards');
+      else if (action === 'shopping') switchNavTab('shopping');
+      else {
+        switchNavTab('home');
+        document.querySelector('.fc-bills-card')?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    async function loadHomePromoSliders() {
+      try {
+        const res = await fetch((typeof API_BASE !== 'undefined' ? API_BASE : '') + '/api/home-sliders');
+        const data = await res.json();
+        if (data && Array.isArray(data.sliders) && data.sliders.length) {
+          const track = document.getElementById('homePromoSliderTrack');
+          if (track) {
+            track.innerHTML = data.sliders.map(s => `
+              <div class="home-promo-slide-card" style="padding:0; overflow:hidden; border-radius:18px; background:#FF5722; cursor:pointer;" onclick="handleHomeSliderClick('${s.action || 'home'}')">
+                <img src="${s.imageUrl}" alt="${s.title || 'EasyPay Banner'}" style="width:100%; height:172px; object-fit:cover; display:block;">
+              </div>
+            `).join('');
+          }
+        }
+      } catch (e) { console.warn('Using default home sliders', e); }
+    }
+
     function initHomePromoSlider() {
+      loadHomePromoSliders();
       clearInterval(promoInterval);
       promoInterval = setInterval(() => {
         promoCurrentSlide = (promoCurrentSlide + 1) % 3;
         setPromoSlide(promoCurrentSlide);
-      }, 3500);
+      }, 3800);
     }
 
     // Auto-carousel for "Today's Top Deals" on Gift Cards View

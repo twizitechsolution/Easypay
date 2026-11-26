@@ -2251,6 +2251,89 @@
               </div>
             </form>
           </div>
+
+          <!-- Home Page 3-Banner Promo Slider Manager -->
+          <div class="panel-card" style="margin-top: 20px;">
+            <div class="card-head">
+              <div>
+                <div class="card-title">Home Page Promo Sliders (3 Banner Images)</div>
+                <div class="card-subtitle">Manage the 3 rotating promotional banner images displayed at the top of the consumer Home screen</div>
+              </div>
+            </div>
+
+            <form id="homeSlidersForm" onsubmit="saveHomeSlidersAdmin(event)">
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;" class="modal-grid-2">
+                <!-- Slide 1 -->
+                <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 14px;">
+                  <div style="font-size: 12px; font-weight: 800; color: #0F172A; margin-bottom: 8px;">Slide 1 (Banner 1)</div>
+                  <img id="sliderPreview1" src="/images/slider_recharge.jpg" alt="Slide 1" style="width: 100%; height: 110px; object-fit: cover; border-radius: 10px; border: 1px solid #CBD5E1; margin-bottom: 10px;">
+                  <div class="form-group" style="margin-bottom: 8px;">
+                    <label style="font-size: 11px;">Image URL or Upload</label>
+                    <input type="text" id="sliderUrl1" value="/images/slider_recharge.jpg" oninput="document.getElementById('sliderPreview1').src=this.value">
+                  </div>
+                  <input type="file" accept="image/*" onchange="handleSliderImageUpload(1, event)" style="font-size: 11px; margin-bottom: 8px; width: 100%;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="font-size: 11px;">Tap Action</label>
+                    <select id="sliderAction1">
+                      <option value="recharge" selected>Recharge &amp; Bills</option>
+                      <option value="bonds">Invest / FDs</option>
+                      <option value="luckydraw">Weekly Lucky Draw</option>
+                      <option value="giftcards">Gift Vouchers</option>
+                      <option value="shopping">Shopping Mall</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 14px;">
+                  <div style="font-size: 12px; font-weight: 800; color: #0F172A; margin-bottom: 8px;">Slide 2 (Banner 2)</div>
+                  <img id="sliderPreview2" src="/images/slider_invest.jpg" alt="Slide 2" style="width: 100%; height: 110px; object-fit: cover; border-radius: 10px; border: 1px solid #CBD5E1; margin-bottom: 10px;">
+                  <div class="form-group" style="margin-bottom: 8px;">
+                    <label style="font-size: 11px;">Image URL or Upload</label>
+                    <input type="text" id="sliderUrl2" value="/images/slider_invest.jpg" oninput="document.getElementById('sliderPreview2').src=this.value">
+                  </div>
+                  <input type="file" accept="image/*" onchange="handleSliderImageUpload(2, event)" style="font-size: 11px; margin-bottom: 8px; width: 100%;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="font-size: 11px;">Tap Action</label>
+                    <select id="sliderAction2">
+                      <option value="recharge">Recharge &amp; Bills</option>
+                      <option value="bonds" selected>Invest / FDs</option>
+                      <option value="luckydraw">Weekly Lucky Draw</option>
+                      <option value="giftcards">Gift Vouchers</option>
+                      <option value="shopping">Shopping Mall</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 14px;">
+                  <div style="font-size: 12px; font-weight: 800; color: #0F172A; margin-bottom: 8px;">Slide 3 (Banner 3)</div>
+                  <img id="sliderPreview3" src="/images/slider_luckydraw.jpg" alt="Slide 3" style="width: 100%; height: 110px; object-fit: cover; border-radius: 10px; border: 1px solid #CBD5E1; margin-bottom: 10px;">
+                  <div class="form-group" style="margin-bottom: 8px;">
+                    <label style="font-size: 11px;">Image URL or Upload</label>
+                    <input type="text" id="sliderUrl3" value="/images/slider_luckydraw.jpg" oninput="document.getElementById('sliderPreview3').src=this.value">
+                  </div>
+                  <input type="file" accept="image/*" onchange="handleSliderImageUpload(3, event)" style="font-size: 11px; margin-bottom: 8px; width: 100%;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="font-size: 11px;">Tap Action</label>
+                    <select id="sliderAction3">
+                      <option value="recharge">Recharge &amp; Bills</option>
+                      <option value="bonds">Invest / FDs</option>
+                      <option value="luckydraw" selected>Weekly Lucky Draw</option>
+                      <option value="giftcards">Gift Vouchers</option>
+                      <option value="shopping">Shopping Mall</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal-foot" style="margin-top: 14px;">
+                <button type="submit" class="btn-topbar primary">
+                  <i class="fa-solid fa-images"></i> Save Home Sliders
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
 
         <!-- ==========================================
@@ -4787,6 +4870,62 @@
         refreshAdminData();
       }
     }
+
+    async function loadHomeSlidersAdmin() {
+      try {
+        const res = await fetch('/api/home-sliders');
+        const data = await res.json();
+        if (data && Array.isArray(data.sliders)) {
+          data.sliders.forEach((s, idx) => {
+            const n = idx + 1;
+            const urlInp = document.getElementById('sliderUrl' + n);
+            const prevImg = document.getElementById('sliderPreview' + n);
+            const actSel = document.getElementById('sliderAction' + n);
+            if (urlInp && s.imageUrl) urlInp.value = s.imageUrl;
+            if (prevImg && s.imageUrl) prevImg.src = s.imageUrl;
+            if (actSel && s.action) actSel.value = s.action;
+          });
+        }
+      } catch (e) { console.warn('Could not load home sliders', e); }
+    }
+
+    function handleSliderImageUpload(num, event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        const b64 = ev.target.result;
+        const urlInp = document.getElementById('sliderUrl' + num);
+        const prevImg = document.getElementById('sliderPreview' + num);
+        if (urlInp) urlInp.value = b64;
+        if (prevImg) prevImg.src = b64;
+        showToast('Banner ' + num + ' image loaded! Click "Save Home Sliders" to publish.');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function saveHomeSlidersAdmin(e) {
+      e.preventDefault();
+      const sliders = [1, 2, 3].map(n => ({
+        id: n,
+        title: 'Banner ' + n,
+        imageUrl: (document.getElementById('sliderUrl' + n)?.value || '').trim(),
+        action: document.getElementById('sliderAction' + n)?.value || 'home'
+      }));
+      const res = await fetch('/api/admin/home-sliders/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sliders })
+      });
+      const out = await res.json();
+      if (out.success) {
+        showToast('Home Promo Sliders updated successfully!');
+      } else {
+        showToast(out.error || 'Failed to update sliders');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadHomeSlidersAdmin);
 
     // Save System Settings
     async function saveSystemSettings(e) {

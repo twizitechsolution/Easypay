@@ -128,8 +128,8 @@ const tests = [
     pass: !appHtml.includes('wallet-section-card-old') && appHtml.includes('User Requested: Wallet section removed')
   },
   {
-    name: 'Req 28: Removed "Pay Bills" Tag & Local SVG Assets for Brand Logos',
-    pass: !appHtml.includes('>Pay Bills</span>') && appHtml.includes('/assets/brands/amazon.svg') && appHtml.includes('/assets/brands/apple.svg') && appHtml.includes('/assets/brands/dominos.svg')
+    name: 'Req 28: Removed "Pay Bills" Tag & Dynamic Brand Logos + Admin Sliders',
+    pass: !appHtml.includes('>Pay Bills</span>') && appHtml.includes('id="homeGiftCardsDealsGrid"') && appHtml.includes('id="topBrandsGridContainer"') && appHtml.includes('loadHomePromoSliders')
   },
   {
     name: 'Req 29: Profile Header shows Nirod Behera, +91 9876548808, and EPY98808',

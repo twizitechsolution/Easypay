@@ -2547,6 +2547,51 @@ async function requestHandler(req, res) {
   }
 
   // --- 7. System Configuration & App Settings APIs ---
+  // API: Get Home Promo Sliders (3 Banners)
+  if (url === '/api/home-sliders' && req.method === 'GET') {
+    const data = readDb();
+    const defaultSliders = [
+      { id: 1, title: 'Recharge & Bills Cashback', imageUrl: '/images/slider_recharge.jpg', action: 'recharge' },
+      { id: 2, title: 'Earn up to 12% Returns', imageUrl: '/images/slider_invest.jpg', action: 'bonds' },
+      { id: 3, title: 'Weekly Lucky Draw ₹25,000', imageUrl: '/images/slider_luckydraw.jpg', action: 'luckydraw' }
+    ];
+    const sliders = (Array.isArray(data.homeSliders) && data.homeSliders.length === 3) ? data.homeSliders : defaultSliders;
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ success: true, sliders }));
+    return;
+  }
+
+  // API: Update Home Promo Sliders (Admin System Settings)
+  if (url === '/api/admin/home-sliders/update' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      try {
+        const payload = JSON.parse(body || '{}');
+        const sliders = Array.isArray(payload.sliders) ? payload.sliders.slice(0, 3) : [];
+        if (sliders.length !== 3) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Exactly 3 slider items are required' }));
+          return;
+        }
+        const data = readDb();
+        data.homeSliders = sliders.map((s, idx) => ({
+          id: idx + 1,
+          title: (s.title || ('Slide ' + (idx + 1))).trim(),
+          imageUrl: (s.imageUrl || '').trim(),
+          action: s.action || 'home'
+        }));
+        writeDb(data);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, sliders: data.homeSliders }));
+      } catch (e) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message }));
+      }
+    });
+    return;
+  }
+
   // API: Get System Settings
   if (url === '/api/admin/settings' && req.method === 'GET') {
     const data = readDb();
