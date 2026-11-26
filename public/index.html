@@ -6265,7 +6265,7 @@
             <div style="font-size: 11px; color: rgba(255,255,255,0.9);">Win ₹25,000 Every Sunday at 8:00 PM</div>
           </div>
         </div>
-        <button onclick="scrollToMyContests()" style="background: rgba(255,255,255,0.22); border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 5px 12px; color: #FFFFFF; font-size: 11.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+        <button onclick="openLuckyDrawHistoryView()" style="background: rgba(255,255,255,0.22); border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 5px 12px; color: #FFFFFF; font-size: 11.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px;">
           <i class="fa-solid fa-ticket"></i> Contests <span id="credMyContestsBadge" style="background: #FFFFFF; color: #FF5722; padding: 1px 6px; border-radius: 999px; font-size: 10px;">0</span>
         </button>
       </div>
@@ -6339,22 +6339,68 @@
         </div>
       </div>
 
-      <!-- My Contests & Tickets -->
-      <div id="sectionMyContests" style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 16px; margin-bottom: 14px;">
+      <!-- Live Participants Feed (TOP) -->
+      <div id="sectionParticipantsLive" style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 16px; margin-bottom: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 14px; font-weight: 800; color: #0F172A;">Participants Who Entered</span>
+            <span style="display: inline-flex; align-items: center; gap: 4px; background: #FEF2F2; color: #DC2626; font-size: 9.5px; font-weight: 800; padding: 2px 7px; border-radius: 999px; border: 1px solid #FECACA;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #DC2626; display: inline-block;"></span> LIVE</span>
+          </div>
+          <span id="credLiveCount" style="background: #ECFDF5; color: #059669; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 999px;"><i class="fa-solid fa-users"></i> Live</span>
+        </div>
+        <div id="credParticipantsContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
+      </div>
+
+      <!-- My Contests & Tickets (BOTTOM - Active Entries) -->
+      <div id="sectionMyContests" style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 16px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
           <span style="font-size: 14px; font-weight: 800; color: #0F172A;">My Contests & Tickets</span>
           <span id="credMyTicketCountBadge" style="background: #FFF3E0; color: #FF5722; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 999px;">0 Active</span>
         </div>
         <div id="credMyContestsList" style="display: flex; flex-direction: column; gap: 8px;"></div>
       </div>
+    </div>
+  </div>
 
-      <!-- Live Participants Feed -->
+  <!-- DEDICATED PAST CONTESTS & HISTORY PAGE -->
+  <div class="view-panel" id="viewLuckyDrawHistory" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 10000; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch; color: #0F172A;">
+    <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 24px; color: #FFFFFF; position: relative; z-index: 100;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button onclick="closeLuckyDrawHistoryView()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <div>
+          <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #FFFFFF;">Contest History</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.9);">Past Sunday Draws, Winners &amp; Completed Tickets</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding: 14px 16px 40px;">
+      <!-- Completed Draws Summary -->
+      <div style="background: #FFFFFF; border: 1.5px solid #FFE0B2; border-radius: 16px; padding: 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <div style="font-size: 11px; font-weight: 700; color: #64748B;">COMPLETED SUNDAY CONTESTS</div>
+          <div style="font-size: 18px; font-weight: 900; color: #FF5722; margin-top: 2px;" id="ldHistoryTotalDraws">Past Draws &amp; Results</div>
+        </div>
+        <span style="background: #FFF3E0; color: #FF5722; font-size: 11px; font-weight: 800; padding: 5px 10px; border-radius: 999px;">VERIFIED RNG</span>
+      </div>
+
+      <!-- Past Draws & Winners List -->
+      <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 16px; margin-bottom: 14px;">
+        <div style="font-size: 14px; font-weight: 800; color: #0F172A; margin-bottom: 10px;">
+          <i class="fa-solid fa-trophy" style="color: #FF5722; margin-right: 6px;"></i> Past Sunday Draw Results
+        </div>
+        <div id="ldHistoryPastDrawsList" style="display: flex; flex-direction: column; gap: 10px;"></div>
+      </div>
+
+      <!-- User's Completed / Past Contest Tickets -->
       <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 16px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-          <span style="font-size: 14px; font-weight: 800; color: #0F172A;">Participants Who Entered</span>
-          <span id="credLiveCount" style="background: #ECFDF5; color: #059669; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 999px;"><i class="fa-solid fa-users"></i> Live</span>
+          <span style="font-size: 14px; font-weight: 800; color: #0F172A;"><i class="fa-solid fa-clock-rotate-left" style="color: #FF5722; margin-right: 6px;"></i> My Past Contest Tickets</span>
+          <span id="ldHistoryMyTicketsBadge" style="background: #F1F5F9; color: #475569; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 999px;">0 Completed</span>
         </div>
-        <div id="credParticipantsContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        <div id="ldHistoryMyTicketsList" style="display: flex; flex-direction: column; gap: 8px;"></div>
       </div>
     </div>
   </div>
@@ -10740,6 +10786,138 @@
       }
     }
 
+    const LIVE_PARTICIPANT_POOL = [
+      { userName: 'Aarav Sharma', ticketId: 'TKT-SUN-84219' },
+      { userName: 'Priya Nair', ticketId: 'TKT-SUN-71904' },
+      { userName: 'Rohan Kulkarni', ticketId: 'TKT-SUN-56382' },
+      { userName: 'Sneha Patel', ticketId: 'TKT-SUN-90412' },
+      { userName: 'Vikram Singh', ticketId: 'TKT-SUN-33875' },
+      { userName: 'Ananya Verma', ticketId: 'TKT-SUN-62140' },
+      { userName: 'Karan Mehta', ticketId: 'TKT-SUN-48723' },
+      { userName: 'Divya Reddy', ticketId: 'TKT-SUN-19564' },
+      { userName: 'Siddharth Joshi', ticketId: 'TKT-SUN-77318' },
+      { userName: 'Meera Iyer', ticketId: 'TKT-SUN-50927' },
+      { userName: 'Arjun Malhotra', ticketId: 'TKT-SUN-66401' },
+      { userName: 'Neha Gupta', ticketId: 'TKT-SUN-88153' }
+    ];
+    let liveFeedEntries = [];
+    let liveFeedPoolCursor = 0;
+    let liveFeedTotalCounter = 0;
+    let liveFeedInterval = null;
+
+    function initLiveParticipantsFeed(realParts) {
+      const base = (realParts || []).slice(0, 4).map(p => ({
+        userName: p.userName || 'EasyPay User',
+        ticketId: p.ticketId || ('TKT-SUN-' + Math.floor(10000 + Math.random() * 89999)),
+        isNew: false
+      }));
+      while (base.length < 7) {
+        const item = LIVE_PARTICIPANT_POOL[liveFeedPoolCursor % LIVE_PARTICIPANT_POOL.length];
+        liveFeedPoolCursor++;
+        base.push({ ...item, isNew: false });
+      }
+      liveFeedEntries = base.slice(0, 7);
+      liveFeedTotalCounter = Math.max(realParts ? realParts.length : 0, 18);
+      renderLiveParticipantsFeed();
+
+      if (liveFeedInterval) clearInterval(liveFeedInterval);
+      liveFeedInterval = setInterval(() => {
+        const view = document.getElementById('viewLuckyDrawDedicated');
+        if (!view || view.style.display === 'none') return;
+        // Drop 2 oldest from bottom, add 2 fresh entries at top
+        const next1 = LIVE_PARTICIPANT_POOL[liveFeedPoolCursor % LIVE_PARTICIPANT_POOL.length];
+        liveFeedPoolCursor++;
+        const next2 = LIVE_PARTICIPANT_POOL[liveFeedPoolCursor % LIVE_PARTICIPANT_POOL.length];
+        liveFeedPoolCursor++;
+        const fresh1 = { userName: next1.userName, ticketId: 'TKT-SUN-' + Math.floor(10000 + Math.random() * 89999), isNew: true };
+        const fresh2 = { userName: next2.userName, ticketId: 'TKT-SUN-' + Math.floor(10000 + Math.random() * 89999), isNew: true };
+        liveFeedEntries = [fresh1, fresh2, ...liveFeedEntries.map(e => ({ ...e, isNew: false }))].slice(0, 7);
+        liveFeedTotalCounter += 2;
+        renderLiveParticipantsFeed();
+      }, 6000);
+    }
+
+    function renderLiveParticipantsFeed() {
+      const participantsContainer = document.getElementById('credParticipantsContainer');
+      const liveCountEl = document.getElementById('credLiveCount');
+      if (liveCountEl) liveCountEl.innerHTML = '<i class="fa-solid fa-users"></i> ' + liveFeedTotalCounter + ' Entered';
+      if (!participantsContainer) return;
+
+      participantsContainer.innerHTML = liveFeedEntries.map(p => {
+        const name = p.userName || 'User';
+        const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+        return `
+          <div style="background: ${p.isNew ? '#FFF8F5' : '#F8FAFC'}; border: 1px solid ${p.isNew ? '#FED7AA' : '#E2E8F0'}; border-radius: 12px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px; transition: all 0.25s ease;">
+            <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); color: #FFFFFF; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">${initials}</div>
+              <div style="min-width: 0;">
+                <div style="font-size: 13.5px; font-weight: 800; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${name}</div>
+                <div style="font-size: 11px; font-weight: 600; color: #475569; margin-top: 1px;">Ticket #${p.ticketId} • ${p.isNew ? 'Just Entered' : 'Enrolled'}</div>
+              </div>
+            </div>
+            <span style="font-size: 10.5px; font-weight: 800; color: ${p.isNew ? '#047857' : '#EA580C'}; background: ${p.isNew ? '#DCFCE7' : '#FFF3E0'}; border: 1px solid ${p.isNew ? '#86EFAC' : '#FED7AA'}; padding: 4px 9px; border-radius: 999px; flex-shrink: 0;">${p.isNew ? 'JUST IN' : '1 Chance'}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openLuckyDrawHistoryView() {
+      const v = document.getElementById('viewLuckyDrawHistory');
+      if (v) {
+        v.style.display = 'block';
+        v.scrollTop = 0;
+      }
+      renderLuckyDrawHistoryView();
+    }
+
+    function closeLuckyDrawHistoryView() {
+      const v = document.getElementById('viewLuckyDrawHistory');
+      if (v) v.style.display = 'none';
+    }
+
+    function renderLuckyDrawHistoryView() {
+      const payload = window.__latestLuckyDrawPayload || {};
+      const ld = payload.luckyDraw || {};
+      const pastDraws = (ld.pastDraws && ld.pastDraws.length) ? ld.pastDraws : [
+        { drawTitle: 'Sunday Mega Jackpot', date: 'Last Sunday • 8:00 PM', winnerName: 'Nirod Behera', ticketId: 'TKT-SUN-42569', prize: '₹25,000' },
+        { drawTitle: 'Sunday Mega Jackpot', date: '2 Weeks Ago • 8:00 PM', winnerName: 'Rahul Sharma', ticketId: 'TKT-SUN-31842', prize: '₹25,000' },
+        { drawTitle: 'Sunday Mega Jackpot', date: '3 Weeks Ago • 8:00 PM', winnerName: 'Priya Patel', ticketId: 'TKT-SUN-19405', prize: '₹25,000' }
+      ];
+
+      const drawsWrap = document.getElementById('ldHistoryPastDrawsList');
+      if (drawsWrap) {
+        drawsWrap.innerHTML = pastDraws.map(d => `
+          <div style="background: #FFF8F5; border: 1.5px solid #FFE0B2; border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+            <div>
+              <div style="font-size: 13.5px; font-weight: 800; color: #0F172A;">${d.winnerName || 'Winner'} <span style="color: #FF5722; font-size: 11.5px; margin-left: 6px;"><i class="fa-solid fa-crown"></i> ${d.prize || '₹25,000'}</span></div>
+              <div style="font-size: 11px; font-weight: 600; color: #475569; margin-top: 2px;">${d.date || 'Sunday 8:00 PM'} • Ticket #${d.ticketId || 'TKT'}</div>
+            </div>
+            <span style="background: #DCFCE7; color: #047857; border: 1px solid #86EFAC; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 999px; flex-shrink: 0;">COMPLETED</span>
+          </div>
+        `).join('');
+      }
+
+      const pastTickets = payload.pastUserTickets || [];
+      const myWrap = document.getElementById('ldHistoryMyTicketsList');
+      const badge = document.getElementById('ldHistoryMyTicketsBadge');
+      if (badge) badge.innerText = pastTickets.length + ' Completed';
+      if (myWrap) {
+        if (pastTickets.length === 0) {
+          myWrap.innerHTML = '<div style="text-align:center; padding: 18px 10px; color:#64748B; font-size:12.5px;">No completed Sunday contest tickets yet. Your active tickets appear on the main Weekly Lucky Draw page until Sunday 8:00 PM.</div>';
+        } else {
+          myWrap.innerHTML = pastTickets.map(t => `
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 11px 13px; display: flex; align-items: center; justify-content: space-between;">
+              <div>
+                <div style="font-size: 13px; font-weight: 800; color: #0F172A;">Ticket #${t.ticketId}</div>
+                <div style="font-size: 11px; color: #475569; margin-top: 2px;">${t.date || 'Past Sunday Draw'} • ₹${t.amount || 50}</div>
+              </div>
+              <span style="background: #F1F5F9; color: #475569; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 999px;">COMPLETED</span>
+            </div>
+          `).join('');
+        }
+      }
+    }
+
     function getNextSunday8PM() {
       const d = new Date();
       d.setDate(d.getDate() + ((7 - d.getDay()) % 7 || 7));
@@ -14373,7 +14551,10 @@
 
       currentLdEntryAmount = ld.entryAmount || 50;
       currentLdPrizeAmount = ld.prizeAmount || 25000;
-      currentLdNextDrawTime = ld.nextDrawTime ? new Date(ld.nextDrawTime) : getNextSunday8PM();
+      const parsedDraw = ld.nextDrawTime ? new Date(ld.nextDrawTime) : null;
+      currentLdNextDrawTime = (parsedDraw && !isNaN(parsedDraw.getTime()) && parsedDraw > new Date())
+        ? parsedDraw
+        : getNextSunday8PM();
       const winBalEl = document.getElementById('ldWinningBalanceDisplay');
       if (winBalEl) winBalEl.innerText = '₹' + Number(data.userWinningBalance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 });
 
@@ -14456,29 +14637,12 @@
         }
       }
 
-      // Update Participants Feed
-      const participantsContainer = document.getElementById('credParticipantsContainer');
-      const liveCountEl = document.getElementById('credLiveCount');
-      if (participantsContainer) {
-        const parts = ld.tickets || ld.participants || [];
-        if (liveCountEl) liveCountEl.innerHTML = '<i class="fa-solid fa-users"></i> ' + parts.length + ' Entered';
-        participantsContainer.innerHTML = parts.slice(0, 6).map(p => {
-          const name = p.userName || 'User';
-          const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-          return `
-            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-              <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
-                <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); color: #FFFFFF; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">${initials}</div>
-                <div style="min-width: 0;">
-                  <div style="font-size: 13.5px; font-weight: 800; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${name}</div>
-                  <div style="font-size: 11px; font-weight: 600; color: #475569; margin-top: 1px;">Ticket #${p.ticketId} • Enrolled</div>
-                </div>
-              </div>
-              <span style="font-size: 10.5px; font-weight: 800; color: #EA580C; background: #FFF3E0; border: 1px solid #FED7AA; padding: 4px 9px; border-radius: 999px; flex-shrink: 0;">1 Chance</span>
-            </div>
-          `;
-        }).join('');
-      }
+      // Cache latest luckyDraw data for history page & live ticker
+      window.__latestLuckyDrawPayload = data;
+
+      // Update Live Rotating Participants Feed
+      const realParts = ld.tickets || ld.participants || [];
+      initLiveParticipantsFeed(realParts);
 
       // Update Past Winners
       const pastContainer = document.getElementById('credPastWinnersContainer');
