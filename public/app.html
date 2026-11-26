@@ -92,25 +92,106 @@
 
     let activeBondPlan = { id: 'suryoday_fd', title: 'Suryoday SF Bank FD', rate: 8.60 };
 
+    const BOND_TENURE_TIERS = [
+      { months: 6, label: '6 Months', sub: 'Minimum Lock-in', bonus: 0.00 },
+      { months: 12, label: '12 Months', sub: '1 Year Plan', bonus: 0.40 },
+      { months: 24, label: '24 Months', sub: '2 Years Plan', bonus: 0.90 },
+      { months: 36, label: '36 Months', sub: '3 Years Plan', bonus: 1.40 },
+      { months: 60, label: '60 Months', sub: '5 Years • Highest Return', bonus: 2.40, highlight: true }
+    ];
+
+    function getRateForTenure(months) {
+      const base = activeBondPlan.baseRate || activeBondPlan.rate || 8.60;
+      const tier = BOND_TENURE_TIERS.find(t => t.months === Number(months)) || BOND_TENURE_TIERS[0];
+      return Math.round((base + tier.bonus) * 100) / 100;
+    }
+
+    function toggleBondTenureDropdown(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById('bondTenureDropdownMenu');
+      const chev = document.getElementById('bondTenureChevron');
+      if (!menu) return;
+      const willOpen = menu.style.display !== 'block';
+      menu.style.display = willOpen ? 'block' : 'none';
+      if (chev) chev.style.transform = willOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+
+    document.addEventListener('click', function(ev) {
+      const wrap = document.getElementById('bondTenureDropdownWrap');
+      const menu = document.getElementById('bondTenureDropdownMenu');
+      const chev = document.getElementById('bondTenureChevron');
+      if (menu && wrap && !wrap.contains(ev.target)) {
+        menu.style.display = 'none';
+        if (chev) chev.style.transform = 'rotate(0deg)';
+      }
+    });
+
+    function renderBondTenureDropdown() {
+      const menu = document.getElementById('bondTenureDropdownMenu');
+      const hidden = document.getElementById('bondTenureSelect');
+      const selectedMonths = parseInt(hidden ? hidden.value : 6) || 6;
+      const lblEl = document.getElementById('bondTenureSelectedLabel');
+      const badgeEl = document.getElementById('bondTenureSelectedRateBadge');
+
+      const activeTier = BOND_TENURE_TIERS.find(t => t.months === selectedMonths) || BOND_TENURE_TIERS[0];
+      const activeRate = getRateForTenure(activeTier.months);
+      if (lblEl) lblEl.innerText = activeTier.label + ' (' + activeTier.sub + ')';
+      if (badgeEl) badgeEl.innerText = activeRate.toFixed(2) + '%/mo';
+      if (document.getElementById('bookBondRateTag')) {
+        document.getElementById('bookBondRateTag').innerText = activeRate.toFixed(2) + '% Guaranteed Return per month';
+      }
+
+      if (!menu) return;
+      menu.innerHTML = BOND_TENURE_TIERS.map(t => {
+        const tierRate = getRateForTenure(t.months);
+        const totalPct = Math.round(tierRate * t.months * 10) / 10;
+        const isSel = t.months === selectedMonths;
+        return `
+          <button type="button" onclick="selectBondTenureOption(${t.months})" style="width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border: none; border-radius: 10px; background: ${isSel ? '#FFF3E0' : 'transparent'}; cursor: pointer; text-align: left; margin-bottom: 2px; transition: background 0.15s;">
+            <div>
+              <div style="font-size: 13px; font-weight: 800; color: ${isSel ? '#FF5722' : '#0F172A'}; display: flex; align-items: center; gap: 6px;">
+                <span>${t.label}</span>
+                ${isSel ? '<i class="fa-solid fa-circle-check" style="font-size: 11px; color: #FF5722;"></i>' : ''}
+              </div>
+              <div style="font-size: 11px; font-weight: 600; color: #64748B; margin-top: 1px;">${t.sub} • ${totalPct}% Total</div>
+            </div>
+            <span style="font-size: 11px; font-weight: 800; padding: 4px 9px; border-radius: 999px; flex-shrink: 0; background: ${t.highlight ? '#DCFCE7' : (isSel ? '#FF5722' : '#FFF3E0')}; color: ${t.highlight ? '#047857' : (isSel ? '#FFFFFF' : '#EA580C')}; border: 1px solid ${t.highlight ? '#86EFAC' : '#FED7AA'};">
+              ${tierRate.toFixed(2)}%/mo
+            </span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectBondTenureOption(months) {
+      const hidden = document.getElementById('bondTenureSelect');
+      if (hidden) hidden.value = String(months);
+      const menu = document.getElementById('bondTenureDropdownMenu');
+      const chev = document.getElementById('bondTenureChevron');
+      if (menu) menu.style.display = 'none';
+      if (chev) chev.style.transform = 'rotate(0deg)';
+      renderBondTenureDropdown();
+      calculateBondMaturity();
+    }
+
     function openBondBookingModal(title, rate, planId) {
       pushAppNavState('bondBookingModal');
       const parsedRate = parseFloat(String(rate || '8.60').replace(/[^0-9.]/g, '')) || 8.60;
       activeBondPlan = {
         id: planId || 'suryoday_fd',
         title: title || 'Suryoday SF Bank FD',
+        baseRate: parsedRate,
         rate: parsedRate
       };
       if (document.getElementById('bookBondTitle')) {
         document.getElementById('bookBondTitle').innerText = activeBondPlan.title;
-      }
-      if (document.getElementById('bookBondRateTag')) {
-        document.getElementById('bookBondRateTag').innerText = parsedRate.toFixed(2) + '% Guaranteed Return per month';
       }
       const wEl = document.getElementById('investPageWalletDisplay');
       if (wEl) {
         const bal = (appData.user && appData.user.walletBalance) || 0;
         wEl.innerText = '₹' + bal.toLocaleString('en-IN', { minimumFractionDigits: 2 });
       }
+      renderBondTenureDropdown();
       calculateBondMaturity();
       const modal = document.getElementById('bondBookingModal');
       if (modal) modal.style.display = 'block';
@@ -122,7 +203,8 @@
       const tenureSelect = document.getElementById('bondTenureSelect');
       const principal = parseFloat(amtInput ? amtInput.value : 1000) || 1000;
       const months = parseInt(tenureSelect ? tenureSelect.value : 6) || 6;
-      const rate = activeBondPlan.rate || 8.60;
+      const rate = getRateForTenure(months);
+      activeBondPlan.rate = rate;
 
       const monthlyYield = (principal * rate) / 100;
       const dailyCredit = monthlyYield / 30;
@@ -6940,15 +7022,25 @@
       </div>
 
       <!-- Lock-in Tenure Selector Card -->
-      <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 16px; margin-bottom: 14px;">
-        <label style="font-size: 11px; font-weight: 800; color: #64748B; text-transform: uppercase; display: block; margin-bottom: 8px;">Select Lock-in Tenure</label>
-        <select id="bondTenureSelect" onchange="calculateBondMaturity()" style="width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid #CBD5E1; background: #F8FAFC; font-size: 14px; font-weight: 700; color: #0F172A; outline: none;">
-          <option value="6" selected>6 Months (Starts from 6 Months)</option>
-          <option value="12">12 Months (1 Year)</option>
-          <option value="24">24 Months (2 Years)</option>
-          <option value="36">36 Months (3 Years)</option>
-          <option value="60">60 Months (5 Years - Highest Return)</option>
-        </select>
+      <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 16px; margin-bottom: 14px; position: relative; z-index: 40;">
+        <label style="font-size: 11px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">Select Lock-in Tenure</label>
+        <input type="hidden" id="bondTenureSelect" value="6">
+        <div id="bondTenureDropdownWrap" style="position: relative;">
+          <button type="button" id="bondTenureDropdownBtn" onclick="toggleBondTenureDropdown(event)" style="width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid #FF5722; background: #FFF8F5; display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; text-align: left; box-shadow: 0 2px 8px rgba(255,87,34,0.08);">
+            <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
+              <i class="fa-regular fa-calendar-check" style="color: #FF5722; font-size: 15px; flex-shrink: 0;"></i>
+              <span id="bondTenureSelectedLabel" style="font-size: 13.5px; font-weight: 800; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">6 Months (Starts from 6 Months)</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+              <span id="bondTenureSelectedRateBadge" style="background: #FF5722; color: #FFFFFF; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 999px;">8.60%/mo</span>
+              <i class="fa-solid fa-chevron-down" id="bondTenureChevron" style="color: #FF5722; font-size: 11px; transition: transform 0.2s;"></i>
+            </div>
+          </button>
+
+          <div id="bondTenureDropdownMenu" style="display: none; position: absolute; left: 0; right: 0; top: calc(100% + 6px); background: #FFFFFF; border: 1.5px solid #FFE0B2; border-radius: 14px; box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14); padding: 6px; z-index: 500; max-height: 290px; overflow-y: auto;">
+            <!-- Populated dynamically with tenure percentages -->
+          </div>
+        </div>
       </div>
 
       <!-- Real-Time Yield & Maturity Calculator -->
