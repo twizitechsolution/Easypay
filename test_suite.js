@@ -132,9 +132,9 @@ const tests = [
     pass: !appHtml.includes('>Pay Bills</span>') && appHtml.includes('id="homeGiftCardsDealsGrid"') && appHtml.includes('id="topBrandsGridContainer"') && appHtml.includes('loadHomePromoSliders')
   },
   {
-    name: 'Req 29: Profile Header shows Nirod Behera, +91 9876548808, and EPY98808',
+    name: 'Req 29: Profile Header shows Nirod Behera, masked +91 ******8808, and EPY98808',
     pass: appHtml.includes('id="profileAccountName" onclick="openProfileEditModal()" style="cursor:pointer;">Nirod Behera</span>') &&
-          appHtml.includes('id="profileAccountPhone">+91 9876548808</div>') &&
+          appHtml.includes('id="profileAccountPhone">+91 ******8808</div>') &&
           appHtml.includes('id="profileAccountUserId" style="letter-spacing: 0.5px;">EPY98808</span>')
   },
   {

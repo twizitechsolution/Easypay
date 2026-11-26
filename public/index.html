@@ -4838,8 +4838,12 @@
       <div class="ep-auth-card">
         <label class="ep-input-label">Enter Mobile Number</label>
         <div class="ep-phone-input-wrap" id="epPhoneWrap">
-          <div class="ep-phone-prefix-pill">+91</div>
-          <input type="tel" id="epMobileInput" class="ep-phone-field" maxlength="10" placeholder="7013893165" value="" oninput="handleMobileInput(this)">
+          <button type="button" id="epLoginCountryBtn" onclick="openCountryCodePicker('login')" style="display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:10px; border:1px solid #E2E8F0; background:#F8FAFC; cursor:pointer; flex-shrink:0;">
+            <img id="epLoginCountryFlag" src="https://flagcdn.com/w40/in.png" alt="IN" style="width:20px; height:14px; object-fit:cover; border-radius:2px;">
+            <span id="epLoginCountryCode" style="font-weight:800; font-size:13.5px; color:#0F172A;">+91</span>
+            <i class="fa-solid fa-chevron-down" style="font-size:9px; color:#64748B;"></i>
+          </button>
+          <input type="tel" id="epMobileInput" class="ep-phone-field" maxlength="15" placeholder="7013893165" value="" oninput="handleMobileInput(this)">
         </div>
         <button id="epGetOtpBtn" class="ep-auth-btn disabled" onclick="executeGetOtp('login')">
           Get OTP
@@ -4901,11 +4905,14 @@
           <i class="fa-regular fa-eye-slash" id="epTogglePasswordIcon" onclick="toggleSignupPasswordVisibility()" style="color: #94A3B8; cursor: pointer; font-size: 14px;"></i>
         </div>
 
-        <!-- 4. Mobile Number with +91 -->
-        <div class="ep-signup-field-pill" style="background: #FFFFFF; border-radius: 30px; padding: 13px 18px; display: flex; align-items: center; gap: 10px; margin-bottom: 11px; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04); border: 1px solid #E2E8F0;">
-          <i class="fa-solid fa-phone" style="color: #64748B; font-size: 15px; width: 18px; text-align: center;"></i>
-          <span style="font-weight: 800; color: #0F172A; font-size: 14px; padding-right: 8px; border-right: 1.5px solid #CBD5E1;">+91</span>
-          <input type="tel" id="epSignupMobile" maxlength="10" placeholder="Mobile Number" style="border: none; outline: none; width: 100%; font-size: 14px; font-weight: 600; color: #0F172A; background: transparent;" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        <!-- 4. Mobile Number with Country Code Selector -->
+        <div class="ep-signup-field-pill" style="background: #FFFFFF; border-radius: 30px; padding: 10px 16px; display: flex; align-items: center; gap: 10px; margin-bottom: 11px; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04); border: 1px solid #E2E8F0;">
+          <button type="button" id="epSignupCountryBtn" onclick="openCountryCodePicker('signup')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 9px; border-radius:20px; border:1px solid #E2E8F0; background:#F8FAFC; cursor:pointer; flex-shrink:0;">
+            <img id="epSignupCountryFlag" src="https://flagcdn.com/w40/in.png" alt="IN" style="width:20px; height:14px; object-fit:cover; border-radius:2px;">
+            <span id="epSignupCountryCode" style="font-weight:800; font-size:13px; color:#0F172A;">+91</span>
+            <i class="fa-solid fa-chevron-down" style="font-size:9px; color:#64748B;"></i>
+          </button>
+          <input type="tel" id="epSignupMobile" maxlength="15" placeholder="Mobile Number" style="border: none; outline: none; width: 100%; font-size: 14px; font-weight: 600; color: #0F172A; background: transparent;" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
         </div>
 
         <!-- 5. Referral Code -->
@@ -5270,7 +5277,7 @@
               <span>Gift Cards & Deals</span>
             </div>
             <div onclick="switchNavTab('giftcards')" style="font-size: 12px; font-weight: 700; color: #1E40AF; cursor: pointer; display: flex; align-items: center; gap: 3px;">
-              View All (32) <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i>
+              <span id="homeGiftViewAllCount">View All (300+)</span> <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i>
             </div>
           </div>
           <div style="margin-bottom: 12px;">
@@ -5358,56 +5365,56 @@
             <div class="brand-4col-grid" id="topBrandsGridContainer">
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('apple_app_store')">
             <div class="brand-4col-icon" style="background: #FFFFFF;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple App Store" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple App Store" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">Save 4%</span>
             <span class="brand-sub-title">App Store Code</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('dominos')">
             <div class="brand-4col-icon" style="background: #FFFFFF;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Dominos_pizza_logo.svg" alt="Domino's Pizza" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Dominos_pizza_logo.svg" alt="Domino's Pizza" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">Save 12%</span>
             <span class="brand-sub-title">Domino's</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('amazon_shopping')">
             <div class="brand-4col-icon" style="background: #FFFFFF;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" alt="Amazon Shopping" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" alt="Amazon Shopping" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">Save 1.5%</span>
             <span class="brand-sub-title">Amazon shopping voucher</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('myntra')">
             <div class="brand-4col-icon" style="background: #FFFFFF;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Myntra_logo.png" alt="Myntra Fashion" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Myntra_logo.png" alt="Myntra Fashion" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">Save 4%</span>
             <span class="brand-sub-title">Myntra</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('amazon_prime')">
             <div class="brand-4col-icon" style="background: #FFFFFF;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Amazon_Prime_Video_logo.svg" alt="Amazon Prime Video" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Amazon_Prime_Video_logo.svg" alt="Amazon Prime Video" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">Save 16%</span>
             <span class="brand-sub-title">amazon prime</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('smart_bazaar')">
             <div class="brand-4col-icon" style="background: #FFFFFF;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Reliance_Retail_logo.svg" alt="Smart Bazaar Reliance" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Reliance_Retail_logo.svg" alt="Smart Bazaar Reliance" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">Save 3%</span>
             <span class="brand-sub-title">SMART BAZAAR</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('bgmi')">
             <div class="brand-4col-icon" style="background: #FFFFFF;">
-              <img src="https://upload.wikimedia.org/wikipedia/en/9/9f/Battlegrounds_Mobile_India_logo.png" alt="BGMI Krafton Swag" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="https://upload.wikimedia.org/wikipedia/en/9/9f/Battlegrounds_Mobile_India_logo.png" alt="BGMI Krafton Swag" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">Save 10%</span>
             <span class="brand-sub-title">BGMI KRAFTON</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('decathlon')">
             <div class="brand-4col-icon" style="background: #FFFFFF;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Decathlon_Logo.png" alt="Decathlon Sports" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Decathlon_Logo.png" alt="Decathlon Sports" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">Save 4%</span>
             <span class="brand-sub-title">DECATHLON</span>
@@ -5437,56 +5444,56 @@
             <div class="brand-4col-grid" id="newArrivalsGridContainer">
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('klook')">
             <div class="brand-4col-icon" style="background: #FFFFFF;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Klook_Logo.png" alt="Klook Travel & Tours" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Klook_Logo.png" alt="Klook Travel & Tours" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">Save 6%</span>
             <span class="brand-sub-title">klook</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('urban_company')">
             <div class="brand-4col-icon" style="background: #FFFFFF;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Urban_Company_Logo.svg" alt="Urban Company" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Urban_Company_Logo.svg" alt="Urban Company" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">Save 3%</span>
             <span class="brand-sub-title">Urban Company</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('eazydiner')">
             <div class="brand-4col-icon" style="background: #FFFFFF;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/EazyDiner_Logo.png" alt="EazyDiner Prime Dining" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/EazyDiner_Logo.png" alt="EazyDiner Prime Dining" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">Save 10%</span>
             <span class="brand-sub-title">eazydiner PRIME</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('real_cricket')">
             <div class="brand-4col-icon" style="background: #FFFFFF;">
-              <img src="https://upload.wikimedia.org/wikipedia/en/e/e6/Real_Cricket_logo.png" alt="Real Cricket 24" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="https://upload.wikimedia.org/wikipedia/en/e/e6/Real_Cricket_logo.png" alt="Real Cricket 24" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">Save 8%</span>
             <span class="brand-sub-title">REAL CRICKET</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('pronto')">
             <div class="brand-4col-icon" style="background: #FFFFFF;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Pronto_Logo.png" alt="Pronto Delivery" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Pronto_Logo.png" alt="Pronto Delivery" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">Save 15%</span>
             <span class="brand-sub-title">Pronto</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('wendys')">
             <div class="brand-4col-icon" style="background: #FFFFFF;">
-              <img src="https://upload.wikimedia.org/wikipedia/en/3/32/Wendy%27s_full_logo_2012.svg" alt="Wendy's Burgers" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="https://upload.wikimedia.org/wikipedia/en/3/32/Wendy%27s_full_logo_2012.svg" alt="Wendy's Burgers" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">Save 9%</span>
             <span class="brand-sub-title">Wendy's</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('noise')">
             <div class="brand-4col-icon" style="background: #FFFFFF;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/4/43/Noise_Logo.png" alt="Noise Smartwatches" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/4/43/Noise_Logo.png" alt="Noise Smartwatches" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">Save 6%</span>
             <span class="brand-sub-title">NOISE</span>
           </div>
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('house_of_rare')">
             <div class="brand-4col-icon" style="background: #FFFFFF;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Rare_Rabbit_Logo.png" alt="The House of Rare" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Rare_Rabbit_Logo.png" alt="The House of Rare" style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px; padding: 5px;" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">Save 7%</span>
             <span class="brand-sub-title">THE HOUSE OF RARE</span>
@@ -6010,8 +6017,13 @@
           <!-- Transactions Ledger Segment -->
           <div id="passbookTxnsSegment" style="display: none;">
             <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 16px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
                 <div style="font-size: 15px; font-weight: 800; color: #0F172A;">Transactions Ledger</div>
+                <div style="display: inline-flex; align-items: center; gap: 5px; background: #F8FAFC; padding: 3px; border-radius: 10px; border: 1px solid #E2E8F0;">
+                  <button type="button" id="txnFilterBtn_ALL" onclick="setTxnLedgerFilter('ALL')" style="padding: 4px 10px; border-radius: 7px; border: none; background: #FF5722; color: #FFFFFF; font-size: 11px; font-weight: 800; cursor: pointer;">All</button>
+                  <button type="button" id="txnFilterBtn_DEBIT" onclick="setTxnLedgerFilter('DEBIT')" style="padding: 4px 10px; border-radius: 7px; border: none; background: transparent; color: #64748B; font-size: 11px; font-weight: 800; cursor: pointer;">Debit</button>
+                  <button type="button" id="txnFilterBtn_CREDIT" onclick="setTxnLedgerFilter('CREDIT')" style="padding: 4px 10px; border-radius: 7px; border: none; background: transparent; color: #64748B; font-size: 11px; font-weight: 800; cursor: pointer;">Credit</button>
+                </div>
               </div>
               <div id="transactionsListContainer"></div>
             </div>
@@ -6043,7 +6055,7 @@
                   <i class="fa-solid fa-circle-check"></i> Active
                 </span>
               </div>
-              <div class="profile-meta-phone" id="profileAccountPhone">+91 9876548808</div>
+              <div class="profile-meta-phone" id="profileAccountPhone">+91 ******8808</div>
               <div class="profile-meta-userid" style="font-size: 13px; color: rgba(255,255,255,0.92); font-weight: 700; margin-top: 3px; display: flex; align-items: center; gap: 6px;">
                 <span>User ID:</span>
                 <span id="profileAccountUserId" style="letter-spacing: 0.5px;">EPY98808</span>
@@ -9858,8 +9870,18 @@
     let explorePage = 1;
     const exploreBatchSize = 12;
 
+    function handleBrandLogoError(imgEl, brandName) {
+      if (!imgEl || imgEl.dataset.fallbackDone) return;
+      imgEl.dataset.fallbackDone = '1';
+      const txt = (brandName || 'EP').trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'EP';
+      const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#FFF3E0"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="800" fill="#FF5722">' + txt + '</text></svg>';
+      imgEl.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+
     function renderGiftCards() {
       const cards = appData.giftCards || [];
+      const viewAllEl = document.getElementById('homeGiftViewAllCount');
+      if (viewAllEl && cards.length > 0) viewAllEl.innerText = 'View All (' + cards.length + ')';
       const homeList = document.getElementById('homeTrendingBrandsList');
       if (homeList) {
         homeList.innerHTML = cards.slice(0, 4).map(c => renderBrandItem(c)).join('');
@@ -9873,7 +9895,7 @@
         homeDealsGrid.innerHTML = listToUse.map(c => `
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('${c.id}')">
             <div class="brand-4col-icon">
-              <img src="${c.logo}" alt="${c.name}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="${c.logo}" alt="${c.name}" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">${c.saveText || 'Save ' + c.cashbackRate + '%'}</span>
             <span class="brand-sub-title">${c.subName || c.name}</span>
@@ -9888,7 +9910,7 @@
         topGrid.innerHTML = topCards.map(c => `
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('${c.id}')">
             <div class="brand-4col-icon">
-              <img src="${c.logo}" alt="${c.name}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="${c.logo}" alt="${c.name}" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">${c.saveText || 'Save ' + c.cashbackRate + '%'}</span>
             <span class="brand-sub-title">${c.subName || c.name}</span>
@@ -9903,7 +9925,7 @@
         newGrid.innerHTML = newCards.map(c => `
           <div class="brand-4col-tile" onclick="openBrandPurchaseModalById('${c.id}')">
             <div class="brand-4col-icon">
-              <img src="${c.logo}" alt="${c.name}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">
+              <img src="${c.logo}" alt="${c.name}" onerror="handleBrandLogoError(this, this.alt)">
             </div>
             <span class="brand-save-text">${c.saveText || 'Save ' + c.cashbackRate + '%'}</span>
             <span class="brand-sub-title">${c.subName || c.name}</span>
@@ -9952,7 +9974,7 @@
       grid.innerHTML = itemsToShow.map(c => `
         <div class="explore-brand-card" onclick="openBrandPurchaseModalById('${c.id}')">
           <div class="explore-brand-icon-box">
-            ${c.iconClass ? `<i class="${c.iconClass}"></i>` : `<img src="${c.logo}" alt="${c.name}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">`}
+            ${c.iconClass ? `<i class="${c.iconClass}"></i>` : `<img src="${c.logo}" alt="${c.name}" onerror="handleBrandLogoError(this, this.alt)">`}
           </div>
           <span class="explore-save-badge">${c.saveText || 'Save ' + c.cashbackRate + '%'}</span>
           <span class="explore-brand-label">${c.subName || c.name}</span>
@@ -10127,8 +10149,23 @@
       }
     }
 
+    function getUserInvestments() {
+      const all = appData.investments || [];
+      const u = appData.user || {};
+      const uid = String(u.id || '').trim();
+      const umob = String(u.mobile || '').replace(/\D/g, '').slice(-10);
+      if (!uid && !umob) return [];
+      return all.filter(b => {
+        const bUid = String(b.userId || '').trim();
+        const bMob = String(b.userMobile || b.mobile || '').replace(/\D/g, '').slice(-10);
+        if (uid && bUid) return bUid === uid;
+        if (umob && bMob) return bMob === umob;
+        return false;
+      });
+    }
+
     function renderBookedBonds() {
-      const list = appData.investments || [];
+      const list = getUserInvestments();
       const container = document.getElementById('bookedBondsListContainer');
       const countBadge = document.getElementById('activeBondsCountBadge');
       if (countBadge) countBadge.innerText = list.length + ' Active';
@@ -10232,12 +10269,33 @@
       return str;
     }
 
+    let activeTxnLedgerFilter = 'ALL';
+
+    function setTxnLedgerFilter(mode) {
+      activeTxnLedgerFilter = mode || 'ALL';
+      ['ALL', 'DEBIT', 'CREDIT'].forEach(k => {
+        const btn = document.getElementById('txnFilterBtn_' + k);
+        if (btn) {
+          const isAct = k === activeTxnLedgerFilter;
+          btn.style.background = isAct ? '#FF5722' : 'transparent';
+          btn.style.color = isAct ? '#FFFFFF' : '#64748B';
+        }
+      });
+      renderTransactions();
+    }
+
     function renderTransactions() {
       const container = document.getElementById('transactionsListContainer');
       if (!container) return;
-      const txns = appData.transactions || [];
+      const allTxns = appData.transactions || [];
+      const txns = allTxns.filter(t => {
+        const isCredit = t.type === 'CREDIT' || t.type === 'UPI_CREDIT' || t.type === 'WALLET_ADD';
+        if (activeTxnLedgerFilter === 'CREDIT') return isCredit;
+        if (activeTxnLedgerFilter === 'DEBIT') return !isCredit;
+        return true;
+      });
       if (txns.length === 0) {
-        container.innerHTML = '<div style="text-align: center; color: #94A3B8; padding: 20px;">No transactions recorded.</div>';
+        container.innerHTML = '<div style="text-align: center; color: #94A3B8; padding: 24px;">No ' + (activeTxnLedgerFilter === 'ALL' ? '' : activeTxnLedgerFilter.toLowerCase() + ' ') + 'transactions recorded.</div>';
         return;
       }
       container.innerHTML = txns.map(t => {
@@ -10588,7 +10646,7 @@
       const iconMini = document.getElementById('purchaseHeroIconMini');
       if (iconMini) {
         iconMini.innerHTML = card.logo
-          ? `<img src="${card.logo}" style="width:28px; height:28px; object-fit:contain; border-radius:6px; background:white; padding:2px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'">`
+          ? `<img src="${card.logo}" style="width:28px; height:28px; object-fit:contain; border-radius:6px; background:white; padding:2px;" onerror="handleBrandLogoError(this, this.alt)">`
           : (card.iconClass ? `<i class="${card.iconClass}"></i>` : '');
       }
       const customInput = document.getElementById('purchaseCustomValueInput');
@@ -12112,7 +12170,10 @@
       const u = appData.user || {};
       const fullName = u.name || [u.firstName, u.lastName].filter(Boolean).join(' ') || 'Nirod Behera';
       const initials = ((u.firstName?.[0] || u.name?.[0] || 'N') + (u.lastName?.[0] || (u.name?.split(' ')?.[1]?.[0] || 'B'))).toUpperCase();
-      const phone = u.mobile ? ('+91 ' + u.mobile) : (u.maskedMobile ? ('+91 ' + u.maskedMobile) : '+91 9876548808');
+      const rawMob = String(u.mobile || '9876548808').replace(/\D/g, '');
+      const dial = u.countryCode || localStorage.getItem('easypay_country_code') || '+91';
+      const maskedMob = rawMob.length > 4 ? ('*'.repeat(rawMob.length - 4) + rawMob.slice(-4)) : rawMob;
+      const phone = dial + ' ' + maskedMob;
       const userId = u.id || 'EPY98808';
       const userPic = u.profilePicture || localStorage.getItem('currentUserProfilePic') || '';
 
@@ -14116,7 +14177,8 @@
       const raw = input.value.replace(/[^0-9]/g, '');
       input.value = raw;
       const btn = document.getElementById('epGetOtpBtn');
-      if (raw.length === 10) {
+      const minLen = (selectedCountry && selectedCountry.code === '+91') ? 10 : 7;
+      if (raw.length >= minLen && raw.length <= 15) {
         btn.classList.remove('disabled');
         btn.classList.add('active');
       } else {
@@ -14154,9 +14216,11 @@
     async function executeGetOtp(type = 'login') {
       authFlowType = type;
       const input = document.getElementById(type === 'signup' ? 'epSignupMobile' : 'epMobileInput');
-      const val = (input && input.value) ? input.value.trim().replace(/[^0-9]/g, '').slice(-10) : '';
-      if (val.length !== 10) {
-        showToast('Please enter a valid 10-digit mobile number');
+      const rawDigits = (input && input.value) ? input.value.trim().replace(/[^0-9]/g, '') : '';
+      const val = (selectedCountry && selectedCountry.code === '+91') ? rawDigits.slice(-10) : rawDigits;
+      const minLen = (selectedCountry && selectedCountry.code === '+91') ? 10 : 7;
+      if (val.length < minLen || val.length > 15) {
+        showToast('Please enter a valid mobile number');
         return;
       }
       authUserMobile = val;
@@ -16223,7 +16287,7 @@
         <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 18px; padding: 16px; box-shadow: 0 3px 10px rgba(15,23,42,0.04);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <img src="${logoUrl}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879757.png'" style="width: 42px; height: 42px; border-radius: 10px; object-fit: contain; background: #FFF8F5; border: 1px solid #FFEDD5; padding: 4px;">
+              <img src="${logoUrl}" onerror="handleBrandLogoError(this, this.alt)" style="width: 42px; height: 42px; border-radius: 10px; object-fit: contain; background: #FFF8F5; border: 1px solid #FFEDD5; padding: 4px;">
               <div>
                 <div style="font-size: 15px; font-weight: 800; color: #0F172A;">${brandTitle}</div>
                 <div style="font-size: 12px; color: #FF5722; font-weight: 800;">Face Value: ₹${Number(valAmt).toLocaleString('en-IN')}</div>
@@ -18132,6 +18196,120 @@
         startWorthAndCityTicker();
       }, 600);
     })();
+  </script>
+  <!-- COUNTRY CODE PICKER MODAL (SVG/PNG FLAGS) -->
+  <div class="modal-overlay" id="countryCodePickerModal" style="z-index: 10020; align-items: flex-end;">
+    <div class="modal-sheet" style="border-radius: 24px 24px 0 0; padding: 20px 18px 26px; max-height: 78vh; display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <div style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: #0F172A;">Select Country Code</div>
+        <button type="button" onclick="closeModal('countryCodePickerModal')" style="background: none; border: none; font-size: 18px; color: #64748B; cursor: pointer;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 9px 12px; margin-bottom: 12px;">
+        <i class="fa-solid fa-magnifying-glass" style="color: #64748B; font-size: 13px;"></i>
+        <input type="text" id="countrySearchInput" oninput="filterCountryCodeList(this.value)" placeholder="Search country or dial code (e.g. India, +1, UAE)..." style="border: none; outline: none; background: transparent; width: 100%; font-size: 13.5px; font-weight: 600; color: #0F172A;">
+      </div>
+      <div id="countryCodeListContainer" style="overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 6px; padding-right: 2px;"></div>
+    </div>
+  </div>
+
+  <script>
+    const WORLD_COUNTRIES = [
+      { name: 'India', iso: 'in', code: '+91' },
+      { name: 'United States', iso: 'us', code: '+1' },
+      { name: 'United Kingdom', iso: 'gb', code: '+44' },
+      { name: 'United Arab Emirates', iso: 'ae', code: '+971' },
+      { name: 'Singapore', iso: 'sg', code: '+65' },
+      { name: 'Canada', iso: 'ca', code: '+1' },
+      { name: 'Australia', iso: 'au', code: '+61' },
+      { name: 'Saudi Arabia', iso: 'sa', code: '+966' },
+      { name: 'Qatar', iso: 'qa', code: '+974' },
+      { name: 'Kuwait', iso: 'kw', code: '+965' },
+      { name: 'Oman', iso: 'om', code: '+968' },
+      { name: 'Bahrain', iso: 'bh', code: '+973' },
+      { name: 'Malaysia', iso: 'my', code: '+60' },
+      { name: 'Germany', iso: 'de', code: '+49' },
+      { name: 'France', iso: 'fr', code: '+33' },
+      { name: 'Italy', iso: 'it', code: '+39' },
+      { name: 'Spain', iso: 'es', code: '+34' },
+      { name: 'Netherlands', iso: 'nl', code: '+31' },
+      { name: 'Switzerland', iso: 'ch', code: '+41' },
+      { name: 'Japan', iso: 'jp', code: '+81' },
+      { name: 'South Korea', iso: 'kr', code: '+82' },
+      { name: 'China', iso: 'cn', code: '+86' },
+      { name: 'Thailand', iso: 'th', code: '+66' },
+      { name: 'Indonesia', iso: 'id', code: '+62' },
+      { name: 'Philippines', iso: 'ph', code: '+63' },
+      { name: 'Vietnam', iso: 'vn', code: '+84' },
+      { name: 'Bangladesh', iso: 'bd', code: '+880' },
+      { name: 'Nepal', iso: 'np', code: '+977' },
+      { name: 'Sri Lanka', iso: 'lk', code: '+94' },
+      { name: 'Pakistan', iso: 'pk', code: '+92' },
+      { name: 'New Zealand', iso: 'nz', code: '+64' },
+      { name: 'South Africa', iso: 'za', code: '+27' },
+      { name: 'Nigeria', iso: 'ng', code: '+234' },
+      { name: 'Kenya', iso: 'ke', code: '+254' },
+      { name: 'Egypt', iso: 'eg', code: '+20' },
+      { name: 'Brazil', iso: 'br', code: '+55' },
+      { name: 'Mexico', iso: 'mx', code: '+52' },
+      { name: 'Russia', iso: 'ru', code: '+7' },
+      { name: 'Turkey', iso: 'tr', code: '+90' },
+      { name: 'Israel', iso: 'il', code: '+972' },
+      { name: 'Ireland', iso: 'ie', code: '+353' },
+      { name: 'Sweden', iso: 'se', code: '+46' },
+      { name: 'Norway', iso: 'no', code: '+47' },
+      { name: 'Denmark', iso: 'dk', code: '+45' },
+      { name: 'Poland', iso: 'pl', code: '+48' },
+      { name: 'Portugal', iso: 'pt', code: '+351' }
+    ];
+    let selectedCountry = WORLD_COUNTRIES[0];
+    let countryPickerTarget = 'login';
+
+    function openCountryCodePicker(target) {
+      countryPickerTarget = target || 'login';
+      const inp = document.getElementById('countrySearchInput');
+      if (inp) inp.value = '';
+      filterCountryCodeList('');
+      openModal('countryCodePickerModal');
+    }
+
+    function filterCountryCodeList(query) {
+      const q = (query || '').trim().toLowerCase();
+      const wrap = document.getElementById('countryCodeListContainer');
+      if (!wrap) return;
+      const list = WORLD_COUNTRIES.filter(c => c.name.toLowerCase().includes(q) || c.code.includes(q));
+      wrap.innerHTML = list.map(c => {
+        const isSel = c.iso === selectedCountry.iso && c.code === selectedCountry.code;
+        return `
+          <button type="button" onclick="selectCountryCode('${c.iso}', '${c.code}')" style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 12px; border: 1.5px solid ${isSel ? '#FF5722' : '#E2E8F0'}; background: ${isSel ? '#FFF8F5' : '#FFFFFF'}; cursor: pointer; text-align: left;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <img src="https://flagcdn.com/w40/${c.iso}.png" alt="${c.iso}" style="width: 24px; height: 17px; object-fit: cover; border-radius: 3px; border: 1px solid #E2E8F0;">
+              <span style="font-size: 13.5px; font-weight: 700; color: #0F172A;">${c.name}</span>
+            </div>
+            <span style="font-size: 13px; font-weight: 800; color: ${isSel ? '#FF5722' : '#475569'};">${c.code}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectCountryCode(iso, code) {
+      const found = WORLD_COUNTRIES.find(c => c.iso === iso && c.code === code) || WORLD_COUNTRIES[0];
+      selectedCountry = found;
+      localStorage.setItem('easypay_country_code', found.code);
+      const flagUrl = 'https://flagcdn.com/w40/' + found.iso + '.png';
+      ['epLoginCountryFlag', 'epSignupCountryFlag'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.src = flagUrl;
+      });
+      ['epLoginCountryCode', 'epSignupCountryCode'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = found.code;
+      });
+      closeModal('countryCodePickerModal');
+      const mobInp = document.getElementById('epMobileInput');
+      if (mobInp) handleMobileInput(mobInp);
+    }
   </script>
 </body>
 </html>

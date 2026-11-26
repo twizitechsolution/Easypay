@@ -1,5 +1,9 @@
 const https = require('https');
 const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
+
+const HUBBLE_DISK_CACHE = path.join(__dirname, 'hubble_cache.json');
 
 /**
  * Hubble Money API Integration Service
@@ -205,29 +209,43 @@ async function getActiveBrands(forceRefresh = false) {
     return cachedBrands;
   }
 
-  const token = await getAuthToken();
-  const res = await apiRequest('/v1/partners/products', 'GET', null, {
-    'Authorization': `Bearer ${token}`
-  });
-
-  if (res.status === 200 && res.data && Array.isArray(res.data.data)) {
-    // Strictly filter on ACTIVE status as instructed in Hubble documentation
-    const activeRaw = res.data.data.filter(b => b.status === 'ACTIVE');
-    const mapped = activeRaw.map(mapHubbleBrand);
-    
-    // Sort: Top brands first, then alphabetically
-    mapped.sort((a, b) => {
-      if (a.isTop && !b.isTop) return -1;
-      if (!a.isTop && b.isTop) return 1;
-      return a.name.localeCompare(b.name);
+  try {
+    const token = await getAuthToken();
+    const res = await apiRequest('/v1/partners/products', 'GET', null, {
+      'Authorization': `Bearer ${token}`
     });
 
-    cachedBrands = mapped;
-    lastBrandsFetchTime = now;
-    return cachedBrands;
+    if (res.status === 200 && res.data && Array.isArray(res.data.data)) {
+      const activeRaw = res.data.data.filter(b => b.status === 'ACTIVE');
+      const mapped = activeRaw.map(mapHubbleBrand);
+
+      mapped.sort((a, b) => {
+        if (a.isTop && !b.isTop) return -1;
+        if (!a.isTop && b.isTop) return 1;
+        return a.name.localeCompare(b.name);
+      });
+
+      cachedBrands = mapped;
+      lastBrandsFetchTime = now;
+      try { fs.writeFileSync(HUBBLE_DISK_CACHE, JSON.stringify(mapped, null, 2), 'utf8'); } catch (e) {}
+      return cachedBrands;
+    }
+  } catch (err) {
+    // Fall back to disk-cached 300+ brand catalog when Hubble staging is unavailable
   }
 
-  throw new Error(`Failed to fetch Hubble brands (HTTP ${res.status}): ${res.raw}`);
+  if (fs.existsSync(HUBBLE_DISK_CACHE)) {
+    try {
+      const diskBrands = JSON.parse(fs.readFileSync(HUBBLE_DISK_CACHE, 'utf8'));
+      if (Array.isArray(diskBrands) && diskBrands.length > 0) {
+        cachedBrands = diskBrands;
+        lastBrandsFetchTime = now;
+        return cachedBrands;
+      }
+    } catch (e) {}
+  }
+
+  throw new Error('Failed to fetch Hubble brands and no disk cache found');
 }
 
 /**
