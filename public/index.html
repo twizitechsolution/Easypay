@@ -7566,12 +7566,12 @@
           </button>
         </div>
 
-        <div style="font-size: 12px; color: #64748B; margin-bottom: 16px;">
-          Transferring <strong style="color: #0F172A;" id="pinModalAmountDisplay">₹500</strong> to <strong style="color: #0F172A;" id="pinModalRecipientDisplay">Twizitech Solution</strong>
+        <div id="pinModalContextLine" style="font-size: 12.5px; color: #64748B; margin-bottom: 16px;">
+          Paying <strong style="color: #0F172A;" id="pinModalAmountDisplay">₹0</strong> for <strong style="color: #0F172A;" id="pinModalRecipientDisplay">E-Pay Transaction</strong>
         </div>
 
         <!-- 4 PIN Dots -->
-        <div id="pinInlineError" style="display: none; color: #EF4444; font-size: 13px; font-weight: 700; margin-bottom: 12px; background: #FEF2F2; padding: 6px 12px; border-radius: 8px; border: 1px solid #FCA5A5; text-align: center;">Wrong PIN. Please try again (Default: 1234)</div>
+        <div id="pinInlineError" style="display: none; color: #EF4444; font-size: 13px; font-weight: 700; margin-bottom: 12px; background: #FEF2F2; padding: 6px 12px; border-radius: 8px; border: 1px solid #FCA5A5; text-align: center;">Incorrect Security PIN. Please try again.</div>
         <div id="pinDotsWrap" style="display: flex; justify-content: center; gap: 18px; margin: 16px 0 20px;">
           <div class="pin-dot" id="pindot-0" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #CBD5E1; background: #F8FAFC;"></div>
           <div class="pin-dot" id="pindot-1" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #CBD5E1; background: #F8FAFC;"></div>
@@ -7580,7 +7580,7 @@
         </div>
 
         <div style="font-size: 11px; color: #16A34A; font-weight: 700; margin-bottom: 20px;">
-          <i class="fa-solid fa-lock" style="font-size: 10px;"></i> Secured by EasyPay Multi-Factor PIN (Default: 1234)
+          <i class="fa-solid fa-shield-halved" style="font-size: 10px;"></i> Secured by EasyPay 256-bit E-Pay PIN
         </div>
 
         <!-- Numeric Keypad -->
@@ -12327,15 +12327,42 @@
       btn.style.color = '#16A34A';
     }
 
-    function proceedToPinFromPaySource() {
-      closeModal('payFromSourceModal');
-      const amt = (currentPendingPayment && currentPendingPayment.amount) || 280;
-      const rec = (currentPendingPayment && currentPendingPayment.recipientName) || 'Twizitech Solution';
-
+    function updatePinModalHeader(pending) {
+      const p = pending || currentPendingPayment || {};
+      const amtNum = Number(p.amount || 0);
+      const amtStr = '₹' + amtNum.toLocaleString('en-IN');
+      const rec = p.recipientName || 'E-Pay Transaction';
+      const type = (p.type || '').toLowerCase();
+      const ctxEl = document.getElementById('pinModalContextLine');
+      if (ctxEl) {
+        let htmlStr = '';
+        if (type.includes('lucky draw') || type.includes('lottery')) {
+          htmlStr = 'Entering <strong style="color: #0F172A;" id="pinModalRecipientDisplay">' + rec + '</strong> • <strong style="color: #FF5722;" id="pinModalAmountDisplay">' + amtStr + '</strong>';
+        } else if (type.includes('invest')) {
+          htmlStr = 'Investing <strong style="color: #FF5722;" id="pinModalAmountDisplay">' + amtStr + '</strong> in <strong style="color: #0F172A;" id="pinModalRecipientDisplay">' + rec + '</strong>';
+        } else if (type.includes('gift')) {
+          htmlStr = 'Buying <strong style="color: #0F172A;" id="pinModalRecipientDisplay">' + rec + '</strong> • <strong style="color: #FF5722;" id="pinModalAmountDisplay">' + amtStr + '</strong>';
+        } else if (type.includes('mall') || type.includes('order') || type.includes('shop')) {
+          htmlStr = 'Paying <strong style="color: #FF5722;" id="pinModalAmountDisplay">' + amtStr + '</strong> for <strong style="color: #0F172A;" id="pinModalRecipientDisplay">' + rec + '</strong>';
+        } else if (type.includes('recharge') || type.includes('bill')) {
+          htmlStr = 'Paying <strong style="color: #FF5722;" id="pinModalAmountDisplay">' + amtStr + '</strong> for <strong style="color: #0F172A;" id="pinModalRecipientDisplay">' + rec + '</strong>';
+        } else if (type.includes('transfer') || type.includes('upi') || type.includes('p2p') || type.includes('withdraw')) {
+          htmlStr = 'Transferring <strong style="color: #FF5722;" id="pinModalAmountDisplay">' + amtStr + '</strong> to <strong style="color: #0F172A;" id="pinModalRecipientDisplay">' + rec + '</strong>';
+        } else {
+          htmlStr = 'Paying <strong style="color: #FF5722;" id="pinModalAmountDisplay">' + amtStr + '</strong> • <strong style="color: #0F172A;" id="pinModalRecipientDisplay">' + rec + '</strong>';
+        }
+        ctxEl.innerHTML = htmlStr;
+        return;
+      }
       const amtEl = document.getElementById('pinModalAmountDisplay');
       const recEl = document.getElementById('pinModalRecipientDisplay');
-      if (amtEl) amtEl.innerText = '₹' + amt;
+      if (amtEl) amtEl.innerText = amtStr;
       if (recEl) recEl.innerText = rec;
+    }
+
+    function proceedToPinFromPaySource() {
+      closeModal('payFromSourceModal');
+      updatePinModalHeader(currentPendingPayment);
 
       // Reset PIN state
       currentSecurityPin = '';
@@ -13591,32 +13618,29 @@
     }
 
     // Open Security PIN Verification Modal
-    function openSecurityPinModal() {
-      const val = parseFloat(document.getElementById('p2pAmountInput')?.value || 0);
-      if (val <= 0) {
-        showToast('Please enter a valid amount');
-        return;
+    function openSecurityPinModal(useExistingPending) {
+      const hasPresetFlow = useExistingPending === true || (currentPendingPayment && typeof currentPendingPayment.onPinVerified === 'function');
+      if (!hasPresetFlow) {
+        const val = parseFloat(document.getElementById('p2pAmountInput')?.value || 0);
+        if (val <= 0) {
+          showToast('Please enter a valid amount');
+          return;
+        }
+        if ((appData.user?.walletBalance || 0) < val) {
+          showToast('Insufficient wallet balance. Please add funds.');
+          return;
+        }
+        currentPendingPayment = {
+          amount: val,
+          recipientName: activeP2pRecipient ? activeP2pRecipient.name : 'Recipient',
+          recipientSubtitle: activeP2pRecipient ? (activeP2pRecipient.payId || activeP2pRecipient.mobile) : '',
+          type: 'UPI Transfer'
+        };
       }
-
-      if ((appData.user?.walletBalance || 0) < val) {
-        showToast('Insufficient wallet balance. Please add funds.');
-        return;
-      }
-
-      currentPendingPayment = {
-        amount: val,
-        recipientName: activeP2pRecipient ? activeP2pRecipient.name : 'Recipient',
-        recipientSubtitle: activeP2pRecipient ? (activeP2pRecipient.payId || activeP2pRecipient.mobile) : '',
-        type: 'UPI Transfer'
-      };
 
       currentSecurityPin = '';
       updatePinDotsUI();
-
-      const amtEl = document.getElementById('pinModalAmountDisplay');
-      const recEl = document.getElementById('pinModalRecipientDisplay');
-      if (amtEl) amtEl.innerText = '₹' + val;
-      if (recEl) recEl.innerText = activeP2pRecipient ? activeP2pRecipient.name : 'Recipient';
+      updatePinModalHeader(currentPendingPayment);
 
       const keypadView = document.getElementById('pinModalKeypadView');
       const successView = document.getElementById('pinModalSuccessView');
@@ -13667,7 +13691,7 @@
           }
           currentSecurityPin = '';
           setTimeout(updatePinDotsUI, 220);
-          showToast('Incorrect Security PIN. (Default: 1234)');
+          showToast('Incorrect Security PIN. Please try again.');
         }
       }
     }
