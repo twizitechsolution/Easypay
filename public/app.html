@@ -4592,16 +4592,15 @@
       <path d="M3.5 10.5L12 3.5l8.5 7M5.5 9.5V20a1 1 0 0 0 1 1h3.5v-5.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V21h3.5a1 1 0 0 0 1-1V9.5" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
     <symbol id="ep-nav-gift" viewBox="0 0 24 24">
-      <rect class="ep-nav-fill" x="4" y="8" width="16" height="13" rx="2" fill="currentColor"/>
-      <path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7M3 8h18v4H3V8zm9 0v13M12 8c-1.5-2.5-4.5-2.5-4.5-.5S10 8 12 8zm0 0c1.5-2.5 4.5-2.5 4.5-.5S14 8 12 8z" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M9.5 4C7.8 4 6.5 5.1 6.5 6.5c0 .5.2 1 .5 1.5H4a1.5 1.5 0 0 0-1.5 1.5V11a1 1 0 0 0 1 1h.5v7.5A2.5 2.5 0 0 0 6.5 22h11a2.5 2.5 0 0 0 2.5-2.5V12h.5a1 1 0 0 0 1-1V9.5A1.5 1.5 0 0 0 20 8h-3c.3-.5.5-1 .5-1.5C17.5 5.1 16.2 4 14.5 4c-1.1 0-2 .6-2.5 1.4C11.5 4.6 10.6 4 9.5 4zm0 1.8c.7 0 1.3.5 1.6 1.2L11.4 8H9.5C8.8 8 8.3 7.5 8.3 6.8c0-.6.5-1 1.2-1zm5 0c.7 0 1.2.4 1.2 1 0 .7-.5 1.2-1.2 1.2h-1.9l.3-1c.3-.7.9-1.2 1.6-1.2zM11.1 12v8.2H6.5a.7.7 0 0 1-.7-.7V12h5.3zm1.8 0h5.3v7.5a.7.7 0 0 1-.7.7h-4.6V12z" fill="currentColor"/>
     </symbol>
     <symbol id="ep-nav-shop" viewBox="0 0 24 24">
       <path class="ep-nav-fill" d="M5 8h14l1 12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1L5 8z" fill="currentColor"/>
       <path d="M5 8h14l1 11.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19.5L5 8zm3.5 0V6.5a3.5 3.5 0 0 1 7 0V8" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
     <symbol id="ep-nav-profile" viewBox="0 0 24 24">
-      <circle class="ep-nav-fill" cx="12" cy="8" r="4" fill="currentColor"/>
-      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-7 9a7 7 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="12" cy="8" r="4.2" fill="currentColor"/>
+      <path d="M4.5 20.2c0-3.6 3.4-6.2 7.5-6.2s7.5 2.6 7.5 6.2a1.3 1.3 0 0 1-1.3 1.3H5.8a1.3 1.3 0 0 1-1.3-1.3z" fill="currentColor"/>
     </symbol>
 
     <!-- Layered 2-Tone Fintech Clip-Art Icons (32x32) -->
@@ -5117,7 +5116,7 @@
         
         <button class="header-icon-btn" onclick="openNotificationsModal()" title="Notifications" style="background:none; border:none; font-size:18px; color:#1A1A1A; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center; padding:0; position:relative;">
           <i class="fa-regular fa-bell"></i>
-          <span style="position:absolute; top:7px; right:7px; width:7px; height:7px; background:#FF5722; border-radius:50%; border:1.5px solid #FFFFFF;"></span>
+          <span id="homeNotifUnreadDot" style="position:absolute; top:7px; right:7px; width:7px; height:7px; background:#FF5722; border-radius:50%; border:1.5px solid #FFFFFF;"></span>
         </button>
       </div>
     </header>
@@ -5808,34 +5807,26 @@
           </div>
         </div>
 
-        <!-- 1. Top Rate Increased Slider (Screenshot 3) -->
-        <div class="bonds-rate-slider-card">
-          <span class="rate-badge-pill">RATE INCREASED</span>
-          <div class="slider-bank-title">FD rate just increased<br>for Suryoday SF Bank</div>
-          <div class="slider-sub-text">Lock-in your FD</div>
-
-          <button class="btn-invest-slider" onclick="triggerRadarConnecting('Suryoday SF Bank', '8.60%', 'suryoday_fd')">
-            Invest now <i class="fa-solid fa-arrow-right"></i>
-          </button>
-
-          <!-- 3D Column Comparison Graphic -->
-          <div class="rate-comparison-graphic">
-            <div class="rate-bar-col">
-              <span class="rate-bar-label">OLD RATE</span>
-              <span class="rate-bar-value" style="color: #64748B;">8.50%/mo</span>
-              <div class="rate-bar-pillar old"></div>
-            </div>
-            <div class="rate-bar-col">
-              <span class="green-growth-curve"><i class="fa-solid fa-arrow-trend-up"></i></span>
-              <span class="rate-bar-label">NEW RATE</span>
-              <span class="rate-bar-value new">8.60%/mo</span>
-              <div class="rate-bar-pillar new">
-                <div class="rupee-coin-3d">₹</div>
-              </div>
-            </div>
+        <!-- 1. Top Rate Increased Card (Clean Mobile Flex, EasyPay Invest) -->
+        <div class="bonds-rate-slider-card" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 16px;">
+          <div style="flex: 1; min-width: 0;">
+            <span class="rate-badge-pill">RATE INCREASED</span>
+            <div class="slider-bank-title" style="font-size: 18px; line-height: 1.25; margin-top: 8px;">FD rate just increased<br>for EasyPay Invest</div>
+            <div class="slider-sub-text" style="margin-top: 4px;">Lock-in your FD</div>
+            <button class="btn-invest-slider" style="margin-top: 12px;" onclick="triggerRadarConnecting('EasyPay Invest FD', '8.60%', 'suryoday_fd')">
+              Invest now <i class="fa-solid fa-arrow-right"></i>
+            </button>
           </div>
 
-
+          <!-- New Rate Pillar Only -->
+          <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0; padding-right: 4px;">
+            <span class="green-growth-curve" style="margin-bottom: 2px;"><i class="fa-solid fa-arrow-trend-up"></i></span>
+            <span class="rate-bar-label">NEW RATE</span>
+            <span class="rate-bar-value new" style="white-space: nowrap;">8.60%/mo</span>
+            <div class="rate-bar-pillar new" style="margin-top: 6px;">
+              <div class="rupee-coin-3d">₹</div>
+            </div>
+          </div>
         </div>
 
         <!-- 2. "Invest with EasyPay" Top 3 Cards (Screenshot 1) -->
@@ -5947,29 +5938,29 @@
         
         <!-- EasyPay Orange Hero Header (Matches Home & Profile) -->
         <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 26px; color: #FFFFFF; position: relative; z-index: 100;">
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <button onclick="closePassbookView()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+              <button onclick="closePassbookView()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;">
                 <i class="fa-solid fa-arrow-left"></i>
               </button>
-              <div>
-                <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #FFFFFF;">Passbook & Portfolio</div>
-                <div style="font-size: 11px; color: rgba(255,255,255,0.88);">DICGC Insured FDs & Transaction Ledger</div>
+              <div style="min-width: 0;">
+                <div style="font-family: var(--font-heading); font-size: 17px; font-weight: 800; color: #FFFFFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Passbook &amp; Portfolio</div>
+                <div style="font-size: 11px; color: rgba(255,255,255,0.9); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">DICGC Insured FDs &amp; Ledger</div>
               </div>
             </div>
-            <span style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.35); padding: 4px 10px; border-radius: 999px; font-size: 10.5px; font-weight: 800;">
+            <span style="background: rgba(255,255,255,0.22); border: 1px solid rgba(255,255,255,0.38); padding: 4px 10px; border-radius: 999px; font-size: 10.5px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0;">
               <i class="fa-solid fa-shield-halved"></i> Verified
             </span>
           </div>
         </div>
 
         <div style="padding: 0 14px 36px; margin-top: -14px; position: relative; z-index: 101;">
-          <!-- Segmented Tab Switcher -->
+          <!-- Segmented Tab Switcher (Equal Height Single-Line) -->
           <div style="background: #FFFFFF; border-radius: 14px; padding: 5px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; box-shadow: 0 4px 14px rgba(15,23,42,0.06); margin-bottom: 14px; border: 1px solid #F1F5F9;">
-            <button id="btnPassbookPortfolio" onclick="switchPassbookSegment('portfolio')" style="padding: 10px 12px; border-radius: 10px; border: none; background: #FF5722; color: #FFFFFF; font-size: 13px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
-              <i class="fa-solid fa-chart-pie"></i> FD & Bonds Portfolio
+            <button id="btnPassbookPortfolio" onclick="switchPassbookSegment('portfolio')" style="padding: 10px 8px; border-radius: 10px; border: none; background: #FF5722; color: #FFFFFF; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap;">
+              <i class="fa-solid fa-chart-pie"></i> FD &amp; Bonds
             </button>
-            <button id="btnPassbookTxns" onclick="switchPassbookSegment('txns')" style="padding: 10px 12px; border-radius: 10px; border: none; background: transparent; color: #64748B; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <button id="btnPassbookTxns" onclick="switchPassbookSegment('txns')" style="padding: 10px 8px; border-radius: 10px; border: none; background: transparent; color: #64748B; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap;">
               <i class="fa-solid fa-list-check"></i> All Transactions
             </button>
           </div>
@@ -5989,14 +5980,14 @@
                 <span style="font-size: 13px; color: #059669; font-weight: 800; background: #ECFDF5; padding: 3px 8px; border-radius: 8px;" id="portfolioTotalReturnsBadge">+₹0 Returns</span>
               </div>
 
-              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background: #FFF8F5; border: 1px solid #FFEDD5; border-radius: 12px; padding: 10px;">
-                <div>
-                  <div style="font-size: 10px; color: #64748B; font-weight: 700;">MATURITY VALUE</div>
-                  <div style="font-size: 13.5px; font-weight: 900; color: #0F172A; margin-top: 2px;" id="portfolioMaturityValue">₹0</div>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: #FFF8F5; border: 1px solid #FFEDD5; border-radius: 12px; padding: 10px;">
+                <div style="min-width: 0;">
+                  <div style="font-size: 9.5px; color: #64748B; font-weight: 700; white-space: nowrap;">MATURITY VALUE</div>
+                  <div style="font-size: 13px; font-weight: 900; color: #0F172A; margin-top: 2px; white-space: nowrap;" id="portfolioMaturityValue">₹0</div>
                 </div>
-                <div>
-                  <div style="font-size: 10px; color: #64748B; font-weight: 700;">DAILY PAYOUT</div>
-                  <div style="font-size: 13.5px; font-weight: 900; color: #FF5722; margin-top: 2px;" id="portfolioDailyReturn">+₹0/day</div>
+                <div style="min-width: 0;">
+                  <div style="font-size: 9.5px; color: #64748B; font-weight: 700; white-space: nowrap;">DAILY PAYOUT</div>
+                  <div style="font-size: 13px; font-weight: 900; color: #FF5722; margin-top: 2px; white-space: nowrap;" id="portfolioDailyReturn">+₹0/day</div>
                 </div>
                 <div style="text-align: right;">
                   <div style="font-size: 10px; color: #64748B; font-weight: 700;">ACTIVE FDs</div>
@@ -6017,12 +6008,12 @@
           <!-- Transactions Ledger Segment -->
           <div id="passbookTxnsSegment" style="display: none;">
             <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 16px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
-                <div style="font-size: 15px; font-weight: 800; color: #0F172A;">Transactions Ledger</div>
-                <div style="display: inline-flex; align-items: center; gap: 5px; background: #F8FAFC; padding: 3px; border-radius: 10px; border: 1px solid #E2E8F0;">
-                  <button type="button" id="txnFilterBtn_ALL" onclick="setTxnLedgerFilter('ALL')" style="padding: 4px 10px; border-radius: 7px; border: none; background: #FF5722; color: #FFFFFF; font-size: 11px; font-weight: 800; cursor: pointer;">All</button>
-                  <button type="button" id="txnFilterBtn_DEBIT" onclick="setTxnLedgerFilter('DEBIT')" style="padding: 4px 10px; border-radius: 7px; border: none; background: transparent; color: #64748B; font-size: 11px; font-weight: 800; cursor: pointer;">Debit</button>
-                  <button type="button" id="txnFilterBtn_CREDIT" onclick="setTxnLedgerFilter('CREDIT')" style="padding: 4px 10px; border-radius: 7px; border: none; background: transparent; color: #64748B; font-size: 11px; font-weight: 800; cursor: pointer;">Credit</button>
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: nowrap;">
+                <div style="font-size: 14px; font-weight: 800; color: #0F172A; white-space: nowrap;">Transactions Ledger</div>
+                <div style="display: inline-flex; align-items: center; gap: 3px; background: #F8FAFC; padding: 3px; border-radius: 9px; border: 1px solid #E2E8F0; flex-shrink: 0;">
+                  <button type="button" id="txnFilterBtn_ALL" onclick="setTxnLedgerFilter('ALL')" style="padding: 4px 8px; border-radius: 6px; border: none; background: #FF5722; color: #FFFFFF; font-size: 10.5px; font-weight: 800; cursor: pointer; white-space: nowrap;">All</button>
+                  <button type="button" id="txnFilterBtn_DEBIT" onclick="setTxnLedgerFilter('DEBIT')" style="padding: 4px 8px; border-radius: 6px; border: none; background: transparent; color: #64748B; font-size: 10.5px; font-weight: 800; cursor: pointer; white-space: nowrap;">Debit</button>
+                  <button type="button" id="txnFilterBtn_CREDIT" onclick="setTxnLedgerFilter('CREDIT')" style="padding: 4px 8px; border-radius: 6px; border: none; background: transparent; color: #64748B; font-size: 10.5px; font-weight: 800; cursor: pointer; white-space: nowrap;">Credit</button>
                 </div>
               </div>
               <div id="transactionsListContainer"></div>
@@ -11397,18 +11388,162 @@
       if (loader) loader.classList.remove('active');
     }
 
-    function openNotificationsModal() {
-      openBizLoader('Notifications', 1500);
-      setTimeout(() => {
-        showToast('You have 0 unread notifications');
-      }, 1500);
+    function openGlobalSearch() {
+      const v = document.getElementById('viewGlobalSearch');
+      if (v) {
+        v.style.display = 'block';
+        v.scrollTop = 0;
+      }
+      const inp = document.getElementById('globalSearchInput');
+      if (inp) {
+        inp.value = '';
+        setTimeout(() => inp.focus(), 80);
+      }
+      runGlobalSearchQuery('');
     }
 
-    function openGlobalSearch() {
-      openBizLoader('Searching Services...', 1000);
-      setTimeout(() => {
-        switchNavTab('giftcards');
-      }, 1000);
+    function closeGlobalSearch() {
+      const v = document.getElementById('viewGlobalSearch');
+      if (v) v.style.display = 'none';
+    }
+
+    function runGlobalSearchQuery(q) {
+      const query = (q || '').trim().toLowerCase();
+      const wrap = document.getElementById('globalSearchResultsList');
+      if (!wrap) return;
+
+      const quickServices = [
+        { title: 'Mobile Recharge', sub: 'Jio, Airtel, Vi • Instant Cashback', icon: 'fa-mobile-screen', fn: "closeGlobalSearch(); openRechargeModal('Mobile Recharge')" },
+        { title: 'Electricity & Bills', sub: 'Zero convenience fee bill pay', icon: 'fa-bolt', fn: "closeGlobalSearch(); openRechargeModal('Electricity')" },
+        { title: 'Fixed Deposits & Bonds', sub: 'Up to 12% monthly returns • DICGC Insured', icon: 'fa-landmark', fn: "closeGlobalSearch(); switchNavTab('bonds')" },
+        { title: 'Weekly Lucky Draw', sub: 'Win ₹25,000 Sunday Jackpot', icon: 'fa-trophy', fn: "closeGlobalSearch(); openLuckyDrawDedicatedPage()" },
+        { title: 'Passbook & Portfolio', sub: 'View FDs, Daily Payouts & Transactions', icon: 'fa-book-open', fn: "closeGlobalSearch(); openPassbookFromProfile()" },
+        { title: 'Pay ID / Mobile', sub: 'Send money via UPI or Phone', icon: 'fa-paper-plane', fn: "closeGlobalSearch(); openPayAnyoneView()" },
+        { title: 'Refer & Earn', sub: 'Invite friends & earn commissions', icon: 'fa-users', fn: "closeGlobalSearch(); openReferEarnView()" }
+      ];
+
+      const matchedServices = quickServices.filter(s => !query || s.title.toLowerCase().includes(query) || s.sub.toLowerCase().includes(query));
+      const matchedBrands = (appData.giftCards || []).filter(c => !query || (c.name || '').toLowerCase().includes(query) || (c.category || '').toLowerCase().includes(query)).slice(0, query ? 12 : 4);
+      const matchedProducts = (appData.products || []).filter(p => !query || (p.title || p.name || '').toLowerCase().includes(query)).slice(0, query ? 8 : 3);
+
+      let htmlOut = '';
+      if (matchedServices.length) {
+        htmlOut += '<div style="font-size:11px; font-weight:800; color:#64748B; text-transform:uppercase; margin: 6px 0 8px;">Services &amp; Features</div>';
+        htmlOut += matchedServices.map(s => `
+          <div onclick="${s.fn}" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:14px; padding:11px 13px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; cursor:pointer;">
+            <div style="display:flex; align-items:center; gap:11px;">
+              <div style="width:36px; height:36px; border-radius:10px; background:#FFF3E0; color:#FF5722; display:flex; align-items:center; justify-content:center; font-size:15px;"><i class="fa-solid ${s.icon}"></i></div>
+              <div>
+                <div style="font-size:13.5px; font-weight:800; color:#0F172A;">${s.title}</div>
+                <div style="font-size:11px; color:#64748B;">${s.sub}</div>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color:#CBD5E1; font-size:12px;"></i>
+          </div>
+        `).join('');
+      }
+      if (matchedBrands.length) {
+        htmlOut += '<div style="font-size:11px; font-weight:800; color:#64748B; text-transform:uppercase; margin: 12px 0 8px;">Gift Cards (' + matchedBrands.length + ')</div>';
+        htmlOut += matchedBrands.map(c => `
+          <div onclick="closeGlobalSearch(); openBuyGiftCardModal('${c.id}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:14px; padding:10px 13px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; cursor:pointer;">
+            <div style="display:flex; align-items:center; gap:11px;">
+              <img src="${c.logo}" alt="${c.name}" onerror="handleBrandLogoError(this, this.alt)" style="width:36px; height:36px; border-radius:10px; object-fit:contain; border:1px solid #F1F5F9; padding:3px;">
+              <div>
+                <div style="font-size:13.5px; font-weight:800; color:#0F172A;">${c.name}</div>
+                <div style="font-size:11px; color:#059669; font-weight:700;">${c.saveText || ('Save ' + (c.cashbackRate || 4) + '%')}</div>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color:#CBD5E1; font-size:12px;"></i>
+          </div>
+        `).join('');
+      }
+      if (matchedProducts.length) {
+        htmlOut += '<div style="font-size:11px; font-weight:800; color:#64748B; text-transform:uppercase; margin: 12px 0 8px;">Mall Products</div>';
+        htmlOut += matchedProducts.map(p => `
+          <div onclick="closeGlobalSearch(); switchNavTab('shopping'); setTimeout(() => openProductDetails('${p.id}'), 120)" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:14px; padding:10px 13px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; cursor:pointer;">
+            <div style="display:flex; align-items:center; gap:11px; min-width:0;">
+              <img src="${(p.images && p.images[0]) || p.image || ''}" alt="${p.title || p.name}" style="width:38px; height:38px; border-radius:10px; object-fit:cover; border:1px solid #F1F5F9; flex-shrink:0;">
+              <div style="min-width:0;">
+                <div style="font-size:13px; font-weight:800; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${p.title || p.name}</div>
+                <div style="font-size:11.5px; color:#FF5722; font-weight:800;">₹${Number(p.price || 0).toLocaleString('en-IN')}</div>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color:#CBD5E1; font-size:12px;"></i>
+          </div>
+        `).join('');
+      }
+      if (!htmlOut) {
+        htmlOut = '<div style="text-align:center; padding:40px 16px; color:#64748B; font-size:13px;">No results found for "' + query + '"</div>';
+      }
+      wrap.innerHTML = htmlOut;
+    }
+
+    function openNotificationsModal() {
+      const v = document.getElementById('viewNotifications');
+      if (v) {
+        v.style.display = 'block';
+        v.scrollTop = 0;
+      }
+      renderNotificationsPage();
+    }
+
+    function closeNotificationsPage() {
+      const v = document.getElementById('viewNotifications');
+      if (v) v.style.display = 'none';
+    }
+
+    function markAllNotificationsRead() {
+      const dot = document.getElementById('homeNotifUnreadDot');
+      if (dot) dot.style.display = 'none';
+      localStorage.setItem('easypay_notif_read_ts', String(Date.now()));
+      showToast('All notifications marked as read');
+    }
+
+    function renderNotificationsPage() {
+      const wrap = document.getElementById('notificationsFeedContainer');
+      if (!wrap) return;
+      const items = [];
+      const ann = appData.announcement;
+      if (ann && ann.enabled && ann.title) {
+        items.push({
+          title: 'Admin Announcement: ' + ann.title,
+          body: 'Tap to explore the latest EasyPay featured update & rewards.',
+          time: 'Featured',
+          icon: 'fa-bullhorn',
+          bg: '#FFF3E0',
+          color: '#FF5722'
+        });
+      }
+      const txns = (appData.transactions || []).slice(0, 10);
+      txns.forEach(t => {
+        const isCred = t.type === 'CREDIT' || t.type === 'UPI_CREDIT' || t.type === 'WALLET_ADD';
+        items.push({
+          title: (isCred ? 'Payment Received: +₹' : 'Payment Sent: -₹') + Math.abs(t.amount || 0).toLocaleString('en-IN'),
+          body: (typeof formatShortTxnTitle === 'function' ? formatShortTxnTitle(t) : (t.title || 'Wallet Transaction')) + ' • ' + (t.utr || t.id || 'Success'),
+          time: (typeof formatShortTxnDate === 'function' ? formatShortTxnDate(t.date || t.timestamp) : (t.date || 'Recent')),
+          icon: isCred ? 'fa-arrow-down' : 'fa-arrow-up',
+          bg: isCred ? '#ECFDF5' : '#FFF1EE',
+          color: isCred ? '#059669' : '#FF5722'
+        });
+      });
+      if (items.length === 0) {
+        wrap.innerHTML = '<div style="text-align:center; padding:40px 16px; color:#64748B; font-size:13px;">No notifications yet. Your payment alerts and admin updates will appear here.</div>';
+        return;
+      }
+      wrap.innerHTML = items.map(n => `
+        <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:14px; padding:12px 14px; display:flex; align-items:flex-start; gap:12px;">
+          <div style="width:38px; height:38px; border-radius:11px; background:${n.bg}; color:${n.color}; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0;">
+            <i class="fa-solid ${n.icon}"></i>
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+              <div style="font-size:13px; font-weight:800; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${n.title}</div>
+              <span style="font-size:10px; color:#94A3B8; white-space:nowrap; flex-shrink:0;">${n.time}</span>
+            </div>
+            <div style="font-size:11.5px; color:#64748B; margin-top:3px; line-height:1.4;">${n.body}</div>
+          </div>
+        </div>
+      `).join('');
     }
 
     // ==============================================================
@@ -16833,32 +16968,116 @@
 
     function verifyEnteredLockPin() {
       const u = appData.user || {};
-      const correctPin = u.securityPin || u.mpin || '1234';
-      if (enteredLockPin === correctPin || enteredLockPin === '1234') {
-        unlockApplicationSuccess();
+      const correctPin = String(u.securityPin || u.mpin || '1234');
+      if (enteredLockPin === correctPin) {
+        unlockApplicationSuccess('Unlocked with MPIN');
       } else {
-        showToast('Incorrect MPIN. Please try again.');
+        showToast('Invalid MPIN. Please try again.');
         enteredLockPin = '';
         updateLockPinBoxes();
       }
     }
 
-    function triggerFaceIdScan() {
-      showToast('Scanning Face ID / Biometrics...');
-      setTimeout(() => {
-        unlockApplicationSuccess('Authenticated with Face ID');
-      }, 1200);
+    function randomChallengeBytes() {
+      const arr = new Uint8Array(32);
+      if (window.crypto && window.crypto.getRandomValues) {
+        window.crypto.getRandomValues(arr);
+      }
+      return arr;
+    }
+
+    function b64ToBuf(b64) {
+      const bin = atob(b64.replace(/-/g, '+').replace(/_/g, '/'));
+      const buf = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+      return buf;
+    }
+
+    function bufToB64(buf) {
+      const bytes = new Uint8Array(buf);
+      let s = '';
+      for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
+      return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+
+    async function triggerFaceIdScan() {
+      const isSupported = !!(window.PublicKeyCredential && navigator.credentials);
+      if (!isSupported) {
+        showToast('Biometric / Face ID is not supported on this browser. Use MPIN or Password.');
+        return;
+      }
+
+      let platformAvailable = false;
+      try {
+        platformAvailable = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+      } catch (e) { platformAvailable = false; }
+
+      if (!platformAvailable) {
+        showToast('Face ID / Fingerprint is not enabled on this device. Please enable biometrics in your phone settings.');
+        return;
+      }
+
+      const credStorageKey = 'easypay_webauthn_cred_' + ((appData.user && appData.user.id) || 'default');
+      const existingCredId = localStorage.getItem(credStorageKey);
+
+      try {
+        if (!existingCredId) {
+          showToast('Registering your phone Face ID / Fingerprint...');
+          const u = appData.user || {};
+          const uidBytes = new TextEncoder().encode(String(u.id || 'EPY98808'));
+          const cred = await navigator.credentials.create({
+            publicKey: {
+              challenge: randomChallengeBytes(),
+              rp: { name: 'EasyPay Secure Access' },
+              user: {
+                id: uidBytes,
+                name: String(u.mobile || 'user@easypay'),
+                displayName: String(u.name || 'EasyPay User')
+              },
+              pubKeyCredParams: [{ type: 'public-key', alg: -7 }, { type: 'public-key', alg: -257 }],
+              authenticatorSelection: {
+                authenticatorAttachment: 'platform',
+                userVerification: 'required'
+              },
+              timeout: 45000
+            }
+          });
+          if (cred && cred.rawId) {
+            localStorage.setItem(credStorageKey, bufToB64(cred.rawId));
+            unlockApplicationSuccess('Biometric verified & unlocked!');
+          } else {
+            showToast('Invalid biometric response. Please try again.');
+          }
+        } else {
+          const assertion = await navigator.credentials.get({
+            publicKey: {
+              challenge: randomChallengeBytes(),
+              allowCredentials: [{ id: b64ToBuf(existingCredId), type: 'public-key' }],
+              userVerification: 'required',
+              timeout: 45000
+            }
+          });
+          if (assertion && assertion.response) {
+            unlockApplicationSuccess('Authenticated with Device Biometrics');
+          } else {
+            showToast('Invalid fingerprint or Face ID.');
+          }
+        }
+      } catch (err) {
+        showToast('Biometric verification failed or not recognized. Please use valid device biometrics or MPIN.');
+      }
     }
 
     function submitLockPasswordUnlock() {
       const input = document.getElementById('lockPasswordInput');
       const pass = input ? input.value.trim() : '';
       const u = appData.user || {};
-      const correctPass = u.password || 'EasyPay@8808';
-      if (pass === correctPass || pass.toLowerCase().includes('easypay')) {
+      const correctPass = String(u.password || 'password123');
+      if (pass && pass === correctPass) {
+        if (input) input.value = '';
         unlockApplicationSuccess('Authenticated with Password');
       } else {
-        showToast('Invalid account password. Try again.');
+        showToast('Invalid password. Please try again.');
       }
     }
 
@@ -18311,5 +18530,53 @@
       if (mobInp) handleMobileInput(mobInp);
     }
   </script>
+  <!-- GLOBAL SEARCH DEDICATED PAGE -->
+  <div class="view-panel" id="viewGlobalSearch" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 10015; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+    <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 20px; color: #FFFFFF; position: relative;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button onclick="closeGlobalSearch()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <div style="flex: 1; background: #FFFFFF; border-radius: 12px; padding: 8px 12px; display: flex; align-items: center; gap: 8px;">
+          <i class="fa-solid fa-magnifying-glass" style="color: #FF5722; font-size: 14px;"></i>
+          <input type="text" id="globalSearchInput" oninput="runGlobalSearchQuery(this.value)" placeholder="Search gift cards, FDs, bills, mall..." style="border: none; outline: none; background: transparent; width: 100%; font-size: 13.5px; font-weight: 600; color: #0F172A;">
+        </div>
+      </div>
+    </div>
+    <div id="globalSearchResultsList" style="padding: 14px 16px 40px;"></div>
+  </div>
+
+  <!-- NOTIFICATIONS DEDICATED PAGE -->
+  <div class="view-panel" id="viewNotifications" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 10015; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+    <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 20px; color: #FFFFFF; position: relative;">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button onclick="closeNotificationsPage()" style="background: rgba(255,255,255,0.2); border: none; font-size: 16px; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <div>
+            <div style="font-family: var(--font-heading); font-size: 17px; font-weight: 800; color: #FFFFFF;">Notifications</div>
+            <div style="font-size: 11px; color: rgba(255,255,255,0.9);">Payment Alerts &amp; Admin Updates</div>
+          </div>
+        </div>
+        <button type="button" onclick="markAllNotificationsRead()" style="background: rgba(255,255,255,0.22); border: 1px solid rgba(255,255,255,0.35); color: #FFFFFF; border-radius: 999px; padding: 5px 10px; font-size: 11px; font-weight: 800; cursor: pointer; white-space: nowrap;">
+          Mark read
+        </button>
+      </div>
+    </div>
+    <div id="notificationsFeedContainer" style="padding: 14px 16px 40px; display: flex; flex-direction: column; gap: 10px;"></div>
+  </div>
+
+  <style>
+    @media (max-width: 430px) {
+      .bonds-hero-title, .slider-bank-title { font-size: 17px !important; }
+      .worth-counter-display { font-size: 24px !important; }
+      .fc-upi-action-label, .fc-bill-label { font-size: 10.5px !important; }
+      .profile-menu-item-title { font-size: 13.5px !important; }
+      .profile-menu-item-sub { font-size: 11px !important; }
+      .cat-name { font-size: 12.5px !important; }
+      .cat-rate-text { font-size: 15px !important; }
+    }
+  </style>
 </body>
 </html>

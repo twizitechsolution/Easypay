@@ -285,7 +285,7 @@ const tests = [
   },
   {
     name: 'Req 49: Passbook & Portfolio Mobile-Responsive Zerodha/FD-Style EasyPay Orange Redesign',
-    pass: appHtml.includes('FD & Bonds Portfolio') &&
+    pass: appHtml.includes('FD &amp; Bonds') &&
           appHtml.includes('portfolioDailyReturn') &&
           appHtml.includes('DAILY RETURN') &&
           appHtml.includes('MATURITY VALUE')
