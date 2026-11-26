@@ -14432,23 +14432,23 @@
       if (myTicketsContainer) {
         if (userTickets.length === 0) {
           myTicketsContainer.innerHTML = `
-            <div style="text-align: center; padding: 20px 10px; color: #64748B; font-size: 12px;">
-              <i class="fa-solid fa-ticket" style="font-size: 24px; color: #334155; margin-bottom: 8px; display: block;"></i>
-              You haven't entered this Sunday's draw yet.<br>Click <strong style="color: #F59E0B;">ENTER</strong> above to get your ticket for ₹${currentLdEntryAmount}!
+            <div style="text-align: center; padding: 22px 12px; color: #475569; font-size: 12.5px; background: #FFF8F5; border: 1.5px dashed #FED7AA; border-radius: 14px;">
+              <i class="fa-solid fa-ticket" style="font-size: 26px; color: #FF5722; margin-bottom: 8px; display: block;"></i>
+              You haven't entered this Sunday's draw yet.<br>Tap <strong style="color: #FF5722;">Enter Draw</strong> above to get your event pass for ₹${currentLdEntryAmount}!
             </div>`;
         } else {
-          myTicketsContainer.innerHTML = userTickets.map(t => `
-            <div class="cred-feed-item">
-              <div class="cred-feed-user-left">
-                <div class="cred-feed-avatar" style="background: rgba(16, 185, 129, 0.15); color: #10B981; border-color: rgba(16, 185, 129, 0.3);">
+          myTicketsContainer.innerHTML = userTickets.map((t, idx) => `
+            <div style="background: linear-gradient(135deg, #FFFFFF 0%, #FFF8F5 100%); border: 1.5px solid #FED7AA; border-left: 4px solid #FF5722; border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; box-shadow: 0 3px 10px rgba(255, 87, 34, 0.08);">
+              <div style="display: flex; align-items: center; gap: 11px; min-width: 0;">
+                <div style="width: 38px; height: 38px; border-radius: 11px; background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; box-shadow: 0 3px 8px rgba(255, 87, 34, 0.25);">
                   <i class="fa-solid fa-ticket"></i>
                 </div>
-                <div>
-                  <div style="font-size: 13px; font-weight: 800; color: #FFFFFF;">Ticket #${t.ticketId}</div>
-                  <div style="font-size: 11px; color: #94A3B8;">Direct Entry • ₹${t.amount || currentLdEntryAmount} • 1 Chance</div>
+                <div style="min-width: 0;">
+                  <div style="font-size: 13.5px; font-weight: 900; color: #0F172A; letter-spacing: 0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Ticket #${t.ticketId}</div>
+                  <div style="font-size: 11.5px; font-weight: 600; color: #475569; margin-top: 2px;">Event Pass • <span style="color: #FF5722; font-weight: 800;">₹${t.amount || currentLdEntryAmount}</span> • 1 Chance</div>
                 </div>
               </div>
-              <span style="font-size: 10px; font-weight: 800; color: #34D399; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); padding: 3px 8px; border-radius: 6px;">
+              <span style="font-size: 10px; font-weight: 800; color: #047857; background: #DCFCE7; border: 1px solid #86EFAC; padding: 4px 9px; border-radius: 999px; flex-shrink: 0; letter-spacing: 0.4px;">
                 ACTIVE
               </span>
             </div>
@@ -14464,17 +14464,17 @@
         if (liveCountEl) liveCountEl.innerHTML = '<i class="fa-solid fa-users"></i> ' + parts.length + ' Entered';
         participantsContainer.innerHTML = parts.slice(0, 6).map(p => {
           const name = p.userName || 'User';
-          const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2);
+          const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
           return `
-            <div class="cred-feed-item">
-              <div class="cred-feed-user-left">
-                <div class="cred-feed-avatar">${initials}</div>
-                <div>
-                  <div style="font-size: 13px; font-weight: 700; color: #E2E8F0;">${name}</div>
-                  <div style="font-size: 11px; color: #64748B;">Ticket #${p.ticketId} • Enrolled</div>
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+                <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); color: #FFFFFF; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">${initials}</div>
+                <div style="min-width: 0;">
+                  <div style="font-size: 13.5px; font-weight: 800; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${name}</div>
+                  <div style="font-size: 11px; font-weight: 600; color: #475569; margin-top: 1px;">Ticket #${p.ticketId} • Enrolled</div>
                 </div>
               </div>
-              <span style="font-size: 11px; font-weight: 800; color: #F59E0B;">1 Chance</span>
+              <span style="font-size: 10.5px; font-weight: 800; color: #EA580C; background: #FFF3E0; border: 1px solid #FED7AA; padding: 4px 9px; border-radius: 999px; flex-shrink: 0;">1 Chance</span>
             </div>
           `;
         }).join('');
@@ -14485,12 +14485,12 @@
       if (pastContainer) {
         const past = ld.pastDraws || [];
         pastContainer.innerHTML = past.slice(0, 3).map(p => `
-          <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 12px; padding: 12px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+          <div style="background: #FFF8F5; border: 1.5px solid #FFE0B2; border-radius: 12px; padding: 12px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
             <div>
-              <div style="font-size: 13px; font-weight: 800; color: #FFFFFF;">${p.winnerName || 'Winner'} <span style="font-size: 11px; color: #F59E0B; margin-left: 6px;"><i class="fa-solid fa-crown"></i> Won ${p.prize || prizeStr}</span></div>
-              <div style="font-size: 11px; color: #64748B; margin-top: 2px;">Draw on ${p.date || 'Sunday 8:00 PM'} • Ticket #${p.ticketId || 'TKT'}</div>
+              <div style="font-size: 13.5px; font-weight: 800; color: #0F172A;">${p.winnerName || 'Winner'} <span style="font-size: 11px; color: #FF5722; font-weight: 800; margin-left: 6px;"><i class="fa-solid fa-crown"></i> Won ${p.prize || prizeStr}</span></div>
+              <div style="font-size: 11px; font-weight: 600; color: #475569; margin-top: 2px;">Draw on ${p.date || 'Sunday 8:00 PM'} • Ticket #${p.ticketId || 'TKT'}</div>
             </div>
-            <span style="background: #10B981; color: white; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px;">VERIFIED</span>
+            <span style="background: #059669; color: #FFFFFF; font-size: 9.5px; font-weight: 800; padding: 3px 7px; border-radius: 6px; flex-shrink: 0;">VERIFIED</span>
           </div>
         `).join('');
       }
