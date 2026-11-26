@@ -1751,80 +1751,92 @@
       font-size: 20px;
     }
 
-    /* "Total Investment Worth" Section (Screenshot 2) */
+    /* "Total Investment Worth" Section (Flush with Footer Nav) */
     .investment-worth-section {
-      background: linear-gradient(180deg, #FBF8F5 0%, #F5EFEB 100%);
+      background: linear-gradient(180deg, #FBF8F4 0%, #F6F0E8 100%);
       border-top: 1px solid #EAE0D5;
-      border-bottom: 1px solid #EAE0D5;
-      padding: 24px 16px;
-      margin-top: 20px;
+      padding: 26px 0 86px;
+      margin: 20px -16px -95px;
       text-align: center;
       position: relative;
       overflow: hidden;
     }
     .worth-section-header {
       font-family: var(--font-heading);
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 800;
-      color: #92400E;
-      letter-spacing: 1.5px;
+      color: #8C6B53;
+      letter-spacing: 1.6px;
       text-transform: uppercase;
       margin-bottom: 6px;
     }
     .worth-counter-display {
       font-family: var(--font-heading);
-      font-size: 26px;
-      font-weight: 800;
-      color: #78350F;
-      letter-spacing: -0.5px;
+      font-size: 27px;
+      font-weight: 900;
+      color: #6B3F23;
+      letter-spacing: -0.4px;
       margin-bottom: 12px;
+      font-variant-numeric: tabular-nums;
+      transition: transform 0.2s ease;
     }
     .worth-metrics-row {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 18px;
-      margin-bottom: 20px;
-      font-size: 12px;
-      color: #64748B;
+      gap: 16px;
+      margin-bottom: 10px;
+      font-size: 12.5px;
+      color: #7C5E44;
       font-weight: 600;
     }
     .worth-metric-divider {
       width: 1px;
       height: 14px;
-      background: #CBD5E1;
+      background: #D6C7B8;
     }
 
     /* 3D Dotted Rotating Globe Canvas */
     .globe-canvas-wrapper {
       width: 100%;
-      height: 260px;
+      height: 290px;
       position: relative;
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: center;
+      overflow: hidden;
     }
     #dottedGlobeCanvas {
-      width: 320px;
-      height: 260px;
+      width: 100%;
+      max-width: 440px;
+      height: 290px;
       display: block;
     }
     .live-booking-pill {
       position: absolute;
-      top: 24px;
-      background: rgba(255, 255, 255, 0.95);
+      top: 72px;
+      left: 50%;
+      transform: translate(-50%, 8px);
+      background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(8px);
-      border: 1px solid #CBD5E1;
+      border: 1px solid #EAE0D5;
       padding: 6px 14px;
-      border-radius: var(--radius-pill);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      border-radius: 999px;
+      box-shadow: 0 6px 18px rgba(107, 63, 35, 0.12);
       font-size: 12px;
       font-weight: 700;
-      color: #0F172A;
+      color: #3E2718;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      transition: all 0.3s;
+      gap: 7px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .live-booking-pill.visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
     }
     .pulse-dot-green {
       width: 8px;
@@ -5777,20 +5789,20 @@
         <!-- 5. "Total Investment Worth" & 3D Rotating Dotted Globe (Screenshot 2) -->
         <div class="investment-worth-section">
           <div class="worth-section-header">TOTAL INVESTMENT WORTH</div>
-          <div class="worth-counter-display" id="rollingWorthCounter">₹1,41,85,11,75,000</div>
+          <div class="worth-counter-display" id="rollingWorthCounter">₹1,47,12,02,48,659</div>
           
           <div class="worth-metrics-row">
             <span>Across 3,500+ cities</span>
             <div class="worth-metric-divider"></div>
-            <span>From 78+ lakh Indians</span>
+            <span>From 80+ lakh Indians</span>
           </div>
 
-          <!-- HTML5 Canvas 3D Rotating Dotted India Globe -->
+          <!-- HTML5 Canvas 3D Dotted India Globe -->
           <div class="globe-canvas-wrapper">
-            <canvas id="dottedGlobeCanvas" width="320" height="260"></canvas>
-            <div class="live-booking-pill" id="liveBookingPill">
+            <canvas id="dottedGlobeCanvas" width="440" height="290"></canvas>
+            <div class="live-booking-pill visible" id="liveBookingPill">
               <span class="pulse-dot-green"></span>
-              <span id="liveBookingCityText">Bond booked in Delhi</span>
+              <span id="liveBookingCityText">FD booked in Bengaluru</span>
             </div>
           </div>
         </div>
@@ -5876,7 +5888,6 @@
             <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 16px;">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <div style="font-size: 15px; font-weight: 800; color: #0F172A;">Transactions Ledger</div>
-                <span style="font-size: 10.5px; font-weight: 800; color: #059669; background: #ECFDF5; padding: 3px 8px; border-radius: 999px;">Real-Time Synced</span>
               </div>
               <div id="transactionsListContainer"></div>
             </div>
@@ -10063,6 +10074,36 @@
       }).join('');
     }
 
+    function formatShortTxnTitle(t) {
+      const raw = (t && t.title ? String(t.title) : 'Transaction').trim();
+      const low = raw.toLowerCase();
+      if (low.includes('lucky draw') || low.includes('lottery')) return 'Lucky Draw Entry';
+      if (low.includes('withdrawal')) return 'Bank Withdrawal';
+      if (low.includes('mall order') || low.includes('mall store')) return 'Mall Order';
+      if (low.includes('cashback')) return 'Cashback Credited';
+      if (low.includes('money added') || low.includes('deposit') || low.includes('add funds')) return 'Wallet Deposit';
+      if (low.includes('gift voucher') || low.includes('gift card')) return 'Gift Voucher';
+      if (low.includes('recharge')) return 'Mobile Recharge';
+      if (low.includes('investment') || low.includes('fixed deposit') || low.includes('bond')) {
+        return raw.replace(/\s*\([^)]*\)/g, '').replace(/Investment/i, 'FD').slice(0, 26).trim();
+      }
+      const cleaned = raw.replace(/\s*\([^)]*\)/g, '').trim();
+      return cleaned.length > 26 ? cleaned.slice(0, 24) + '…' : cleaned;
+    }
+
+    function formatShortTxnDate(rawDate) {
+      if (!rawDate) return 'Just now';
+      const str = String(rawDate);
+      if (str.includes('T') && (str.includes('Z') || str.includes('+'))) {
+        const d = new Date(str);
+        if (!isNaN(d.getTime())) {
+          return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) + ', ' +
+                 d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }).toLowerCase();
+        }
+      }
+      return str;
+    }
+
     function renderTransactions() {
       const container = document.getElementById('transactionsListContainer');
       if (!container) return;
@@ -10080,19 +10121,23 @@
         else if (t.type === 'GIFT_CARD' || t.category === 'Gift Card') iconClass = 'fa-gift';
         else if (t.type === 'SHOPPING' || t.category === 'Shopping') iconClass = 'fa-bag-shopping';
 
-        return '<div class="history-item-row" style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">' +
-          '<div class="history-item-left" style="display: flex; align-items: center; gap: 12px;">' +
-            '<div class="history-icon-circle" style="width: 40px; height: 40px; border-radius: 12px; background: ' + (isCredit ? '#ECFDF5' : '#FFF1EE') + '; color: ' + (isCredit ? '#10B981' : '#FF5722') + '; display: flex; align-items: center; justify-content: center; font-size: 16px;">' +
+        const shortTitle = formatShortTxnTitle(t);
+        const shortDate = formatShortTxnDate(t.date || t.timestamp);
+        const refCode = t.utr || t.id || 'Verified';
+
+        return '<div class="history-item-row" style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 12px 13px; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px;">' +
+          '<div class="history-item-left" style="display: flex; align-items: center; gap: 11px; min-width: 0; flex: 1;">' +
+            '<div class="history-icon-circle" style="width: 38px; height: 38px; border-radius: 11px; background: ' + (isCredit ? '#ECFDF5' : '#FFF1EE') + '; color: ' + (isCredit ? '#10B981' : '#FF5722') + '; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;">' +
               '<i class="fa-solid ' + iconClass + '"></i>' +
             '</div>' +
-            '<div>' +
-              '<div style="font-size: 13px; font-weight: 700; color: #0F172A;">' + (t.title || 'Transaction') + '</div>' +
-              '<div style="font-size: 11px; color: #94A3B8;">' + (t.date || t.timestamp || 'Just now') + ' • ' + (t.utr || t.id || 'Verified') + '</div>' +
+            '<div style="min-width: 0; flex: 1;">' +
+              '<div style="font-size: 13px; font-weight: 800; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">' + shortTitle + '</div>' +
+              '<div style="font-size: 10.5px; color: #64748B; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px;">' + shortDate + ' • ' + refCode + '</div>' +
             '</div>' +
           '</div>' +
-          '<div style="text-align: right;">' +
-            '<div style="font-family: var(--font-heading); font-size: 14px; font-weight: 800; color: ' + (isCredit ? '#059669' : '#0F172A') + ';">' + amtStr + '</div>' +
-            (t.cashback ? '<div style="font-size: 10px; font-weight: 700; color: #059669;">+₹' + t.cashback.toFixed(1) + ' Cashback</div>' : (() => { const st = (t.status || 'SUCCESS').toUpperCase(); const stBg = st === 'PENDING' ? '#FFFBEB' : (st === 'FAILED' ? '#FEF2F2' : '#ECFDF5'); const stClr = st === 'PENDING' ? '#D97706' : (st === 'FAILED' ? '#DC2626' : '#059669'); return '<span style="font-size: 10px; font-weight: 800; color: ' + stClr + '; background: ' + stBg + '; padding: 2px 7px; border-radius: 999px;">' + st + '</span>'; })()) +
+          '<div style="text-align: right; flex-shrink: 0;">' +
+            '<div style="font-family: var(--font-heading); font-size: 13.5px; font-weight: 800; white-space: nowrap; color: ' + (isCredit ? '#059669' : '#0F172A') + ';">' + amtStr + '</div>' +
+            (t.cashback ? '<div style="font-size: 10px; font-weight: 700; color: #059669; white-space: nowrap;">+₹' + t.cashback.toFixed(1) + ' Cashback</div>' : (() => { const st = (t.status || 'SUCCESS').toUpperCase(); const stBg = st === 'PENDING' ? '#FFFBEB' : (st === 'FAILED' ? '#FEF2F2' : '#ECFDF5'); const stClr = st === 'PENDING' ? '#D97706' : (st === 'FAILED' ? '#DC2626' : '#059669'); return '<span style="display: inline-block; margin-top: 2px; font-size: 9.5px; font-weight: 800; color: ' + stClr + '; background: ' + stBg + '; padding: 2px 7px; border-radius: 999px;">' + st + '</span>'; })()) +
           '</div>' +
         '</div>';
       }).join('');
@@ -17715,5 +17760,199 @@
     </div>
   </div>
 
+  <script>
+    // ==============================================================
+    // TOTAL INVESTMENT WORTH + 3D DOTTED INDIA GLOBE ENGINE
+    // ==============================================================
+    (function setupInvestmentWorthAndGlobe() {
+      let currentWorthValue = 147120248659;
+      let worthTickerStarted = false;
+      let globeAnimRunning = false;
+
+      const INDIA_POLY = [
+        [0.44, 0.14], [0.50, 0.12], [0.55, 0.17], [0.53, 0.23], [0.58, 0.27],
+        [0.64, 0.30], [0.69, 0.31], [0.73, 0.30], [0.77, 0.27], [0.81, 0.29],
+        [0.80, 0.34], [0.76, 0.37], [0.73, 0.35], [0.70, 0.36], [0.70, 0.42],
+        [0.67, 0.45], [0.63, 0.49], [0.59, 0.54], [0.56, 0.59], [0.52, 0.65],
+        [0.49, 0.72], [0.47, 0.80], [0.44, 0.84], [0.41, 0.78], [0.39, 0.70],
+        [0.37, 0.62], [0.35, 0.54], [0.31, 0.48], [0.27, 0.45], [0.29, 0.40],
+        [0.33, 0.37], [0.33, 0.31], [0.37, 0.24], [0.41, 0.18]
+      ];
+
+      const CITY_PINS = [
+        { label: 'FD booked in Bengaluru', x: 0.44, y: 0.72 },
+        { label: 'FD booked in Patna', x: 0.64, y: 0.36 },
+        { label: 'Bond booked in Delhi', x: 0.44, y: 0.29 },
+        { label: 'FD booked in Mumbai', x: 0.36, y: 0.54 },
+        { label: 'FD booked in Coimbatore', x: 0.43, y: 0.78 },
+        { label: 'Bond booked in Pune', x: 0.38, y: 0.58 },
+        { label: 'FD booked in Hyderabad', x: 0.48, y: 0.60 },
+        { label: 'FD booked in Kolkata', x: 0.69, y: 0.43 },
+        { label: 'Bond booked in Jaipur', x: 0.39, y: 0.34 },
+        { label: 'FD booked in Ahmedabad', x: 0.32, y: 0.44 }
+      ];
+
+      let activeCityIdx = 0;
+
+      function pointInPoly(px, py, poly) {
+        let inside = false;
+        for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+          const xi = poly[i][0], yi = poly[i][1];
+          const xj = poly[j][0], yj = poly[j][1];
+          const intersect = ((yi > py) !== (yj > py)) &&
+            (px < (xj - xi) * (py - yi) / ((yj - yi) || 1e-9) + xi);
+          if (intersect) inside = !inside;
+        }
+        return inside;
+      }
+
+      function animateWorthTo(targetVal) {
+        const el = document.getElementById('rollingWorthCounter');
+        if (!el) return;
+        const startVal = currentWorthValue;
+        const diff = targetVal - startVal;
+        const startTime = performance.now();
+        const duration = 650;
+        function step(now) {
+          const p = Math.min(1, (now - startTime) / duration);
+          const eased = 1 - Math.pow(1 - p, 3);
+          const val = Math.round(startVal + diff * eased);
+          el.innerText = '₹' + val.toLocaleString('en-IN');
+          if (p < 1) {
+            requestAnimationFrame(step);
+          } else {
+            currentWorthValue = targetVal;
+          }
+        }
+        requestAnimationFrame(step);
+      }
+
+      function startWorthAndCityTicker() {
+        if (worthTickerStarted) return;
+        worthTickerStarted = true;
+
+        setInterval(() => {
+          const bondsView = document.getElementById('viewBonds');
+          if (!bondsView || bondsView.style.display === 'none') return;
+
+          const inc = Math.floor(12500 + Math.random() * 68000);
+          animateWorthTo(currentWorthValue + inc);
+
+          const pill = document.getElementById('liveBookingPill');
+          const txt = document.getElementById('liveBookingCityText');
+          if (pill && txt) {
+            pill.classList.remove('visible');
+            setTimeout(() => {
+              activeCityIdx = (activeCityIdx + 1) % CITY_PINS.length;
+              const city = CITY_PINS[activeCityIdx];
+              txt.innerText = city.label;
+              pill.style.left = Math.round(city.x * 100) + '%';
+              pill.style.top = Math.max(18, Math.round(city.y * 290 - 44)) + 'px';
+              pill.classList.add('visible');
+            }, 380);
+          }
+        }, 3200);
+      }
+
+      function startDottedGlobeAnimation() {
+        if (globeAnimRunning) return;
+        const canvas = document.getElementById('dottedGlobeCanvas');
+        if (!canvas) return;
+        globeAnimRunning = true;
+
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        const W = 440;
+        const H = 290;
+        canvas.width = W * dpr;
+        canvas.height = H * dpr;
+        ctx.scale(dpr, dpr);
+
+        const cx = W / 2;
+        const cy = H + 95;
+        const R = 345;
+
+        function drawFrame(now) {
+          const bondsView = document.getElementById('viewBonds');
+          if (bondsView && bondsView.style.display !== 'none') {
+            ctx.clearRect(0, 0, W, H);
+            const driftX = Math.sin(now * 0.00055) * 6;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(cx, cy, R, Math.PI, 0, false);
+            ctx.clip();
+
+            ctx.strokeStyle = 'rgba(166, 138, 114, 0.22)';
+            ctx.lineWidth = 1;
+            for (let r = R - 35; r > 120; r -= 58) {
+              ctx.beginPath();
+              ctx.arc(cx, cy, r, Math.PI, 0, false);
+              ctx.stroke();
+            }
+            for (let lon = -3; lon <= 3; lon++) {
+              ctx.beginPath();
+              ctx.ellipse(cx + driftX * 0.35, cy, Math.abs(lon) * 68 + 1, R, 0, Math.PI, 0, false);
+              ctx.stroke();
+            }
+
+            const step = 7;
+            for (let y = 18; y < H; y += step) {
+              for (let x = 16; x < W - 16; x += step) {
+                const dx = x - cx;
+                const dy = y - cy;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist > R - 3) continue;
+
+                const nx = (x - driftX) / W;
+                const ny = y / H;
+                const inIndia = pointInPoly(nx, ny, INDIA_POLY);
+                const edgeFade = Math.max(0.15, 1 - (dist / R) * 0.65);
+
+                if (inIndia) {
+                  ctx.fillStyle = 'rgba(124, 94, 68, ' + (0.72 * edgeFade + 0.22).toFixed(2) + ')';
+                  ctx.beginPath();
+                  ctx.arc(x, y, 1.9, 0, Math.PI * 2);
+                  ctx.fill();
+                } else if (((x + y) % 14) === 0 || (dist > R - 26)) {
+                  ctx.fillStyle = 'rgba(180, 156, 134, ' + (0.38 * edgeFade).toFixed(2) + ')';
+                  ctx.beginPath();
+                  ctx.arc(x, y, 1.15, 0, Math.PI * 2);
+                  ctx.fill();
+                }
+              }
+            }
+
+            const city = CITY_PINS[activeCityIdx];
+            const px = city.x * W + driftX;
+            const py = city.y * H;
+            const pulse = (Math.sin(now * 0.005) + 1) * 0.5;
+            ctx.fillStyle = 'rgba(255, 87, 34, ' + (0.28 - pulse * 0.18).toFixed(2) + ')';
+            ctx.beginPath();
+            ctx.arc(px, py, 7 + pulse * 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#FF5722';
+            ctx.beginPath();
+            ctx.arc(px, py, 3.6, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+          }
+          requestAnimationFrame(drawFrame);
+        }
+        requestAnimationFrame(drawFrame);
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        startDottedGlobeAnimation();
+        startWorthAndCityTicker();
+      });
+      setTimeout(() => {
+        startDottedGlobeAnimation();
+        startWorthAndCityTicker();
+      }, 600);
+    })();
+  </script>
 </body>
 </html>
