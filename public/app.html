@@ -4575,6 +4575,200 @@
   <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 </head>
 <body>
+  <style>
+    .ep-svg-icon { width: 22px; height: 22px; display: block; flex-shrink: 0; }
+    .ep-svg-nav { width: 21px; height: 21px; display: block; transition: transform 0.15s ease; }
+    .nav-tab-item.active .ep-svg-nav { transform: translateY(-1px); }
+    .nav-tab-item .ep-nav-fill { opacity: 0.14; transition: opacity 0.15s ease; }
+    .nav-tab-item.active .ep-nav-fill { opacity: 0.28; }
+    .profile-menu-icon { background: #FFF8F5 !important; border: 1px solid #FFE8DC !important; border-radius: 12px !important; }
+    .fc-upi-action-icon-box { background: #FFF8F5 !important; border: 1px solid #FFE8DC !important; border-radius: 14px !important; }
+    .fc-bill-icon-outline { background: #FFF8F5 !important; border: 1px solid #FFE8DC !important; border-radius: 14px !important; }
+  </style>
+  <svg id="epSvgSprite" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+    <!-- Bottom Navigation Icons (24x24) -->
+    <symbol id="ep-nav-home" viewBox="0 0 24 24">
+      <path class="ep-nav-fill" d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-5.5h-5V21H5a1 1 0 0 1-1-1v-9.5z" fill="currentColor"/>
+      <path d="M3.5 10.5L12 3.5l8.5 7M5.5 9.5V20a1 1 0 0 0 1 1h3.5v-5.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V21h3.5a1 1 0 0 0 1-1V9.5" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="ep-nav-gift" viewBox="0 0 24 24">
+      <rect class="ep-nav-fill" x="4" y="8" width="16" height="13" rx="2" fill="currentColor"/>
+      <path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7M3 8h18v4H3V8zm9 0v13M12 8c-1.5-2.5-4.5-2.5-4.5-.5S10 8 12 8zm0 0c1.5-2.5 4.5-2.5 4.5-.5S14 8 12 8z" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="ep-nav-shop" viewBox="0 0 24 24">
+      <path class="ep-nav-fill" d="M5 8h14l1 12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1L5 8z" fill="currentColor"/>
+      <path d="M5 8h14l1 11.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19.5L5 8zm3.5 0V6.5a3.5 3.5 0 0 1 7 0V8" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="ep-nav-profile" viewBox="0 0 24 24">
+      <circle class="ep-nav-fill" cx="12" cy="8" r="4" fill="currentColor"/>
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-7 9a7 7 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+
+    <!-- Layered 2-Tone Fintech Clip-Art Icons (32x32) -->
+    <symbol id="ep-ic-user" viewBox="0 0 32 32">
+      <circle cx="16" cy="11" r="5" fill="#FFE0D1"/>
+      <path d="M16 16a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM7.5 26.5c0-4.4 3.8-7.5 8.5-7.5s8.5 3.1 8.5 7.5" fill="none" stroke="#1E293B" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="23" cy="23" r="4.5" fill="#FF5722"/>
+      <path d="M21.3 23l1.2 1.2 2.2-2.2" fill="none" stroke="#FFF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="ep-ic-qr" viewBox="0 0 32 32">
+      <rect x="6" y="6" width="8" height="8" rx="1.8" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <rect x="18" y="6" width="8" height="8" rx="1.8" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <rect x="6" y="18" width="8" height="8" rx="1.8" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <rect x="9" y="9" width="2" height="2" fill="#FF5722"/>
+      <rect x="21" y="9" width="2" height="2" fill="#FF5722"/>
+      <rect x="9" y="21" width="2" height="2" fill="#FF5722"/>
+      <path d="M18 18h3v3h-3zm5 0h3v5h-3zm-5 5h5v3h-5z" fill="#FF5722"/>
+    </symbol>
+    <symbol id="ep-ic-passbook" viewBox="0 0 32 32">
+      <rect x="7" y="5" width="18" height="22" rx="3" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <path d="M11 5v22M15 11h6M15 16h6" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="23" cy="22" r="5" fill="#FF5722"/>
+      <path d="M21.5 20.5h3M21.5 22.3h2.2a1 1 0 0 1 0 2H21.5l2.5 2" fill="none" stroke="#FFF" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="ep-ic-shake-scan" viewBox="0 0 32 32">
+      <rect x="9" y="4" width="14" height="24" rx="3" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <path d="M5 12c-1.5 2-1.5 6 0 8M27 12c1.5 2 1.5 6 0 8" fill="none" stroke="#FF5722" stroke-width="1.8" stroke-linecap="round"/>
+      <rect x="13" y="11" width="6" height="6" rx="1" fill="none" stroke="#FF5722" stroke-width="1.8"/>
+      <circle cx="16" cy="23.5" r="1.2" fill="#1E293B"/>
+    </symbol>
+    <symbol id="ep-ic-txns" viewBox="0 0 32 32">
+      <rect x="5" y="6" width="22" height="20" rx="4" fill="#FFE0D1"/>
+      <path d="M9 12h12l-3-3m5 11H11l3 3" fill="none" stroke="#1E293B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="24" cy="12" r="3.5" fill="#FF5722"/>
+    </symbol>
+    <symbol id="ep-ic-pin-shield" viewBox="0 0 32 32">
+      <path d="M16 4l10 4v7c0 6.5-4.3 11.2-10 13-5.7-1.8-10-6.5-10-13V8l10-4z" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8" stroke-linejoin="round"/>
+      <rect x="12" y="14" width="8" height="6.5" rx="1.5" fill="#FF5722"/>
+      <path d="M13.5 14v-2a2.5 2.5 0 0 1 5 0v2" fill="none" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ep-ic-orders" viewBox="0 0 32 32">
+      <path d="M16 4l10 5v14l-10 5-10-5V9l10-5z" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M6 9l10 5 10-5M16 14v14" fill="none" stroke="#1E293B" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M11 6.5l10 5" stroke="#FF5722" stroke-width="2.2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ep-ic-pay-settings" viewBox="0 0 32 32">
+      <rect x="4" y="8" width="24" height="16" rx="3" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <path d="M4 13h24" stroke="#1E293B" stroke-width="2"/>
+      <rect x="8" y="17" width="6" height="3" rx="1" fill="#FF5722"/>
+      <circle cx="23" cy="21" r="4.5" fill="#FF5722"/>
+      <path d="M23 19v4M21 21h4" stroke="#FFF" stroke-width="1.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ep-ic-refer" viewBox="0 0 32 32">
+      <circle cx="12" cy="11" r="4" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <path d="M5 24c0-3.5 3.1-6 7-6s7 2.5 7 6" fill="none" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="23" cy="11" r="4.5" fill="#FF5722"/>
+      <path d="M21 11h4M23 9v4" stroke="#FFF" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M20 19c2.5.4 5 1.8 5.5 5" fill="none" stroke="#FF5722" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ep-ic-rewards" viewBox="0 0 32 32">
+      <circle cx="16" cy="13" r="8" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <path d="M12 20l-1.5 8 5.5-2.8L21.5 28 20 20" fill="#FF5722" stroke="#1E293B" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M16 8.5l1.3 2.7 3 .4-2.2 2.1.5 3-2.6-1.4-2.6 1.4.5-3-2.2-2.1 3-.4z" fill="#FF5722"/>
+    </symbol>
+    <symbol id="ep-ic-about" viewBox="0 0 32 32">
+      <circle cx="16" cy="16" r="11" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <circle cx="16" cy="11" r="1.5" fill="#FF5722"/>
+      <path d="M16 15v7" stroke="#FF5722" stroke-width="2.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ep-ic-terms" viewBox="0 0 32 32">
+      <rect x="7" y="4" width="18" height="24" rx="2.5" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <path d="M11 10h10M11 15h10M11 20h6" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="22" cy="22" r="4" fill="#FF5722"/>
+      <path d="M20.5 22l1 1 2-2" fill="none" stroke="#FFF" stroke-width="1.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ep-ic-privacy" viewBox="0 0 32 32">
+      <path d="M16 4l10 4v7c0 6.5-4.3 11.2-10 13-5.7-1.8-10-6.5-10-13V8l10-4z" fill="#DCFCE7" stroke="#1E293B" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M12.5 16l2.5 2.5 4.8-5" fill="none" stroke="#059669" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="ep-ic-logout" viewBox="0 0 32 32">
+      <path d="M13 6H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h6" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M13 16h13m-4-4l4 4-4 4" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+
+    <!-- Home Money Transfer & Bills Clip-Art Icons -->
+    <symbol id="ep-ic-scan-qr" viewBox="0 0 32 32">
+      <path d="M5 10V7a2 2 0 0 1 2-2h3m12 0h3a2 2 0 0 1 2 2v3m0 12v3a2 2 0 0 1-2 2h-3M10 27H7a2 2 0 0 1-2-2v-3" fill="none" stroke="#1E293B" stroke-width="2" stroke-linecap="round"/>
+      <rect x="9" y="9" width="6" height="6" rx="1" fill="#FFE0D1" stroke="#FF5722" stroke-width="1.6"/>
+      <rect x="17" y="17" width="6" height="6" rx="1" fill="#FFE0D1" stroke="#FF5722" stroke-width="1.6"/>
+      <path d="M7 16h18" stroke="#FF5722" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ep-ic-pay-mobile" viewBox="0 0 32 32">
+      <rect x="7" y="4" width="14" height="24" rx="3" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <circle cx="22" cy="18" r="6" fill="#FF5722"/>
+      <path d="M20 18h4m-1.5-2l2 2-2 2" fill="none" stroke="#FFF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="ep-ic-balance" viewBox="0 0 32 32">
+      <rect x="4" y="7" width="24" height="18" rx="3.5" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <circle cx="21" cy="16" r="4.5" fill="#FF5722"/>
+      <path d="M8 13h7M8 18h5" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ep-ic-bank-self" viewBox="0 0 32 32">
+      <path d="M4 12l12-7 12 7H4z" fill="#FF5722" stroke="#1E293B" stroke-width="1.6" stroke-linejoin="round"/>
+      <rect x="6" y="12" width="20" height="12" fill="#FFE0D1"/>
+      <path d="M9 12v12M16 12v12M23 12v12M4 25h24" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ep-ic-mobile-pre" viewBox="0 0 32 32">
+      <rect x="9" y="4" width="14" height="24" rx="3" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <path d="M17 10l-3 5h4l-2 5" fill="none" stroke="#FF5722" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="ep-ic-postpaid" viewBox="0 0 32 32">
+      <rect x="8" y="4" width="16" height="24" rx="3" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <path d="M12 11h8M12 15h8M12 19h5" stroke="#FF5722" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ep-ic-electricity" viewBox="0 0 32 32">
+      <circle cx="16" cy="14" r="8" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <path d="M17 9l-4 6h4l-2 6" fill="none" stroke="#FF5722" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M13 24h6M14 27h4" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ep-ic-fastag" viewBox="0 0 32 32">
+      <path d="M6 19l2.5-6.5A2 2 0 0 1 10.4 11h11.2a2 2 0 0 1 1.9 1.5L26 19v5a1 1 0 0 1-1 1h-2v-2H9v2H7a1 1 0 0 1-1-1v-5z" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8" stroke-linejoin="round"/>
+      <circle cx="10.5" cy="19.5" r="1.5" fill="#FF5722"/>
+      <circle cx="21.5" cy="19.5" r="1.5" fill="#FF5722"/>
+      <path d="M12 7c2.5-2 5.5-2 8 0" fill="none" stroke="#FF5722" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ep-ic-dth" viewBox="0 0 32 32">
+      <rect x="5" y="8" width="22" height="15" rx="3" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <path d="M12 26h8M16 23v3M12 4l4 4 4-4" fill="none" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="16" cy="15.5" r="3" fill="#FF5722"/>
+    </symbol>
+    <symbol id="ep-ic-creditcard" viewBox="0 0 32 32">
+      <rect x="4" y="7" width="24" height="18" rx="3" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <path d="M4 13h24" stroke="#1E293B" stroke-width="2.2"/>
+      <rect x="8" y="17" width="7" height="3.5" rx="1" fill="#FF5722"/>
+    </symbol>
+    <symbol id="ep-ic-broadband" viewBox="0 0 32 32">
+      <circle cx="16" cy="23" r="2.5" fill="#FF5722"/>
+      <path d="M10.5 18.5a8 8 0 0 1 11 0M6.5 14a14 14 0 0 1 19 0M3.5 9.5a19 19 0 0 1 25 0" fill="none" stroke="#1E293B" stroke-width="1.9" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ep-ic-gas" viewBox="0 0 32 32">
+      <rect x="9" y="10" width="14" height="17" rx="5" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <path d="M12 10V7a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v3" fill="none" stroke="#1E293B" stroke-width="1.8"/>
+      <path d="M16 14c2 2 2.5 4.5 0 6.5-2.5-2-2-4.5 0-6.5z" fill="#FF5722"/>
+    </symbol>
+
+    <!-- Invest Icons -->
+    <symbol id="ep-ic-fd-vault" viewBox="0 0 32 32">
+      <path d="M4 12l12-7 12 7H4z" fill="#FF5722" stroke="#1E293B" stroke-width="1.6"/>
+      <rect x="6" y="12" width="20" height="13" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.6"/>
+      <path d="M10 15v7M16 15v7M22 15v7M4 26h24" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ep-ic-rd-calendar" viewBox="0 0 32 32">
+      <rect x="5" y="7" width="22" height="20" rx="3" fill="#DCFCE7" stroke="#1E293B" stroke-width="1.8"/>
+      <path d="M5 13h22M11 4v5M21 4v5" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="16" cy="20" r="3.5" fill="#059669"/>
+    </symbol>
+    <symbol id="ep-ic-bond-cert" viewBox="0 0 32 32">
+      <rect x="5" y="6" width="22" height="18" rx="3" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <path d="M9 12h9M9 16h6" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="22" cy="18" r="5" fill="#FF5722"/>
+      <path d="M20 22l-1 5 3-1.5 3 1.5-1-5" fill="#FF5722"/>
+    </symbol>
+    <symbol id="ep-ic-daily-clock" viewBox="0 0 32 32">
+      <circle cx="16" cy="16" r="11" fill="#FFE0D1" stroke="#1E293B" stroke-width="1.8"/>
+      <path d="M16 10v6l4 2.5" fill="none" stroke="#FF5722" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </svg>
 
   <!-- ==============================================================
        AUTHENTIC EASYPAY (FREECHARGE BIZ) AUTHENTICATION SYSTEM
@@ -5039,30 +5233,22 @@
           <!-- 4-Grid Action Buttons (100% Functional) -->
           <div class="fc-upi-grid-4">
             <button class="fc-upi-action-btn" onclick="openQrScannerModal()">
-              <div class="fc-upi-action-icon-box" style="background: #FFF1EE; color: #FF5722;">
-                <i class="fa-solid fa-qrcode"></i>
-              </div>
+              <div class="fc-upi-action-icon-box"><svg class="ep-svg-icon" style="width:24px;height:24px;"><use href="#ep-ic-scan-qr"/></svg></div>
               <span class="fc-upi-action-label">Scan QR</span>
             </button>
 
             <button class="fc-upi-action-btn" onclick="openPayAnyoneView()">
-              <div class="fc-upi-action-icon-box" style="background: #FCE4EC; color: #E91E63;">
-                <i class="fa-solid fa-paper-plane"></i>
-              </div>
+              <div class="fc-upi-action-icon-box"><svg class="ep-svg-icon" style="width:24px;height:24px;"><use href="#ep-ic-pay-mobile"/></svg></div>
               <span class="fc-upi-action-label">Pay ID / Mobile</span>
             </button>
 
             <button class="fc-upi-action-btn" onclick="openBalanceModal()">
-              <div class="fc-upi-action-icon-box" style="background: #FFF8E1; color: #FFA000;">
-                <i class="fa-solid fa-receipt"></i>
-              </div>
+              <div class="fc-upi-action-icon-box"><svg class="ep-svg-icon" style="width:24px;height:24px;"><use href="#ep-ic-balance"/></svg></div>
               <span class="fc-upi-action-label">Check Balance</span>
             </button>
 
             <button class="fc-upi-action-btn" onclick="openToBankOrSelfTransfer()">
-              <div class="fc-upi-action-icon-box" style="background: #E8F5E9; color: #2E7D32;">
-                <i class="fa-solid fa-building-columns"></i>
-              </div>
+              <div class="fc-upi-action-icon-box"><svg class="ep-svg-icon" style="width:24px;height:24px;"><use href="#ep-ic-bank-self"/></svg></div>
               <span class="fc-upi-action-label">To Bank/Self</span>
             </button>
           </div>
@@ -5100,58 +5286,42 @@
           <!-- 8 Recharges Grid -->
           <div class="fc-bills-grid-4">
             <button class="fc-bill-item-btn" onclick="openRechargeModal('Mobile Recharge')">
-              <div class="fc-bill-icon-outline">
-                <i class="fa-solid fa-mobile-screen"></i>
-              </div>
+              <div class="fc-bill-icon-outline"><svg class="ep-svg-icon" style="width:23px;height:23px;"><use href="#ep-ic-mobile-pre"/></svg></div>
               <span class="fc-bill-label">Mobile Recharge</span>
             </button>
 
             <button class="fc-bill-item-btn" onclick="openRechargeModal('Mobile Postpaid')">
-              <div class="fc-bill-icon-outline">
-                <i class="fa-solid fa-mobile-screen-button"></i>
-              </div>
+              <div class="fc-bill-icon-outline"><svg class="ep-svg-icon" style="width:23px;height:23px;"><use href="#ep-ic-postpaid"/></svg></div>
               <span class="fc-bill-label">Mobile Postpaid</span>
             </button>
 
             <button class="fc-bill-item-btn" onclick="openRechargeModal('Electricity')">
-              <div class="fc-bill-icon-outline">
-                <i class="fa-regular fa-lightbulb"></i>
-              </div>
+              <div class="fc-bill-icon-outline"><svg class="ep-svg-icon" style="width:23px;height:23px;"><use href="#ep-ic-electricity"/></svg></div>
               <span class="fc-bill-label">Electricity</span>
             </button>
 
             <button class="fc-bill-item-btn" onclick="openRechargeModal('FASTag Recharge')">
-              <div class="fc-bill-icon-outline">
-                <i class="fa-solid fa-car-side"></i>
-              </div>
+              <div class="fc-bill-icon-outline"><svg class="ep-svg-icon" style="width:23px;height:23px;"><use href="#ep-ic-fastag"/></svg></div>
               <span class="fc-bill-label">FASTag Recharge</span>
             </button>
 
             <button class="fc-bill-item-btn" onclick="openRechargeModal('DTH Recharge')">
-              <div class="fc-bill-icon-outline">
-                <i class="fa-solid fa-tv"></i>
-              </div>
+              <div class="fc-bill-icon-outline"><svg class="ep-svg-icon" style="width:23px;height:23px;"><use href="#ep-ic-dth"/></svg></div>
               <span class="fc-bill-label">DTH Recharge</span>
             </button>
 
             <button class="fc-bill-item-btn" onclick="openRechargeModal('Credit Card Bill')">
-              <div class="fc-bill-icon-outline">
-                <i class="fa-regular fa-credit-card"></i>
-              </div>
+              <div class="fc-bill-icon-outline"><svg class="ep-svg-icon" style="width:23px;height:23px;"><use href="#ep-ic-creditcard"/></svg></div>
               <span class="fc-bill-label">Credit Card</span>
             </button>
 
             <button class="fc-bill-item-btn" onclick="openRechargeModal('Broadband / WiFi')">
-              <div class="fc-bill-icon-outline">
-                <i class="fa-solid fa-wifi"></i>
-              </div>
+              <div class="fc-bill-icon-outline"><svg class="ep-svg-icon" style="width:23px;height:23px;"><use href="#ep-ic-broadband"/></svg></div>
               <span class="fc-bill-label">Broadband</span>
             </button>
 
             <button class="fc-bill-item-btn" onclick="openRechargeModal('Gas Cylinder')">
-              <div class="fc-bill-icon-outline">
-                <i class="fa-solid fa-fire-flame-simple"></i>
-              </div>
+              <div class="fc-bill-icon-outline"><svg class="ep-svg-icon" style="width:23px;height:23px;"><use href="#ep-ic-gas"/></svg></div>
               <span class="fc-bill-label">Gas Cylinder</span>
             </button>
           </div>
@@ -5807,9 +5977,7 @@
               <span class="cat-reg-text">RBI-insured FD</span>
               <div class="cat-rate-text" style="color: #FF5722;">8.60% <span style="font-size: 11px; font-weight: 700; color: #059669;">/mo</span></div>
             </div>
-            <div class="cat-illustration-box" style="background: #FFF3E0; color: #FF5722;">
-              <i class="fa-solid fa-landmark"></i>
-            </div>
+            <div class="cat-illustration-box" style="background: #FFF8F5; border: 1px solid #FFE8DC;"><svg class="ep-svg-icon" style="width:24px;height:24px;"><use href="#ep-ic-fd-vault"/></svg></div>
           </div>
 
           <!-- Card 2: Recurring Deposit (RD) -->
@@ -5821,9 +5989,7 @@
               <span class="cat-reg-text">RBI-regulated</span>
               <div class="cat-rate-text" style="color: #059669;">9.10% <span style="font-size: 11px; font-weight: 700; color: #059669;">/mo</span></div>
             </div>
-            <div class="cat-illustration-box" style="background: #ECFDF5; color: #059669;">
-              <i class="fa-solid fa-calendar-days"></i>
-            </div>
+            <div class="cat-illustration-box" style="background: #ECFDF5; border: 1px solid #D1FAE5;"><svg class="ep-svg-icon" style="width:24px;height:24px;"><use href="#ep-ic-rd-calendar"/></svg></div>
           </div>
 
           <!-- Card 3: Senior Secured Bonds -->
@@ -5835,9 +6001,7 @@
               <span class="cat-reg-text">SEBI-registered</span>
               <div class="cat-rate-text" style="color: #FF5722;">12.00% <span style="font-size: 11px; font-weight: 700; color: #059669;">/mo</span></div>
             </div>
-            <div class="cat-illustration-box" style="background: #FFF8F5; color: #FF5722;">
-              <i class="fa-solid fa-scroll"></i>
-            </div>
+            <div class="cat-illustration-box" style="background: #FFF8F5; border: 1px solid #FFE8DC;"><svg class="ep-svg-icon" style="width:24px;height:24px;"><use href="#ep-ic-bond-cert"/></svg></div>
           </div>
         </div>
 
@@ -5864,12 +6028,12 @@
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <div style="background: #FFFFFF; border: 1px solid #FFEDD5; border-radius: 14px; padding: 12px;">
-              <div style="width: 32px; height: 32px; border-radius: 9px; background: #FFF3E0; color: #FF5722; display: flex; align-items: center; justify-content: center; font-size: 15px; margin-bottom: 8px;"><i class="fa-solid fa-clock"></i></div>
+              <div style="width: 36px; height: 36px; border-radius: 10px; background: #FFF8F5; border: 1px solid #FFE8DC; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;"><svg class="ep-svg-icon"><use href="#ep-ic-daily-clock"/></svg></div>
               <div style="font-size: 13px; font-weight: 800; color: #0F172A;">12:00 AM Daily Payout</div>
               <div style="font-size: 11px; color: #64748B; margin-top: 3px;">Interest credits automatically to your E-Pay Wallet every midnight.</div>
             </div>
             <div style="background: #FFFFFF; border: 1px solid #FFEDD5; border-radius: 14px; padding: 12px;">
-              <div style="width: 32px; height: 32px; border-radius: 9px; background: #ECFDF5; color: #059669; display: flex; align-items: center; justify-content: center; font-size: 15px; margin-bottom: 8px;"><i class="fa-solid fa-shield-halved"></i></div>
+              <div style="width: 36px; height: 36px; border-radius: 10px; background: #ECFDF5; border: 1px solid #D1FAE5; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;"><svg class="ep-svg-icon"><use href="#ep-ic-privacy"/></svg></div>
               <div style="font-size: 13px; font-weight: 800; color: #0F172A;">DICGC Insured ₹5L</div>
               <div style="font-size: 11px; color: #64748B; margin-top: 3px;">Zero hidden fees. RBI-regulated partner banks & instant tracking.</div>
             </div>
@@ -6021,17 +6185,17 @@
         <!-- Floating White Card with 3 Action Pills (Screenshot 4) -->
         <div class="profile-floating-action-card" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
           <button class="profile-action-pill-btn" onclick="openProfileEditModal()">
-            <i class="fa-regular fa-user" style="color: #E91E63;"></i>
+            <svg class="ep-svg-icon"><use href="#ep-ic-user"/></svg>
             <span>Profile</span>
           </button>
 
           <button class="profile-action-pill-btn" onclick="openQrCodeModal()">
-            <i class="fa-solid fa-qrcode" style="color: #FF5722;"></i>
+            <svg class="ep-svg-icon"><use href="#ep-ic-qr"/></svg>
             <span>My QR</span>
           </button>
 
           <button class="profile-action-pill-btn" onclick="openPassbookFromProfile()">
-            <i class="fa-solid fa-clock-rotate-left" style="color: #00C853;"></i>
+            <svg class="ep-svg-icon"><use href="#ep-ic-passbook"/></svg>
             <span>Passbook</span>
           </button>
         </div>
@@ -6060,9 +6224,7 @@
           <!-- Shake to Open Scanner -->
           <div class="profile-menu-row">
             <div class="profile-menu-left">
-              <div class="profile-menu-icon" style="background:#FFF3E0; color:#FF5722;">
-                <i class="fa-solid fa-mobile-screen"></i>
-              </div>
+              <div class="profile-menu-icon"><svg class="ep-svg-icon"><use href="#ep-ic-shake-scan"/></svg></div>
               <div class="profile-menu-text-wrap">
                 <span class="profile-menu-item-title">Shake to Open Scanner</span>
                 <span class="profile-menu-item-sub">Quick UPI payments, just a shake away</span>
@@ -6077,9 +6239,7 @@
           <!-- My Transactions -->
           <div class="profile-menu-row" onclick="openPassbookFromProfile()">
             <div class="profile-menu-left">
-              <div class="profile-menu-icon" style="background:#FCE4EC; color:#E91E63;">
-                <i class="fa-solid fa-arrow-right-arrow-left"></i>
-              </div>
+              <div class="profile-menu-icon"><svg class="ep-svg-icon"><use href="#ep-ic-txns"/></svg></div>
               <div class="profile-menu-text-wrap">
                 <span class="profile-menu-item-title">My Transactions</span>
                 <span class="profile-menu-item-sub">View all your payments with details</span>
@@ -6092,9 +6252,7 @@
           <!-- Set / Reset Security PIN with OTP (User Requested Functional Dedicated Page) -->
           <div class="profile-menu-row" onclick="openResetPinView()">
             <div class="profile-menu-left">
-              <div class="profile-menu-icon" style="background:#E3F2FD; color:#1976D2;">
-                <i class="fa-solid fa-shield-halved"></i>
-              </div>
+              <div class="profile-menu-icon"><svg class="ep-svg-icon"><use href="#ep-ic-pin-shield"/></svg></div>
               <div class="profile-menu-text-wrap">
                 <span class="profile-menu-item-title">Set / Reset Security PIN</span>
                 <span class="profile-menu-item-sub">Set or update 4-digit PIN via OTP</span>
@@ -6106,9 +6264,7 @@
           <!-- My Orders (User Requested: Replaced UPI Requests with Amazon/Flipkart Style Order Tracking) -->
           <div class="profile-menu-row" onclick="openMyOrdersView()">
             <div class="profile-menu-left">
-              <div class="profile-menu-icon" style="background:#EEF2FF; color:#4F46E5;">
-                <i class="fa-solid fa-box-archive"></i>
-              </div>
+              <div class="profile-menu-icon"><svg class="ep-svg-icon"><use href="#ep-ic-orders"/></svg></div>
               <div class="profile-menu-text-wrap">
                 <span class="profile-menu-item-title">My Orders</span>
                 <span class="profile-menu-item-sub">Track Mall orders & gift vouchers</span>
@@ -6120,9 +6276,7 @@
           <!-- Payment Settings / Payment Details (User Requested: Bank, UPI, USDT) -->
           <div class="profile-menu-row" onclick="openBankAccountsView()">
             <div class="profile-menu-left">
-              <div class="profile-menu-icon" style="background:#FFF8E1; color:#F57F17;">
-                <i class="fa-solid fa-gear"></i>
-              </div>
+              <div class="profile-menu-icon"><svg class="ep-svg-icon"><use href="#ep-ic-pay-settings"/></svg></div>
               <div class="profile-menu-text-wrap">
                 <span class="profile-menu-item-title">Payment Settings</span>
                 <span class="profile-menu-item-sub">Add and manage payment details (Bank, UPI, USDT)</span>
@@ -6137,9 +6291,7 @@
           <!-- Refer & Earn (Screenshot 3 Match) -->
           <div class="profile-menu-row" onclick="openReferEarnView()">
             <div class="profile-menu-left">
-              <div class="profile-menu-icon" style="background:#E0F2FE; color:#0284C7;">
-                <i class="fa-solid fa-bullhorn"></i>
-              </div>
+              <div class="profile-menu-icon"><svg class="ep-svg-icon"><use href="#ep-ic-refer"/></svg></div>
               <div class="profile-menu-text-wrap">
                 <span class="profile-menu-item-title">Refer & Earn</span>
                 <span class="profile-menu-item-sub">Invite friends & get assured ₹400 Cashback</span>
@@ -6151,9 +6303,7 @@
           <!-- Cashback & Rewards -->
           <div class="profile-menu-row" onclick="switchNavTab('giftcards')">
             <div class="profile-menu-left">
-              <div class="profile-menu-icon" style="background:#EDE7F6; color:#512DA8;">
-                <i class="fa-solid fa-award"></i>
-              </div>
+              <div class="profile-menu-icon"><svg class="ep-svg-icon"><use href="#ep-ic-rewards"/></svg></div>
               <div class="profile-menu-text-wrap">
                 <span class="profile-menu-item-title">Cashback & Rewards</span>
                 <span class="profile-menu-item-sub">Get cashbacks and brand vouchers</span>
@@ -6168,9 +6318,7 @@
           <!-- 1. About EasyPay -->
           <div class="profile-menu-row" onclick="openAboutAppModal()">
             <div class="profile-menu-left">
-              <div class="profile-menu-icon" style="background:#E0F2FE; color:#0284C7;">
-                <i class="fa-solid fa-circle-info"></i>
-              </div>
+              <div class="profile-menu-icon"><svg class="ep-svg-icon"><use href="#ep-ic-about"/></svg></div>
               <div class="profile-menu-text-wrap">
                 <span class="profile-menu-item-title">About EasyPay</span>
                 <span class="profile-menu-item-sub">Application overview & security credentials</span>
@@ -6182,9 +6330,7 @@
           <!-- 2. Terms and Conditions -->
           <div class="profile-menu-row" onclick="openTermsModal()">
             <div class="profile-menu-left">
-              <div class="profile-menu-icon" style="background:#F3E8FF; color:#7C3AED;">
-                <i class="fa-solid fa-file-contract"></i>
-              </div>
+              <div class="profile-menu-icon"><svg class="ep-svg-icon"><use href="#ep-ic-terms"/></svg></div>
               <div class="profile-menu-text-wrap">
                 <span class="profile-menu-item-title">Terms & Conditions</span>
                 <span class="profile-menu-item-sub">User terms of service, limits & policy</span>
@@ -6196,9 +6342,7 @@
           <!-- 3. Privacy Policy -->
           <div class="profile-menu-row" onclick="openPrivacyModal()">
             <div class="profile-menu-left">
-              <div class="profile-menu-icon" style="background:#DCFCE7; color:#15803D;">
-                <i class="fa-solid fa-shield-halved"></i>
-              </div>
+              <div class="profile-menu-icon"><svg class="ep-svg-icon"><use href="#ep-ic-privacy"/></svg></div>
               <div class="profile-menu-text-wrap">
                 <span class="profile-menu-item-title">Privacy Policy</span>
                 <span class="profile-menu-item-sub">Data protection, ISO encryption & RBI standards</span>
@@ -6212,9 +6356,7 @@
           <!-- Log Out & Switch User -->
           <div class="profile-menu-row" onclick="replayCurieFlow()">
             <div class="profile-menu-left">
-              <div class="profile-menu-icon" style="background:#FFEBEE; color:#D32F2F;">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-              </div>
+              <div class="profile-menu-icon" style="background:#FEF2F2 !important; border-color:#FECACA !important;"><svg class="ep-svg-icon"><use href="#ep-ic-logout"/></svg></div>
               <div class="profile-menu-text-wrap">
                 <span class="profile-menu-item-title" style="color:#D32F2F;">Log Out & Switch User</span>
                 <span class="profile-menu-item-sub">Return to Splash & Login Screen</span>
@@ -6904,13 +7046,13 @@
     <nav class="app-bottom-nav" id="appBottomNav">
       <!-- 1. Home Tab -->
       <div class="nav-tab-item active" id="tabHome" onclick="switchNavTab('home')">
-        <i class="fa-solid fa-house" style="font-size: 19px;"></i>
+        <svg class="ep-svg-nav"><use href="#ep-nav-home"/></svg>
         <span style="font-size: 11px; font-weight: 700; margin-top: 3px;">Home</span>
       </div>
 
       <!-- 2. Gift Tab -->
       <div class="nav-tab-item" id="tabGift" onclick="switchNavTab('gift')">
-        <i class="fa-solid fa-gift" style="font-size: 19px;"></i>
+        <svg class="ep-svg-nav"><use href="#ep-nav-gift"/></svg>
         <span style="font-size: 11px; font-weight: 700; margin-top: 3px;">Gift</span>
       </div>
 
@@ -6925,13 +7067,13 @@
 
       <!-- 4. Shopping Tab -->
       <div class="nav-tab-item" id="tabShopping" onclick="switchNavTab('shopping')">
-        <i class="fa-solid fa-bag-shopping" style="font-size: 19px;"></i>
+        <svg class="ep-svg-nav"><use href="#ep-nav-shop"/></svg>
         <span style="font-size: 11px; font-weight: 700; margin-top: 3px;">Shopping</span>
       </div>
 
       <!-- 5. Profile Tab -->
       <div class="nav-tab-item" id="tabProfile" onclick="switchNavTab('profile')">
-        <i class="fa-solid fa-user" style="font-size: 19px;"></i>
+        <svg class="ep-svg-nav"><use href="#ep-nav-profile"/></svg>
         <span style="font-size: 11px; font-weight: 700; margin-top: 3px;">Profile</span>
       </div>
     </nav>
