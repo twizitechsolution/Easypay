@@ -1833,55 +1833,63 @@
       font-size: 20px;
     }
 
-    /* "Total Investment Worth" Section (Flush with Footer Nav) */
+    /* "Total Investment Worth" Section (Exact Reference Match, Flush with Footer Nav) */
     .investment-worth-section {
-      background: linear-gradient(180deg, #FBF8F4 0%, #F6F0E8 100%);
+      background: linear-gradient(180deg, #FBF8F4 0%, #F7F1E9 100%);
       border-top: 1px solid #EAE0D5;
-      padding: 26px 0 86px;
-      margin: 20px -16px -95px;
+      padding: 28px 0 0;
+      margin: 20px 0 -90px 0;
+      width: 100%;
       text-align: center;
       position: relative;
       overflow: hidden;
     }
     .worth-section-header {
       font-family: var(--font-heading);
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 800;
       color: #8C6B53;
-      letter-spacing: 1.6px;
+      letter-spacing: 1.8px;
       text-transform: uppercase;
       margin-bottom: 6px;
     }
     .worth-counter-display {
       font-family: var(--font-heading);
-      font-size: 27px;
+      font-size: 29px;
       font-weight: 900;
       color: #6B3F23;
       letter-spacing: -0.4px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       font-variant-numeric: tabular-nums;
       transition: transform 0.2s ease;
     }
     .worth-metrics-row {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 16px;
-      margin-bottom: 10px;
+      gap: 0;
+      margin-bottom: 8px;
       font-size: 12.5px;
-      color: #7C5E44;
+      color: #6B4F3A;
       font-weight: 600;
+      border: 1px solid #EAE0D5;
+      background: rgba(255, 255, 255, 0.45);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .worth-metrics-row span {
+      padding: 7px 14px;
     }
     .worth-metric-divider {
       width: 1px;
-      height: 14px;
-      background: #D6C7B8;
+      height: 28px;
+      background: #E2D5C7;
     }
 
     /* 3D Dotted Rotating Globe Canvas */
     .globe-canvas-wrapper {
       width: 100%;
-      height: 290px;
+      height: 365px;
       position: relative;
       display: flex;
       align-items: flex-end;
@@ -1890,8 +1898,8 @@
     }
     #dottedGlobeCanvas {
       width: 100%;
-      max-width: 440px;
-      height: 290px;
+      max-width: 480px;
+      height: 365px;
       display: block;
     }
     .live-booking-pill {
@@ -5739,7 +5747,7 @@
       <!-- ==============================================================
            VIEW 3: BONDS TAB (STABLE MONEY REPLICA - ALL 4 SCREENSHOTS)
            ============================================================== -->
-      <div id="viewBonds" style="display: none; padding-bottom: 105px; background: #F8FAFC;">
+      <div id="viewBonds" style="display: none; padding-bottom: 0; background: #F8FAFC;">
         <!-- Unified EasyPay Orange Hero Header -->
         <div style="background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%); padding: 14px 16px 24px; color: #FFFFFF; border-radius: 0 0 22px 22px; margin-bottom: 14px; box-shadow: 0 4px 14px rgba(255,87,34,0.18);">
           <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -5881,7 +5889,7 @@
 
           <!-- HTML5 Canvas 3D Dotted India Globe -->
           <div class="globe-canvas-wrapper">
-            <canvas id="dottedGlobeCanvas" width="440" height="290"></canvas>
+            <canvas id="dottedGlobeCanvas" width="480" height="365"></canvas>
             <div class="live-booking-pill visible" id="liveBookingPill">
               <span class="pulse-dot-green"></span>
               <span id="liveBookingCityText">FD booked in Bengaluru</span>
@@ -17862,26 +17870,42 @@
       let globeAnimRunning = false;
 
       const INDIA_POLY = [
-        [0.44, 0.14], [0.50, 0.12], [0.55, 0.17], [0.53, 0.23], [0.58, 0.27],
-        [0.64, 0.30], [0.69, 0.31], [0.73, 0.30], [0.77, 0.27], [0.81, 0.29],
-        [0.80, 0.34], [0.76, 0.37], [0.73, 0.35], [0.70, 0.36], [0.70, 0.42],
-        [0.67, 0.45], [0.63, 0.49], [0.59, 0.54], [0.56, 0.59], [0.52, 0.65],
-        [0.49, 0.72], [0.47, 0.80], [0.44, 0.84], [0.41, 0.78], [0.39, 0.70],
-        [0.37, 0.62], [0.35, 0.54], [0.31, 0.48], [0.27, 0.45], [0.29, 0.40],
-        [0.33, 0.37], [0.33, 0.31], [0.37, 0.24], [0.41, 0.18]
+        // Kashmir / Ladakh crown
+        [0.39, 0.17], [0.43, 0.14], [0.47, 0.14], [0.51, 0.16], [0.52, 0.19],
+        // Himachal / Uttarakhand / Nepal border
+        [0.49, 0.23], [0.52, 0.26], [0.56, 0.29], [0.62, 0.32], [0.68, 0.33],
+        // Sikkim & North-East (Assam, Arunachal, Nagaland, Mizoram)
+        [0.72, 0.31], [0.74, 0.29], [0.78, 0.28], [0.85, 0.27], [0.90, 0.29],
+        [0.88, 0.33], [0.84, 0.36], [0.82, 0.41], [0.79, 0.42], [0.77, 0.38],
+        [0.73, 0.36], [0.71, 0.39], [0.72, 0.44],
+        // West Bengal / Odisha / Andhra / Tamil Nadu East Coast
+        [0.69, 0.46], [0.66, 0.49], [0.62, 0.52], [0.56, 0.56], [0.52, 0.61],
+        [0.50, 0.66], [0.49, 0.72], [0.47, 0.77],
+        // Kanyakumari tip
+        [0.44, 0.81], [0.41, 0.77],
+        // Kerala / Karnataka / Goa / Konkan West Coast
+        [0.39, 0.71], [0.37, 0.64], [0.35, 0.57], [0.33, 0.50], [0.32, 0.45],
+        // Gujarat (Saurashtra & Kutch)
+        [0.27, 0.45], [0.22, 0.42], [0.23, 0.38], [0.28, 0.37],
+        // Rajasthan / Punjab / J&K West Border
+        [0.29, 0.33], [0.33, 0.28], [0.36, 0.24], [0.37, 0.20]
+      ];
+
+      const ISLAND_POLY = [
+        [0.54, 0.78], [0.57, 0.78], [0.57, 0.84], [0.54, 0.84]
       ];
 
       const CITY_PINS = [
-        { label: 'FD booked in Bengaluru', x: 0.44, y: 0.72 },
-        { label: 'FD booked in Patna', x: 0.64, y: 0.36 },
-        { label: 'Bond booked in Delhi', x: 0.44, y: 0.29 },
-        { label: 'FD booked in Mumbai', x: 0.36, y: 0.54 },
-        { label: 'FD booked in Coimbatore', x: 0.43, y: 0.78 },
-        { label: 'Bond booked in Pune', x: 0.38, y: 0.58 },
-        { label: 'FD booked in Hyderabad', x: 0.48, y: 0.60 },
-        { label: 'FD booked in Kolkata', x: 0.69, y: 0.43 },
-        { label: 'Bond booked in Jaipur', x: 0.39, y: 0.34 },
-        { label: 'FD booked in Ahmedabad', x: 0.32, y: 0.44 }
+        { label: 'FD booked in Bengaluru', x: 0.43, y: 0.69 },
+        { label: 'FD booked in Patna', x: 0.63, y: 0.35 },
+        { label: 'Bond booked in Delhi', x: 0.43, y: 0.27 },
+        { label: 'FD booked in Mumbai', x: 0.34, y: 0.52 },
+        { label: 'FD booked in Coimbatore', x: 0.42, y: 0.74 },
+        { label: 'Bond booked in Pune', x: 0.37, y: 0.55 },
+        { label: 'FD booked in Hyderabad', x: 0.47, y: 0.58 },
+        { label: 'FD booked in Kolkata', x: 0.69, y: 0.42 },
+        { label: 'Bond booked in Jaipur', x: 0.37, y: 0.32 },
+        { label: 'FD booked in Ahmedabad', x: 0.30, y: 0.41 }
       ];
 
       let activeCityIdx = 0;
@@ -17939,7 +17963,7 @@
               const city = CITY_PINS[activeCityIdx];
               txt.innerText = city.label;
               pill.style.left = Math.round(city.x * 100) + '%';
-              pill.style.top = Math.max(18, Math.round(city.y * 290 - 44)) + 'px';
+              pill.style.top = Math.max(20, Math.round(city.y * 365 - 46)) + 'px';
               pill.classList.add('visible');
             }, 380);
           }
@@ -17954,72 +17978,78 @@
 
         const ctx = canvas.getContext('2d');
         const dpr = window.devicePixelRatio || 1;
-        const W = 440;
-        const H = 290;
+        const W = 480;
+        const H = 365;
         canvas.width = W * dpr;
         canvas.height = H * dpr;
         ctx.scale(dpr, dpr);
 
         const cx = W / 2;
-        const cy = H + 95;
-        const R = 345;
+        const cy = H + 150;
+        const R = 495;
 
         function drawFrame(now) {
           const bondsView = document.getElementById('viewBonds');
           if (bondsView && bondsView.style.display !== 'none') {
             ctx.clearRect(0, 0, W, H);
-            const driftX = Math.sin(now * 0.00055) * 6;
+            const driftX = Math.sin(now * 0.00045) * 4.5;
 
             ctx.save();
             ctx.beginPath();
             ctx.arc(cx, cy, R, Math.PI, 0, false);
             ctx.clip();
 
-            ctx.strokeStyle = 'rgba(166, 138, 114, 0.22)';
+            // Spherical latitude & longitude grid curves (matches reference)
+            ctx.strokeStyle = 'rgba(166, 138, 114, 0.24)';
             ctx.lineWidth = 1;
-            for (let r = R - 35; r > 120; r -= 58) {
+            for (let r = R - 28; r > 150; r -= 72) {
               ctx.beginPath();
               ctx.arc(cx, cy, r, Math.PI, 0, false);
               ctx.stroke();
             }
             for (let lon = -3; lon <= 3; lon++) {
               ctx.beginPath();
-              ctx.ellipse(cx + driftX * 0.35, cy, Math.abs(lon) * 68 + 1, R, 0, Math.PI, 0, false);
+              ctx.ellipse(cx + driftX * 0.3, cy, Math.abs(lon) * 86 + 1, R, 0, Math.PI, 0, false);
               ctx.stroke();
             }
 
-            const step = 7;
+            // Dense spherical dot matrix for India + horizon atmosphere
+            const step = 6;
             for (let y = 18; y < H; y += step) {
-              for (let x = 16; x < W - 16; x += step) {
+              for (let x = 4; x < W - 4; x += step) {
                 const dx = x - cx;
                 const dy = y - cy;
                 const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist > R - 3) continue;
+                if (dist > R - 2) continue;
 
+                // Subtle spherical curvature warp for authentic 3D globe feel
                 const nx = (x - driftX) / W;
                 const ny = y / H;
-                const inIndia = pointInPoly(nx, ny, INDIA_POLY);
-                const edgeFade = Math.max(0.15, 1 - (dist / R) * 0.65);
+                const inIndia = pointInPoly(nx, ny, INDIA_POLY) || pointInPoly(nx, ny, ISLAND_POLY);
+                const nearHorizon = dist > R - 34;
 
                 if (inIndia) {
-                  ctx.fillStyle = 'rgba(124, 94, 68, ' + (0.72 * edgeFade + 0.22).toFixed(2) + ')';
+                  const alpha = Math.max(0.55, 0.92 - (dist / R) * 0.25);
+                  ctx.fillStyle = 'rgba(124, 96, 71, ' + alpha.toFixed(2) + ')';
                   ctx.beginPath();
-                  ctx.arc(x, y, 1.9, 0, Math.PI * 2);
+                  ctx.arc(x, y, 2.0, 0, Math.PI * 2);
                   ctx.fill();
-                } else if (((x + y) % 14) === 0 || (dist > R - 26)) {
-                  ctx.fillStyle = 'rgba(180, 156, 134, ' + (0.38 * edgeFade).toFixed(2) + ')';
+                } else if (nearHorizon || ((x + y) % 12 === 0)) {
+                  const alpha = nearHorizon ? 0.42 : 0.24;
+                  ctx.fillStyle = 'rgba(176, 152, 130, ' + alpha + ')';
                   ctx.beginPath();
-                  ctx.arc(x, y, 1.15, 0, Math.PI * 2);
+                  ctx.arc(x, y, nearHorizon ? 1.25 : 1.0, 0, Math.PI * 2);
                   ctx.fill();
                 }
               }
             }
 
+            // Active city pulse dot on India map
             const city = CITY_PINS[activeCityIdx];
             const px = city.x * W + driftX;
             const py = city.y * H;
             const pulse = (Math.sin(now * 0.005) + 1) * 0.5;
-            ctx.fillStyle = 'rgba(255, 87, 34, ' + (0.28 - pulse * 0.18).toFixed(2) + ')';
+            ctx.fillStyle = 'rgba(255, 87, 34, ' + (0.30 - pulse * 0.20).toFixed(2) + ')';
             ctx.beginPath();
             ctx.arc(px, py, 7 + pulse * 6, 0, Math.PI * 2);
             ctx.fill();
