@@ -204,18 +204,24 @@ async function requestHandler(req, res) {
     req.on('data', chunk => body += chunk);
     req.on('end', async () => {
       try {
-        const { mobile, type } = JSON.parse(body || '{}');
-        const cleanMobile = (mobile || '').replace(/[^0-9]/g, '').slice(-10);
-        if (!cleanMobile || cleanMobile.length !== 10) {
+        const { mobile, type, countryCode, cachedUser } = JSON.parse(body || '{}');
+        const rawDigits = (mobile || '').replace(/[^0-9]/g, '');
+        const cleanMobile = rawDigits.length > 10 && (!countryCode || countryCode === '+91') ? rawDigits.slice(-10) : rawDigits;
+        if (!cleanMobile || cleanMobile.length < 7 || cleanMobile.length > 15) {
           res.writeHead(400, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: false, error: 'Please enter a valid 10-digit mobile number' }));
+          res.end(JSON.stringify({ success: false, error: 'Please enter a valid mobile number' }));
           return;
         }
 
         const data = readDb();
-        const users = data.users || [];
-        const existingUser = users.find(u => (u.mobile || '').replace(/[^0-9]/g, '').slice(-10) === cleanMobile) ||
-          ((data.user && (data.user.mobile || '').replace(/[^0-9]/g, '').slice(-10) === cleanMobile) ? data.user : null);
+        data.users = data.users || [];
+        let existingUser = data.users.find(u => (u.mobile || '').replace(/[^0-9]/g, '') === cleanMobile || (cleanMobile.length === 10 && (u.mobile || '').replace(/[^0-9]/g, '').slice(-10) === cleanMobile)) ||
+          ((data.user && ((data.user.mobile || '').replace(/[^0-9]/g, '') === cleanMobile || (cleanMobile.length === 10 && (data.user.mobile || '').replace(/[^0-9]/g, '').slice(-10) === cleanMobile))) ? data.user : null);
+        if (!existingUser && type === 'login' && cachedUser && (cachedUser.mobile || '').replace(/[^0-9]/g, '') === cleanMobile) {
+          data.users.push(cachedUser);
+          existingUser = cachedUser;
+          writeDb(data);
+        }
 
         // Strict Registration Check: Login is ONLY allowed for registered users
         if (type === 'login' && !existingUser) {
@@ -264,8 +270,9 @@ async function requestHandler(req, res) {
     req.on('data', chunk => body += chunk);
     req.on('end', () => {
       try {
-        const { mobile, otp, type } = JSON.parse(body || '{}');
-        const cleanMobile = (mobile || '').replace(/[^0-9]/g, '').slice(-10);
+        const { mobile, otp, type, countryCode } = JSON.parse(body || '{}');
+        const rawDigits = (mobile || '').replace(/[^0-9]/g, '');
+        const cleanMobile = rawDigits.length > 10 && (!countryCode || countryCode === '+91') ? rawDigits.slice(-10) : rawDigits;
         const stored = activeOtps[cleanMobile];
 
         const enteredOtp = (otp || '').toString().trim();
@@ -284,8 +291,8 @@ async function requestHandler(req, res) {
 
         const data = readDb();
         const users = data.users || [];
-        const existingUser = users.find(u => (u.mobile || '').replace(/[^0-9]/g, '').slice(-10) === cleanMobile) ||
-          ((data.user && (data.user.mobile || '').replace(/[^0-9]/g, '').slice(-10) === cleanMobile) ? data.user : null);
+        const existingUser = users.find(u => (u.mobile || '').replace(/[^0-9]/g, '') === cleanMobile || (cleanMobile.length === 10 && (u.mobile || '').replace(/[^0-9]/g, '').slice(-10) === cleanMobile)) ||
+          ((data.user && ((data.user.mobile || '').replace(/[^0-9]/g, '') === cleanMobile || (cleanMobile.length === 10 && (data.user.mobile || '').replace(/[^0-9]/g, '').slice(-10) === cleanMobile))) ? data.user : null);
 
         if (existingUser && type === 'login') {
           data.user = existingUser;
@@ -322,8 +329,9 @@ async function requestHandler(req, res) {
     req.on('data', chunk => body += chunk);
     req.on('end', () => {
       try {
-        const { name, email, password, mobile, referralCode, state, city, mpin, otp } = JSON.parse(body || '{}');
-        const cleanMobile = (mobile || '').replace(/[^0-9]/g, '').slice(-10);
+        const { name, email, password, mobile, countryCode, referralCode, state, city, mpin, otp } = JSON.parse(body || '{}');
+        const rawDigits = (mobile || '').replace(/[^0-9]/g, '');
+        const cleanMobile = rawDigits.length > 10 && (!countryCode || countryCode === '+91') ? rawDigits.slice(-10) : rawDigits;
 
         if (!name || !name.trim()) {
           res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -331,9 +339,9 @@ async function requestHandler(req, res) {
           return;
         }
 
-        if (!cleanMobile || cleanMobile.length !== 10) {
+        if (!cleanMobile || cleanMobile.length < 7 || cleanMobile.length > 15) {
           res.writeHead(400, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: false, error: 'Valid 10-digit mobile number is required' }));
+          res.end(JSON.stringify({ success: false, error: 'Valid mobile number is required' }));
           return;
         }
 
@@ -354,7 +362,7 @@ async function requestHandler(req, res) {
         const data = readDb();
         data.users = data.users || [];
 
-        const existing = data.users.find(u => (u.mobile || '').replace(/[^0-9]/g, '').slice(-10) === cleanMobile);
+        const existing = data.users.find(u => (u.mobile || '').replace(/[^0-9]/g, '') === cleanMobile || (cleanMobile.length === 10 && (u.mobile || '').replace(/[^0-9]/g, '').slice(-10) === cleanMobile));
         if (existing) {
           data.user = existing;
           writeDb(data);
@@ -688,10 +696,37 @@ async function requestHandler(req, res) {
     return;
   }
 
-  // API: Get complete data (Enriched with Live Hubble Gift Card Brands)
-  if (url === '/api/data' && req.method === 'GET') {
+  // API: Get complete data (Enriched with Live Hubble Gift Card Brands + Per-User Filtering)
+  if (url.startsWith('/api/data') && req.method === 'GET') {
     creditDailyInvestmentInterest(false);
     const data = readDb();
+    const parsedUrl = new URL(url, 'http://localhost');
+    const qUserId = (parsedUrl.searchParams.get('userId') || '').trim();
+    const qMobile = (parsedUrl.searchParams.get('mobile') || '').replace(/[^0-9]/g, '');
+
+    if (qUserId || qMobile) {
+      const matched = (data.users || []).find(u =>
+        (qUserId && String(u.id) === qUserId) ||
+        (qMobile && ((u.mobile || '').replace(/[^0-9]/g, '') === qMobile || (qMobile.length >= 10 && (u.mobile || '').replace(/[^0-9]/g, '').slice(-10) === qMobile.slice(-10))))
+      );
+      if (matched) {
+        data.user = matched;
+        const uid = String(matched.id || '');
+        const umob = String(matched.mobile || '').replace(/[^0-9]/g, '');
+        const matchRecord = (rec) => {
+          const rUid = String(rec.userId || '');
+          const rMob = String(rec.userMobile || rec.mobile || '').replace(/[^0-9]/g, '');
+          if (uid && rUid) return rUid === uid;
+          if (umob && rMob) return rMob === umob || (umob.length >= 10 && rMob.slice(-10) === umob.slice(-10));
+          return false;
+        };
+        data.investments = (data.investments || []).filter(matchRecord);
+        data.transactions = (data.transactions || []).filter(matchRecord);
+        data.orders = (data.orders || []).filter(matchRecord);
+        data.vouchers = (data.vouchers || []).filter(matchRecord);
+      }
+    }
+
     data.analytics = calculateLiveAnalytics(data);
     data.investPlans = data.bonds || [];
     try {

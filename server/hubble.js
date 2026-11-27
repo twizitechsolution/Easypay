@@ -123,6 +123,69 @@ async function getWalletBalance() {
 /**
  * Map raw Hubble category string to clean user-friendly category name
  */
+const EXTRA_ESSENTIAL_BRANDS = [
+  ['Rapido', 'rapido.bike', 'Travel & Stays', 5],
+  ['Porter', 'porter.in', 'Travel & Stays', 5],
+  ['IndianOil XTRAREWARDS', 'iocl.com', 'Travel & Stays', 2],
+  ['HPCL HP Pay', 'hindustanpetroleum.com', 'Travel & Stays', 2],
+  ['BPCL SmartFleet', 'bharatpetroleum.in', 'Travel & Stays', 2],
+  ['Shell India Fuel', 'shell.in', 'Travel & Stays', 2.5],
+  ['Jio-bp Pulse & Fuel', 'jiobp.com', 'Travel & Stays', 2.5],
+  ['Uber India', 'uber.com', 'Travel & Stays', 4],
+  ['Ola Cabs', 'olacabs.com', 'Travel & Stays', 4.5],
+  ['BluSmart', 'blu-smart.com', 'Travel & Stays', 6],
+  ['Google Play', 'play.google.com', 'Gaming', 3],
+  ['Netflix India', 'netflix.com', 'OTT & Entertainment', 3],
+  ['Spotify India', 'open.spotify.com', 'OTT & Entertainment', 6],
+  ['Steam Wallet', 'store.steampowered.com', 'Gaming', 4],
+  ['PlayStation Store', 'playstation.com', 'Gaming', 4],
+  ['MakeMyTrip', 'makemytrip.com', 'Travel & Stays', 5],
+  ['RedBus', 'redbus.in', 'Travel & Stays', 5],
+  ['IndiGo Airlines', 'goindigo.in', 'Travel & Stays', 2.5]
+];
+
+function mergeWithEssentialBrands(list) {
+  const existingNames = new Set((list || []).map(x => (x.name || '').toLowerCase().trim()));
+  const merged = [...(list || [])];
+  EXTRA_ESSENTIAL_BRANDS.forEach(([name, domain, category, rate], i) => {
+    const key = name.toLowerCase();
+    const alreadyHas = Array.from(existingNames).some(en => en.includes(key.split(' ')[0]));
+    if (!alreadyHas) {
+      const id = 'ep_brand_' + key.replace(/[^a-z0-9]+/g, '_') + '_' + (i + 1);
+      merged.push({
+        id,
+        hubbleId: id,
+        name,
+        subName: name,
+        title: name,
+        brandDescription: `Instant ${name} e-gift voucher redeemable across India.`,
+        category,
+        rawCategories: [category.toUpperCase()],
+        tags: [category, name],
+        denominationType: 'FIXED',
+        denominations: [100, 250, 500, 1000, 2000, 5000],
+        minOrderAmount: 100,
+        maxOrderAmount: 10000,
+        cardType: 'CARD_AND_PIN_NO_SECURED',
+        redemptionType: 'ONLINE_AND_OFFLINE',
+        logo: `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+        thumbnailUrl: `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+        logoUrl: `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+        cashbackRate: rate,
+        discountRate: rate,
+        saveRate: rate,
+        saveText: `Save ${rate}%`,
+        isTop: false,
+        isNew: true,
+        termsAndConditions: ['Instant digital delivery', 'Valid for 12 months from issue date'],
+        howToUseInstructions: [{ instructions: [`Open ${name} app or outlet`, 'Enter voucher code & PIN at checkout'] }],
+        status: 'ACTIVE'
+      });
+    }
+  });
+  return merged;
+}
+
 function normalizeCategory(cats = []) {
   if (!cats || cats.length === 0) return 'Shopping';
   const c = cats[0].toUpperCase();
@@ -155,10 +218,10 @@ function mapHubbleBrand(b) {
     denominations = [100, 250, 500, 1000, 2000, 5000];
   }
 
-  // Subvention / instant discount percentage
-  const discountRate = (typeof b.discountPercentage === 'number' && b.discountPercentage > 0)
-    ? b.discountPercentage
-    : 4; // Default 4% instant bachat
+  // Subvention / instant discount percentage (preserve exact API percentage)
+  const rawPct = [b.discountPercentage, b.cashbackPercentage, b.discountRate, b.subvention, b.cashbackRate]
+    .find(v => typeof v === 'number' && !isNaN(v) && v >= 0);
+  const discountRate = (typeof rawPct === 'number') ? rawPct : 4;
 
   const isTopBrand = [
     'Flipkart', 'Amazon shopping', 'Zomato', 'Swiggy', 'Reliance Digital',
@@ -225,9 +288,9 @@ async function getActiveBrands(forceRefresh = false) {
         return a.name.localeCompare(b.name);
       });
 
-      cachedBrands = mapped;
+      cachedBrands = mergeWithEssentialBrands(mapped);
       lastBrandsFetchTime = now;
-      try { fs.writeFileSync(HUBBLE_DISK_CACHE, JSON.stringify(mapped, null, 2), 'utf8'); } catch (e) {}
+      try { fs.writeFileSync(HUBBLE_DISK_CACHE, JSON.stringify(cachedBrands, null, 2), 'utf8'); } catch (e) {}
       return cachedBrands;
     }
   } catch (err) {
@@ -238,7 +301,7 @@ async function getActiveBrands(forceRefresh = false) {
     try {
       const diskBrands = JSON.parse(fs.readFileSync(HUBBLE_DISK_CACHE, 'utf8'));
       if (Array.isArray(diskBrands) && diskBrands.length > 0) {
-        cachedBrands = diskBrands;
+        cachedBrands = mergeWithEssentialBrands(diskBrands);
         lastBrandsFetchTime = now;
         return cachedBrands;
       }

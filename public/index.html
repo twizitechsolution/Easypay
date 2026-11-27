@@ -9816,17 +9816,54 @@
     // Fetch Initial Platform Data
     // Global API_BASE is configured in <head>
 
+    function getStoredSessionUser() {
+      try {
+        const raw = localStorage.getItem('easypay_session_user');
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) { return null; }
+    }
+
+    function scopeAppDataToUser(data, sessUser) {
+      if (!data) return data;
+      const u = sessUser || data.user;
+      if (!u) return data;
+      const uid = String(u.id || '').trim();
+      const umob = String(u.mobile || '').replace(/[^0-9]/g, '');
+      const belongsToUser = (rec) => {
+        if (!rec) return false;
+        const rUid = String(rec.userId || '').trim();
+        const rMob = String(rec.userMobile || rec.mobile || '').replace(/[^0-9]/g, '');
+        if (uid && rUid) return rUid === uid;
+        if (umob && rMob) return rMob === umob || (umob.length >= 10 && rMob.slice(-10) === umob.slice(-10));
+        return false;
+      };
+      data.user = u;
+      data.investments = (data.investments || []).filter(belongsToUser);
+      data.transactions = (data.transactions || []).filter(belongsToUser);
+      data.orders = (data.orders || []).filter(belongsToUser);
+      data.vouchers = (data.vouchers || []).filter(belongsToUser);
+      return data;
+    }
+
     async function loadData() {
       try {
-        const res = await fetch(API_BASE + '/api/data');
+        const sess = getStoredSessionUser();
+        const qs = sess ? ('?userId=' + encodeURIComponent(sess.id || '') + '&mobile=' + encodeURIComponent(sess.mobile || '')) : '';
+        const res = await fetch(API_BASE + '/api/data' + qs);
         if (res.ok) {
-          appData = await res.json();
+          const rawData = await res.json();
+          const matchedInDb = sess && Array.isArray(rawData.users)
+            ? rawData.users.find(u => (sess.id && u.id === sess.id) || (sess.mobile && String(u.mobile || '').replace(/\D/g, '') === String(sess.mobile || '').replace(/\D/g, '')))
+            : null;
+          const activeUser = matchedInDb || sess || rawData.user;
+          appData = scopeAppDataToUser(rawData, activeUser);
           renderWallet();
           renderGiftCards();
           renderBookedBonds();
           renderTransactions();
           syncUserProfileUI();
           if (appData.user) {
+            localStorage.setItem('easypay_session_user', JSON.stringify(appData.user));
             localStorage.setItem('currentUser', JSON.stringify(appData.user));
             if (appData.user.mobile) localStorage.setItem('easypay_logged_mobile', appData.user.mobile);
           }
@@ -14367,10 +14404,20 @@
 
       openBizLoader('Sending SMS OTP via Carrier...', 600, async () => {
         try {
+          let cachedUser = null;
+          try {
+            const regList = JSON.parse(localStorage.getItem('easypay_registered_users') || '[]');
+            cachedUser = regList.find(u => String(u.mobile || '').replace(/\D/g, '') === authUserMobile) || null;
+          } catch (e) {}
           const res = await fetch((typeof API_BASE !== 'undefined' ? API_BASE : '') + '/api/auth/send-otp', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ mobile: authUserMobile, type: authFlowType })
+            body: JSON.stringify({
+              mobile: authUserMobile,
+              countryCode: (selectedCountry && selectedCountry.code) || '+91',
+              type: authFlowType,
+              cachedUser
+            })
           });
           const result = await res.json();
           if (result && result.success) {
@@ -14485,6 +14532,7 @@
               email: signupFormData.email || '',
               password: signupFormData.password || '',
               mobile: authUserMobile,
+              countryCode: (selectedCountry && selectedCountry.code) || '+91',
               referralCode: signupFormData.referralCode || '',
               state: signupFormData.state || '',
               city: signupFormData.city || '',
@@ -14508,6 +14556,12 @@
               sessionStorage.setItem('easypay_auth_completed', 'true');
               if (result && result.user) {
                 localStorage.setItem('easypay_session_user', JSON.stringify(result.user));
+                try {
+                  const regList = JSON.parse(localStorage.getItem('easypay_registered_users') || '[]');
+                  const filteredReg = regList.filter(x => String(x.mobile || '').replace(/\D/g, '') !== String(result.user.mobile || '').replace(/\D/g, ''));
+                  filteredReg.push(result.user);
+                  localStorage.setItem('easypay_registered_users', JSON.stringify(filteredReg));
+                } catch (e) {}
               }
               showToast('🎉 Account Created! Welcome bonus ₹100 credited.');
               await refreshUserDataAfterAuth();
@@ -14732,13 +14786,23 @@
 
     async function refreshUserDataAfterAuth() {
       try {
-        const res = await fetch((typeof API_BASE !== 'undefined' ? API_BASE : '') + '/api/data');
+        const sess = getStoredSessionUser();
+        const qs = sess ? ('?userId=' + encodeURIComponent(sess.id || '') + '&mobile=' + encodeURIComponent(sess.mobile || '')) : '';
+        const res = await fetch((typeof API_BASE !== 'undefined' ? API_BASE : '') + '/api/data' + qs);
         if (res.ok) {
           const fresh = await res.json();
-          if (fresh && fresh.user) {
-            currentUser = fresh.user;
-            localStorage.setItem('easypay_session_user', JSON.stringify(fresh.user));
-            renderUserDisplays(fresh.user);
+          const matchedInDb = sess && Array.isArray(fresh.users)
+            ? fresh.users.find(u => (sess.id && u.id === sess.id) || (sess.mobile && String(u.mobile || '').replace(/\D/g, '') === String(sess.mobile || '').replace(/\D/g, '')))
+            : null;
+          const activeUser = matchedInDb || sess || (fresh && fresh.user);
+          if (activeUser) {
+            currentUser = activeUser;
+            appData = scopeAppDataToUser(fresh, activeUser);
+            localStorage.setItem('easypay_session_user', JSON.stringify(activeUser));
+            renderUserDisplays(activeUser);
+            if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
+            if (typeof renderBookedBonds === 'function') renderBookedBonds();
+            if (typeof renderTransactions === 'function') renderTransactions();
           }
         }
       } catch(e) {
@@ -18236,16 +18300,21 @@
       ];
 
       const CITY_PINS = [
-        { label: 'FD booked in Bengaluru', x: 0.43, y: 0.69 },
-        { label: 'FD booked in Patna', x: 0.63, y: 0.35 },
-        { label: 'Bond booked in Delhi', x: 0.43, y: 0.27 },
-        { label: 'FD booked in Mumbai', x: 0.34, y: 0.52 },
-        { label: 'FD booked in Coimbatore', x: 0.42, y: 0.74 },
-        { label: 'Bond booked in Pune', x: 0.37, y: 0.55 },
-        { label: 'FD booked in Hyderabad', x: 0.47, y: 0.58 },
-        { label: 'FD booked in Kolkata', x: 0.69, y: 0.42 },
-        { label: 'Bond booked in Jaipur', x: 0.37, y: 0.32 },
-        { label: 'FD booked in Ahmedabad', x: 0.30, y: 0.41 }
+        { label: 'FD booked in Rajasthan', x: 0.36, y: 0.33 },
+        { label: 'Bond booked in Maharashtra', x: 0.38, y: 0.54 },
+        { label: 'FD booked in Bangladesh', x: 0.73, y: 0.42 },
+        { label: 'FD booked in Karnataka', x: 0.42, y: 0.68 },
+        { label: 'Bond booked in Haryana', x: 0.42, y: 0.27 },
+        { label: 'FD booked in Gujarat', x: 0.29, y: 0.41 },
+        { label: 'Bond booked in Sri Lanka', x: 0.54, y: 0.80 },
+        { label: 'FD booked in Bihar', x: 0.63, y: 0.35 },
+        { label: 'FD booked in Tamil Nadu', x: 0.45, y: 0.74 },
+        { label: 'Bond booked in West Bengal', x: 0.69, y: 0.41 },
+        { label: 'FD booked in Nepal', x: 0.60, y: 0.28 },
+        { label: 'FD booked in Uttar Pradesh', x: 0.50, y: 0.33 },
+        { label: 'Bond booked in Punjab', x: 0.39, y: 0.24 },
+        { label: 'FD booked in Pakistan', x: 0.25, y: 0.26 },
+        { label: 'FD booked in Kerala', x: 0.40, y: 0.75 }
       ];
 
       let activeCityIdx = 0;
@@ -18512,10 +18581,68 @@
       }).join('');
     }
 
+    const COUNTRY_STATES_MAP = {
+      in: ['Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Delhi','Goa','Gujarat','Haryana','Himachal Pradesh','Jammu & Kashmir','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal'],
+      vn: ['Hanoi','Ho Chi Minh City','Da Nang','Hai Phong','Can Tho','Bien Hoa','Nha Trang','Hue','Vung Tau','Da Lat','Quy Nhon','Ha Long'],
+      us: ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'],
+      gb: ['England','Scotland','Wales','Northern Ireland','Greater London','West Midlands','Greater Manchester','West Yorkshire'],
+      ae: ['Abu Dhabi','Dubai','Sharjah','Ajman','Umm Al Quwain','Ras Al Khaimah','Fujairah'],
+      sg: ['Central Region','East Region','North Region','North-East Region','West Region'],
+      ca: ['Ontario','Quebec','British Columbia','Alberta','Manitoba','Saskatchewan','Nova Scotia','New Brunswick'],
+      au: ['New South Wales','Victoria','Queensland','Western Australia','South Australia','Tasmania','Australian Capital Territory','Northern Territory'],
+      sa: ['Riyadh','Makkah','Madinah','Eastern Province','Asir','Tabuk','Qassim'],
+      qa: ['Doha','Al Rayyan','Al Wakrah','Al Khor','Umm Salal'],
+      kw: ['Al Asimah','Hawalli','Farwaniya','Mubarak Al-Kabeer','Ahmadi','Jahra'],
+      om: ['Muscat','Dhofar','Al Batinah','Ad Dakhiliyah','Ash Sharqiyah'],
+      bh: ['Capital Governorate','Muharraq','Northern Governorate','Southern Governorate'],
+      my: ['Kuala Lumpur','Selangor','Penang','Johor','Perak','Sabah','Sarawak'],
+      de: ['Bavaria','Berlin','Hamburg','Hesse','North Rhine-Westphalia','Baden-Wuerttemberg','Lower Saxony','Saxony'],
+      fr: ['Ile-de-France','Auvergne-Rhone-Alpes','Nouvelle-Aquitaine','Occitanie','Provence-Alpes-Cote dAzur','Brittany'],
+      it: ['Lombardy','Lazio','Campania','Veneto','Sicily','Piedmont','Tuscany'],
+      es: ['Madrid','Catalonia','Andalusia','Valencia','Galicia','Basque Country'],
+      nl: ['North Holland','South Holland','Utrecht','North Brabant','Gelderland'],
+      ch: ['Zurich','Geneva','Bern','Basel-Stadt','Vaud','Ticino'],
+      jp: ['Tokyo','Osaka','Kanagawa','Aichi','Hokkaido','Fukuoka','Kyoto'],
+      kr: ['Seoul','Busan','Incheon','Daegu','Daejeon','Gwangju','Gyeonggi-do'],
+      cn: ['Beijing','Shanghai','Guangdong','Zhejiang','Jiangsu','Sichuan','Hubei'],
+      th: ['Bangkok','Chiang Mai','Phuket','Chonburi','Nonthaburi','Khon Kaen'],
+      id: ['Jakarta','West Java','East Java','Central Java','Bali','North Sumatra'],
+      ph: ['Metro Manila','Cebu','Davao','Calabarzon','Central Luzon'],
+      bd: ['Dhaka','Chattogram','Sylhet','Rajshahi','Khulna','Barishal','Rangpur'],
+      np: ['Bagmati (Kathmandu)','Gandaki (Pokhara)','Koshi','Lumbini','Madhesh','Sudurpashchim'],
+      lk: ['Western (Colombo)','Central (Kandy)','Southern (Galle)','Northern','Eastern','North Western'],
+      pk: ['Punjab','Sindh','Khyber Pakhtunkhwa','Balochistan','Islamabad Capital Territory'],
+      nz: ['Auckland','Wellington','Canterbury','Waikato','Otago'],
+      za: ['Gauteng','Western Cape','KwaZulu-Natal','Eastern Cape','Free State'],
+      ng: ['Lagos','Abuja FCT','Kano','Rivers','Oyo'],
+      ke: ['Nairobi','Mombasa','Kisumu','Nakuru','Eldoret'],
+      eg: ['Cairo','Alexandria','Giza','Luxor','Aswan'],
+      br: ['Sao Paulo','Rio de Janeiro','Minas Gerais','Bahia','Parana'],
+      mx: ['Mexico City','Jalisco','Nuevo Leon','Puebla','Guanajuato'],
+      ru: ['Moscow','Saint Petersburg','Novosibirsk','Yekaterinburg','Kazan'],
+      tr: ['Istanbul','Ankara','Izmir','Antalya','Bursa'],
+      il: ['Tel Aviv','Jerusalem','Haifa','Central District','Southern District'],
+      ie: ['Dublin','Cork','Galway','Limerick'],
+      se: ['Stockholm','Vastra Gotaland','Skane','Uppsala'],
+      no: ['Oslo','Vestland','Trondelag','Rogaland'],
+      dk: ['Capital Region (Copenhagen)','Central Denmark','Southern Denmark','Zealand'],
+      pl: ['Masovian (Warsaw)','Lesser Poland (Krakow)','Greater Poland','Silesian'],
+      pt: ['Lisbon','Porto','Faro (Algarve)','Coimbra']
+    };
+
+    function populateSignupStatesForCountry(iso) {
+      const sel = document.getElementById('epSignupState');
+      if (!sel) return;
+      const list = COUNTRY_STATES_MAP[(iso || 'in').toLowerCase()] || ['Capital Region', 'Central Province', 'Northern Province', 'Southern Province', 'Other'];
+      sel.innerHTML = '<option value="" disabled selected>Select State / Province</option>' +
+        list.map(s => '<option value="' + s + '">' + s + '</option>').join('');
+    }
+
     function selectCountryCode(iso, code) {
       const found = WORLD_COUNTRIES.find(c => c.iso === iso && c.code === code) || WORLD_COUNTRIES[0];
       selectedCountry = found;
       localStorage.setItem('easypay_country_code', found.code);
+      localStorage.setItem('easypay_country_iso', found.iso);
       const flagUrl = 'https://flagcdn.com/w40/' + found.iso + '.png';
       ['epLoginCountryFlag', 'epSignupCountryFlag'].forEach(id => {
         const el = document.getElementById(id);
@@ -18525,10 +18652,16 @@
         const el = document.getElementById(id);
         if (el) el.innerText = found.code;
       });
+      populateSignupStatesForCountry(found.iso);
       closeModal('countryCodePickerModal');
       const mobInp = document.getElementById('epMobileInput');
       if (mobInp) handleMobileInput(mobInp);
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedIso = localStorage.getItem('easypay_country_iso') || 'in';
+      populateSignupStatesForCountry(savedIso);
+    });
   </script>
   <!-- GLOBAL SEARCH DEDICATED PAGE -->
   <div class="view-panel" id="viewGlobalSearch" style="display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; z-index: 10015; background: #F8FAFC; overflow-y: auto; -webkit-overflow-scrolling: touch;">
